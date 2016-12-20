@@ -280,11 +280,11 @@ if (Mix.js.vendor) {
 if (Mix.cssPreprocessor) {
     let cssOutputPath = Mix[Mix.cssPreprocessor].output[
         Mix.versioning.enabled ? 'hashedPath' : 'path'
-    ];
+    ].replace(/\.?\/?public/, '');
 
     module.exports.plugins.push(
         new plugins.ExtractTextPlugin({
-            filename: cssOutputPath.replace('public', '')
+            filename: cssOutputPath
         })
     );
 }
