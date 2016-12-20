@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
-var Mix = require('laravel-webpacker').config;
-var plugins = require('laravel-webpacker').plugins;
+var Mix = require('laravel-mix').config;
+var plugins = require('laravel-mix').plugins;
 
 
 /*
@@ -226,7 +226,7 @@ if (Mix.notifications) {
         new plugins.WebpackNotifierPlugin({
             title: 'Laravel Mix',
             alwaysNotify: true,
-            contentImage: 'node_modules/laravel-webpacker/icons/laravel.png'
+            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
         })
     );
 }
