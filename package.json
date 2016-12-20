@@ -1,0 +1,53 @@
+{
+  "name": "laravel-webpacker",
+  "version": "0.1.0",
+  "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
+  "main": "index.js",
+  "scripts": {
+    "compile": "webpack --progress --hide-modules",
+    "dev": "webpack --watch --progress --hide-modules",
+    "hmr": "webpack-dev-server --inline --hot",
+    "production": "export NODE_ENV=production && webpack --progress --hide-modules"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "keywords": [
+    "laravel",
+    "webpack",
+    "laravel elixir",
+    "laravel mix"
+  ],
+  "author": "Jeffrey Way",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.9",
+    "babel-preset-es2015": "^6.18.0",
+    "clean-css": "^3.4.22",
+    "concatenate": "0.0.1",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "file-loader": "^0.9.0",
+    "fs": "0.0.1-security",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "node-sass": "^4.0.0",
+    "on-build-webpack": "^0.1.0",
+    "path": "^0.12.7",
+    "postcss-load-config": "^1.0.0",
+    "postcss-loader": "^1.2.1",
+    "resolve-url-loader": "^1.6.1",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "uglify-js": "^2.7.5",
+    "vue-loader": "^10.0.2",
+    "vue-template-compiler": "^2.1.4",
+    "webpack": "^2.1.0-beta.27",
+    "webpack-dev-server": "^2.1.0-beta.12",
+    "webpack-notifier": "^1.4.1"
+  }
+}
