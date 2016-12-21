@@ -56,10 +56,11 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
 
 ```js
 "scripts": {
-    "dev": "webpack --watch --progress --hide-modules",
-    "hmr": "webpack-dev-server --inline --hot",
-    "production": "export NODE_ENV=production && webpack --progress --hide-modules"
-  }
+  "webpack": "webpack --progress --hide-modules",
+  "dev": "webpack --watch --progress --hide-modules",
+  "hmr": "webpack-dev-server --inline --hot",
+  "production": "export NODE_ENV=production && webpack --progress --hide-modules"
+}
 ```
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
