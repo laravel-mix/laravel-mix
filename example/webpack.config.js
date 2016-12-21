@@ -125,10 +125,7 @@ if (Mix.less) {
         test: /\.less$/,
         loader: plugins.ExtractTextPlugin.extract({
             fallbackLoader: 'style-loader',
-            loader: [
-                'css-loader', 'postcss-loader', 
-                'resolve-url-loader', 'less-loader?sourceMap'
-            ]
+            loader: ['css-loader', 'postcss-loader', 'less-loader']
         })
     });
 }
