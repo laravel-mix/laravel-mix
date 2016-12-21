@@ -1,10 +1,10 @@
-# How is Laravel Mix different from Laravel Elixir?
+# How is Laravel Mix different from Laravel Mix?
 
-You may be aware that a tool called Laravel Elixir has existed for some time now \(also built by us\). Laravel Mix is the evolution of that tool. Though its entry point API is almost identical, there are a handful of key differences to be aware of, if you're switching over.
+You may be aware that a tool called Laravel Mix has existed for some time now \(also built by us\). Laravel Mix is the evolution of that tool. Though its entry point API is almost identical, there are a handful of key differences to be aware of, if you're switching over.
 
 #### 1. Laravel Mix is built on top of Webpack, not Gulp.
 
-The most significant change is our switch over to Webpack as a base, rather than Gulp. This allows for, not just more power and flexibility, but also a simpler and more configurable \(should you need it\) codebase. Please note that all Laravel Elixir plugins assume and use Gulp, which is why we've opted for a name change. To avoid confusion, all Laravel Elixir plugins work with Laravel Elixir. Laravel Mix, on the other hand, will have no need for plugins, since you may freely edit your `webpack.config.js` file.
+The most significant change is our switch over to Webpack as a base, rather than Gulp. This allows for, not just more power and flexibility, but also a simpler and more configurable \(should you need it\) codebase. Please note that all Laravel Mix plugins assume and use Gulp, which is why we've opted for a name change. To avoid confusion, all Laravel Mix plugins work with Laravel Mix. Laravel Mix, on the other hand, will have no need for plugins, since you may freely edit your `webpack.config.js` file.
 
 #### 2. Your Gulpfile.js will now be webpack.mix.js
 
@@ -19,7 +19,7 @@ Gulp is excellent for general purpose tasks. Move this file here, and then minif
 
 That being said, we've introduced a number of options that will allow you to continue, for example, combining various files, or minifying a stylesheet that isn't related to your Webpack build. This mean, `mix.copy(`\), `mix.combine()`, and `mix.minify()` are still available.
 
-Example: With Laravel Elixir, you might call `mix.version('./public/some/random/file.js')`, and this would apply a hash to the file. With Laravel Mix, you'll simply run `mix.version()`, and the tool will automatically version all relevant files to the Webpack build.
+Example: With Laravel Mix, you might call `mix.version('./public/some/random/file.js')`, and this would apply a hash to the file. With Laravel Mix, you'll simply run `mix.version()`, and the tool will automatically version all relevant files to the Webpack build.
 
 #### 4. Greater flexibility.
 

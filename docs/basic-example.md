@@ -1,20 +1,14 @@
 # Basic Example
 
-Laravel Elixir is a clean layer on top of Webpack to make the 80% use case laughably simple to execute. Most would agree that, though incredibly powerful, Webpack ships with a steep learning curve. But what if you didn't have to worry about that?
+Laravel Mix is a clean layer on top of Webpack to make the 80% use case laughably simple to execute. Most would agree that, though incredibly powerful, Webpack ships with a steep learning curve. But what if you didn't have to worry about that?
 
-Have a look at a basic `webpack.elixir.js` file. Let's imagine that we only desire JavaScript \(ES2015 with modules\), and Sass compilation:
+Have a look at a basic `webpack.mix.js` file. Let's imagine that we only desire JavaScript \(ES2015 with modules\), and Sass compilation:
 
 ```js
-let Elixir = require('laravel-webpacker');
+let mix = require('laravel-mix').mix;
 
-
-Elixir.mix(function (mix) {
-    mix.sass('./src/app.sass', './dist/app.sass')
-       .js('./src/app.js', './dist/bundle.js')
-});
-
-
-module.exports = Elixir;
+mix.sass('src/app.sass', 'dist')
+   .js('src/app.js', 'dist')
 ```
 
 Simple, right?
@@ -30,5 +24,5 @@ During development, it's unnecessary to minify the output, however, this will be
 
 But what if you prefer Less compilation instead? No problem. Just swap `mix.sass()` with `mix.less()`, and you're done! 
 
-You'll find that most common Webpack tasks become a cinch with Laravel Elixir. 
+You'll find that most common Webpack tasks become a cinch with Laravel Mix. 
 

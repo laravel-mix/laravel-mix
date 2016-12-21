@@ -1,15 +1,16 @@
 # Hot Module Replacement
 
-Where available, Laravel Elixir provides seamless support for hot module replacement.
+Where available, Laravel Mix provides seamless support for hot module replacement.
 
 > Hot Module Replacement \(or Hot Reloading\) allows you to, not just refresh the page when a piece of JavaScript is changed, but it will also maintain the current state of the component in the browser. As an example, consider a simple counter component. When you press a button, the count goes up. Imagine that you click this button a number of times, and then update the component file. Once you do, the webpage will refresh to reflect your change, but the count will remain the same. It won't reset. This is the beauty of hot reloading!
 
 ### Usage in Laravel
 
-Both Laravel and Laravel Elixir work together to abstract away the complexities in getting hot reloading to work. Have a look at your Laravel install's included `package.json` file. Within the `scripts` object, you'll see:
+Both Laravel and Laravel Mix work together to abstract away the complexities in getting hot reloading to work. Have a look at your Laravel install's included `package.json` file. Within the `scripts` object, you'll see:
 
 ```js
 "scripts": {
+  "webpack": "webpack --progress --hide-modules",
   "dev": "webpack --watch --progress --hide-modules",
   "hmr": "webpack-dev-server --inline --hot",
   "production": "export NODE_ENV=production && webpack --progress --hide-modules"
@@ -29,12 +30,12 @@ The key to making hot reloading work within a Laravel application is ensuring th
 
 And this would work. Give it a try. Assuming you have some demo components to work with, try changing the state in the browser, and then modifying the component's template. You should see your browser instantly refresh to reflect the change, without losing your state.
 
-However, it can be a burden to manually change this URL for production deploys. As such, Laravel offers a useful `elixirAssets()` function, which will build up your script or stylesheet imports dynamically, and echo them out. As such, the code snippet above may be changed to:
+However, it can be a burden to manually change this URL for production deploys. As such, Laravel offers a useful `mixAssets()` function, which will build up your script or stylesheet imports dynamically, and echo them out. As such, the code snippet above may be changed to:
 
 ```html
 <body>
     <div id="app"></div>
-    {!! elixirAssets('js') !!}
+    {!! mix('js/bundle.js') !!}
 </body>
 ```
 
@@ -44,5 +45,5 @@ With this adjustment, Laravel will do the work for you. If you run nom run her t
 
 ### Usage in SPAs
 
-Laravel Elixir includes the popular `vue-loader` package, which means, for SPAs, there's nothing for you to do. It'll all work seamlessly out of the box!
+Laravel Mix includes the popular `vue-loader` package, which means, for SPAs, there's nothing for you to do. It'll all work seamlessly out of the box!
 

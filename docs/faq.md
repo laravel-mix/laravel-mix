@@ -16,6 +16,7 @@ It's highly recommended that you add the following NPM scripts to your `package.
 
 ```js
 "scripts": {
+  "webpack": "webpack --progress --hide-modules",
   "dev": "webpack --watch --progress --hide-modules",
   "hmr": "webpack-dev-server --inline --hot",
   "production": "export NODE_ENV=production && webpack --progress --hide-modules"

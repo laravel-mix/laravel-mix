@@ -29,9 +29,9 @@ Once you run Webpack to compile your code, you'll find three new files. You may 
 
 In effect, we pay a small HTTP request penalty, in exchange for improved long-term caching.
 
-> **Laravel Users:** You alternatively have access to a `elixirAssets('js')` function that will dynamically create these script tags for you.
+> **Laravel Users:** You alternatively have access to a `mix('js/app.js')` function that will dynamically create these script tag for you.
 
 ### What's That Manifest File?
 
-Webpack compiles with a small bit of run-time code, to assist with its job. When not using `mix.extract()`, this code is invisible to you, and lives inside your bundle file. However, if we want to split our code and allow for long-term caching, that runtime code needs to live somewhere. As such, Elixir will extract it to its own file as well. This way, both your vendor and manifest files can be cached as long as possible.
+Webpack compiles with a small bit of run-time code, to assist with its job. When not using `mix.extract()`, this code is invisible to you, and lives inside your bundle file. However, if we want to split our code and allow for long-term caching, that runtime code needs to live somewhere. As such, mix will extract it to its own file as well. This way, both your vendor and manifest files can be cached as long as possible.
 

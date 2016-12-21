@@ -4,7 +4,7 @@
 mix.js(src, output)
 ```
 
-With a single line of code, Laravel Elixir allows you to trigger a number of vital actions.
+With a single line of code, Laravel Mix allows you to trigger a number of vital actions.
 
 * ES2015 + modules compilation
 * Build and compile `.vue` components \(via `vue-loader`\)
@@ -15,18 +15,12 @@ With a single line of code, Laravel Elixir allows you to trigger a number of vit
 
 ### Laravel Example
 
-Consider a typical Laravel install. By default, your JavaScript entry point will be located at `./resources/assets/js/app.js`. Let's prepare a `webpack.elixir.js` file to compile that to `./public/js/app.js`.
+Consider a typical Laravel install. By default, your JavaScript entry point will be located at `./resources/assets/js/app.js`. Let's prepare a `webpack.mix.js` file to compile that to `./public/js/app.js`.
 
 ```js
-let Elixir = require('laravel-webpacker');
+let mix = require('laravel-mix').mix;
 
-
-Elixir.mix(function (mix) {
-    mix.js('./resources/assets/js/app.js', './public/js/app.js');
-});
-
-
-module.exports = Elixir;
+mix.js('resources/assets/js/app.js', 'public/js');
 ```
 
 Done! Now, all of the bullet items above are available to you, and it required exactly one method call.
@@ -35,7 +29,7 @@ To trigger the compilation, run `node_modules/.bin/webpack` from the command lin
 
 ### Vue Components
 
-Laravel Elixir is mildly opinionated, and ships with compilation support for `.vue` component files. Don't worry: if you don't use Vue, you can ignore this entire section.
+Laravel Mix is mildly opinionated, and ships with compilation support for `.vue` component files. Don't worry: if you don't use Vue, you can ignore this entire section.
 
 Single file components are one of Vue's neatest features. One file to declare the template, script, and styling for a component? Yes, please! Let's try it out.
 
@@ -81,18 +75,12 @@ Above, we import Vue \(you'll want to first run `npm install vue --save-dev`\), 
 
 If you're familiar with Vue, this show all look very familiar, so we'll move on.
 
-**./webpack.elixir.js**
+**./webpack.mix.js**
 
 ```js
-let Elixir = require('laravel-webpacker');
+let mix = require('laravel-mix').mix;
 
-
-Elixir.mix(function (mix) {
-    mix.js('./resources/assets/js/app.js', './public/js/app.js');
-});
-
-
-module.exports = Elixir;
+mix.js('resources/assets/js/app.js', 'public/js');
 ```
 
 And that should do it! Run `node_modules/.bin/webpack` to compile it all down. At this point, simply create an HTML file, import your `./js/app.js` bundle, and load the browser. Tada!

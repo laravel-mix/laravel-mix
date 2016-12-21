@@ -6,7 +6,7 @@ mix.minify('src');
 mix.minify(['src']);
 ```
 
-If used properly, Laravel Elixir and Webpack should take care of all the necessary module bundling and minification for you. However, you may have some legacy code or vendor libraries that need to be concatenated and minified. Not a problem.
+If used properly, Laravel Mix and Webpack should take care of all the necessary module bundling and minification for you. However, you may have some legacy code or vendor libraries that need to be concatenated and minified. Not a problem.
 
 ### Combine Files
 

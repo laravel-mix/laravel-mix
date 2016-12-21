@@ -14,14 +14,14 @@ laravel new my-app
 npm install
 ```
 
-### Step 3: Visit `webpack.elixir.js`
+### Step 3: Visit `webpack.mix.js`
 
 Think of this file as your home base for all front-end configuration.
 
 ```js
-Elixir.mix(function (mix) {
-    mix.js('resources/assets/js/app.js', 'public/js/app.js');
-    mix.sass('resources/assets/sass/app.scss', 'public/css/app.css');
+
+    mix.js('resources/assets/js/app.js', 'public/js');
+    mix.sass('resources/assets/sass/app.scss', 'public/css');
 });
 ```
 
@@ -33,6 +33,12 @@ Go ahead and compile these down.
 
 ```bash
 node_modules/.bin/webpack
+```
+
+Alternatively, if you have the NPM script within your `package.json`, you may do:
+
+```bash
+npm run webpack
 ```
 
 Once that finishes, you should now see:
@@ -59,14 +65,14 @@ Again, Laravel ships with a welcome page. We can use this for our demo. Update i
         <meta charset="utf-8">
         <title>Laravel</title>
 
-        {!! elixirAssets('css') !!}
+        {!! mix('css/app.css') !!}
     </head>
     <body>
         <div id="app">
             <example></example>
         </div>
         
-        {!! elixirAssets('js') !!}
+        {!! mix('css/app.js') !!}
     </body>
 </html>
 ```
