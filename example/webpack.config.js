@@ -168,7 +168,8 @@ module.exports.resolve = {
 module.exports.stats = {
     hash: false,
     version: false,
-    timings: false
+    timings: false,
+    children: false
 };
 
 module.exports.performance = { hints: Mix.inProduction };
