@@ -80,6 +80,7 @@ module.exports = class {
             file: outputSegments.base,
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,
             name: outputSegments.name,
+            isDir: ! outputSegments.ext,
             ext: outputSegments.ext
         };
     } 

@@ -15,15 +15,18 @@ module.exports.plugins = {
 /**
  * Register the Webpack entry/output paths.
  * 
- * @param {mixed}  entry  
+ * @param {mixed}  entry
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    Mix.js = {
-        entry: path.resolve(entry),
-        output: new Mix.File(output).parsePath(),
-        vendor: false
-    };
+    entry = new Mix.File(path.resolve(entry)).parsePath();
+    output = new Mix.File(output).parsePath();
+
+    if (output.isDir) {
+        output = new Mix.File(path.join(output.path, entry.file)).parsePath();
+    }
+
+    Mix.js = { entry, output, vendor: false };
 
     return this;
 };
@@ -45,18 +48,11 @@ module.exports.extract = (libs) => {
 /**
  * Register Sass compilation.
  * 
- * @param {string} src  
+ * @param {string} src
  * @param {string} output 
  */
 module.exports.sass = (src, output) => {
-    Mix.sass = {
-        src: path.resolve(src),
-        output: new Mix.File(output).parsePath()
-    };
-
-    Mix.cssPreprocessor = 'sass';
-
-    return this;
+    return module.exports.preprocess('sass', src, output);
 };
 
 
@@ -67,12 +63,30 @@ module.exports.sass = (src, output) => {
  * @param {string} output 
  */
 module.exports.less = (src, output) => {
-    Mix.less = {
-        src: path.resolve(src),
-        output: new Mix.File(output).parsePath()
-    };
+    return module.exports.preprocess('less', src, output);
+};
 
-    Mix.cssPreprocessor = 'less';
+
+/**
+ * Register a generic CSS preprocessor.
+ * 
+ * @param  {string} type   
+ * @param  {string} src    
+ * @param  {string} output 
+ */
+module.exports.preprocess = (type, src, output) => {
+    src = new Mix.File(path.resolve(src)).parsePath();
+    output = new Mix.File(output).parsePath();
+
+    if (output.isDir) {
+        output = new Mix.File(
+            path.join(output.path, src.name + '.css')
+        ).parsePath();
+    }
+
+    Mix[type] = { src, output };
+
+    Mix.cssPreprocessor = type;
 
     return this;
 };

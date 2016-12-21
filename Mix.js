@@ -42,10 +42,10 @@ module.exports = new class {
      */
     entry() {
         if (this.cssPreprocessor) {
-            return [this.js.entry, this[this.cssPreprocessor].src];
+            return [this.js.entry.path, this[this.cssPreprocessor].src.path];
         }
 
-        return this.js.entry;
+        return this.js.entry.path;
     }
 
 
