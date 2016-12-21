@@ -2,7 +2,7 @@
   "name": "laravel-mix",
   "version": "0.1.0",
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "webpack": "webpack --progress --hide-modules",
     "dev": "webpack --watch --progress --hide-modules",
