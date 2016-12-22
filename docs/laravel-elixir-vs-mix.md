@@ -1,6 +1,6 @@
 # How is Laravel Mix different from Laravel Mix?
 
-You may be aware that a tool called Laravel Mix has existed for some time now \(also built by us\). Laravel Mix is the evolution of that tool. Though its entry point API is almost identical, there are a handful of key differences to be aware of, if you're switching over.
+You may be aware that a tool called Laravel Elixir has existed for some time now \(also built by us\). Laravel Mix is the evolution of that tool. Though its entry point API is almost identical, there are a handful of key differences to be aware of, if you're switching over.
 
 #### 1. Laravel Mix is built on top of Webpack, not Gulp.
 
