@@ -30,7 +30,7 @@ The key to making hot reloading work within a Laravel application is ensuring th
 
 And this would work. Give it a try. Assuming you have some demo components to work with, try changing the state in the browser, and then modifying the component's template. You should see your browser instantly refresh to reflect the change, without losing your state.
 
-However, it can be a burden to manually change this URL for production deploys. As such, Laravel offers a useful `mixAssets()` function, which will build up your script or stylesheet imports dynamically, and echo them out. As such, the code snippet above may be changed to:
+However, it can be a burden to manually change this URL for production deploys. As such, Laravel offers a useful `mix()` function, which will build up your script or stylesheet imports dynamically, and echo them out. As such, the code snippet above may be changed to:
 
 ```html
 <body>
