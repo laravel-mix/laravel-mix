@@ -26,7 +26,7 @@ module.exports.js = (entry, output) => {
         output = new Mix.File(path.join(output.path, entry.file)).parsePath();
     }
 
-    Mix.js = { entry, output, vendor: false };
+    Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
 
     return this;
 };

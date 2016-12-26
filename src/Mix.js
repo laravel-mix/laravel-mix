@@ -41,11 +41,24 @@ module.exports = new class {
      * Determine the Webpack entry file(s).
      */
     entry() {
-        if (this.cssPreprocessor) {
-            return [this.js.entry.path, this[this.cssPreprocessor].src.path];
-        }
+        let entry = {};
 
-        return this.js.entry.path;
+        this.js.forEach((js, index) => {
+            let name = js.entry.name;
+
+            // If the user has requested CSS preprocessing, 
+            // we'll extract it into the first entry point.
+            if (this.cssPreprocessor && index === 0) {
+                return entry[name] = [
+                    js.entry.path, 
+                    this[this.cssPreprocessor].src.path
+                ];
+            } 
+            
+            entry[name] = js.entry.path
+        });
+
+        return entry;
     }
 
 
@@ -55,15 +68,15 @@ module.exports = new class {
     output() {
         let filename;
 
-        if (this.js.vendor) {
+        if (this.js.vendor || this.js.length > 1) {
             filename = this.versioning.enabled ? '[name].[hash].js' : '[name].js';
         } else {
-            filename = this.versioning.enabled ? this.js.output.hashedFile : this.js.output.file;
+            filename = this.versioning.enabled ? this.js[0].output.hashedFile  : this.js[0].output.file;
         }
 
         return {
             path: this.hmr ? '/' : this.publicPath,
-            filename: path.join(this.js.output.base, filename).replace(this.publicPath, ''),
+            filename: path.join(this.js[0].output.base, filename).replace(this.publicPath, ''),
             publicPath: this.hmr ? 'http://localhost:8080/' : './'
         };
     }

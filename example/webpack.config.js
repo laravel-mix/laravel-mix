@@ -31,7 +31,7 @@ Mix.finalize();
  |
  */
 
-module.exports.entry = { app: Mix.entry() };
+module.exports.entry = Mix.entry();
 
 if (Mix.js.vendor) {
     module.exports.entry.vendor = Mix.js.vendor;
