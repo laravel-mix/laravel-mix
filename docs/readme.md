@@ -4,7 +4,7 @@
 * [Basic Example](basic-example.md)
 * [Installation](installation.md)
 * [Laravel Workflow](workflow.md)
-* [Laravel Mix vs. Laravel Mix](laravel-mix-vs-mix.md)
+* [Laravel Mix vs. Laravel Elixir](laravel-elixir-vs-mix.md)
 * [FAQ](faq.md)
 
 ## API
