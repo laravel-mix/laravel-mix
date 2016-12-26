@@ -75,6 +75,13 @@ module.exports.less = (src, output) => {
  * @param  {string} output 
  */
 module.exports.preprocess = (type, src, output) => {
+    if (Mix[type]) {
+        throw new Error(
+            `Laravel Mix Error: It looks like you've called "mix.${type}()" multiple times. 
+            Please limit your usage to one call alone.`
+        );
+    }
+
     src = new Mix.File(path.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
 
