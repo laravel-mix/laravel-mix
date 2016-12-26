@@ -45,14 +45,14 @@ module.exports = new class {
 
         this.js.forEach((js, index) => {
             entry[js.output.name] = js.entry.map(src => src.path);
-
-            
         });
 
         // If the user has requested CSS preprocessing, 
         // we'll extract it into the first entry point.
         if (this.cssPreprocessor) {
-            entry[Object.keys(entry)[0]].push(this[this.cssPreprocessor].src.path)
+            entry[Object.keys(entry)[0]].push(
+                this[this.cssPreprocessor].src.path
+            )
         }
 
         return entry;
