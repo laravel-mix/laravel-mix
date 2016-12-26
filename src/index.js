@@ -19,11 +19,14 @@ module.exports.plugins = {
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    entry = new Mix.File(path.resolve(entry)).parsePath();
+    entry = (Array.isArray(entry) ? entry : [entry]).map(file => {
+        return new Mix.File(path.resolve(file)).parsePath();
+    });
+
     output = new Mix.File(output).parsePath();
 
     if (output.isDir) {
-        output = new Mix.File(path.join(output.path, entry.file)).parsePath();
+        output = new Mix.File(path.join(output.path, entry[0].file)).parsePath();
     }
 
     Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
