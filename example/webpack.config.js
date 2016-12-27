@@ -73,9 +73,9 @@ module.exports.module = {
             options: {
                 loaders: {
                     js: 'babel-loader' + Mix.babelConfig()
-                  },
+                },
                   
-                  postcss: [
+                postcss: [
                     require('autoprefixer')
                 ]
             }
