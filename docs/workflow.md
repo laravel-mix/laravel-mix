@@ -65,14 +65,14 @@ Again, Laravel ships with a welcome page. We can use this for our demo. Update i
         <meta charset="utf-8">
         <title>Laravel</title>
 
-        {!! mix('css/app.css') !!}
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     </head>
     <body>
         <div id="app">
             <example></example>
         </div>
         
-        {!! mix('css/app.js') !!}
+        <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>
 ```
