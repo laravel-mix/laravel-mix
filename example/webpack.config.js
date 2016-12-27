@@ -171,7 +171,7 @@ module.exports.stats = {
     children: false
 };
 
-module.exports.performance = { hints: Mix.inProduction };
+module.exports.performance = { hints: false};
 
 
 
