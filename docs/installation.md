@@ -55,12 +55,12 @@ Laravel 5.4 ships with everything you need to get started. Simply:
 As a tip, consider adding the following NPM scripts to your `package.json` file, to speed up your workflow. Laravel installs will already include this.
 
 ```js
-"scripts": {
-  "webpack": "webpack --progress --hide-modules",
-  "dev": "webpack --watch --progress --hide-modules",
-  "hmr": "webpack-dev-server --inline --hot",
-  "production": "cross-env NODE_ENV=production && webpack --progress --hide-modules"
-}
+  "scripts": {
+    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
+    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  }
 ```
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.

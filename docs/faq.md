@@ -15,12 +15,12 @@ export NODE_ENV=production && webpack --progress --hide-modules
 It's highly recommended that you add the following NPM scripts to your `package.json` file.
 
 ```js
-"scripts": {
-  "webpack": "webpack --progress --hide-modules",
-  "dev": "webpack --watch --progress --hide-modules",
-  "hmr": "webpack-dev-server --inline --hot",
-  "production": "cross-env NODE_ENV=production && webpack --progress --hide-modules"
-}
+  "scripts": {
+    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
+    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
 ```
 
 
