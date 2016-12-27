@@ -23,7 +23,7 @@ As an example, try running`webpack --watch`, and then change a bit of your JavaS
 
 ### Importing Versioned Files
 
-This all begs the question: how exactly do we include these versioned scripts and stylesheets into your HTML, if the names keep changing? Yes, that can be tricky. The answer will be dependent upon the type of application you're building. For SPAs, you may dynamically read mix's generated mix.json file, extract the asset file names \(these will be updated for each compile to reflect the new versioned file\), and then generate your HTML.
+This all begs the question: how exactly do we include these versioned scripts and stylesheets into your HTML, if the names keep changing? Yes, that can be tricky. The answer will be dependent upon the type of application you're building. For SPAs, you may dynamically read Laravel Mix's generated `manifest.json` file, extract the asset file names \(these will be updated for each compile to reflect the new versioned file\), and then generate your HTML.
 
 #### Laravel Users
 
@@ -35,17 +35,17 @@ For Laravel projects, a solution is provided out of the box. Simply call the glo
     <head>
         <meta charset="utf-8">
         <title>App</title>
-        {!! mix('css/app.css') !!}
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     </head>
     <body>
         <div id="app">
             <h1>Hello World</h1>
         </div>
 
-        {!! mix('js/app.js') !!}
+        <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>
 ```
 
-Pass the unhashed file path to the `mix()` function, and, behind the scenes, we'll figure out which scripts or stylesheets should be imported. Even if you're extracting vendor libraries \(with `mix.extract()`\), this function will correctly return all necessary imports. Please note that you may use this function, even if you're not versioning your files.
+Pass the unhashed file path to the `mix()` function, and, behind the scenes, we'll figure out which script or stylesheet should be imported. Please note that you may/should use this function, even if you're not versioning your files.
 
