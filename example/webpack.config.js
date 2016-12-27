@@ -257,7 +257,7 @@ if (Mix.versioning.enabled) {
     Mix.versioning.record();
 
     module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(stats => {
+        new plugins.WebpackOnBuildPlugin(() => {
             Mix.versioning.prune(Mix.publicPath);
         })
     );
@@ -266,7 +266,7 @@ if (Mix.versioning.enabled) {
 
 if (Mix.combine || Mix.minify) {
     module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(stats => {
+        new plugins.WebpackOnBuildPlugin(() => {
             Mix.concatenateAll().minifyAll();
         })
     );

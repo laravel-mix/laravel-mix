@@ -63,7 +63,7 @@ class File {
      * Delete/Unlink the current file.
      */
     delete() {
-       if (fs.existsSync(this.file)) {
+        if (fs.existsSync(this.file)) {
             fs.unlinkSync(this.file);
         }     
     }
@@ -86,6 +86,6 @@ class File {
             ext: outputSegments.ext
         };
     } 
-};
+}
 
 module.exports = File;

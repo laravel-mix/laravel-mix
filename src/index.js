@@ -9,7 +9,7 @@ module.exports.plugins = {
     WebpackOnBuildPlugin: require('on-build-webpack'),
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
     CopyWebpackPlugin: require('copy-webpack-plugin')
-}
+};
 
 
 /**
@@ -51,7 +51,7 @@ module.exports.extract = (libs) => {
     Mix.js.vendor = libs;
 
     return this;
-}
+};
 
 
 /**
