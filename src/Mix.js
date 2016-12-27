@@ -41,13 +41,13 @@ module.exports = new class {
      * Determine the Webpack entry file(s).
      */
     entry() {
-        let entry = {};
+        let entry = this.js.reduce((result, paths) => {
+            result[paths.output.name] = paths.entry.map(src => src.path);
 
-        this.js.forEach((js, index) => {
-            entry[js.output.name] = js.entry.map(src => src.path);
-        });
+            return result;
+        }, {});
 
-        // If the user has requested CSS preprocessing, 
+        // If the user has requested CSS preprocessing,
         // we'll extract it into the first entry point.
         if (this.cssPreprocessor) {
             entry[Object.keys(entry)[0]].push(
