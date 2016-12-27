@@ -18,6 +18,6 @@
 * [Concatenation and Minification](concatenation-and-minification.md)
 
 ## Advanced Configuration
-* [mix Helpers](mix-helpers.md)
+* [Laravel Mix Helpers](mix-helpers.md)
 * [The Webpack Configuration File](the-webpack-configuration-file.md)
 
