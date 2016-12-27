@@ -4,10 +4,10 @@
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
-    "webpack": "webpack --progress --hide-modules",
-    "dev": "webpack --watch --progress --hide-modules",
-    "hmr": "webpack-dev-server --inline --hot",
-    "production": "cross-env NODE_ENV=production && webpack --progress --hide-modules"
+    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
+    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "postcss": {
     "plugins": {
