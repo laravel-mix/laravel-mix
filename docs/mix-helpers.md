@@ -1,4 +1,4 @@
-# mix Helpers
+# Laravel Mix Helpers
 
 Though you likely won't need to reference many of these helpers directly, they, nonetheless, are available to you, should you wish to manually configure/modify the provided `webpack.config.js` file.
 
@@ -63,6 +63,7 @@ let segments = new mix.File('file.js').parsePath();
 ```
 
 This method will parse the provided file into segments. The returned object will contain details of each segment of the path, including the extension, the base directory, the file name, and more.
+
 #### file.minify\(\)
 
 ```js
