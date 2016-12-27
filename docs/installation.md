@@ -20,7 +20,7 @@ You should now have the following directory structure:
 * webpack.config.js
 * webpack.mix.js
 
-mix consists of two core components:
+Laravel Mix consists of two core components:
 
 * **webpack.mix.js: **This is your configuration layer on top of Webpack. Most of your time will be spent here.
 * **webpack.config.js: **This is the traditional Webpack configuration file. Only advanced users need to visit this file.
@@ -42,15 +42,8 @@ Take note of the source paths, and create the directory structure to match \(or,
 
 Nice job! Now get to work on that project.
 
-### Laravel Project
 
-Laravel 5.4 ships with everything you need to get started. Simply:
-
-* Install Laravel
-* Run `npm install` 
-* Visit your `webpack.mix.js file`, and get started!
-
-## NPM Scripts
+#### NPM Scripts
 
 As a tip, consider adding the following NPM scripts to your `package.json` file, to speed up your workflow. Laravel installs will already include this.
 
@@ -62,6 +55,14 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   }
 ```
+
+### Laravel Project
+
+Laravel 5.4 ships with everything you need to get started. Simply:
+
+* Install Laravel
+* Run `npm install` 
+* Visit your `webpack.mix.js file`, and get started!
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
 
