@@ -52,7 +52,7 @@ module.exports = new class {
         if (this.cssPreprocessor) {
             entry[Object.keys(entry)[0]].push(
                 this[this.cssPreprocessor].src.path
-            )
+            );
         }
 
         return entry;
@@ -156,9 +156,9 @@ module.exports = new class {
         // the babel-loader will automatically fetch it.
         // Otherwise, we'll use these defaults.
         return this.File.exists(file) ? '' : '?' + JSON.stringify({
-            "cacheDirectory": true,
-            "presets": [
-                ["es2015", { "modules": false }]
+            'cacheDirectory': true,
+            'presets': [
+                ['es2015', { 'modules': false }]
             ]
         });
     }
