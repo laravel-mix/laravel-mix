@@ -3,7 +3,7 @@ let path = require('path');
 let uglify = require('uglify-js');
 let UglifyCss = require('clean-css');
 
-module.exports = class {
+class File {
     /**
      * Create a new File instance.
      * 
@@ -43,7 +43,9 @@ module.exports = class {
      * Read the file.
      */
     read() {
-        return fs.readFileSync(this.file, { encoding: 'utf-8' });
+        return fs.readFileSync(this.file, { 
+            encoding: 'utf-8' 
+        });
     }
 
 
@@ -85,3 +87,5 @@ module.exports = class {
         };
     } 
 };
+
+module.exports = File;

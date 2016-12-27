@@ -1,6 +1,6 @@
 let File = require('./File');
 
-module.exports = class {
+class Manifest {
     /**
      * Create a new Manifest instance.
      * 
@@ -49,3 +49,5 @@ module.exports = class {
         new File(file).delete();
     }
 }
+
+module.exports = Manifest;

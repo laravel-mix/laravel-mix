@@ -66,12 +66,11 @@ class Versioning {
         this.files.forEach(file => {
             // If the updated file is exactly the same as the old
             // one, then nothing has changed. Don't delete it.
-            if (! updated.files.includes(file)) {
-                this.manifest.remove(path.join(baseDir, file));
-            }
+            if (updated.files.includes(file)) return;
+
+            this.manifest.remove(path.join(baseDir, file));
         });
 
-        // Lastly, we'll replace the versioned file list with the new one.
         this.files = updated.files;
 
         return this;

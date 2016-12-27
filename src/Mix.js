@@ -9,12 +9,12 @@ module.exports = new class {
      * Create a new Laravel Mix instance. 
      */
     constructor() {
-        this.inProduction = process.env.NODE_ENV === 'production';
         this.File = File;
         this.hmr = false;
         this.sourcemaps = false;
-        this.cssPreprocessor = false;
         this.notifications = true;
+        this.cssPreprocessor = false;
+        this.inProduction = process.env.NODE_ENV === 'production';
         
         this.publicPath = this.isUsingLaravel() ? 'public' : './';
         this.cachePath = this.isUsingLaravel() ? 'storage/framework/cache' : './';
@@ -68,7 +68,7 @@ module.exports = new class {
         if (this.js.vendor || this.js.length > 1) {
             filename = this.versioning.enabled ? '[name].[hash].js' : '[name].js';
         } else {
-            filename = this.versioning.enabled ? this.js[0].output.hashedFile  : this.js[0].output.file;
+            filename = this.js[0].output[this.versioning.enabled ? 'hashedFile' : 'file'];
         }
 
         return {
@@ -76,6 +76,16 @@ module.exports = new class {
             filename: path.join(this.js[0].output.base, filename).replace(this.publicPath, ''),
             publicPath: this.hmr ? 'http://localhost:8080/' : './'
         };
+    }
+
+
+    /**
+     * Determine the appropriate CSS output path.
+     */
+    cssOutput() {
+        return this[this.cssPreprocessor].output[
+            this.versioning.enabled ? 'hashedPath' : 'path'
+        ].replace(/\.?\/?public/, '');
     }
     
 

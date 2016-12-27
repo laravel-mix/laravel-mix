@@ -26,10 +26,16 @@ module.exports.js = (entry, output) => {
     output = new Mix.File(output).parsePath();
 
     if (output.isDir) {
-        output = new Mix.File(path.join(output.path, entry[0].file)).parsePath();
+        output = new Mix.File(
+            path.join(output.path, entry[0].file)
+        ).parsePath();
     }
 
-    Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
+    Mix.js = (Mix.js || []).concat({ 
+        entry, 
+        output, 
+        vendor: false 
+    });
 
     return this;
 };
@@ -80,8 +86,7 @@ module.exports.less = (src, output) => {
 module.exports.preprocess = (type, src, output) => {
     if (Mix[type]) {
         throw new Error(
-            `Laravel Mix Error: It looks like you've called "mix.${type}()" multiple times. 
-            Please limit your usage to one call alone.`
+            `Laravel Mix: Limit your "mix.${type}()" calls to one.`
         );
     }
 
