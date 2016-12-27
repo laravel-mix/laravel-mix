@@ -72,11 +72,7 @@ module.exports.module = {
             loader: 'vue-loader',
             options: {
                 loaders: {
-                    js: 'babel-loader' + Mix.babelConfig(),
-                    css: Mix.cssPreprocessor ? plugins.ExtractTextPlugin.extract({
-                        loader: 'css-loader',
-                        fallbackLoader: 'vue-style-loader'
-                    }) : 'style-loader!css-loader'
+                    js: 'babel-loader' + Mix.babelConfig()
                   },
                   
                   postcss: [
