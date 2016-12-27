@@ -32,7 +32,7 @@ mix.js([
 
 
 // 3. For multiple entry/output points:
-mix.js('src/app.js', 'dist/'))
+mix.js('src/app.js', 'dist/')
    .js('src/forum.js', 'dist/');
 ```
 
