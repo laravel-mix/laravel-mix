@@ -5,7 +5,7 @@ class Versioning {
     /**
      * Create a new Versioning instance.
      *
-     * @param {object} manifest
+     * @param {object} Manifest
      */
     constructor(manifest) {
         this.enabled = false;
