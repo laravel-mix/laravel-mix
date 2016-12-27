@@ -148,7 +148,7 @@ if (Mix.less) {
  */
 
 module.exports.resolve = {
-    extensions: ['', '.js', '.jsx', '.vue'],
+    extensions: ['*', '.js', '.jsx', '.vue'],
 
     alias: {
         'vue$': 'vue/dist/vue.common.js'
