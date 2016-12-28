@@ -28,6 +28,10 @@ module.exports = new class {
      * Finalize the user's webpack.mix.js configuration file.
      */
     finalize() {
+        // We'll first load the user's webpack.mix.js file,
+        // and apply its settings.
+        require(this.configPath());
+
         // Since the user might wish to override the default cache 
         // path, we'll update these here with the latest values.
         this.manifest.path = this.cachePath + '/Mix.json';
@@ -162,6 +166,22 @@ module.exports = new class {
             ]
         });
     }
+
+
+    /**
+     * Determine the appropriate project root.
+     */
+    contextPath() {
+        return path.resolve(__dirname, '../../../');
+    }
+    
+
+    /**
+     * Determine the path to the user's webpack.mix.js file.
+     */
+    configPath() {
+        return path.resolve(__dirname, '../../../webpack.mix');
+    }    
 
 
     /**

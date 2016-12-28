@@ -15,9 +15,21 @@ var plugins = require('laravel-mix').plugins;
  |
  */
 
-require('./webpack.mix');
-
 Mix.finalize();
+
+
+/*
+ |--------------------------------------------------------------------------
+ | Webpack Context
+ |--------------------------------------------------------------------------
+ |
+ | This prop will determine the appropriate context, when running Webpack.
+ | Since you have the option of publishing this webpack.config.js file
+ | to your project root, we will dynamically set the path for you.
+ |
+ */
+
+module.exports.context = Mix.contextPath();
 
 
 /*
@@ -25,9 +37,9 @@ Mix.finalize();
  | Webpack Entry
  |--------------------------------------------------------------------------
  |
- | We'll first specify the entry point for Webpack. By default, we
+ | We'll first specify the entry point for Webpack. By default, we'll
  | assume a single bundled file, but you may call Mix.extract()
- | to make a bundle specifically for your vendor libraries.
+ | to make a separate bundle specifically for vendor libraries.
  |
  */
 
@@ -45,8 +57,8 @@ if (Mix.js.vendor) {
  |--------------------------------------------------------------------------
  |
  | Webpack naturally requires us to specify our desired output path and
- | file name. We'll simply echo what you passed to us with Mix.js().
- | Note that, for Mix.version(), we will add a hash to the file.
+ | file name. We'll simply echo what you passed to with Mix.js().
+ | Note that, for Mix.version(), we'll properly hash the file.
  |
  */
 
