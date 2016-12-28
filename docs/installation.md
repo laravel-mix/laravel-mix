@@ -10,7 +10,7 @@ Begin by installing Laravel Mix through NPM or Yarn, and then copying the exampl
 mkdir my-app && cd my-app
 npm init -y
 npm install laravel-mix --save-dev
-cp -r node_modules/laravel-mix/example/** ./
+cp -r node_modules/laravel-mix/setup/** ./
 ```
 
 You should now have the following directory structure:
