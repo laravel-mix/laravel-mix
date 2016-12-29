@@ -26,3 +26,4 @@ mix.js('src/app.js', 'dist/')
 // mix.version(); // Enable versioning.
 // mix.disableNotifications();
 // mix.setCachePath('some/folder');
+// mix.setPublicPath('path/to/public'); <-- Useful for Node apps.

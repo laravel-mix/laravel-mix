@@ -111,7 +111,7 @@ module.exports.module = {
             test: /\.(woff2?|ttf|eot|svg)$/,
             loader: 'file-loader',
             options: {
-                name: path.parse(Mix.cssOutput()).dir + '/fonts/[name].[ext]?[hash]'
+                name: '/fonts/[name].[ext]?[hash]'
             }
         }
     ]

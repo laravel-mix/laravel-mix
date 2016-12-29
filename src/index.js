@@ -179,6 +179,18 @@ module.exports.disableNotifications = () => {
 
 
 /**
+ * Set the path to your public folder.
+ *
+ * @param {string} path
+ */
+module.exports.setPublicPath = (path) => {
+    Mix.publicPath = path;
+
+    return this;
+};
+
+
+/**
  * Set the temporary cache directory.
  *
  * @param {string} path
