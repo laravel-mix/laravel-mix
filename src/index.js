@@ -183,7 +183,7 @@ module.exports.disableNotifications = () => {
  *
  * @param {string} path
  */
-module.exports.setCacheDirectory = (path) => {
+module.exports.setCachePath = (path) => {
     Mix.cachePath = path;
 
     return this;

@@ -25,4 +25,4 @@ mix.js('src/app.js', 'dist/')
 // mix.sourceMaps(); // Enable sourcemaps
 // mix.version(); // Enable versioning.
 // mix.disableNotifications();
-// mix.setCacheDirectory('some/folder');
+// mix.setCachePath('some/folder');
