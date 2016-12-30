@@ -15,15 +15,15 @@ cp -r node_modules/laravel-mix/setup/** ./
 
 You should now have the following directory structure:
 
-* node\_modules/
-* package.json
-* webpack.config.js
-* webpack.mix.js
+* `node_modules/`
+* `package.json`
+* `webpack.config.js`
+* `webpack.mix.js`
 
 Laravel Mix consists of two core components:
 
-* **webpack.mix.js: **This is your configuration layer on top of Webpack. Most of your time will be spent here.
-* **webpack.config.js: **This is the traditional Webpack configuration file. Only advanced users need to visit this file.
+* **webpack.mix.js:** This is your configuration layer on top of Webpack. Most of your time will be spent here.
+* **webpack.config.js:** This is the traditional Webpack configuration file. Only advanced users need to visit this file.
 
 Head over to your webpack.mix.js file:
 
@@ -36,12 +36,11 @@ mix.js('src/app.js', 'dist')
 
 Take note of the source paths, and create the directory structure to match \(or, of course, change them to your preferred structure\). You're all set now. Compile everything down by running `node_modules/.bin/webpack` from the command line. You should now see:
 
-* dist/app.css
-* dist/app.js
-* dist/mix.json \(Your asset dump file, which we'll discuss later\).
+* `dist/app.css`
+* `dist/app.js`
+* `dist/mix.json` (Your asset dump file, which we'll discuss later.)
 
 Nice job! Now get to work on that project.
-
 
 #### NPM Scripts
 
@@ -66,3 +65,4 @@ Laravel 5.4 ships with everything you need to get started. Simply:
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
 
+> Note: You won't find a `webpack.config.js` file in your project root. By default, Laravel defers to the config file from this repo. However, should you need to configure it, you may copy the file to your project root, and then update your `package.json` NPM scripts accordingly: `cp node_modules/laravel-mix/setup/webpack.config.js ./`.
