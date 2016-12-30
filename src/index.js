@@ -14,7 +14,7 @@ module.exports.plugins = {
 
 /**
  * Register the Webpack entry/output paths.
- * 
+ *
  * @param {mixed}  entry
  * @param {string} output
  */
@@ -40,8 +40,8 @@ module.exports.js = (entry, output) => {
 /**
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
- * 
- * @param {array} libs 
+ *
+ * @param {array} libs
  */
 module.exports.extract = (libs) => {
     Mix.js.vendor = libs;
@@ -52,9 +52,9 @@ module.exports.extract = (libs) => {
 
 /**
  * Register Sass compilation.
- * 
+ *
  * @param {string} src
- * @param {string} output 
+ * @param {string} output
  */
 module.exports.sass = (src, output) => {
     return module.exports.preprocess('sass', src, output);
@@ -63,9 +63,9 @@ module.exports.sass = (src, output) => {
 
 /**
  * Register Less compilation.
- * 
- * @param {string} src  
- * @param {string} output 
+ *
+ * @param {string} src
+ * @param {string} output
  */
 module.exports.less = (src, output) => {
     return module.exports.preprocess('less', src, output);
@@ -74,10 +74,10 @@ module.exports.less = (src, output) => {
 
 /**
  * Register a generic CSS preprocessor.
- * 
+ *
  * @param {string} type
- * @param {string} src    
- * @param {string} output 
+ * @param {string} src
+ * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
     if (Mix[type]) {
@@ -105,9 +105,9 @@ module.exports.preprocess = (type, src, output) => {
 
 /**
  * Combine a collection of files.
- * 
- * @param {string|array} src  
- * @param {string}       output 
+ *
+ * @param {string|array} src
+ * @param {string}       output
  */
 module.exports.combine = (src, output) => {
     Mix.combine = (Mix.combine || []).concat({ src, output });
@@ -118,13 +118,13 @@ module.exports.combine = (src, output) => {
 
 /**
  * Copy one or more files to a new location.
- * 
+ *
  * @param {string} from
  * @param {string} to
  */
 module.exports.copy = (from, to) => {
-    Mix.copy = (Mix.copy || []).concat({ 
-        from, 
+    Mix.copy = (Mix.copy || []).concat({
+        from,
         to: path.resolve(__dirname, '../../', to)
     });
 
@@ -134,8 +134,8 @@ module.exports.copy = (from, to) => {
 
 /**
  * Minify the provided file.
- * 
- * @param {string|array} src  
+ *
+ * @param {string|array} src
  */
 module.exports.minify = (src) => {
     Mix.minify = (Mix.minify || []).concat(src);

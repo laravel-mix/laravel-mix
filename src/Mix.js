@@ -6,7 +6,7 @@ let concatenate = require('concatenate');
 
 module.exports = new class {
     /**
-     * Create a new Laravel Mix instance. 
+     * Create a new Laravel Mix instance.
      */
     constructor() {
         this.File = File;
@@ -15,10 +15,10 @@ module.exports = new class {
         this.notifications = true;
         this.cssPreprocessor = false;
         this.inProduction = process.env.NODE_ENV === 'production';
-        
+
         this.publicPath = this.isUsingLaravel() ? 'public' : './';
         this.cachePath = this.isUsingLaravel() ? 'storage/framework/cache' : './';
-        
+
         this.manifest = new Manifest(this.cachePath + '/Mix.json');
         this.versioning = new Versioning(this.manifest);
     }
@@ -32,13 +32,13 @@ module.exports = new class {
         // and apply its settings.
         require(this.configPath());
 
-        // Since the user might wish to override the default cache 
+        // Since the user might wish to override the default cache
         // path, we'll update these here with the latest values.
         this.manifest.path = this.cachePath + '/Mix.json';
         this.versioning.manifest = this.manifest;
 
         this.detectHotReloading();
-    }    
+    }
 
 
     /**
@@ -93,12 +93,12 @@ module.exports = new class {
             this.versioning.enabled ? 'hashedPath' : 'path'
         ].replace(regex, '');
     }
-    
+
 
     /**
      * Minify the given files, or those from Mix.minify().
-     * 
-     * @param {array|null} files 
+     *
+     * @param {array|null} files
      */
     minifyAll(files = null) {
         if (! this.inProduction) return;
@@ -110,11 +110,11 @@ module.exports = new class {
         return this;
     }
 
-    
+
     /**
      * Combine the given files, or those from Mix.combine().
-     * 
-     * @param {array|null} files 
+     *
+     * @param {array|null} files
      */
     concatenateAll(files = null) {
         files = files || this.combine || [];
@@ -139,7 +139,7 @@ module.exports = new class {
 
         file.delete();
 
-        // If the user wants hot module replacement, we'll create 
+        // If the user wants hot module replacement, we'll create
         // a temporary file, so that Laravel can detect it, and
         // reference the proper base URL for any assets.
         if (process.argv.includes('--hot')) {
@@ -156,7 +156,7 @@ module.exports = new class {
     babelConfig() {
         let file = this.root('.babelrc');
 
-        // If the user has defined their own .babelrc file, 
+        // If the user has defined their own .babelrc file,
         // the babel-loader will automatically fetch it.
         // Otherwise, we'll use these defaults.
         return this.File.exists(file) ? '' : '?' + JSON.stringify({
@@ -166,7 +166,7 @@ module.exports = new class {
             ]
         });
     }
-    
+
 
     /**
      * Determine the path to the user's webpack.mix.js file.
@@ -178,7 +178,7 @@ module.exports = new class {
 
     /**
      * Determine the project root.
-     * 
+     *
      * @param {string|null} append
      */
     root(append = '') {

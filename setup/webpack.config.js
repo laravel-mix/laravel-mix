@@ -86,7 +86,7 @@ module.exports.module = {
                 loaders: {
                     js: 'babel-loader' + Mix.babelConfig()
                 },
-                  
+
                 postcss: [
                     require('autoprefixer')
                 ]
@@ -124,7 +124,7 @@ if (Mix.sass) {
         loader: plugins.ExtractTextPlugin.extract({
             fallbackLoader: 'style-loader',
             loader: [
-                'css-loader', 'postcss-loader', 
+                'css-loader', 'postcss-loader',
                 'resolve-url-loader', 'sass-loader?sourceMap'
             ]
         })
@@ -170,7 +170,7 @@ module.exports.resolve = {
  | Stats
  |--------------------------------------------------------------------------
  |
- | By default, Webpack spits a lot of information out to the terminal, 
+ | By default, Webpack spits a lot of information out to the terminal,
  | each you time you compile. Let's keep things a bit more minimal
  | and hide a few of those bits and pieces. Adjust as you wish.
  |
@@ -224,7 +224,7 @@ module.exports.devServer = {
  | Plugins
  |--------------------------------------------------------------------------
  |
- | Lastly, we'll register a number of plugins to extend and configure 
+ | Lastly, we'll register a number of plugins to extend and configure
  | Webpack. To get you started, we've included a handful of useful
  | extensions, for versioning, OS notifications, and much more.
  |
@@ -244,7 +244,7 @@ module.exports.plugins.push(
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
-            postcss: [ 
+            postcss: [
                 require('autoprefixer')
             ],
             context: __dirname,
@@ -322,8 +322,8 @@ if (Mix.inProduction) {
 
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
-            compress: { 
-                warnings: false 
+            compress: {
+                warnings: false
             }
         })
     ]);

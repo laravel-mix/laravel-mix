@@ -3,8 +3,8 @@ let File = require('./File');
 class Manifest {
     /**
      * Create a new Manifest instance.
-     * 
-     * @param {string} path 
+     *
+     * @param {string} path
      */
     constructor(path) {
         this.path = path;
@@ -26,13 +26,13 @@ class Manifest {
         return JSON.parse(
             new File(this.path).read()
         ).assetsByChunkName;
-    }   
+    }
 
 
     /**
      * Write the updated stats to the manifest.
-     * 
-     * @param {object} stats 
+     *
+     * @param {object} stats
      */
     write(stats) {
         new File(this.path).write(
@@ -42,7 +42,7 @@ class Manifest {
 
     /**
      * Delete the given file from the manifest.
-     * 
+     *
      * @param {string} file
      */
     remove(file) {

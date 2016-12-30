@@ -55,8 +55,8 @@ class Versioning {
 
     /**
      * Replace all old hashed files with the new versions.
-     * 
-     * @param {string} baseDir 
+     *
+     * @param {string} baseDir
      */
     prune(baseDir) {
         let updated = new Versioning(this.manifest).enable().record();

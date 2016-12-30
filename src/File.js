@@ -6,7 +6,7 @@ let UglifyCss = require('clean-css');
 class File {
     /**
      * Create a new File instance.
-     * 
+     *
      * @param {string} file
      */
     constructor(file) {
@@ -45,15 +45,15 @@ class File {
      * Read the file.
      */
     read() {
-        return fs.readFileSync(this.file, { 
-            encoding: 'utf-8' 
+        return fs.readFileSync(this.file, {
+            encoding: 'utf-8'
         });
     }
 
 
     /**
      * Write the given contents to the file.
-     * 
+     *
      * @param {string} body
      */
     write(body) {
@@ -67,7 +67,7 @@ class File {
     delete() {
         if (fs.existsSync(this.file)) {
             fs.unlinkSync(this.file);
-        }     
+        }
     }
 
 
@@ -87,7 +87,7 @@ class File {
             isDir: ! outputSegments.ext,
             ext: outputSegments.ext
         };
-    } 
+    }
 }
 
 module.exports = File;
