@@ -8,9 +8,8 @@ The most significant change is our switch over to Webpack as a base, rather than
 
 #### 2. Your gulpfile.js will now be webpack.mix.js
 
-Because Laravel Mix is built upon Webpack, you won't find any `gulpfile.js`, when installing Laravel. Instead, you'll see two new files:
+Because Laravel Mix is built upon Webpack, you won't find any `gulpfile.js`, when installing Laravel. Instead, you'll see one file:
 
-- `webpack.config.js` - This is the standard Webpack config file that we've populated and included for you. Only advanced users will need/wish to edit this.
 - `webpack.mix.js` - This will be the equivalent of your old `gulpfile.js`. In fact, you'll find that the API is almost identical.
 
 #### 3. Webpack isn't a general task runner, like Gulp.
