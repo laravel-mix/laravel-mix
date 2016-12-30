@@ -7,7 +7,7 @@ class File {
     /**
      * Create a new File instance.
      * 
-     * @param  {string}  file
+     * @param {string} file
      */
     constructor(file) {
         this.file = file;
@@ -32,7 +32,9 @@ class File {
 
 
     /**
-     * Determine if the file exists.
+     * Determine if the given file exists.
+     *
+     * @param {string} file
      */
     static exists(file) {
         return fs.existsSync(file);

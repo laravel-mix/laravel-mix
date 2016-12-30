@@ -31,11 +31,7 @@ module.exports.js = (entry, output) => {
         ).parsePath();
     }
 
-    Mix.js = (Mix.js || []).concat({ 
-        entry, 
-        output, 
-        vendor: false 
-    });
+    Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
 
     return this;
 };
@@ -79,9 +75,9 @@ module.exports.less = (src, output) => {
 /**
  * Register a generic CSS preprocessor.
  * 
- * @param  {string} type   
- * @param  {string} src    
- * @param  {string} output 
+ * @param {string} type
+ * @param {string} src    
+ * @param {string} output 
  */
 module.exports.preprocess = (type, src, output) => {
     if (Mix[type]) {

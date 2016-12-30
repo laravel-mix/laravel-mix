@@ -98,7 +98,7 @@ module.exports = new class {
     /**
      * Minify the given files, or those from Mix.minify().
      * 
-     * @param array|null files 
+     * @param {array|null} files 
      */
     minifyAll(files = null) {
         if (! this.inProduction) return;
@@ -114,7 +114,7 @@ module.exports = new class {
     /**
      * Combine the given files, or those from Mix.combine().
      * 
-     * @param array|null files 
+     * @param {array|null} files 
      */
     concatenateAll(files = null) {
         files = files || this.combine || [];
@@ -152,8 +152,6 @@ module.exports = new class {
 
     /**
      * Fetch the appropriate Babel config for babel-loader.
-     * 
-     * @return {string}
      */
     babelConfig() {
         let file = path.resolve(__dirname, '../../.babelrc');
@@ -168,22 +166,24 @@ module.exports = new class {
             ]
         });
     }
-
-
-    /**
-     * Determine the appropriate project root.
-     */
-    contextPath() {
-        return path.resolve(__dirname, '../../../');
-    }
     
 
     /**
      * Determine the path to the user's webpack.mix.js file.
      */
     configPath() {
-        return path.resolve(__dirname, '../../../webpack.mix');
-    }    
+        return this.root('webpack.mix');
+    }
+
+
+    /**
+     * Determine the project root.
+     * 
+     * @param {string|null} append
+     */
+    root(append = '') {
+        return path.resolve(__dirname, '../../../', append);
+    }
 
 
     /**

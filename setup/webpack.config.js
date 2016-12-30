@@ -29,7 +29,7 @@ Mix.finalize();
  |
  */
 
-module.exports.context = Mix.contextPath();
+module.exports.context = Mix.root();
 
 
 /*
