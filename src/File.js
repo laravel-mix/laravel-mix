@@ -58,6 +58,8 @@ class File {
      */
     write(body) {
         fs.writeFileSync(this.file, body);
+
+        return this;
     }
 
 

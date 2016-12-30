@@ -7,7 +7,8 @@
     "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
     "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
     "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
-    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "test": "ava --verbose"
   },
   "keywords": [
     "laravel",
@@ -45,5 +46,8 @@
     "webpack": "^2.1.0-beta.27",
     "webpack-dev-server": "^2.1.0-beta.12",
     "webpack-notifier": "^1.4.1"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0"
   }
 }

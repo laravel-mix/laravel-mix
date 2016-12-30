@@ -198,5 +198,18 @@ module.exports.setCachePath = (path) => {
 };
 
 
+/**
+ * Reset all configuration to their defaults.
+ */
+module.exports.reset = () => {
+    [
+        'js', 'cssPreprocessor', 'sass',
+        'less', 'sourceMaps'
+    ].forEach(prop => Mix[prop] = null);
+
+    return this;
+};
+
+
 module.exports.config = Mix;
 module.exports.mix = module.exports;
