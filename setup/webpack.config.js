@@ -233,17 +233,6 @@ module.exports.devServer = {
 module.exports.plugins = [];
 
 
-if (Mix.notifications) {
-    module.exports.plugins.push(
-        new plugins.WebpackNotifierPlugin({
-            title: 'Laravel Mix',
-            alwaysNotify: true,
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
-        })
-    );
-}
-
-
 module.exports.plugins.push(
     function() {
         this.plugin('done', stats => Mix.manifest.write(stats));
@@ -263,6 +252,17 @@ module.exports.plugins.push(
         }
     })
 );
+
+
+if (Mix.notifications) {
+    module.exports.plugins.push(
+        new plugins.WebpackNotifierPlugin({
+            title: 'Laravel Mix',
+            alwaysNotify: true,
+            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+        })
+    );
+}
 
 
 if (Mix.versioning.enabled) {
