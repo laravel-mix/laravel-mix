@@ -87,7 +87,7 @@ module.exports = new class {
      * Determine the appropriate CSS output path.
      */
     cssOutput() {
-        let regex = new RegExp('.?/?' + this.publicPath);
+        let regex = new RegExp('^(\.\/)?' + this.publicPath);
 
         return this[this.cssPreprocessor].output[
             this.versioning.enabled ? 'hashedPath' : 'path'
