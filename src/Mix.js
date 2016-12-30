@@ -154,7 +154,7 @@ module.exports = new class {
      * Fetch the appropriate Babel config for babel-loader.
      */
     babelConfig() {
-        let file = path.resolve(__dirname, '../../.babelrc');
+        let file = this.root('.babelrc');
 
         // If the user has defined their own .babelrc file, 
         // the babel-loader will automatically fetch it.
