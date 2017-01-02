@@ -1,5 +1,6 @@
 let path = require('path');
 let File = require('./File');
+let lodash = require('lodash');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
@@ -25,11 +26,10 @@ module.exports = new class {
 
 
     /**
-     * Finalize the user's webpack.mix.js configuration file.
+     * Initialize the user's webpack.mix.js configuration file.
      */
-    finalize() {
-        // We'll first load the user's webpack.mix.js file,
-        // and apply its settings.
+    initialize() {
+        // We'll first load the user's webpack.mix.js file.
         require(this.configPath());
 
         // Since the user might wish to override the default cache
@@ -38,6 +38,22 @@ module.exports = new class {
         this.versioning.manifest = this.manifest;
 
         this.detectHotReloading();
+    }
+
+
+    /**
+     * Finalize the Webpack configuration.
+     *
+     * @param {object} webpackConfig
+     */
+    finalize(webpackConfig) {
+        if (this.webpackConfig) {
+            lodash.mergeWith(webpackConfig, this.webpackConfig, (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            });
+        }
     }
 
 

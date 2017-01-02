@@ -199,6 +199,18 @@ module.exports.setCachePath = (path) => {
 
 
 /**
+ * Merge custom config with the provided webpack.config file.
+ *
+ * @param {object} config
+ */
+module.exports.webpackConfig = (config) => {
+    Mix.webpackConfig = config;
+
+    return this;
+}
+
+
+/**
  * Reset all configuration to their defaults.
  */
 module.exports.reset = () => {

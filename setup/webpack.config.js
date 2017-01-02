@@ -15,7 +15,7 @@ var plugins = require('laravel-mix').plugins;
  |
  */
 
-Mix.finalize();
+Mix.initialize();
 
 
 /*
@@ -328,3 +328,16 @@ if (Mix.inProduction) {
         })
     ]);
 }
+
+
+/*
+ |--------------------------------------------------------------------------
+ | Mix Finalizing
+ |--------------------------------------------------------------------------
+ |
+ | Now that we've declared the entirety of our Webpack configuration, the
+ | final step is to scan for any custom configuration in the Mix file.
+ | If mix.webpackConfig() is called, we'll merge it in, and build!
+ |
+ */
+Mix.finalize(module.exports);
