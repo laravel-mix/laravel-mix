@@ -125,7 +125,7 @@ module.exports.combine = (src, output) => {
 module.exports.copy = (from, to) => {
     Mix.copy = (Mix.copy || []).concat({
         from,
-        to: path.resolve(__dirname, '../../', to)
+        to: Mix.root(to)
     });
 
     return this;
