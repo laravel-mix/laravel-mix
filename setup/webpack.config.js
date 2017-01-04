@@ -84,7 +84,9 @@ module.exports.module = {
             loader: 'vue-loader',
             options: {
                 loaders: {
-                    js: 'babel-loader' + Mix.babelConfig()
+                    js: 'babel-loader' + Mix.babelConfig(),
+                    scss: 'vue-style-loader!css-loader!sass-loader',
+                    sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
                 },
 
                 postcss: [
