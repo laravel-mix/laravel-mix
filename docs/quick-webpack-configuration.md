@@ -14,7 +14,7 @@ As an example, perhaps you want to add a custom array of modules that should be 
 Below, as an example, we'll add a custom module path for Laravel Spark.
 
 ```js
-mix.webpackConfig({}
+mix.webpackConfig({
     resolve: {
         modules: [
             path.resolve(__dirname, 'vendor/laravel/spark/resources/assets/js')
