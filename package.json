@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "uglify-js": "^2.7.5",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.1.4",
-    "webpack": "^2.1.0-beta.27",
+    "webpack": "^2.2.0-rc.3",
     "webpack-dev-server": "^2.1.0-beta.12",
     "webpack-notifier": "^1.4.1"
   },
