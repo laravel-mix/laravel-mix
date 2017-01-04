@@ -24,4 +24,12 @@ It's highly recommended that you add the following NPM scripts to your `package.
 ```
 
 
+### I'm using a VM, and Webpack isn't picking up my file changes.
 
+If you're running `npm run dev` through a VM, you may find that file changes are not picked up by Webpack. If that's the case, update your NPM script to use the `--watch-poll` flag, rather than `--watch`. Like this:
+
+```js
+"scripts": {
+    "dev": "NODE_ENV=development webpack --watch-poll",
+  }
+  

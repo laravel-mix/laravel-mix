@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.root();
+module.exports.context = Mix.paths.root();
 
 
 /*
@@ -84,7 +84,9 @@ module.exports.module = {
             loader: 'vue-loader',
             options: {
                 loaders: {
-                    js: 'babel-loader' + Mix.babelConfig()
+                    js: 'babel-loader' + Mix.babelConfig(),
+                    scss: 'vue-style-loader!css-loader!sass-loader',
+                    sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
                 },
 
                 postcss: [
@@ -183,7 +185,7 @@ module.exports.stats = {
     children: false
 };
 
-module.exports.performance = { hints: false};
+module.exports.performance = { hints: false };
 
 
 
