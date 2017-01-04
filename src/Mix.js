@@ -49,13 +49,15 @@ class Mix {
      * @param {object} webpackConfig
      */
     finalize(webpackConfig) {
-        if (this.webpackConfig) {
-            lodash.mergeWith(webpackConfig, this.webpackConfig, (objValue, srcValue) => {
+        if (! this.webpackConfig) return;
+
+        lodash.mergeWith(webpackConfig, this.webpackConfig,
+            (objValue, srcValue) => {
                 if (Array.isArray(objValue)) {
                     return objValue.concat(srcValue);
                 }
-            });
-        }
+            }
+        );
     }
 
 
