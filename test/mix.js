@@ -42,7 +42,7 @@ test('that it calculates the output correctly', t => {
 
     t.deepEqual({
         path: './public',
-        filename: 'dist/stub.js',
+        filename: 'dist/[name].js',
         publicPath: './'
     }, mix.config.output());
 
@@ -52,7 +52,7 @@ test('that it calculates the output correctly', t => {
 
     t.deepEqual({
         path: '/',
-        filename: 'dist/stub.js',
+        filename: 'dist/[name].js',
         publicPath: 'http://localhost:8080/'
     }, mix.config.output());
 

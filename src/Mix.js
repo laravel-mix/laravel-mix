@@ -87,13 +87,7 @@ class Mix {
      * Determine the Webpack output path.
      */
     output() {
-        let filename;
-
-        if (this.js.vendor || this.js.length > 1) {
-            filename = this.versioning.enabled ? '[name].[hash].js' : '[name].js';
-        } else {
-            filename = this.js[0].output[this.versioning.enabled ? 'hashedFile' : 'file'];
-        }
+        let filename = this.versioning.enabled ? '[name].[hash].js' : '[name].js';
 
         return {
             path: this.hmr ? '/' : this.publicPath,
