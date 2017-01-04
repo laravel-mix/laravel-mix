@@ -1,4 +1,4 @@
-# Laravel Mix
+<p align="center"><img src="https://laravel.com/assets/img/components/logo-mix.svg" alt="Laravel Mix"></p>
 
 ## Introduction
 
