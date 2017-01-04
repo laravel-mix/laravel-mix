@@ -40,7 +40,7 @@ However, it can be a burden to manually change this URL for production deploys. 
 </body>
 ```
 
-With this adjustment, Laravel will do the work for you. If you run nom run her to enable hot reloading, the function will set the necessary `http://localhost:8080` base url. If, instead, you use `npm run dev` or `npm run production`, it'll use your domain as the base.
+With this adjustment, Laravel will do the work for you. If you run 'npm run hmr' to enable hot reloading, the function will set the necessary `http://localhost:8080` base url. If, instead, you use `npm run dev` or `npm run production`, it'll use your domain as the base.
 
 
 
