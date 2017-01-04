@@ -79,20 +79,6 @@ test('that it calculates the output correctly', t => {
 });
 
 
-test('that it calculates the project root', t => {
-    // The project root should be three dirs up from where
-    // laravel-mix is installed.
-    let root = require('path').resolve(__dirname, '../../../');
-
-    t.is(root, mix.config.root());
-});
-
-
-test('that it calculates the webpack.mix path', t => {
-    t.is(mix.config.root('webpack.mix'), mix.config.configPath());
-});
-
-
 test('that it knows if it is running within a Laravel project', t => {
     t.falsy(mix.config.isUsingLaravel());
 

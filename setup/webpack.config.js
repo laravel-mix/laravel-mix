@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.root();
+module.exports.context = Mix.paths.root();
 
 
 /*
@@ -185,7 +185,7 @@ module.exports.stats = {
     children: false
 };
 
-module.exports.performance = { hints: false};
+module.exports.performance = { hints: false };
 
 
 
