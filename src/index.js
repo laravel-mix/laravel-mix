@@ -8,7 +8,8 @@ module.exports.plugins = {
     WebpackNotifierPlugin: require('webpack-notifier'),
     WebpackOnBuildPlugin: require('on-build-webpack'),
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
-    CopyWebpackPlugin: require('copy-webpack-plugin')
+    CopyWebpackPlugin: require('copy-webpack-plugin'),
+    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin')
 };
 
 

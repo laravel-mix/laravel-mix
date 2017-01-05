@@ -182,7 +182,8 @@ module.exports.stats = {
     hash: false,
     version: false,
     timings: false,
-    children: false
+    children: false,
+    errors: false
 };
 
 module.exports.performance = { hints: false };
@@ -232,17 +233,9 @@ module.exports.devServer = {
  |
  */
 
-module.exports.plugins = [];
+module.exports.plugins = [
+    new plugins.FriendlyErrorsWebpackPlugin(),
 
-
-module.exports.plugins.push(
-    function() {
-        this.plugin('done', stats => Mix.manifest.write(stats));
-    }
-);
-
-
-module.exports.plugins.push(
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
@@ -252,8 +245,12 @@ module.exports.plugins.push(
             context: __dirname,
             output: { path: './' }
         }
-    })
-);
+    }),
+
+    function() {
+        this.plugin('done', stats => Mix.manifest.write(stats));
+    },
+];
 
 
 if (Mix.notifications) {
