@@ -73,6 +73,17 @@ module.exports.less = (src, output) => {
 
 
 /**
+ * Register Stylus compilation.
+ *
+ * @param {string} src
+ * @param {string} output
+ */
+module.exports.stylus = (src, output) => {
+    return module.exports.preprocess('stylus', src, output);
+};
+
+
+/**
  * Register a generic CSS preprocessor.
  *
  * @param {string} type

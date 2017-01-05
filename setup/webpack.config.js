@@ -145,6 +145,16 @@ if (Mix.less) {
 }
 
 
+if (Mix.stylus) {
+    module.exports.module.rules.push({
+        test: /\.styl$/,
+        loader: plugins.ExtractTextPlugin.extract({
+            fallbackLoader: 'style-loader',
+            loader: ['css-loader', 'postcss-loader', 'stylus-loader']
+        })
+    });
+}
+
 
 /*
  |--------------------------------------------------------------------------
