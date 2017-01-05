@@ -185,6 +185,16 @@ class Mix {
 
 
     /**
+     * Path relative to root.
+     *
+     * @param {string|null} append
+     */
+    root(append = '') {
+        return this.paths.root(append);
+    }
+
+
+    /**
      * Determine if we are working with a Laravel project.
      */
     isUsingLaravel() {
