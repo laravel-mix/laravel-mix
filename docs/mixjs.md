@@ -96,7 +96,7 @@ Above, we import Vue \(you'll want to first run `npm install vue --save-dev`\), 
 </style>
 ```
 
-If you're familiar with Vue, this show all look very familiar, so we'll move on.
+If you're familiar with Vue, this should all look very familiar, so we'll move on.
 
 **./webpack.mix.js**
 
