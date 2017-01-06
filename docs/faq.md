@@ -30,6 +30,6 @@ If you're running `npm run dev` through a VM, you may find that file changes are
 
 ```js
 "scripts": {
-    "dev": "NODE_ENV=development webpack --watch-poll",
+    "dev": "NODE_ENV=development webpack --watch --watch-poll",
   }
   
