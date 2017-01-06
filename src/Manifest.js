@@ -35,8 +35,13 @@ class Manifest {
      * @param {object} stats
      */
     write(stats) {
+        stats = stats.toJson();
+
         new File(this.path).write(
-            JSON.stringify(stats.toJson())
+            JSON.stringify({
+                hash: stats.hash,
+                assetsByChunkName: stats.assetsByChunkName
+            })
         );
     }
 
