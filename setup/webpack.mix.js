@@ -1,4 +1,4 @@
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix-stylus').mix;
 
 /*
  |--------------------------------------------------------------------------
@@ -12,13 +12,14 @@ let mix = require('laravel-mix').mix;
  */
 
 mix.js('src/app.js', 'dist/')
-   .sass('src/app.scss', 'dist/');
+   .stylus('src/app.styl', 'dist/');
 
 // Full API
 // mix.js(src, output);
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.less(src, output);
+// mix.stylus(src, output);
 // mix.combine(files, destination);
 // mix.copy(from, to);
 // mix.minify(file);
