@@ -2,6 +2,15 @@ This project is a fork from [the original Laravel Mix](https://github.com/Jeffre
 
 You may review the original documentation here [on GitHub](https://github.com/JeffreyWay/laravel-mix/tree/master/docs).
 
+## Basic Installation
+
+```shell
+mkdir my-app && cd my-app
+npm init -y
+npm install laravel-mix-stylus --save-dev
+cp -r node_modules/laravel-mix-stylus/setup/** ./
+```
+
 ## Example
 
 **This fork supports less and sass too**, but it adds Stylus support. 
