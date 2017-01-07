@@ -11,8 +11,7 @@ let mix = require('laravel-mix-stylus').mix;
  |
  */
 
-mix.js('src/app.js', 'dist/')
-   .stylus('src/app.styl', 'dist/');
+mix.stylus('src/app.styl', 'dist/');
 
 // Full API
 // mix.js(src, output);
