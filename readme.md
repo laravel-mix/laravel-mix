@@ -1,14 +1,14 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-mix.svg" alt="Laravel Mix"></p>
+This project is a fork from [the original Laravel Mix](https://github.com/JeffreyWay/laravel-mix).
 
-## Introduction
+You may review the original documentation here [on GitHub](https://github.com/JeffreyWay/laravel-mix/tree/master/docs).
 
-Laravel Mix provides a clean, fluent API for defining basic Webpack build steps for your Laravel application. Mix supports several common CSS and JavaScript pre-processors.
+## Example
 
-If you've ever been confused about how to get started with module bundling and asset compilation, you will love Laravel Mix!
+**This fork supports less and sass too**, but it adds Stylus support. 
 
-## Documentation
-
-You may review the initial documentation here [on GitHub](https://github.com/JeffreyWay/laravel-mix/tree/master/docs).
+```js
+mix.stylus('path/to/app.styl', 'dist');
+```
 
 ## License
 
