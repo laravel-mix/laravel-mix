@@ -1,7 +1,7 @@
 {
-  "name": "laravel-mix",
-  "version": "0.2.10",
-  "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
+  "name": "laravel-mix-stylus",
+  "version": "0.1.0",
+  "description": "Laravel Mix fork with Stylus support.",
   "main": "src/index.js",
   "scripts": {
     "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
@@ -13,10 +13,12 @@
   "keywords": [
     "laravel",
     "webpack",
+    "laravel mix stylus",
+    "stylus",
     "laravel elixir",
     "laravel mix"
   ],
-  "author": "Jeffrey Way",
+  "author": "Roger Vilà",
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.20.0",
