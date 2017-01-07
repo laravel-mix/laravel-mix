@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rogervila/laravel-mix-stylus.svg?branch=master)](https://travis-ci.org/rogervila/laravel-mix-stylus)
+
 This project is a fork from [the original Laravel Mix](https://github.com/JeffreyWay/laravel-mix).
 
 You may review the original documentation here [on GitHub](https://github.com/JeffreyWay/laravel-mix/tree/master/docs).
