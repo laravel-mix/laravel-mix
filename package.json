@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
   "name": "laravel-mix-stylus",
   "version": "0.1.0",
   "description": "Laravel Mix fork with Stylus support.",
-=======
-  "name": "laravel-mix",
-  "version": "0.3.0",
-  "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
->>>>>>> JeffreyWay/master
   "main": "src/index.js",
   "scripts": {
     "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
