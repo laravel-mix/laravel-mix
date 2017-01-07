@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix-stylus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Laravel Mix fork with Stylus support.",
   "main": "src/index.js",
   "scripts": {
