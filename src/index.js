@@ -8,7 +8,8 @@ module.exports.plugins = {
     WebpackNotifierPlugin: require('webpack-notifier'),
     WebpackOnBuildPlugin: require('on-build-webpack'),
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
-    CopyWebpackPlugin: require('copy-webpack-plugin')
+    CopyWebpackPlugin: require('copy-webpack-plugin'),
+    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin')
 };
 
 
@@ -136,7 +137,7 @@ module.exports.combine = (src, output) => {
 module.exports.copy = (from, to) => {
     Mix.copy = (Mix.copy || []).concat({
         from,
-        to: Mix.root(to)
+        to: Mix.paths.root(to)
     });
 
     return this;
