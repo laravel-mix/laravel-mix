@@ -68,7 +68,7 @@ class Mix {
         // We'll build up an entry object that the webpack.config.js
         // file will want to see. It'll include all mix.js() calls.
         let entry = this.js.reduce((result, paths) => {
-            result[paths.output.base + '/' + paths.output.name] = paths.entry.map(src => src.path);
+            result[paths.output.base + '/' + paths.output.name] = paths.entry.map(src => src.path)
 
             return result;
         }, {});
