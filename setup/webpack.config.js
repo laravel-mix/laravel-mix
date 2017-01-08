@@ -217,7 +217,8 @@ module.exports.devtool = Mix.sourcemaps;
  */
 module.exports.devServer = {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    compress: true
 };
 
 
