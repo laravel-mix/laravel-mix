@@ -175,7 +175,7 @@ class Mix {
         // If the user has defined their own .babelrc file,
         // the babel-loader will automatically fetch it.
         // Otherwise, we'll use these defaults.
-        return this.File.exists(file) ? '' : '?' + JSON.stringify({
+        return this.File.exists(file) ? '?cacheDirectory' : '?' + JSON.stringify({
             'cacheDirectory': true,
             'presets': [
                 ['es2015', { 'modules': false }]
