@@ -6,8 +6,8 @@ This project is a fork from [the original Laravel Mix](https://github.com/Jeffre
 You may review the original documentation here [on GitHub](https://github.com/JeffreyWay/laravel-mix/tree/master/docs).
 
 ## Links
-[Github Repository](https://github.com/rogervila/laravel-mix-stylus)
-[Npm Package](https://www.npmjs.com/package/laravel-mix-stylus)
+- [Github Repository](https://github.com/rogervila/laravel-mix-stylus)
+- [Npm Package](https://www.npmjs.com/package/laravel-mix-stylus)
 
 ## Basic Installation
 
