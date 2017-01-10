@@ -19,10 +19,8 @@ npm install
 Think of this file as your home base for all front-end configuration.
 
 ```js
-
-    mix.js('resources/assets/js/app.js', 'public/js');
-    mix.sass('resources/assets/sass/app.scss', 'public/css');
-});
+mix.js('resources/assets/js/app.js', 'public/js');
+mix.sass('resources/assets/sass/app.scss', 'public/css');
 ```
 
 By default, we've enabled JavaScript ES2015 + module bundling, as well as Sass compilation. 
