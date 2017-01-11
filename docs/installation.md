@@ -48,19 +48,24 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
 
 ```js
   "scripts": {
-    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
-    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
-    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 ```
+
+If you would like to use your own `webpack.config.js` simply remove `--config=node_modules/laravel-mix/setup/webpack.config.js` from the scripts.
+
+Alternatively, if you would like to easily merge your own config with Laravel Mix's you can do so.
+[Quick Webpack Configuration](quick-webpack-configuration.md)
 
 ### Laravel Project
 
 Laravel 5.4 ships with everything you need to get started. Simply:
 
 * Install Laravel
-* Run `npm install` 
+* Run `npm install`
 * Visit your `webpack.mix.js file`, and get started!
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
