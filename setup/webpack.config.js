@@ -120,27 +120,26 @@ module.exports.module = {
 };
 
 
-if (Mix.sass) {
-    module.exports.module.rules.push({
-        test: /\.s[ac]ss$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: [
-                'css-loader', 'postcss-loader',
-                'resolve-url-loader', 'sass-loader?sourceMap'
-            ]
-        })
-    });
-}
+if (Mix.cssPreprocessor) {
+    Mix[Mix.cssPreprocessor].forEach(toCompile => {
+        let extractPlugin = new plugins.ExtractTextPlugin(
+            Mix.cssOutput(toCompile)
+        );
 
+        module.exports.module.rules.push({
+            test: new RegExp(toCompile.src.file),
+            loader: extractPlugin.extract({
+                fallbackLoader: 'style-loader',
+                loader: [
+                    'css-loader',
+                    'postcss-loader',
+                    'resolve-url-loader',
+                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap' : 'less-loader'
+                ]
+            })
+        });
 
-if (Mix.less) {
-    module.exports.module.rules.push({
-        test: /\.less$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: ['css-loader', 'postcss-loader', 'less-loader']
-        })
+        module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
 }
 
@@ -234,7 +233,7 @@ module.exports.devServer = {
  |
  */
 
-module.exports.plugins = [
+module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.ProvidePlugin({
         jQuery: 'jquery',
         $: 'jquery',
@@ -257,7 +256,8 @@ module.exports.plugins = [
     function() {
         this.plugin('done', stats => Mix.manifest.write(stats));
     },
-];
+]);
+
 
 
 if (Mix.notifications) {
@@ -304,15 +304,6 @@ if (Mix.js.vendor) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
             names: ['vendor', 'manifest']
-        })
-    );
-}
-
-
-if (Mix.cssPreprocessor) {
-    module.exports.plugins.push(
-        new plugins.ExtractTextPlugin({
-            filename: Mix.cssOutput()
         })
     );
 }

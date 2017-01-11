@@ -73,12 +73,10 @@ class Mix {
             return result;
         }, {});
 
-        // If the user has requested CSS preprocessing, then
-        // we'll extract it into the very first entry point.
         if (this.cssPreprocessor) {
-            entry[Object.keys(entry)[0]].push(
-                this[this.cssPreprocessor].src.path
-            );
+            let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
+
+            entry.styles = stylesheets;
         }
 
         return entry;
@@ -101,11 +99,13 @@ class Mix {
 
     /**
      * Determine the appropriate CSS output path.
+     *
+     * @param {object} segments
      */
-    cssOutput() {
+    cssOutput(segments) {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
 
-        return this[this.cssPreprocessor].output[
+        return segments.output[
             this.versioning.enabled ? 'hashedPath' : 'path'
         ].replace(regex, '');
     }

@@ -81,12 +81,6 @@ module.exports.less = (src, output) => {
  * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
-    if (Mix[type]) {
-        throw new Error(
-            `Laravel Mix: Limit your "mix.${type}()" calls to one.`
-        );
-    }
-
     src = new Mix.File(path.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
 
@@ -96,7 +90,7 @@ module.exports.preprocess = (type, src, output) => {
         ).parsePath();
     }
 
-    Mix[type] = { src, output };
+    Mix[type] = (Mix[type] || []).concat({ src, output });
 
     Mix.cssPreprocessor = type;
 
