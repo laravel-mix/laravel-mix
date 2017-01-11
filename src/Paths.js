@@ -17,7 +17,7 @@ module.exports = {
      * @param {string|null} append
      */
     root: function(append) {
-	    append = (typeof append != 'undefined') ? append : '';
+        append = (typeof append != 'undefined') ? append : '';
         return path.resolve(__dirname, '../../../', append)
     }
 }
