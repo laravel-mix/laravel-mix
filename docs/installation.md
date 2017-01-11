@@ -2,6 +2,19 @@
 
 Though Laravel Mix is optimized for Laravel usage, it may be used for any type of application.
 
+### Laravel Project
+
+Laravel 5.4 ships with everything you need to get started. Simply:
+
+* Install Laravel
+* Run `npm install` 
+* Visit your `webpack.mix.js file`, and get started!
+
+Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
+
+> Note: You won't find a `webpack.config.js` file in your project root. By default, Laravel defers to the config file from this repo. However, should you need to configure it, you may copy the file to your project root, and then update your `package.json` NPM scripts accordingly: `cp node_modules/laravel-mix/setup/webpack.config.js ./`.
+
+
 ### Stand-Alone Project
 
 Begin by installing Laravel Mix through NPM or Yarn, and then copying the example config files to your project root.
@@ -54,15 +67,3 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   }
 ```
-
-### Laravel Project
-
-Laravel 5.4 ships with everything you need to get started. Simply:
-
-* Install Laravel
-* Run `npm install` 
-* Visit your `webpack.mix.js file`, and get started!
-
-Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
-
-> Note: You won't find a `webpack.config.js` file in your project root. By default, Laravel defers to the config file from this repo. However, should you need to configure it, you may copy the file to your project root, and then update your `package.json` NPM scripts accordingly: `cp node_modules/laravel-mix/setup/webpack.config.js ./`.
