@@ -8,10 +8,10 @@ Have a look at a basic `webpack.mix.js` file. Let's imagine that we only desire 
 let mix = require('laravel-mix').mix;
 
 mix.sass('src/app.sass', 'dist')
-   .js('src/app.js', 'dist')
+   .js('src/app.js', 'dist');
 ```
 
-Simple, right?
+Done. Simple, right?
 
 1. Compile the Sass file, `./src/app.sass`, to `./dist/app.sass`
 2. Bundle all JavaScript \(and any required modules\) at `./src/app.js` to `./dist/bundle.js`.
