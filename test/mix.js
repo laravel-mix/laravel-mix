@@ -38,21 +38,20 @@ test('that it determines the CSS output path correctly.', t => {
 
 
 test('that it calculates the output correctly', t => {
-    mix.js('js/stub.js', 'dist').sass('sass/stub.scss', 'dist');
+    mix.js('js/stub.js', 'dist/test').sass('sass/stub.scss', 'dist');
 
     t.deepEqual({
         path: './public',
-        filename: 'dist/[name].js',
+        filename: '[name].js',
         publicPath: './'
     }, mix.config.output());
-
 
     // Enabling Hot Reloading should change this output.
     mix.config.hmr = true;
 
     t.deepEqual({
         path: '/',
-        filename: 'dist/[name].js',
+        filename: '[name].js',
         publicPath: 'http://localhost:8080/'
     }, mix.config.output());
 
@@ -63,17 +62,17 @@ test('that it calculates the output correctly', t => {
 
     t.deepEqual({
         path: './public',
-        filename: 'dist/[name].js',
+        filename: '[name].js',
         publicPath: './'
     }, mix.config.output());
 
 
-    // Enabling file versioning shoul dchange this output.
+    // Enabling file versioning should change this output.
     mix.version();
 
     t.deepEqual({
         path: './public',
-        filename: 'dist/[name].[hash].js',
+        filename: '[name].[hash].js',
         publicPath: './'
     }, mix.config.output());
 });
