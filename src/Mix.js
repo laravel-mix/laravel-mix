@@ -119,7 +119,7 @@ class Mix {
      * @param {array|null} files
      */
     minifyAll(files) {
-	    files = (typeof files != 'undefined') ? files : null;
+        files = (typeof files != 'undefined') ? files : null;
         if (! this.inProduction) return;
 
         files = files || this.minify || [];
@@ -136,7 +136,7 @@ class Mix {
      * @param {array|null} files
      */
     concatenateAll(files) {
-	    files = (typeof files != 'undefined') ? files : null;
+        files = (typeof files != 'undefined') ? files : null;
         files = files || this.combine || [];
 
         files.forEach(file => {
