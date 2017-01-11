@@ -1,3 +1,5 @@
+"use strict";
+
 let path = require('path');
 let paths = require('./Paths');
 let File = require('./File');
@@ -116,7 +118,8 @@ class Mix {
      *
      * @param {array|null} files
      */
-    minifyAll(files = null) {
+    minifyAll(files) {
+	    files = (typeof files != 'undefined') ? files : null;
         if (! this.inProduction) return;
 
         files = files || this.minify || [];
@@ -132,7 +135,8 @@ class Mix {
      *
      * @param {array|null} files
      */
-    concatenateAll(files = null) {
+    concatenateAll(files) {
+	    files = (typeof files != 'undefined') ? files : null;
         files = files || this.combine || [];
 
         files.forEach(file => {
@@ -158,7 +162,7 @@ class Mix {
         // If the user wants hot module replacement, we'll create
         // a temporary file, so that Laravel can detect it, and
         // reference the proper base URL for any assets.
-        if (process.argv.includes('--hot')) {
+        if (process.argv.indexOf('--hot') > -1) {
             this.hmr = true;
 
             file.write('hot reloading enabled');
