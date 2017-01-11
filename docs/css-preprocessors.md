@@ -5,11 +5,20 @@ mix.js('src', 'output')
    .sass('src', 'output')
 ```
 
-A single method call allows you to compile any Sass \(`mix.sass()`\), Less \(`mix.less()`\), or both!
+A single method call allows you to compile your Sass \(`mix.sass()`\) or Less \(`mix.less()`\) files.
 
 > Note: Webpack naturally requires some form of JavaScript compilation. You can't use `mix.sass()` without a call to `mix.js()` as well.
 
 Though Webpack can inline all of your CSS directly into the bundled JavaScript, Laravel Mix automatically performs the necessary steps to extract it to your desired output path.
+
+### Multiple Builds
+
+Should you need to compile more than one root Sass or Less file, you may call `mix.sass()` as many as times as is needed. For each call, Webpack will output a new file with the relevant contents.
+
+```js
+mix.sass('src/app.scss', 'dist/') // creates 'dist/app.css'
+   .sass('src/forum.scss', 'dist/'); // creates 'dist/forum.css'
+```
 
 ### Example
 
