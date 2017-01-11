@@ -235,6 +235,12 @@ module.exports.devServer = {
  */
 
 module.exports.plugins = [
+    new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        jquery: 'jquery'
+    }),
+
     new plugins.FriendlyErrorsWebpackPlugin(),
 
     new webpack.LoaderOptionsPlugin({
