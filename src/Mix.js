@@ -19,8 +19,8 @@ class Mix {
         this.cssPreprocessor = false;
         this.inProduction = process.env.NODE_ENV === 'production';
 
-        this.publicPath = this.isUsingLaravel() ? 'public' : './';
-        this.cachePath = this.isUsingLaravel() ? 'storage/framework/cache' : './';
+        this.publicPath = this.isUsingLaravel() ? 'public' : '.';
+        this.cachePath = this.isUsingLaravel() ? 'storage/framework/cache' : '.';
 
         this.manifest = new Manifest(this.cachePath + '/Mix.json');
         this.versioning = new Versioning(this.manifest);
