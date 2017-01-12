@@ -9,7 +9,8 @@ module.exports.plugins = {
     WebpackOnBuildPlugin: require('on-build-webpack'),
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
     CopyWebpackPlugin: require('copy-webpack-plugin'),
-    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin')
+    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
+    ManifestPlugin: require('webpack-manifest-plugin')
 };
 
 
@@ -153,7 +154,7 @@ module.exports.sourceMaps = () => {
  * Enable compiled file versioning.
  */
 module.exports.version = () => {
-    Mix.versioning.enabled = true;
+    Mix.versioning = true;
 
     return this;
 };

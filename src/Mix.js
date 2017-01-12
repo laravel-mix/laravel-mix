@@ -17,13 +17,9 @@ class Mix {
         this.sourcemaps = false;
         this.notifications = true;
         this.cssPreprocessor = false;
+        this.versioning = false;
         this.inProduction = process.env.NODE_ENV === 'production';
-
         this.publicPath = this.isUsingLaravel() ? 'public' : './';
-        this.cachePath = this.isUsingLaravel() ? 'storage/framework/cache' : './';
-
-        this.manifest = new Manifest(this.cachePath + '/Mix.json');
-        this.versioning = new Versioning(this.manifest);
     }
 
 
@@ -34,10 +30,11 @@ class Mix {
         // We'll first load the user's webpack.mix.js file.
         require(this.paths.mix());
 
-        // Since the user might wish to override the default cache
-        // path, we'll update these here with the latest values.
-        this.manifest.path = this.cachePath + '/Mix.json';
-        this.versioning.manifest = this.manifest;
+        if (this.versioning) {
+            this.versioning = new Versioning(
+                new Manifest(this.publicPath + '/manifest.json')
+            )
+        }
 
         this.detectHotReloading();
     }
@@ -88,7 +85,8 @@ class Mix {
      * Determine the Webpack output path.
      */
     output() {
-        let filename = this.versioning.enabled ? '[name].[hash].js' : '[name].js';
+        // We'll only apply a chunkhash in production, as it's a costly step.
+        let filename = (this.inProduction && this.versioning) ? '[name].[chunkhash].js' : '[name].js';
 
         return {
             path: this.hmr ? '/' : this.publicPath,
@@ -105,10 +103,9 @@ class Mix {
      */
     cssOutput(segments) {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
+        let path = (this.inProduction && this.versioning) ? 'hashedPath' : 'path';
 
-        return segments.output[
-            this.versioning.enabled ? 'hashedPath' : 'path'
-        ].replace(regex, '');
+        return segments.output[path].replace(regex, '');
     }
 
 
@@ -152,7 +149,7 @@ class Mix {
      * Detect if the user desires hot reloading.
      */
     detectHotReloading() {
-        let file = new this.File(this.cachePath + '/hot');
+        let file = new this.File(this.publicPath + '/hot');
 
         file.delete();
 

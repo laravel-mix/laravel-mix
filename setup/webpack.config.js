@@ -242,6 +242,8 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 
     new plugins.FriendlyErrorsWebpackPlugin(),
 
+    new plugins.ManifestPlugin(),
+
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
@@ -251,11 +253,7 @@ module.exports.plugins = (module.exports.plugins || []).concat([
             context: __dirname,
             output: { path: './' }
         }
-    }),
-
-    function() {
-        this.plugin('done', stats => Mix.manifest.write(stats));
-    },
+    })
 ]);
 
 
@@ -271,7 +269,7 @@ if (Mix.notifications) {
 }
 
 
-if (Mix.versioning.enabled) {
+if (Mix.versioning) {
     Mix.versioning.record();
 
     module.exports.plugins.push(

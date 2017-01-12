@@ -25,23 +25,6 @@ class Manifest {
     read() {
         return JSON.parse(
             new File(this.path).read()
-        ).assetsByChunkName;
-    }
-
-
-    /**
-     * Write the updated stats to the manifest.
-     *
-     * @param {object} stats
-     */
-    write(stats) {
-        stats = stats.toJson();
-
-        new File(this.path).write(
-            JSON.stringify({
-                hash: stats.hash,
-                assetsByChunkName: stats.assetsByChunkName
-            })
         );
     }
 

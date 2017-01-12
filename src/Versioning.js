@@ -8,20 +8,9 @@ class Versioning {
      * @param {object} manifest
      */
     constructor(manifest) {
-        this.enabled = false;
         this.manifest = manifest;
 
         this.files = [];
-    }
-
-
-    /**
-     * Enable Webpack versioning.
-     */
-    enable() {
-        this.enabled = true;
-
-        return this;
     }
 
 
@@ -33,11 +22,7 @@ class Versioning {
 
         this.reset();
 
-        let json = this.manifest.read();
-
-        Object.keys(json).forEach(entry => {
-            this.files = this.files.concat(json[entry]);
-        });
+        this.files = Object.values(this.manifest.read());
 
         return this;
     }
@@ -59,7 +44,7 @@ class Versioning {
      * @param {string} baseDir
      */
     prune(baseDir) {
-        let updated = new Versioning(this.manifest).enable().record();
+        let updated = new Versioning(this.manifest).record();
 
         if (! updated) return;
 
