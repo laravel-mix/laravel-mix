@@ -75,8 +75,9 @@ class Mix {
 
         if (this.cssPreprocessor) {
             let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
+            let name = Object.keys(entry)[0];
 
-            entry.styles = stylesheets;
+            entry[name] = entry[name].concat(stylesheets);
         }
 
         return entry;
