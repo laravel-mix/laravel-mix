@@ -244,6 +244,8 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 
     new plugins.ManifestPlugin(),
 
+    new plugins.WebpackMd5HashPlugin(),
+
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
