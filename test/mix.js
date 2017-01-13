@@ -13,6 +13,13 @@ test('that it throws exception if mix.js() was not called', t => {
     }, Error);
 
     t.is(error.message, 'Laravel Mix: You must call "mix.js()" once or more.');
+
+    mix.reset();
+
+    t.notThrows(() => {
+        mix.js('js/stub.js', 'dist');
+        Mix.entry();
+    }, Error);    
 });
 
 test('that it determines the JS paths', t => {
