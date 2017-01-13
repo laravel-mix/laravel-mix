@@ -1,11 +1,19 @@
 import test from 'ava';
-import mix from '../src/index';
+import {mix, config as Mix} from '../src/index';
 import path from 'path';
 
 test.afterEach('cleanup', t => {
     mix.reset();
 });
 
+test('that it throws exception if mix.js() was not called', t => {   
+    const error = t.throws(() => {
+        mix.sass('sass/stub.scss', 'dist');
+        Mix.entry();
+    }, Error);
+
+    t.is(error.message, 'Laravel Mix: You must call "mix.js()" once or more.');
+});
 
 test('that it determines the JS paths', t => {
     mix.js('js/stub.js', 'dist')

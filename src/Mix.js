@@ -64,6 +64,13 @@ class Mix {
     entry() {
         // We'll build up an entry object that the webpack.config.js
         // file will want to see. It'll include all mix.js() calls.
+
+        if (!this.js) {
+            throw new Error(
+                `Laravel Mix: You must call "mix.js()" once or more.`
+            );
+        }
+
         let entry = this.js.reduce((result, paths) => {
             result[paths.output.name] = paths.entry.map(src => src.path);
 
