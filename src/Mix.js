@@ -97,7 +97,7 @@ class Mix {
 
         return {
             path: this.hmr ? '/' : this.publicPath,
-            filename: path.join(this.js[0].output.base, filename).replace(this.publicPath, ''),
+            filename: path.posix.join(this.js[0].output.base, filename).replace(this.publicPath, ''),
             publicPath: this.hmr ? 'http://localhost:8080/' : './'
         };
     }
