@@ -1,5 +1,5 @@
 let path = require('path');
-let paths = require('./Paths');
+let Paths = require('./Paths');
 let File = require('./File');
 let lodash = require('lodash');
 let Manifest = require('./Manifest');
@@ -12,7 +12,7 @@ class Mix {
      */
     constructor() {
         this.File = File;
-        this.paths = paths;
+        this.Paths = new Paths;
         this.hmr = false;
         this.sourcemaps = false;
         this.notifications = true;
@@ -28,7 +28,7 @@ class Mix {
      */
     initialize() {
         // We'll first load the user's webpack.mix.js file.
-        require(this.paths.mix());
+        require(this.Paths.mix());
 
         if (this.versioning) {
             this.versioning = new Versioning(
@@ -175,7 +175,7 @@ class Mix {
      * Fetch the appropriate Babel config for babel-loader.
      */
     babelConfig() {
-        let file = this.paths.root('.babelrc');
+        let file = this.Paths.root('.babelrc');
 
         // If the user has defined their own .babelrc file,
         // the babel-loader will automatically fetch it.
