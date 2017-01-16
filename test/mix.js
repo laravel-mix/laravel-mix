@@ -48,7 +48,8 @@ test('that it determines the CSS output path correctly.', t => {
        .js('js/stub.js', 'dist')
        .sass('sass/stub.scss', 'dist');
 
-    t.is('dist/stub.css', mix.config.cssOutput());
+    var segments = mix.config.sass[0];
+    t.is('dist/stub.css', segments.output.path);
 });
 
 
@@ -82,15 +83,41 @@ test('that it calculates the output correctly', t => {
         publicPath: './'
     }, mix.config.output());
 
+});
 
-    // Enabling file versioning shoul dchange this output.
-    mix.version();
+test('that it calculates versioned output correctly', t => {
+
+    mix.js('js/stub.js', 'dist').sass('sass/stub.scss', 'dist');
+
+    // turn on versioning and fake production env
+    // since versioninig only works in production
+    mix.config.versioning = true;
+    mix.config.inProduction = true;
 
     t.deepEqual({
         path: './public',
-        filename: 'dist/[name].[hash].js',
+        filename: 'dist/[name].[chunkhash].js',
         publicPath: './'
     }, mix.config.output());
+
+    // Enabling Hot Reloading should change this output.
+    mix.config.hmr = true;
+
+    t.deepEqual({
+        path: '/',
+        filename: 'dist/[name].[chunkhash].js',
+        publicPath: 'http://localhost:8080/'
+    }, mix.config.output());
+
+    mix.config.hmr = false;
+    mix.extract(['some-lib']);
+
+    t.deepEqual({
+        path: './public',
+        filename: 'dist/[name].[chunkhash].js',
+        publicPath: './'
+    }, mix.config.output());
+
 });
 
 
