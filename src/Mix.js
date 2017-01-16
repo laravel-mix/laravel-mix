@@ -78,11 +78,17 @@ class Mix {
             return result;
         }, {});
 
+        // Allow us to have multiple .sass() or .less() calls with each
+        // chunk having it's own unique entry[chunk] name.
         if (this.cssPreprocessor) {
-            let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
-            let name = Object.keys(entry)[0];
+            let stylesheets = this[this.cssPreprocessor].reduce((result, paths) => {
+                result[paths.output.name] = paths.src.path;
 
-            entry[name] = entry[name].concat(stylesheets);
+                return result;
+            }, {});
+            Object.keys(stylesheets).map(name => {
+                entry[name] = stylesheets[name];
+            });
         }
 
         return entry;
