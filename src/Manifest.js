@@ -1,3 +1,5 @@
+"use strict";
+
 let File = require('./File');
 
 class Manifest {
