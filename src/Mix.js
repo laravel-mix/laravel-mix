@@ -26,8 +26,9 @@ class Mix {
     /**
      * Initialize the user's webpack.mix.js configuration file.
      */
-    initialize() {
+    initialize(rootPath = '') {
         // We'll first load the user's webpack.mix.js file.
+        if (rootPath) this.Paths.setRootPath(rootPath);
         require(this.Paths.mix());
 
         if (this.versioning) {
