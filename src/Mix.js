@@ -1,7 +1,7 @@
 let path = require('path');
+let mergeWith = require('lodash').mergeWith;
 let Paths = require('./Paths');
 let File = require('./File');
-let lodash = require('lodash');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
@@ -49,7 +49,7 @@ class Mix {
     finalize(webpackConfig) {
         if (! this.webpackConfig) return;
 
-        lodash.mergeWith(webpackConfig, this.webpackConfig,
+        mergeWith(webpackConfig, this.webpackConfig,
             (objValue, srcValue) => {
                 if (Array.isArray(objValue)) {
                     return objValue.concat(srcValue);
