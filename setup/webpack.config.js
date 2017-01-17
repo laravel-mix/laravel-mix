@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.paths.root();
+module.exports.context = Mix.Paths.root();
 
 
 /*

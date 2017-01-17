@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
     "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "ava --verbose"
+    "test": "nyc ava --verbose",
+    "posttest": "nyc report --reporter=html"
   },
   "keywords": [
     "laravel",
@@ -52,6 +53,8 @@
     "webpack-notifier": "^1.4.1"
   },
   "devDependencies": {
-    "ava": "^0.17.0"
+    "ava": "^0.17.0",
+    "nyc": "^10.0.0",
+    "sinon": "^1.17.7"
   }
 }

@@ -1,3 +1,6 @@
 node_modules/
 npm-debug.log
 notes.md
+coverage
+.nyc_output
+.idea/

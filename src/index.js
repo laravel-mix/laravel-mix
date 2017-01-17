@@ -122,7 +122,7 @@ module.exports.combine = (src, output) => {
 module.exports.copy = (from, to) => {
     Mix.copy = (Mix.copy || []).concat({
         from,
-        to: Mix.paths.root(to)
+        to: Mix.Paths.root(to)
     });
 
     return this;
