@@ -10,7 +10,7 @@ module.exports.plugins = {
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
     CopyWebpackPlugin: require('copy-webpack-plugin'),
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
-    ManifestPlugin: require('webpack-manifest-plugin'),
+    StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
     WebpackMd5HashPlugin: require('webpack-md5-hash')
 };
 

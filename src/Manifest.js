@@ -12,6 +12,26 @@ class Manifest {
 
 
     /**
+     * Transform the Webpack stats into the shape we need.
+     *
+     * @param {object} stats
+     */
+    transform(stats) {
+        let flattenedPaths = [].concat.apply([], Object.values(stats.assetsByChunkName));
+
+        let manifest = flattenedPaths.reduce((manifest, path) => {
+            let original = path.replace(/\.(\w{20})(\..+)/, '$2');
+
+            manifest[original] = path;
+
+            return manifest;
+        }, {});
+
+        return JSON.stringify(manifest, null, 2);
+    }
+
+
+    /**
      * Determine if the manifest file exists.
      */
     exists() {
