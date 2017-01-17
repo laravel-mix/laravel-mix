@@ -174,6 +174,8 @@ class Mix {
             this.hmr = true;
 
             file.write('hot reloading enabled');
+        } else {
+            this.hmr = false;
         }
     }
 
