@@ -110,7 +110,7 @@ module.exports.module = {
         },
 
         {
-            test: /\.(woff2?|ttf|eot|svg)$/,
+            test: /\.(woff2?|ttf|eot|svg|otf)$/,
             loader: 'file-loader',
             options: {
                 name: '/fonts/[name].[ext]?[hash]'
