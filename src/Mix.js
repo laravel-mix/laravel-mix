@@ -1,10 +1,10 @@
 let path = require('path');
-let paths = require('./Paths');
 let File = require('./File');
-let lodash = require('lodash');
+let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
+let mergeWith = require('lodash').mergeWith;
 
 class Mix {
     /**
@@ -12,29 +12,32 @@ class Mix {
      */
     constructor() {
         this.File = File;
-        this.paths = paths;
+        this.Paths = new Paths;
         this.hmr = false;
         this.sourcemaps = false;
         this.notifications = true;
         this.cssPreprocessor = false;
-        this.versioning = false;
         this.inProduction = process.env.NODE_ENV === 'production';
-        this.publicPath = this.isUsingLaravel() ? 'public' : './';
+        this.publicPath = './';
     }
 
 
     /**
      * Initialize the user's webpack.mix.js configuration file.
+     *
+     * @param {string} rootPath
      */
-    initialize() {
-        // We'll first load the user's webpack.mix.js file.
-        require(this.paths.mix());
-
-        if (this.versioning) {
-            this.versioning = new Versioning(
-                new Manifest(this.publicPath + '/manifest.json')
-            )
+    initialize(rootPath = '') {
+        if (this.isUsingLaravel()) {
+            this.publicPath = 'public';
         }
+
+        // We'll first load the user's webpack.mix.js file.
+        if (rootPath) this.Paths.setRootPath(rootPath);
+        require(this.Paths.mix());
+
+        this.manifest = new Manifest(this.publicPath + '/mix-manifest.json');
+        this.versioning = new Versioning(this.manifest);
 
         this.detectHotReloading();
     }
@@ -48,7 +51,7 @@ class Mix {
     finalize(webpackConfig) {
         if (! this.webpackConfig) return;
 
-        lodash.mergeWith(webpackConfig, this.webpackConfig,
+        mergeWith(this.webpackConfig, webpackConfig,
             (objValue, srcValue) => {
                 if (Array.isArray(objValue)) {
                     return objValue.concat(srcValue);
@@ -64,8 +67,7 @@ class Mix {
     entry() {
         // We'll build up an entry object that the webpack.config.js
         // file will want to see. It'll include all mix.js() calls.
-
-        if (!this.js) {
+        if (! this.js) {
             throw new Error(
                 `Laravel Mix: You must call "mix.js()" once or more.`
             );
@@ -154,8 +156,10 @@ class Mix {
 
     /**
      * Detect if the user desires hot reloading.
+     *
+     * @param {bool} force
      */
-    detectHotReloading() {
+    detectHotReloading(force = false) {
         let file = new this.File(this.publicPath + '/hot');
 
         file.delete();
@@ -163,10 +167,12 @@ class Mix {
         // If the user wants hot module replacement, we'll create
         // a temporary file, so that Laravel can detect it, and
         // reference the proper base URL for any assets.
-        if (process.argv.includes('--hot')) {
+        if (process.argv.includes('--hot') || force) {
             this.hmr = true;
 
             file.write('hot reloading enabled');
+        } else {
+            this.hmr = false;
         }
     }
 
@@ -175,7 +181,7 @@ class Mix {
      * Fetch the appropriate Babel config for babel-loader.
      */
     babelConfig() {
-        let file = this.paths.root('.babelrc');
+        let file = this.Paths.root('.babelrc');
 
         // If the user has defined their own .babelrc file,
         // the babel-loader will automatically fetch it.

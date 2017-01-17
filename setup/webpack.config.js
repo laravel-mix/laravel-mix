@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.paths.root();
+module.exports.context = Mix.Paths.root();
 
 
 /*
@@ -110,7 +110,7 @@ module.exports.module = {
         },
 
         {
-            test: /\.(woff2?|ttf|eot|svg)$/,
+            test: /\.(woff2?|ttf|eot|svg|otf)$/,
             loader: 'file-loader',
             options: {
                 name: '/fonts/[name].[ext]?[hash]'
@@ -242,7 +242,10 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 
     new plugins.FriendlyErrorsWebpackPlugin(),
 
-    new plugins.ManifestPlugin(),
+    new plugins.StatsWriterPlugin({
+        filename: "mix-manifest.json",
+        transform: Mix.manifest.transform,
+    }),
 
     new plugins.WebpackMd5HashPlugin(),
 
