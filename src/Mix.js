@@ -19,7 +19,7 @@ class Mix {
         this.cssPreprocessor = false;
         this.versioning = false;
         this.inProduction = process.env.NODE_ENV === 'production';
-        this.publicPath = this.isUsingLaravel() ? 'public' : './';
+        this.publicPath = './';
     }
 
 
@@ -27,6 +27,10 @@ class Mix {
      * Initialize the user's webpack.mix.js configuration file.
      */
     initialize(rootPath = '') {
+        // set public path here so we can test :)
+        if (this.isUsingLaravel()) {
+            this.publicPath = 'public';
+        }
         // We'll first load the user's webpack.mix.js file.
         if (rootPath) this.Paths.setRootPath(rootPath);
         require(this.Paths.mix());
@@ -49,7 +53,7 @@ class Mix {
     finalize(webpackConfig) {
         if (! this.webpackConfig) return;
 
-        mergeWith(webpackConfig, this.webpackConfig,
+        mergeWith(this.webpackConfig, webpackConfig,
             (objValue, srcValue) => {
                 if (Array.isArray(objValue)) {
                     return objValue.concat(srcValue);
@@ -162,7 +166,7 @@ class Mix {
     /**
      * Detect if the user desires hot reloading.
      */
-    detectHotReloading() {
+    detectHotReloading(force = false) {
         let file = new this.File(this.publicPath + '/hot');
 
         file.delete();
@@ -170,7 +174,7 @@ class Mix {
         // If the user wants hot module replacement, we'll create
         // a temporary file, so that Laravel can detect it, and
         // reference the proper base URL for any assets.
-        if (process.argv.includes('--hot')) {
+        if (process.argv.includes('--hot') || force) {
             this.hmr = true;
 
             file.write('hot reloading enabled');
