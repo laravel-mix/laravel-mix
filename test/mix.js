@@ -8,8 +8,8 @@ test.afterEach('cleanup', t => {
     mix.reset();
 });
 
-test('that it throws exception if mix.js() was not called', t => {
-    const error = t.throws(() => {
+test('that it throws an exception if mix.js() was not called', t => {
+    let error = t.throws(() => {
         mix.sass('sass/stub.scss', 'dist');
         Mix.entry();
     }, Error);
@@ -25,21 +25,26 @@ test('that it throws exception if mix.js() was not called', t => {
     }, Error);
 });
 
-test('initializes properly', t => {
-    const initSpy = sinon.spy(Mix, 'initialize');
+
+test('that Mix initializes properly', t => {
+    let initSpy = sinon.spy(Mix, 'initialize');
+
     // Test if (rootPath) branch
     Mix.initialize(path.resolve(__dirname, 'fixtures'));
     t.true(initSpy.called);
+
     // Test rootPath = '' branch
     Mix.initialize();
     t.true(initSpy.called);
+
     // Test if (this.versioning) branch
     Mix.versioning = true;
     Mix.initialize();
     t.true(initSpy.called);
     Mix.versioning = false;
+
     // Test if (this.isUsingLaravel()) branch
-    const artisan = new mix.config.File('./artisan').write('I am Laravel');
+    let artisan = new mix.config.File('./artisan').write('I am Laravel');
     Mix.initialize();
     t.true(initSpy.called);
     t.is(Mix.publicPath, 'public');
@@ -59,39 +64,43 @@ test('that it determines the JS paths', t => {
     t.is('dist/stub.js', js[0].output.path);
     t.falsy(js[0].vendor);
 
-    // We can also pass an array of entry scripts, to be bundled together.
     mix.reset();
 
+    // We can also pass an array of entry scripts, to be bundled together.
     mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');
     t.is('dist/bundle.js', mix.config.js[0].output.path);
     t.is(2, mix.config.js[0].entry.length);
 });
 
-test('that it merges webpack configs', t => {
+
+test('that it can merge a user\'s Webpack config', t => {
     mix.webpackConfig({ entry: 'stub' });
     Mix.finalize({ output: 'stub' });
     t.deepEqual(Mix.webpackConfig, { entry: 'stub', output: 'stub' });
-    // Test mergeWith customizer function
+
     mix.webpackConfig({ entry: [1] });
     Mix.finalize({ entry: [2] });
     t.deepEqual(Mix.webpackConfig, { entry: [1, 2] });
-    // Now test with empty webpackConfig
+
+
     Mix.webpackConfig = null;
     Mix.finalize();
     t.is(Mix.webpackConfig, null);
 });
+
 
 test('that it determines the CSS output path correctly.', t => {
     mix.setPublicPath('./public')
        .js('js/stub.js', 'dist')
        .less('sass/stub.scss', 'dist/stub.css');
 
-    const segments = mix.config.less;
+    let segments = mix.config.less;
 
     // Test the cssOutput which gets passed to ExtractTextPlugin
     segments.forEach(s => {
         t.is('dist/stub.css', Mix.cssOutput(s));
     });
+
     // Test to see if it returns hashedPath in production
     Mix.versioning = true;
     Mix.inProduction = true;
@@ -107,9 +116,6 @@ test('that it determines the CSS output path correctly.', t => {
         { stub: [path.resolve(__dirname, '../js/stub.js')] }); //js/stub.js
                                                                // from above
 });
-// test('that the CSS output path works properly', t => {
-//
-// });
 
 
 test('that it calculates the output correctly', t => {
@@ -190,11 +196,13 @@ test('that it knows if it is running within a Laravel project', t => {
 
     artisan.delete();
 });
+
+
 test('that it can combine and minify files', t => {
-    const file1Path = path.resolve(__dirname, 'fixtures/file1.txt');
-    const file2Path = path.resolve(__dirname, 'fixtures/file2.txt');
-    const file1 = new File(file1Path).write('1+1');
-    const file2 = new File(file2Path).write('=2');
+    let file1Path = path.resolve(__dirname, 'fixtures/file1.txt');
+    let file2Path = path.resolve(__dirname, 'fixtures/file2.txt');
+    let file1 = new File(file1Path).write('1+1');
+    let file2 = new File(file2Path).write('=2');
 
     mix.combine([file1Path, file2Path],
         path.resolve(__dirname, 'fixtures/file3.txt'));
@@ -220,17 +228,19 @@ test('that it can combine and minify files', t => {
     t.deepEqual(Mix.combine, null);
     t.deepEqual(Mix.minify, null);
 
-    const file3 = new File(path.resolve(__dirname, 'fixtures/file3.txt'));
+    let file3 = new File(path.resolve(__dirname, 'fixtures/file3.txt'));
     t.is(file3.read(), '1+1\n=2');
 
     file1.delete();
     file2.delete();
     file3.delete();
 });
+
+
 test('that it detects hmr correctly', t => {
-    const root = path.resolve(__dirname);
+    let root = path.resolve(__dirname);
     mix.setPublicPath(root);
-    const hmrFile = Mix.publicPath + '/hot';
+    let hmrFile = Mix.publicPath + '/hot';
 
     Mix.detectHotReloading(); // normal
     t.false(Mix.hmr);
@@ -241,23 +251,27 @@ test('that it detects hmr correctly', t => {
     t.false(Mix.hmr);
     t.false(File.exists(hmrFile));
 });
-test('that it reads babel config properly', t => {
+
+
+test('that it reads the Babel config properly', t => {
     // First lets test when there's no .babelrc
-    const root = path.resolve(__dirname);
+    let root = path.resolve(__dirname);
     Mix.Paths.setRootPath(root);
     let config = Mix.babelConfig();
     t.is(config,
         "?{\"cacheDirectory\":true,\"presets\":[[\"es2015\",{\"modules\":false}]]}");
-    // Now create a fake .babelrc
-    const babel = new File(root + '/.babelrc').write(JSON.stringify(
-        { "presets": ["react", ["es2015", { "modules": false }]] }));
+
+    // Now, create a fake .babelrc
+    let babel = new File(root + '/.babelrc').write(JSON.stringify({ "presets": ["react", ["es2015", { "modules": false }]] }));
     config = Mix.babelConfig();
     t.is(config, "?cacheDirectory");
     babel.delete();
 });
+
+
 // test all methods that all they do is set a value
-test('that setter methods work properly', t => {
-    const root = path.resolve(__dirname);
+test('that the setter methods work properly', t => {
+    let root = path.resolve(__dirname);
     mix.setCachePath('./');
     t.is(Mix.cachePath, './');
 

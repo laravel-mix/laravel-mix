@@ -24,12 +24,14 @@ class Mix {
 
     /**
      * Initialize the user's webpack.mix.js configuration file.
+     *
+     * @param {string} rootPath
      */
     initialize(rootPath = '') {
-        // set public path here so we can test :)
         if (this.isUsingLaravel()) {
             this.publicPath = 'public';
         }
+
         // We'll first load the user's webpack.mix.js file.
         if (rootPath) this.Paths.setRootPath(rootPath);
         require(this.Paths.mix());
@@ -65,8 +67,7 @@ class Mix {
     entry() {
         // We'll build up an entry object that the webpack.config.js
         // file will want to see. It'll include all mix.js() calls.
-
-        if (!this.js) {
+        if (! this.js) {
             throw new Error(
                 `Laravel Mix: You must call "mix.js()" once or more.`
             );
@@ -155,6 +156,8 @@ class Mix {
 
     /**
      * Detect if the user desires hot reloading.
+     *
+     * @param {bool} force
      */
     detectHotReloading(force = false) {
         let file = new this.File(this.publicPath + '/hot');
