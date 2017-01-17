@@ -1,4 +1,5 @@
 let File = require('./File');
+let objectValues = require('lodash').values;
 
 class Manifest {
     /**
@@ -17,7 +18,7 @@ class Manifest {
      * @param {object} stats
      */
     transform(stats) {
-        let flattenedPaths = [].concat.apply([], Object.values(stats.assetsByChunkName));
+        let flattenedPaths = [].concat.apply([], objectValues(stats.assetsByChunkName));
 
         let manifest = flattenedPaths.reduce((manifest, path) => {
             let original = path.replace(/\.(\w{20})(\..+)/, '$2');

@@ -1,6 +1,6 @@
 let path = require('path');
 let Manifest = require('./Manifest');
-let ObjectValues = require('lodash').values;
+let objectValues = require('lodash').values;
 
 class Versioning {
     /**
@@ -23,7 +23,7 @@ class Versioning {
 
         this.reset();
 
-        this.files = ObjectValues(this.manifest.read());
+        this.files = objectValues(this.manifest.read());
 
         return this;
     }
