@@ -25,7 +25,6 @@ class Paths {
     /**
      * Determine the project root.
      *
-     * @param {string|null} rootPath
      * @param {string|null} append
      */
     root(append = '') {
