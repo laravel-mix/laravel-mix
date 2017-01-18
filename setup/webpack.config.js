@@ -268,7 +268,7 @@ if (Mix.notifications) {
         new plugins.WebpackNotifierPlugin({
             title: 'Laravel Mix',
             alwaysNotify: true,
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+            contentImage: path.join(__dirname, 'node_modules/laravel-mix/icons/laravel.png')
         })
     );
 }
