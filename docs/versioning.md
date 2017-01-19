@@ -12,7 +12,7 @@ With versioning enabled, each time your code changes, a new hashed file will be 
 ```js
 let mix = require('laravel-mix').mix;
 
-mix.js('resources/assets/js/app.js', 'public/js');
+mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.sass', 'public/css')
    .version();
 ```
