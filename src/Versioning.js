@@ -50,7 +50,7 @@ class Versioning {
         if (! updated) return;
 
         this.files.filter(file => ! updated.files.includes(file))
-                  .forEach(file => this.manifest.remove(path.posix.join(baseDir, file)));
+                  .forEach(file => this.manifest.remove(path.join(baseDir, file)));
 
         this.files = updated.files;
 

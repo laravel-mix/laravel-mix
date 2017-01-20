@@ -112,9 +112,9 @@ class Mix {
      */
     cssOutput(segments) {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
-        let path = (this.inProduction && this.versioning) ? 'hashedPath' : 'path';
+        let pathVariant = (this.inProduction && this.versioning) ? 'hashedPath' : 'path';
 
-        return segments.output[path].replace(regex, '');
+        return segments.output[pathVariant].replace(regex, '').replace(path.sep, '/');
     }
 
 
