@@ -6,6 +6,8 @@ import ObjectValues from 'lodash/values';
 
 let manifestPath = null;
 let manifestFile = null;
+let cssFile = null;
+let jsFile = null;
 let manifest = null;
 
 let json = '{"/js/app.js":"/js/app.js","/css/app.css":"/css/app.css","/css/forum.css":"/css/forum.css","/js/admin.js":"/js/admin.js"}';
@@ -14,8 +16,8 @@ test.before(t => {
     manifestPath = path.resolve(__dirname, 'mix-manifest.json');
     manifestFile = new File(manifestPath).write(json);
 
-    new File(path.resolve(__dirname, 'fixtures/app.css')).write('css file');
-    new File(path.resolve(__dirname, 'fixtures/app.js')).write('js file');
+    cssFile = new File(path.resolve(__dirname, 'fixtures/app.css')).write('css file');
+    jsFile = new File(path.resolve(__dirname, 'fixtures/app.js')).write('js file');
 
     manifest = new Manifest(manifestFile.file);
 });
@@ -23,6 +25,8 @@ test.before(t => {
 
 test.after.always(t => {
     manifestFile.delete();
+    cssFile.delete();
+    jsFile.delete();
 });
 
 

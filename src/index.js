@@ -88,7 +88,7 @@ module.exports.preprocess = (type, src, output) => {
 
     if (output.isDir) {
         output = new Mix.File(
-            path.posix.join(output.path, src.name + '.css')
+            path.join(output.path, src.name + '.css')
         ).parsePath();
     }
 
