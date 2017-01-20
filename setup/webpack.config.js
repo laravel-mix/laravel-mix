@@ -234,11 +234,7 @@ module.exports.devServer = {
  */
 
 module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery'
-    }),
+    new webpack.ProvidePlugin(Mix.js.autoload || {}),
 
     new plugins.FriendlyErrorsWebpackPlugin(),
 
