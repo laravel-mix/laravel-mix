@@ -49,15 +49,17 @@ class Mix {
      * @param {object} webpackConfig
      */
     finalize(webpackConfig) {
-        if (! this.webpackConfig) return;
+        if (! this.webpackConfig) return webpackConfig;
 
-        mergeWith(this.webpackConfig, webpackConfig,
+        mergeWith(webpackConfig, this.webpackConfig,
             (objValue, srcValue) => {
                 if (Array.isArray(objValue)) {
                     return objValue.concat(srcValue);
                 }
             }
         );
+
+        return webpackConfig;
     }
 
 
