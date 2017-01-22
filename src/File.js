@@ -81,7 +81,7 @@ class File {
 
         return {
             path: this.file,
-            hashedPath: `${outputSegments.dir}/${outputSegments.name}.[hash]${outputSegments.ext}`,
+            hashedPath: path.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,

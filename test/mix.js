@@ -97,7 +97,7 @@ test('that it can merge a user\'s Webpack config', t => {
 test('that it determines the CSS output path correctly.', t => {
     mix.setPublicPath('./public')
        .js('js/stub.js', 'dist')
-       .less('sass/stub.scss', 'dist/stub.css');
+       .less('sass/stub.less', 'dist/stub.css');
 
     let segments = mix.config.less;
 
