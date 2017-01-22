@@ -30,7 +30,7 @@ module.exports.js = (entry, output) => {
 
     if (output.isDir) {
         output = new Mix.File(
-            path.join(output.path, entry[0].file)
+            path.posix.join(output.path, entry[0].file)
         ).parsePath();
     }
 
