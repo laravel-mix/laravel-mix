@@ -221,4 +221,3 @@ module.exports.reset = () => {
 
 
 module.exports.config = Mix;
-module.exports.mix = module.exports;
