@@ -295,7 +295,7 @@ test('that the setter methods work properly', t => {
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);
     t.deepEqual(Mix.copy,
-        [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures') }]);
+        [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures'), flatten: true }]);
 
     Mix.minify = [];
     mix.minify('fake/test.txt');
