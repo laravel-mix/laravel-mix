@@ -183,17 +183,23 @@ class Mix {
      * Fetch the appropriate Babel config for babel-loader.
      */
     babelConfig() {
-        let file = this.Paths.root('.babelrc');
+       let file = this.Paths.root('.babelrc');
 
         // If the user has defined their own .babelrc file,
         // the babel-loader will automatically fetch it.
+        if(this.File.exists(file)) {
+            let userBabelConfig = new this.File(file).read()
+            
+            return '?' + JSON.stringify(JSON.parse(userBabelConfig))
+        }
+
         // Otherwise, we'll use these defaults.
-        return this.File.exists(file) ? '?cacheDirectory' : '?' + JSON.stringify({
+        return '?' + JSON.stringify({
             'cacheDirectory': true,
             'presets': [
                 ['es2015', { 'modules': false }]
             ]
-        });
+        });    
     }
 
 
