@@ -17,6 +17,7 @@ class Mix {
         this.sourcemaps = false;
         this.notifications = true;
         this.cssPreprocessor = false;
+        this.versioning = false;
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -37,7 +38,10 @@ class Mix {
         require(this.Paths.mix());
 
         this.manifest = new Manifest(this.publicPath + '/mix-manifest.json');
-        this.versioning = new Versioning(this.manifest);
+
+        if (this.versioning) {
+            this.versioning = new Versioning(this.manifest);
+        }
 
         this.detectHotReloading();
     }
@@ -97,7 +101,7 @@ class Mix {
      */
     output() {
         // We'll only apply a chunkhash in production, as it's a costly step.
-        let filename = (this.inProduction && this.versioning) ? '[name].[chunkhash].js' : '[name].js';
+        let filename = this.versioning ? '[name].[chunkhash].js' : '[name].js';
 
         return {
             path: this.hmr ? '/' : this.publicPath,
@@ -114,7 +118,7 @@ class Mix {
      */
     cssOutput(segments) {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
-        let pathVariant = (this.inProduction && this.versioning) ? 'hashedPath' : 'path';
+        let pathVariant = this.versioning ? 'hashedPath' : 'path';
 
         return segments.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
     }
