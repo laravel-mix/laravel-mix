@@ -11,7 +11,7 @@ With a single line of code, Laravel Mix allows you to trigger a number of vital 
 * Hot module replacement
 * Tree-shaking, new in Webpack 2 \(removes unused library code\)
 * Extract vendor libraries \(via `mix.extract()`\), for improved long-term caching
-* Automatic versioning \(file hashing\), via `mix.vendor()`
+* Automatic versioning \(file hashing\), via `mix.version()`
 
 
 ### Usage
