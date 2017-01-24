@@ -14,7 +14,7 @@ mix.sass('src/app.sass', 'dist')
 Done. Simple, right?
 
 1. Compile the Sass file, `./src/app.sass`, to `./dist/app.sass`
-2. Bundle all JavaScript \(and any required modules\) at `./src/app.js` to `./dist/bundle.js`.
+2. Bundle all JavaScript \(and any required modules\) at `./src/app.js` to `./dist/app.js`.
 
 With this configuration in place, we may trigger Webpack from the command line: `node_modules/.bin/webpack`.
 
