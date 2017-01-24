@@ -1,4 +1,5 @@
 let path = require('path');
+let assert = require('assert');
 let Mix = require('./Mix');
 
 /**
@@ -22,6 +23,9 @@ module.exports.plugins = {
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
+    assert(entry && (typeof entry === 'string' || Array.isArray(entry)), 'Missing required parameter 1: entry');
+    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+
     entry = (Array.isArray(entry) ? entry : [entry]).map(file => {
         return new Mix.File(path.resolve(file)).parsePath();
     });
@@ -81,6 +85,9 @@ module.exports.autoload = (libs) => {
  * @param {string} output
  */
 module.exports.sass = (src, output) => {
+    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
+    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+
     return module.exports.preprocess('sass', src, output);
 };
 
@@ -92,6 +99,9 @@ module.exports.sass = (src, output) => {
  * @param {string} output
  */
 module.exports.less = (src, output) => {
+    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
+    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+
     return module.exports.preprocess('less', src, output);
 };
 
