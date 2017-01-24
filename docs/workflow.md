@@ -38,7 +38,7 @@ node_modules/.bin/webpack
 Alternatively, if you have the NPM script within your `package.json`, you may do:
 
 ```bash
-npm run webpack
+npm run dev
 ```
 
 Once that finishes, you should now see:
@@ -49,7 +49,7 @@ Once that finishes, you should now see:
 Excellent! Next, let's get to work. To watch your JavaScript for changes, run:
 
 ```bash
-npm run dev
+npm run watch
 ```
 
 Laravel ships with a `./resources/assets/js/components/Example.vue` file. Give it a tweak, and wait for the OS notification, which signals that the compilation has completed. Great!
@@ -86,10 +86,10 @@ It would be nice if we could update a Vue component, and instantly see it refres
 Return to the command line, and hit `Ctrl+c` to cancel the Webpack watcher. Instead, we'll run:
 
 ```bash
-npm run hmr
+npm run hot
 ```
 
-"HMR" stands for "hot module replacement." This command is the only thing you have to do to activate automatic reloading. Return to your browser, give it a refresh, and then return to your editor to modify the `./resources/assets/js/components/Example.vue` file. Change the template however you wish, and watch as the browser instantly refreshes to reflect your change \(once you hit save, of course\). Amazing!
+"hot" stands for "hot module replacement." This command is the only thing you have to do to activate automatic reloading. Return to your browser, give it a refresh, and then return to your editor to modify the `./resources/assets/js/components/Example.vue` file. Change the template however you wish, and watch as the browser instantly refreshes to reflect your change \(once you hit save, of course\). Amazing!
 
 
 
