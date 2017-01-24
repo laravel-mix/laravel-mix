@@ -116,7 +116,7 @@ class Mix {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
         let pathVariant = (this.inProduction && this.versioning) ? 'hashedPath' : 'path';
 
-        return segments.output[pathVariant].replace(regex, '').replace(path.sep, '/');
+        return segments.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
     }
 
 
