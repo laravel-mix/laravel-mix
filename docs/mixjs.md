@@ -17,13 +17,13 @@ With a single line of code, Laravel Mix allows you to trigger a number of vital 
 ### Usage
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 // 1. A single src and output path.
 mix.js('src/app.js', 'dist/app.js');
 
 
-// 2. For additional src files that should be 
+// 2. For additional src files that should be
 // bundled together:
 mix.js([
     'src/app.js',
@@ -45,7 +45,7 @@ Please note that Laravel Mix requires you to perform some form of Javascript bun
 Consider a typical Laravel install. By default, your JavaScript entry point will be located at `./resources/assets/js/app.js`. Let's prepare a `webpack.mix.js` file to compile that to `./public/js/app.js`.
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js');
 ```
@@ -105,7 +105,7 @@ If you're familiar with Vue, this should all look very familiar, so we'll move o
 **./webpack.mix.js**
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js');
 ```

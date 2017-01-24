@@ -7,7 +7,7 @@ Though Laravel Mix is optimized for Laravel usage, it may be used for any type o
 Laravel 5.4 ships with everything you need to get started. Simply:
 
 * Install Laravel
-* Run `npm install` 
+* Run `npm install`
 * Visit your `webpack.mix.js file`, and get started!
 
 Now, from the command line, you may run `npm run dev` to watch your files for changes, and then recompile.
@@ -41,7 +41,7 @@ Laravel Mix consists of two core components:
 Head over to your webpack.mix.js file:
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('src/app.js', 'dist')
    .sass('src/app.scss', 'dist');

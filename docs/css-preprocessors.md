@@ -27,7 +27,7 @@ Let's review a quick example:
 **webpack.mix.js**
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.sass', 'public/css');

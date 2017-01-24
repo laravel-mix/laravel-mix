@@ -19,13 +19,13 @@ npm install
 Think of this file as your home base for all front-end configuration.
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js');
 mix.sass('resources/assets/sass/app.scss', 'public/css');
 ```
 
-By default, we've enabled JavaScript ES2015 + module bundling, as well as Sass compilation. 
+By default, we've enabled JavaScript ES2015 + module bundling, as well as Sass compilation.
 
 ### Step 4: Compilation
 
@@ -71,17 +71,17 @@ Again, Laravel ships with a welcome page. We can use this for our demo. Update i
         <div id="app">
             <example></example>
         </div>
-        
+
         <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>
 ```
 
-And reload the page in your browser. Great! It works. 
+And reload the page in your browser. Great! It works.
 
 ### Step 6: Hot Reloading
 
-It would be nice if we could update a Vue component, and instantly see it refresh in the browser, without having to perform a manual refresh. Even better, it would be nice if this refresh didn't reset our component's state. Well, hot module replacement to the rescue! 
+It would be nice if we could update a Vue component, and instantly see it refresh in the browser, without having to perform a manual refresh. Even better, it would be nice if this refresh didn't reset our component's state. Well, hot module replacement to the rescue!
 
 Return to the command line, and hit `Ctrl+c` to cancel the Webpack watcher. Instead, we'll run:
 

@@ -37,3 +37,29 @@ If you're running `npm run dev` through a VM, you may find that file changes are
 ### My manifest.json file shouldn't be in the project root.
 
 If you're not using Laravel, your `manifest.json` file will be dumped into the project root. If you need to change this, call `mix.setPublicPath('dist/');`, and your manifest file will now be saved in that base directory.
+
+### How Do I autoload modules with Webpack?
+
+Through its `ProvidePlugin` plugin, Webpack allows you to automatically load modules, where needed. A common use-case for this is when we need to pull in jQuery.
+
+```js
+new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery'
+});
+
+// in a module
+$('#item'); // <= just works
+jQuery('#item'); // <= just works
+// $ is automatically set to the exports of module "jquery"
+```
+
+While Laravel Mix automatically loads jQuery for you (exactly as the example above demonstrates), should you need to disable it (by passing an empty object), or override it with your own modules, you may use the `mix.autoload()` method. Here's an example:
+
+```js
+mix.autoload({
+    $: 'jquery',
+    jQuery: 'jquery',
+    someLib: 'some-lib-module-name'
+});
+```
