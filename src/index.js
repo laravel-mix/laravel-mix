@@ -68,7 +68,7 @@ module.exports.autoload = (libs) => {
         });
     });
 
-    Mix.js.autoload = aliases;
+    Mix.autoload = aliases;
 
     return this;
 };
