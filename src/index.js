@@ -239,6 +239,8 @@ module.exports.reset = () => {
         'less', 'sourceMaps'
     ].forEach(prop => Mix[prop] = null);
 
+    Mix.publicPath = './';
+
     return this;
 };
 

@@ -8,6 +8,7 @@ test('that it parses a path into segments', t => {
 
     t.deepEqual(segments, {
         path: dummyFile.file,
+        pathWithoutExt: dummyFile.file.replace('.txt', ''),
         hashedPath: dummyFile.file.replace('dummy.txt', 'dummy.[hash].txt'),
         base: path.resolve(__dirname),
         file: "dummy.txt",

@@ -71,8 +71,6 @@ class Mix {
      * Determine the Webpack entry file(s).
      */
     entry() {
-        // We'll build up an entry object that the webpack.config.js
-        // file will want to see. It'll include all mix.js() calls.
         if (! this.js) {
             throw new Error(
                 `Laravel Mix: You must call "mix.js()" once or more.`
@@ -80,7 +78,9 @@ class Mix {
         }
 
         let entry = this.js.reduce((result, paths) => {
-            result[paths.output.name] = paths.entry.map(src => src.path);
+            let name = paths.output.pathWithoutExt.replace(this.publicPath, '');
+
+            result[name] = paths.entry.map(src => src.path);
 
             return result;
         }, {});
@@ -100,12 +100,11 @@ class Mix {
      * Determine the Webpack output path.
      */
     output() {
-        // We'll only apply a chunkhash in production, as it's a costly step.
         let filename = this.versioning ? '[name].[chunkhash].js' : '[name].js';
 
         return {
             path: this.hmr ? '/' : this.publicPath,
-            filename: path.posix.join(this.js[0].output.base, filename).replace(this.publicPath, ''),
+            filename: filename,
             publicPath: this.hmr ? 'http://localhost:8080/' : './'
         };
     }

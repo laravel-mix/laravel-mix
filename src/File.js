@@ -81,6 +81,7 @@ class File {
 
         return {
             path: this.file,
+            pathWithoutExt: path.join(outputSegments.dir, `${outputSegments.name}`),
             hashedPath: path.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,

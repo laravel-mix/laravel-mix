@@ -6,8 +6,9 @@ import File from '../src/File';
 import sinon from 'sinon';
 
 test.afterEach('cleanup', t => {
-    mix.reset();
+    mix = mix.reset();
 });
+
 
 test('that it throws an exception if mix.js() was not called', t => {
     let error = t.throws(() => {
@@ -52,6 +53,7 @@ test('that Mix initializes properly', t => {
     artisan.delete();
     t.is(initSpy.callCount, 4);
 });
+
 
 test('that it determines the JS paths', t => {
     mix.js('js/stub.js', 'dist')
@@ -118,47 +120,48 @@ test('that it determines the CSS output path correctly.', t => {
 
     // Test else path for this.cssPreprocessor being empty
     Mix.cssPreprocessor = false;
-    t.deepEqual(Mix.entry(),
-        { stub: [path.resolve(__dirname, '../js/stub.js')] }); //js/stub.js
-                                                               // from above
+    t.deepEqual(Mix.entry(), {
+        'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
+    });
 });
 
 
 test('that it calculates the output correctly', t => {
-    mix.js('js/stub.js', 'dist').sass('sass/stub.scss', 'dist');
+    mix.js('js/stub.js', 'dist')
+       .sass('sass/stub.scss', 'dist');
 
     t.deepEqual({
-        path: './public',
-        filename: 'dist/[name].js',
+        path: './',
+        filename: '[name].js',
         publicPath: './'
     }, mix.config.output());
 
 
-    // Enabling Hot Reloading should change this output.
+    // // Enabling Hot Reloading should change this output.
     mix.config.hmr = true;
 
     t.deepEqual({
         path: '/',
-        filename: 'dist/[name].js',
+        filename: '[name].js',
         publicPath: 'http://localhost:8080/'
     }, mix.config.output());
 
 
-    // Extracting vendor libraries should change this output.
+    // // Extracting vendor libraries should change this output.
     mix.config.hmr = false;
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: './public',
-        filename: 'dist/[name].js',
+        path: './',
+        filename: '[name].js',
         publicPath: './'
     }, mix.config.output());
-
 });
 
-test('that it calculates versioned output correctly', t => {
 
-    mix.js('js/stub.js', 'dist').sass('sass/stub.scss', 'dist');
+test('that it calculates versioned output correctly', t => {
+    mix.js('js/stub.js', 'dist')
+       .sass('sass/stub.scss', 'dist');
 
     // turn on versioning and fake production env
     // since versioninig only works in production
@@ -166,17 +169,17 @@ test('that it calculates versioned output correctly', t => {
     mix.config.inProduction = true;
 
     t.deepEqual({
-        path: './public',
-        filename: 'dist/[name].[chunkhash].js',
+        path: './',
+        filename: '[name].[chunkhash].js',
         publicPath: './'
     }, mix.config.output());
 
-    // Enabling Hot Reloading should change this output.
+    // // Enabling Hot Reloading should change this output.
     mix.config.hmr = true;
 
     t.deepEqual({
         path: '/',
-        filename: 'dist/[name].[chunkhash].js',
+        filename: '[name].[chunkhash].js',
         publicPath: 'http://localhost:8080/'
     }, mix.config.output());
 
@@ -184,8 +187,8 @@ test('that it calculates versioned output correctly', t => {
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: './public',
-        filename: 'dist/[name].[chunkhash].js',
+        path: './',
+        filename: '[name].[chunkhash].js',
         publicPath: './'
     }, mix.config.output());
 
