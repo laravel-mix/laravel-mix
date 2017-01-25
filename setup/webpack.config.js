@@ -135,7 +135,7 @@ if (Mix.cssPreprocessor) {
                     'css-loader',
                     'postcss-loader',
                     'resolve-url-loader',
-                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap' : 'less-loader'
+                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
                 ]
             })
         });
