@@ -63,7 +63,7 @@ module.exports.autoload = (libs) => {
     let aliases = {};
 
     Object.keys(libs).forEach(library => {
-        libs[library].forEach(alias => {
+        [].concat(libs[library]).forEach(alias => {
             aliases[alias] = library;
         });
     });
