@@ -139,12 +139,13 @@ module.exports.combine = (src, output) => {
  *
  * @param {string} from
  * @param {string} to
+ * @param {boolean} flatten
  */
-module.exports.copy = (from, to) => {
+module.exports.copy = (from, to, flatten = true) => {
     Mix.copy = (Mix.copy || []).concat({
         from,
         to: Mix.Paths.root(to),
-        flatten: true
+        flatten: flatten
     });
 
     return this;
