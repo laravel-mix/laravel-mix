@@ -92,6 +92,12 @@ class Mix {
             entry[name] = entry[name].concat(stylesheets);
         }
 
+        if (this.js.vendor) {
+            let vendorPath = (this.js.base + '/vendor').replace(this.publicPath, '');
+
+            entry[vendorPath] = this.js.vendor;
+        }
+
         return entry;
     }
 

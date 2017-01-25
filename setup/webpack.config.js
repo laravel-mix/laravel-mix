@@ -45,11 +45,6 @@ module.exports.context = Mix.Paths.root();
 
 module.exports.entry = Mix.entry();
 
-if (Mix.js.vendor) {
-    module.exports.entry.vendor = Mix.js.vendor;
-}
-
-
 
 /*
  |--------------------------------------------------------------------------
@@ -63,7 +58,6 @@ if (Mix.js.vendor) {
  */
 
 module.exports.output = Mix.output();
-
 
 
 /*
@@ -308,7 +302,8 @@ if (Mix.copy) {
 if (Mix.js.vendor) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', 'manifest']
+            names: ['vendor', Mix.js.base + '/' + 'manifest'],
+            minChunks: Infinity
         })
     );
 }

@@ -36,6 +36,8 @@ module.exports.js = (entry, output) => {
 
     Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
 
+    Mix.js.base = output.base.replace(Mix.publicPath, '');
+
     return this;
 };
 
