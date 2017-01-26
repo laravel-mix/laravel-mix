@@ -22,7 +22,7 @@ module.exports.plugins = {
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    entry = (Array.isArray(entry) ? entry : [entry]).map(file => {
+    entry = [].concat(entry).map(file => {
         return new Mix.File(path.resolve(file)).parsePath();
     });
 
@@ -139,8 +139,8 @@ module.exports.combine = (src, output) => {
 /**
  * Copy one or more files to a new location.
  *
- * @param {string} from
- * @param {string} to
+ * @param {string}  from
+ * @param {string}  to
  * @param {boolean} flatten
  */
 module.exports.copy = (from, to, flatten = true) => {

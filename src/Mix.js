@@ -34,7 +34,9 @@ class Mix {
         }
 
         // We'll first load the user's webpack.mix.js file.
-        if (rootPath) this.Paths.setRootPath(rootPath);
+        if (rootPath) {
+            this.Paths.setRootPath(rootPath);
+        }
         require(this.Paths.mix());
 
         this.manifest = new Manifest(this.publicPath + '/mix-manifest.json');
