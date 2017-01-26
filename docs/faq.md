@@ -58,7 +58,7 @@ While Laravel Mix automatically loads jQuery for you (exactly as the example abo
 
 ```js
 mix.autoload({
-	jquery: ['$', 'window.jQuery', 'jQuery'], // more than one
+  jquery: ['$', 'window.jQuery', 'jQuery'], // more than one
   moment: 'moment' // only one
 })
 ```
