@@ -132,7 +132,7 @@ if (Mix.stylePreprocessors) {
                         'css-loader',
                         'postcss-loader',
                         'resolve-url-loader',
-                        (type == 'sass') ? 'sass-loader?sourceMap' : 'less-loader'
+                        (type == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
                     ]
                 })
             });

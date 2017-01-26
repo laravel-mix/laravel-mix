@@ -109,7 +109,7 @@ test('that it determines the CSS output path correctly.', t => {
     Mix.versioning = false;
     Mix.inProduction = false;
 
-    // Test else path for this.cssPreprocessor being empty
+    // Test else path for this.stylePreprocessors being empty
     Mix.stylePreprocessors = false;
     t.deepEqual(Mix.entry(), {
         'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
