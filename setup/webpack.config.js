@@ -125,7 +125,7 @@ if (Mix.stylePreprocessors) {
             );
 
             module.exports.module.rules.push({
-                test: new RegExp(toCompile.src.file),
+                test: new RegExp(toCompile.src.path),
                 loader: extractPlugin.extract({
                     fallbackLoader: 'style-loader',
                     loader: [
