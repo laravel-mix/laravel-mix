@@ -78,7 +78,9 @@ class Mix {
         }
 
         let entry = this.js.reduce((result, paths) => {
-            let name = paths.output.pathWithoutExt.replace(this.publicPath, '');
+            let name = paths.output.pathWithoutExt
+                .replace(this.publicPath, '')
+                .replace(/\\/g, '/');
 
             result[name] = paths.entry.map(src => src.path);
 
