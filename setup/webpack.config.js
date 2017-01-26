@@ -302,7 +302,7 @@ if (Mix.copy) {
 if (Mix.js.vendor) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', Mix.js.base + '/' + 'manifest'],
+            names: [Mix.js.base + '/vendor', Mix.js.base + '/' + 'manifest'],
             minChunks: Infinity
         })
     );
