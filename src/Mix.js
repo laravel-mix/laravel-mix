@@ -5,6 +5,7 @@ let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
 let mergeWith = require('lodash').mergeWith;
+let WebpackEntry = require('./WebpackEntry');
 
 class Mix {
     /**
@@ -19,6 +20,7 @@ class Mix {
         this.cssPreprocessor = false;
         this.versioning = false;
         this.js = [];
+        this.webpackEntry = new WebpackEntry(this);
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -71,37 +73,10 @@ class Mix {
 
 
     /**
-     * Determine the Webpack entry file(s).
+     * Prepare the Webpack entry object.
      */
     entry() {
-        let entry = { 'app': [] };
-
-        if (this.js.length) {
-            entry = this.js.reduce((result, paths) => {
-                let name = paths.output.pathWithoutExt
-                    .replace(this.publicPath, '')
-                    .replace(/\\/g, '/');
-
-                result[name] = paths.entry.map(src => src.path);
-
-                return result;
-            }, {});
-        }
-
-        if (this.cssPreprocessor) {
-            let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
-            let name = Object.keys(entry)[0];
-
-            entry[name] = entry[name].concat(stylesheets);
-        }
-
-        if (this.js.length && this.js.vendor) {
-            let vendorPath = (this.js.base + '/vendor').replace(this.publicPath, '');
-
-            entry[vendorPath] = this.js.vendor;
-        }
-
-        return entry;
+        return this.webpackEntry.build();
     }
 
 
@@ -215,6 +190,23 @@ class Mix {
     isUsingLaravel() {
         return this.File.exists('./artisan');
     }
+
+
+    /**
+     * Reset all configuration to their defaults.
+     */
+    reset() {
+        [
+            'js', 'cssPreprocessor', 'sass',
+            'less', 'sourceMaps'
+        ].forEach(prop => this[prop] = null);
+
+        this.publicPath = './';
+        this.webpackEntry.reset();
+
+        return this;
+    }
 };
+
 
 module.exports = new Mix;

@@ -6,7 +6,7 @@ import File from '../src/File';
 import sinon from 'sinon';
 
 test.afterEach('cleanup', t => {
-    mix = mix.reset();
+    Mix.reset();
 });
 
 
@@ -58,7 +58,7 @@ test('that it determines the JS paths', t => {
     t.is('dist/stub.js', js[0].output.path);
     t.falsy(js[0].vendor);
 
-    mix.reset();
+    Mix.reset();
 
     // We can also pass an array of entry scripts, to be bundled together.
     mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');

@@ -232,20 +232,5 @@ module.exports.webpackConfig = (config) => {
 }
 
 
-/**
- * Reset all configuration to their defaults.
- */
-module.exports.reset = () => {
-    [
-        'js', 'cssPreprocessor', 'sass',
-        'less', 'sourceMaps'
-    ].forEach(prop => Mix[prop] = null);
-
-    Mix.publicPath = './';
-
-    return this;
-};
-
-
 module.exports.config = Mix;
 module.exports.mix = module.exports;
