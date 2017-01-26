@@ -115,29 +115,32 @@ module.exports.module = {
 };
 
 
-if (Mix.cssPreprocessor) {
-    Mix[Mix.cssPreprocessor].forEach(toCompile => {
-        let extractPlugin = new plugins.ExtractTextPlugin(
-            Mix.cssOutput(toCompile)
-        );
+if (Mix.stylePreprocessors) {
+    Mix.stylePreprocessors.forEach(type => {
+        if (!Mix[type]) return;
 
-        module.exports.module.rules.push({
-            test: new RegExp(toCompile.src.path),
-            loader: extractPlugin.extract({
-                fallbackLoader: 'style-loader',
-                loader: [
-                    'css-loader',
-                    'postcss-loader',
-                    'resolve-url-loader',
-                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
-                ]
-            })
+        Mix[type].forEach(toCompile => {
+            let extractPlugin = new plugins.ExtractTextPlugin(
+                Mix.cssOutput(toCompile)
+            );
+
+            module.exports.module.rules.push({
+                test: new RegExp(toCompile.src.path),
+                loader: extractPlugin.extract({
+                    fallbackLoader: 'style-loader',
+                    loader: [
+                        'css-loader',
+                        'postcss-loader',
+                        'resolve-url-loader',
+                        (type == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
+                    ]
+                })
+            });
+
+            module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
         });
-
-        module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
 }
-
 
 
 /*

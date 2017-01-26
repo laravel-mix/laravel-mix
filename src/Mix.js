@@ -88,11 +88,15 @@ class Mix {
             }, {});
         }
 
-        if (this.cssPreprocessor) {
-            let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
-            let name = Object.keys(entry)[0];
+        if (this.stylePreprocessors) {
+            this.stylePreprocessors.forEach(type => {
+                if (!this[type]) return;
 
-            entry[name] = entry[name].concat(stylesheets);
+                let stylesheets = this[type].map(entry => entry.src.path);
+                let name = Object.keys(entry)[0];
+
+                entry[name] = entry[name].concat(stylesheets);
+            });
         }
 
         if (this.js.length && this.js.vendor) {
