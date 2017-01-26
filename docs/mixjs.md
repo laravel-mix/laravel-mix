@@ -36,9 +36,6 @@ mix.js('src/app.js', 'dist/')
    .js('src/forum.js', 'dist/');
 ```
 
-##### Important Note
-
-Please note that Laravel Mix requires you to perform some form of Javascript bundling. As such, at least one call to `mix.js` within your `webpack.mix.js` file is mandatory.
 
 ### Laravel Example
 
