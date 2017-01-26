@@ -117,7 +117,7 @@ module.exports.preprocess = (type, src, output) => {
 
     Mix[type] = (Mix[type] || []).concat({ src, output });
 
-    Mix.cssPreprocessor = type;
+    Mix.stylePreprocessors = (Mix.stylePreprocessors || []).concat(type).filter((v, i, a) => a.indexOf(v) === i);
 
     return this;
 };
