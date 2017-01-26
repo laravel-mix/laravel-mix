@@ -18,6 +18,7 @@ class Mix {
         this.notifications = true;
         this.cssPreprocessor = false;
         this.versioning = false;
+        this.js = [];
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -73,21 +74,19 @@ class Mix {
      * Determine the Webpack entry file(s).
      */
     entry() {
-        if (! this.js) {
-            throw new Error(
-                `Laravel Mix: You must call "mix.js()" once or more.`
-            );
+        let entry = { 'app': [] };
+
+        if (this.js.length) {
+            entry = this.js.reduce((result, paths) => {
+                let name = paths.output.pathWithoutExt
+                    .replace(this.publicPath, '')
+                    .replace(/\\/g, '/');
+
+                result[name] = paths.entry.map(src => src.path);
+
+                return result;
+            }, {});
         }
-
-        let entry = this.js.reduce((result, paths) => {
-            let name = paths.output.pathWithoutExt
-                .replace(this.publicPath, '')
-                .replace(/\\/g, '/');
-
-            result[name] = paths.entry.map(src => src.path);
-
-            return result;
-        }, {});
 
         if (this.cssPreprocessor) {
             let stylesheets = this[this.cssPreprocessor].map(entry => entry.src.path);
@@ -96,7 +95,7 @@ class Mix {
             entry[name] = entry[name].concat(stylesheets);
         }
 
-        if (this.js.vendor) {
+        if (this.js.length && this.js.vendor) {
             let vendorPath = (this.js.base + '/vendor').replace(this.publicPath, '');
 
             entry[vendorPath] = this.js.vendor;

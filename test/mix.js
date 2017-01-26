@@ -10,21 +10,12 @@ test.afterEach('cleanup', t => {
 });
 
 
-test('that it throws an exception if mix.js() was not called', t => {
-    let error = t.throws(() => {
+test('that it uses a default entry, if mix.js() is never called', t => {
         mix.sass('sass/stub.scss', 'dist');
-        Mix.entry();
-    }, Error);
 
-    t.is(error.message, 'Laravel Mix: You must call "mix.js()" once or more.');
-
-    mix.reset();
-
-    t.notThrows(() => {
-        mix.js('js/stub.js', 'dist');
-        mix.sass('css/stub.css', 'dist');
-        Mix.entry();
-    }, Error);
+        t.deepEqual({
+            app: [path.resolve('sass/stub.scss')]
+        }, Mix.entry());
 });
 
 
