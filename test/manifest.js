@@ -51,7 +51,8 @@ test('that it transforms the Webpack stats to a format we require', t => {
             app: [
                 '/js/app.js',
                 '/css/app.css',
-                '/css/forum.css'
+                '/css/forum.css',
+                '\\admin\\js/manifest.js'
             ],
 
             admin: '/js/admin.js'
@@ -62,6 +63,7 @@ test('that it transforms the Webpack stats to a format we require', t => {
         '/js/app.js': '/js/app.js',
         '/css/app.css': '/css/app.css',
         '/css/forum.css': '/css/forum.css',
+        '/admin/js/manifest.js': '/admin/js/manifest.js',
         '/js/admin.js': '/js/admin.js'
     }, JSON.parse(transformed));
 });

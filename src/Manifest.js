@@ -21,6 +21,8 @@ class Manifest {
         let flattenedPaths = [].concat.apply([], objectValues(stats.assetsByChunkName));
 
         let manifest = flattenedPaths.reduce((manifest, path) => {
+            path = path.replace(/\\/g, '/');
+
             let original = path.replace(/\.(\w{20})(\..+)/, '$2');
 
             manifest[original] = path;
