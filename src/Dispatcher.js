@@ -22,11 +22,12 @@ class Dispatcher {
      * Trigger all handlers for the given event.
      *
      * @param {string} event
+     * @param {mixed} data
      */
-    fire(event) {
+    fire(event, data) {
         if (! this.events[event]) return false;
 
-        this.events[event].forEach(handler => handler());
+        this.events[event].forEach(handler => handler(data));
     }
 }
 

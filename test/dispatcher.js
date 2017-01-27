@@ -9,8 +9,8 @@ test('that it can dispatch events', t => {
     events.listen('some-event', handler);
     events.listen('some-event', handler);
 
-    events.fire('some-event');
+    events.fire('some-event', 'foo');
 
-    t.truthy(handler.calledTwice);
+    t.truthy(handler.withArgs('foo').calledTwice);
 });
 
