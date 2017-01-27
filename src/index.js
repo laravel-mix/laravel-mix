@@ -13,14 +13,14 @@ module.exports.js = (entry, output) => {
     assert(output && typeof output === 'string', 'mix.js() is missing required parameter 2: output');
 
     entry = [].concat(entry).map(file => {
-        return new Mix.File(path.posix.resolve(file)).parsePath();
+        return new Mix.File(path.resolve(file)).parsePath();
     });
 
     output = new Mix.File(output).parsePath();
 
     if (output.isDir) {
         output = new Mix.File(
-            path.posix.join(output.path, entry[0].file)
+            path.join(output.path, entry[0].file)
         ).parsePath();
     }
 
@@ -99,12 +99,12 @@ module.exports.preprocess = (type, src, output) => {
     assert(src && typeof src === 'string', `mix.${type}() is missing required parameter 1: src`);
     assert(output && typeof output === 'string', `mix.${type}() is missing required parameter 2: output`);
 
-    src = new Mix.File(path.posix.resolve(src)).parsePath();
+    src = new Mix.File(path.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
 
     if (output.isDir) {
         output = new Mix.File(
-            path.posix.join(output.path, src.name + '.css')
+            path.join(output.path, src.name + '.css')
         ).parsePath();
     }
 
