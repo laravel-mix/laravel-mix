@@ -87,11 +87,13 @@ class Mix {
      */
     output() {
         let filename = this.versioning ? '[name].[chunkhash].js' : '[name].js';
+        let chunkFilename = this.js.base + '/' + (this.versioning ? '[name].[chunkhash].js' : '[name].js');
 
         return {
             path: this.hmr ? '/' : this.publicPath,
             filename: filename,
-            publicPath: this.hmr ? 'http://localhost:8080/' : './'
+            chunkFilename: chunkFilename,
+            publicPath: this.hmr ? 'http://localhost:8080' : ''
         };
     }
 
