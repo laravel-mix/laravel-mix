@@ -1,3 +1,4 @@
+let path = require('path');
 let Collection = new require('./Collection');
 
 class WebpackEntry {
@@ -30,9 +31,7 @@ class WebpackEntry {
      */
     addScripts() {
         if (! this.mix.js.length) {
-            this.entry.add('app', []);
-
-            return this;
+            return this.addTemporaryScript();
         }
 
         this.mix.js.forEach(paths => {
@@ -43,6 +42,27 @@ class WebpackEntry {
             this.entry.add(
                 name, paths.entry.map(src => src.path)
             );
+        });
+
+        return this;
+    }
+
+
+    /**
+     * Add a temporary JS entrypoint, since the
+     * user hasn't called mix.js().
+     */
+    addTemporaryScript() {
+        let file = new this.mix.File('mix-entry.js').write('');
+
+        this.entry.add('mix', file.path());
+
+        this.mix.events.listen('build', () => {
+            file.delete();
+
+            this.mix.File.find(
+                path.join(this.mix.output().path, 'mix.js')
+            ).delete();
         });
 
         return this;

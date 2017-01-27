@@ -16,6 +16,16 @@ class File {
 
 
     /**
+     * Static constructor.
+     *
+     * @param {string} file
+     */
+    static find(file) {
+        return new File(file);
+    }
+
+
+    /**
      * Minify the file, if it is CSS or JS.
      */
     minify() {
@@ -70,6 +80,16 @@ class File {
         if (fs.existsSync(this.file)) {
             fs.unlinkSync(this.file);
         }
+    }
+
+
+    /**
+     * Fetch the full path to the file.
+     *
+     * @return {string}
+     */
+    path() {
+        return path.resolve(this.file);
     }
 
 

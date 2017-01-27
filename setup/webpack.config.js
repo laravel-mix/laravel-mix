@@ -270,6 +270,13 @@ if (Mix.notifications) {
 }
 
 
+module.exports.plugins.push(
+    new plugins.WebpackOnBuildPlugin(
+        () => Mix.events.fire('build')
+    )
+);
+
+
 if (Mix.versioning) {
     Mix.versioning.record();
 

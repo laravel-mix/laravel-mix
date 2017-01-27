@@ -6,6 +6,7 @@ let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
 let mergeWith = require('lodash').mergeWith;
 let WebpackEntry = require('./WebpackEntry');
+let Dispatcher = require('./Dispatcher');
 
 class Mix {
     /**
@@ -21,6 +22,7 @@ class Mix {
         this.versioning = false;
         this.js = [];
         this.webpackEntry = new WebpackEntry(this);
+        this.events = new Dispatcher;
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -197,11 +199,12 @@ class Mix {
      */
     reset() {
         [
-            'js', 'cssPreprocessor', 'sass',
+            'cssPreprocessor', 'sass',
             'less', 'sourceMaps'
         ].forEach(prop => this[prop] = null);
 
         this.publicPath = './';
+        this.js = [];
         this.webpackEntry.reset();
 
         return this;
