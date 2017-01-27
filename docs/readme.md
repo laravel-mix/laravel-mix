@@ -16,6 +16,7 @@
 * [Copying Files](copying-files.md)
 * [OS Notifications](os-notifications.md)
 * [Concatenation and Minification](concatenation-and-minification.md)
+* [Event Hooks](event-hooks.md)
 * [Quick Webpack Configuration](quick-webpack-configuration.md)
 
 ## Advanced Configuration
