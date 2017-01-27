@@ -206,6 +206,18 @@ module.exports.webpackConfig = (config) => {
 }
 
 
+/**
+ * Register a Webpack build event handler.
+ *
+ * @param {Function} callback
+ */
+module.exports.then = (callback) => {
+    Mix.events.listen('build', callback);
+
+    return this;
+}
+
+
 module.exports.config = Mix;
 module.exports.mix = module.exports;
 module.exports.plugins = {
