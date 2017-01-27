@@ -9,8 +9,8 @@ let Mix = require('./Mix');
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    assert(entry && (typeof entry === 'string' || Array.isArray(entry)), 'Missing required parameter 1: entry');
-    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+    assert(entry && (typeof entry === 'string' || Array.isArray(entry)), 'mix.js() is missing required parameter 1: entry');
+    assert(output && typeof output === 'string', 'mix.js() is missing required parameter 2: output');
 
     entry = [].concat(entry).map(file => {
         return new Mix.File(path.posix.resolve(file)).parsePath();
@@ -96,8 +96,8 @@ module.exports.less = (src, output) => {
  * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
-    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
-    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+    assert(src && typeof src === 'string', `mix.${type}() is missing required parameter 1: src`);
+    assert(output && typeof output === 'string', `mix.${type}() is missing required parameter 2: output`);
 
     src = new Mix.File(path.posix.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
