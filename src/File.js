@@ -97,12 +97,12 @@ class File {
      * Parse the file path into segments.
      */
     parsePath() {
-        let outputSegments = path.parse(this.file);
+        let outputSegments = path.posix.parse(this.file);
 
         return {
             path: this.file,
-            pathWithoutExt: path.join(outputSegments.dir, `${outputSegments.name}`),
-            hashedPath: path.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
+            pathWithoutExt: path.posix.join(outputSegments.dir, `${outputSegments.name}`),
+            hashedPath: path.posix.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,

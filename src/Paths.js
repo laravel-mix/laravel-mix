@@ -5,7 +5,7 @@ class Paths {
      * Create a new Paths instance.
      */
     constructor() {
-        this.rootPath = path.resolve(__dirname, '../../../');
+        this.rootPath = path.posix.resolve(__dirname, '../../../');
     }
 
 
@@ -36,7 +36,7 @@ class Paths {
      * @param {string|null} append
      */
     root(append = '') {
-        return path.resolve(this.rootPath, append);
+        return path.posix.resolve(this.rootPath, append);
     }
 }
 
