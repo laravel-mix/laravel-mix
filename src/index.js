@@ -73,9 +73,6 @@ module.exports.autoload = (libs) => {
  * @param {string} output
  */
 module.exports.sass = (src, output) => {
-    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
-    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
-
     return module.exports.preprocess('sass', src, output);
 };
 
@@ -87,9 +84,6 @@ module.exports.sass = (src, output) => {
  * @param {string} output
  */
 module.exports.less = (src, output) => {
-    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
-    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
-
     return module.exports.preprocess('less', src, output);
 };
 
@@ -102,6 +96,9 @@ module.exports.less = (src, output) => {
  * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
+    assert(src && typeof src === 'string', 'Missing required parameter 1: src');
+    assert(output && typeof output === 'string', 'Missing required parameter 2: output');
+
     src = new Mix.File(path.posix.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
 
