@@ -272,7 +272,7 @@ if (Mix.notifications) {
 
 module.exports.plugins.push(
     new plugins.WebpackOnBuildPlugin(
-        () => Mix.events.fire('build')
+        stats => Mix.events.fire('build', stats)
     )
 );
 
