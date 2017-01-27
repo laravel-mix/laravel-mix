@@ -122,7 +122,7 @@ if (Mix.cssPreprocessor) {
         );
 
         module.exports.module.rules.push({
-            test: new RegExp(toCompile.src.fileWithDir + '$'),
+            test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
             loader: extractPlugin.extract({
                 fallbackLoader: 'style-loader',
                 loader: [
