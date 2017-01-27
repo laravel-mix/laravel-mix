@@ -24,7 +24,7 @@ module.exports.js = (entry, output) => {
         ).parsePath();
     }
 
-    Mix.js = (Mix.js || []).concat({ entry, output, vendor: false });
+    Mix.js = (Mix.js || []).concat({ entry, output });
 
     Mix.js.base = output.base.replace(Mix.publicPath, '');
 
