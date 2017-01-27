@@ -1,7 +1,6 @@
 let path = require('path');
 let Mix = require('./Mix');
 
-
 /**
  * Register the Webpack entry/output paths.
  *
@@ -190,18 +189,6 @@ module.exports.disableNotifications = () => {
  */
 module.exports.setPublicPath = (path) => {
     Mix.publicPath = path;
-
-    return this;
-};
-
-
-/**
- * Set the temporary cache directory.
- *
- * @param {string} path
- */
-module.exports.setCachePath = (path) => {
-    Mix.cachePath = path;
 
     return this;
 };

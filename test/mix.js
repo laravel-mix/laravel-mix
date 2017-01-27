@@ -294,8 +294,6 @@ test('that it reads the Babel config properly', t => {
 // test all methods that all they do is set a value
 test('that the setter methods work properly', t => {
     let root = path.resolve(__dirname);
-    mix.setCachePath('./');
-    t.is(Mix.cachePath, './');
 
     mix.disableNotifications();
     t.false(Mix.notifications);
