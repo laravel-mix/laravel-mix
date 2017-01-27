@@ -1,19 +1,6 @@
 let path = require('path');
 let Mix = require('./Mix');
 
-/**
- * We'll fetch some Webpack config plugins here for cleanliness.
- */
-module.exports.plugins = {
-    WebpackNotifierPlugin: require('webpack-notifier'),
-    WebpackOnBuildPlugin: require('on-build-webpack'),
-    ExtractTextPlugin: require('extract-text-webpack-plugin'),
-    CopyWebpackPlugin: require('copy-webpack-plugin'),
-    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
-    StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
-    WebpackMd5HashPlugin: require('webpack-md5-hash')
-};
-
 
 /**
  * Register the Webpack entry/output paths.
@@ -234,3 +221,12 @@ module.exports.webpackConfig = (config) => {
 
 module.exports.config = Mix;
 module.exports.mix = module.exports;
+module.exports.plugins = {
+    WebpackNotifierPlugin: require('webpack-notifier'),
+    WebpackOnBuildPlugin: require('on-build-webpack'),
+    ExtractTextPlugin: require('extract-text-webpack-plugin'),
+    CopyWebpackPlugin: require('copy-webpack-plugin'),
+    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
+    StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
+    WebpackMd5HashPlugin: require('webpack-md5-hash')
+};
