@@ -9,7 +9,7 @@ let Mix = require('./Mix');
  */
 module.exports.js = (entry, output) => {
     entry = [].concat(entry).map(file => {
-        return new Mix.File(path.resolve(file)).parsePath();
+        return new Mix.File(path.posix.resolve(file)).parsePath();
     });
 
     output = new Mix.File(output).parsePath();
@@ -92,7 +92,7 @@ module.exports.less = (src, output) => {
  * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
-    src = new Mix.File(path.resolve(src)).parsePath();
+    src = new Mix.File(path.posix.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
 
     if (output.isDir) {
