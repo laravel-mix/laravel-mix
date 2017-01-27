@@ -3,19 +3,19 @@ import path from 'path';
 import File from '../src/File';
 
 test('that it parses a path into segments', t => {
-    let dummyFile = new File(path.resolve(__dirname, 'dummy.txt'));
-    let segments = dummyFile.parsePath();
+    let file = new File('some/path/to/a/file.txt');
 
-    t.deepEqual(segments, {
-        path: dummyFile.file,
-        pathWithoutExt: dummyFile.file.replace('.txt', ''),
-        hashedPath: dummyFile.file.replace('dummy.txt', 'dummy.[hash].txt'),
-        base: path.resolve(__dirname),
-        file: "dummy.txt",
-        hashedFile: "dummy.[hash].txt",
-        name: "dummy",
+    t.deepEqual(file.parsePath(), {
+        path: 'some/path/to/a/file.txt',
+        pathWithoutExt: 'some/path/to/a/file',
+        hashedPath: 'some/path/to/a/file.[hash].txt',
+        base: 'some/path/to/a',
+        file: 'file.txt',
+        fileWithDir: 'a/file.txt',
+        hashedFile: 'file.[hash].txt',
+        name: 'file',
         isDir: false,
-        ext: ".txt"
+        ext: '.txt'
     });
 });
 

@@ -105,6 +105,7 @@ class File {
             hashedPath: path.posix.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,
+            fileWithDir: path.posix.join(outputSegments.dir.split('/').pop(), outputSegments.base),
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,
             name: outputSegments.name,
             isDir: ! outputSegments.ext,
