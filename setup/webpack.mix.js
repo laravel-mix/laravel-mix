@@ -1,4 +1,4 @@
-let mix = require('laravel-mix-stylus').mix;
+let mix = require('laravel-mix-stylus');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,7 +12,7 @@ let mix = require('laravel-mix-stylus').mix;
  */
 
 mix.js('src/app.js', 'dist/')
-	.stylus('src/app.styl', 'dist/');
+   .stylus('src/app.styl', 'dist/');
 
 // Full API
 // mix.js(src, output);
@@ -26,6 +26,7 @@ mix.js('src/app.js', 'dist/')
 // mix.sourceMaps(); // Enable sourcemaps
 // mix.version(); // Enable versioning.
 // mix.disableNotifications();
-// mix.setCachePath('some/folder');
-// mix.setPublicPath('path/to/public'); <-- Useful for Node apps.
+// mix.setPublicPath('path/to/public');
+// mix.autoload({}); <-- Will be passed to Webpack's ProvidePlugin.
 // mix.webpackConfig({}); <-- Override webpack.config.js, without editing the file directly.
+// mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.

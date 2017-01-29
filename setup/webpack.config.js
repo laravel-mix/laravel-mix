@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.paths.root();
+module.exports.context = Mix.Paths.root();
 
 
 /*
@@ -45,11 +45,6 @@ module.exports.context = Mix.paths.root();
 
 module.exports.entry = Mix.entry();
 
-if (Mix.js.vendor) {
-    module.exports.entry.vendor = Mix.js.vendor;
-}
-
-
 
 /*
  |--------------------------------------------------------------------------
@@ -63,7 +58,6 @@ if (Mix.js.vendor) {
  */
 
 module.exports.output = Mix.output();
-
 
 
 /*
@@ -110,50 +104,40 @@ module.exports.module = {
         },
 
         {
-            test: /\.(woff2?|ttf|eot|svg)$/,
+            test: /\.(woff2?|ttf|eot|svg|otf)$/,
             loader: 'file-loader',
             options: {
-                name: '/fonts/[name].[ext]?[hash]'
+                name: 'fonts/[name].[ext]?[hash]',
+                publicPath: '/'
             }
         }
     ]
 };
 
 
-if (Mix.sass) {
-    module.exports.module.rules.push({
-        test: /\.s[ac]ss$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: [
-                'css-loader', 'postcss-loader',
-                'resolve-url-loader', 'sass-loader?sourceMap'
-            ]
-        })
+if (Mix.cssPreprocessor) {
+    Mix[Mix.cssPreprocessor].forEach(toCompile => {
+        let extractPlugin = new plugins.ExtractTextPlugin(
+            Mix.cssOutput(toCompile)
+        );
+
+        module.exports.module.rules.push({
+            test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
+            loader: extractPlugin.extract({
+                fallbackLoader: 'style-loader',
+                loader: [
+                    'css-loader',
+                    'postcss-loader',
+                    'resolve-url-loader',
+                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
+                ]
+            })
+        });
+
+        module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
 }
 
-
-if (Mix.less) {
-    module.exports.module.rules.push({
-        test: /\.less$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: ['css-loader', 'postcss-loader', 'less-loader']
-        })
-    });
-}
-
-
-if (Mix.stylus) {
-    module.exports.module.rules.push({
-        test: /\.styl$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: ['css-loader', 'postcss-loader', 'stylus-loader']
-        })
-    });
-}
 
 
 /*
@@ -244,8 +228,22 @@ module.exports.devServer = {
  |
  */
 
-module.exports.plugins = [
+module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.ProvidePlugin(Mix.autoload || {
+        jQuery: 'jquery',
+        $: 'jquery',
+        jquery: 'jquery',
+        'window.jQuery': 'jquery'
+    }),
+
     new plugins.FriendlyErrorsWebpackPlugin(),
+
+    new plugins.StatsWriterPlugin({
+        filename: "mix-manifest.json",
+        transform: Mix.manifest.transform,
+    }),
+
+    new plugins.WebpackMd5HashPlugin(),
 
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
@@ -256,12 +254,9 @@ module.exports.plugins = [
             context: __dirname,
             output: { path: './' }
         }
-    }),
+    })
+]);
 
-    function() {
-        this.plugin('done', stats => Mix.manifest.write(stats));
-    },
-];
 
 
 if (Mix.notifications) {
@@ -269,13 +264,20 @@ if (Mix.notifications) {
         new plugins.WebpackNotifierPlugin({
             title: 'Laravel Mix',
             alwaysNotify: true,
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
         })
     );
 }
 
 
-if (Mix.versioning.enabled) {
+module.exports.plugins.push(
+    new plugins.WebpackOnBuildPlugin(
+        stats => Mix.events.fire('build', stats)
+    )
+);
+
+
+if (Mix.versioning) {
     Mix.versioning.record();
 
     module.exports.plugins.push(
@@ -307,16 +309,8 @@ if (Mix.copy) {
 if (Mix.js.vendor) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', 'manifest']
-        })
-    );
-}
-
-
-if (Mix.cssPreprocessor) {
-    module.exports.plugins.push(
-        new plugins.ExtractTextPlugin({
-            filename: Mix.cssOutput()
+            names: [Mix.js.base + '/vendor', Mix.js.base + '/' + 'manifest'],
+            minChunks: Infinity
         })
     );
 }

@@ -1,4 +1,5 @@
 let File = require('./File');
+let objectValues = require('lodash').values;
 
 class Manifest {
     /**
@@ -8,6 +9,28 @@ class Manifest {
      */
     constructor(path) {
         this.path = path;
+    }
+
+
+    /**
+     * Transform the Webpack stats into the shape we need.
+     *
+     * @param {object} stats
+     */
+    transform(stats) {
+        let flattenedPaths = [].concat.apply([], objectValues(stats.assetsByChunkName));
+
+        let manifest = flattenedPaths.reduce((manifest, path) => {
+            path = path.replace(/\\/g, '/');
+
+            let original = path.replace(/\.(\w{20})(\..+)/, '$2');
+
+            manifest[original] = path;
+
+            return manifest;
+        }, {});
+
+        return JSON.stringify(manifest, null, 2);
     }
 
 
@@ -25,23 +48,6 @@ class Manifest {
     read() {
         return JSON.parse(
             new File(this.path).read()
-        ).assetsByChunkName;
-    }
-
-
-    /**
-     * Write the updated stats to the manifest.
-     *
-     * @param {object} stats
-     */
-    write(stats) {
-        stats = stats.toJson();
-
-        new File(this.path).write(
-            JSON.stringify({
-                hash: stats.hash,
-                assetsByChunkName: stats.assetsByChunkName
-            })
         );
     }
 

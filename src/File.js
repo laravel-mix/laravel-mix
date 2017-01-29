@@ -16,6 +16,16 @@ class File {
 
 
     /**
+     * Static constructor.
+     *
+     * @param {string} file
+     */
+    static find(file) {
+        return new File(file);
+    }
+
+
+    /**
      * Minify the file, if it is CSS or JS.
      */
     minify() {
@@ -74,6 +84,16 @@ class File {
 
 
     /**
+     * Fetch the full path to the file.
+     *
+     * @return {string}
+     */
+    path() {
+        return path.resolve(this.file);
+    }
+
+
+    /**
      * Parse the file path into segments.
      */
     parsePath() {
@@ -81,9 +101,11 @@ class File {
 
         return {
             path: this.file,
-            hashedPath: `${outputSegments.dir}/${outputSegments.name}.[hash]${outputSegments.ext}`,
+            pathWithoutExt: path.join(outputSegments.dir, `${outputSegments.name}`),
+            hashedPath: path.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,
+            fileWithDir: path.join(outputSegments.dir.split('/').pop(), outputSegments.base),
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,
             name: outputSegments.name,
             isDir: ! outputSegments.ext,

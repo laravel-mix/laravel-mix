@@ -1,0 +1,3 @@
+alert('minify');
+
+alert('me');

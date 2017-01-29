@@ -2,7 +2,7 @@
 
 ```js
 mix.js(src, output)
-   .extract(['any', 'vendor', 'library');
+   .extract(['any', 'vendor', 'library']);
 ```
 
 Bundling all JavaScript into a single files does come with a potential downside: each time you change a minor detail in your application code, you must bust the cache for all users. That means all of your vendor libraries must be re-downloaded and cached. Yikes - not ideal!

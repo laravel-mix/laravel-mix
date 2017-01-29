@@ -11,19 +11,19 @@ With a single line of code, Laravel Mix allows you to trigger a number of vital 
 * Hot module replacement
 * Tree-shaking, new in Webpack 2 \(removes unused library code\)
 * Extract vendor libraries \(via `mix.extract()`\), for improved long-term caching
-* Automatic versioning \(file hashing\), via `mix.vendor()`
+* Automatic versioning \(file hashing\), via `mix.version()`
 
 
 ### Usage
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 // 1. A single src and output path.
 mix.js('src/app.js', 'dist/app.js');
 
 
-// 2. For additional src files that should be 
+// 2. For additional src files that should be
 // bundled together:
 mix.js([
     'src/app.js',
@@ -36,12 +36,13 @@ mix.js('src/app.js', 'dist/')
    .js('src/forum.js', 'dist/');
 ```
 
+
 ### Laravel Example
 
 Consider a typical Laravel install. By default, your JavaScript entry point will be located at `./resources/assets/js/app.js`. Let's prepare a `webpack.mix.js` file to compile that to `./public/js/app.js`.
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js');
 ```
@@ -101,10 +102,9 @@ If you're familiar with Vue, this should all look very familiar, so we'll move o
 **./webpack.mix.js**
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js');
 ```
 
 And that should do it! Run `node_modules/.bin/webpack` to compile it all down. At this point, simply create an HTML file, import your `./js/app.js` bundle, and load the browser. Tada!
-

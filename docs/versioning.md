@@ -10,9 +10,9 @@ To assist with long-term caching, Laravel Mix provides the `mix.version()` metho
 With versioning enabled, each time your code changes, a new hashed file will be generated, and the old one will be deleted. Consider the following `webpack.mix.js` file.
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
-mix.js('resources/assets/js/app.js', 'public/js');
+mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.sass', 'public/css')
    .version();
 ```
@@ -24,6 +24,10 @@ As an example, try running`webpack --watch`, and then change a bit of your JavaS
 ### Importing Versioned Files
 
 This all begs the question: how exactly do we include these versioned scripts and stylesheets into your HTML, if the names keep changing? Yes, that can be tricky. The answer will be dependent upon the type of application you're building. For SPAs, you may dynamically read Laravel Mix's generated `manifest.json` file, extract the asset file names \(these will be updated for each compile to reflect the new versioned file\), and then generate your HTML.
+
+#### Note
+
+Versioning is only performed when running in `production` mode.  (ie with `NODE_ENV=production`)
 
 #### Laravel Users
 
@@ -48,4 +52,3 @@ For Laravel projects, a solution is provided out of the box. Simply call the glo
 ```
 
 Pass the unhashed file path to the `mix()` function, and, behind the scenes, we'll figure out which script or stylesheet should be imported. Please note that you may/should use this function, even if you're not versioning your files.
-

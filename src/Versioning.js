@@ -1,5 +1,6 @@
 let path = require('path');
 let Manifest = require('./Manifest');
+let objectValues = require('lodash').values;
 
 class Versioning {
     /**
@@ -8,20 +9,9 @@ class Versioning {
      * @param {object} manifest
      */
     constructor(manifest) {
-        this.enabled = false;
         this.manifest = manifest;
 
         this.files = [];
-    }
-
-
-    /**
-     * Enable Webpack versioning.
-     */
-    enable() {
-        this.enabled = true;
-
-        return this;
     }
 
 
@@ -33,11 +23,7 @@ class Versioning {
 
         this.reset();
 
-        let json = this.manifest.read();
-
-        Object.keys(json).forEach(entry => {
-            this.files = this.files.concat(json[entry]);
-        });
+        this.files = objectValues(this.manifest.read());
 
         return this;
     }
@@ -59,17 +45,12 @@ class Versioning {
      * @param {string} baseDir
      */
     prune(baseDir) {
-        let updated = new Versioning(this.manifest).enable().record();
+        let updated = new Versioning(this.manifest).record();
 
         if (! updated) return;
 
-        this.files.forEach(file => {
-            // If the updated file is exactly the same as the old
-            // one, then nothing has changed. Don't delete it.
-            if (updated.files.includes(file)) return;
-
-            this.manifest.remove(path.join(baseDir, file));
-        });
+        this.files.filter(file => ! updated.files.includes(file))
+                  .forEach(file => this.manifest.remove(path.join(baseDir, file)));
 
         this.files = updated.files;
 

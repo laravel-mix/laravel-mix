@@ -5,16 +5,16 @@ Laravel Mix is a clean layer on top of Webpack to make the 80% use case laughabl
 Have a look at a basic `webpack.mix.js` file. Let's imagine that we only desire JavaScript \(ES2015 with modules\), and Sass compilation:
 
 ```js
-let mix = require('laravel-mix').mix;
+let mix = require('laravel-mix');
 
 mix.sass('src/app.sass', 'dist')
-   .js('src/app.js', 'dist')
+   .js('src/app.js', 'dist');
 ```
 
-Simple, right?
+Done. Simple, right?
 
 1. Compile the Sass file, `./src/app.sass`, to `./dist/app.sass`
-2. Bundle all JavaScript \(and any required modules\) at `./src/app.js` to `./dist/bundle.js`.
+2. Bundle all JavaScript \(and any required modules\) at `./src/app.js` to `./dist/app.js`.
 
 With this configuration in place, we may trigger Webpack from the command line: `node_modules/.bin/webpack`.
 
@@ -22,7 +22,7 @@ During development, it's unnecessary to minify the output, however, this will be
 
 ### Less?
 
-But what if you prefer Less compilation instead? No problem. Just swap `mix.sass()` with `mix.less()`, and you're done! 
+But what if you prefer Less compilation instead? No problem. Just swap `mix.sass()` with `mix.less()`, and you're done!
 
-You'll find that most common Webpack tasks become a cinch with Laravel Mix. 
+You'll find that most common Webpack tasks become a cinch with Laravel Mix.
 
