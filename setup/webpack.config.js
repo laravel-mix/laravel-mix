@@ -306,7 +306,7 @@ if (Mix.copy) {
 }
 
 
-if (Mix.js.vendor) {
+if (Mix.extract) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
             names: [Mix.js.base + '/vendor', Mix.js.base + '/' + 'manifest'],

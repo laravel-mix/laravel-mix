@@ -39,7 +39,7 @@ module.exports.js = (entry, output) => {
  * @param {array} libs
  */
 module.exports.extract = (libs) => {
-    Mix.js.vendor = libs;
+    Mix.extract = libs;
 
     return this;
 };

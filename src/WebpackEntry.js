@@ -98,12 +98,12 @@ class WebpackEntry {
      * Add any relevant vendor extractions to the entry.
      */
     addVendors() {
-        if (! this.mix.js.length || ! this.mix.js.vendor) return this;
+        if (! this.mix.js.length || ! this.mix.extract) return this;
 
         let vendorPath = (this.mix.js.base + '/vendor')
             .replace(this.mix.publicPath, '');
 
-        this.entry.add(vendorPath, this.mix.js.vendor);
+        this.entry.add(vendorPath, this.mix.extract);
 
         return this;
     }
