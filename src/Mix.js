@@ -209,6 +209,20 @@ class Mix {
 
         return this;
     }
+
+    getCurrentPreprocessorLoader() {
+
+        if (this.cssPreprocessor == 'sass') {
+            return 'sass-loader?sourceMap&precision=8';
+        }
+
+        if (this.cssPreprocessor == 'stylus') {
+            return 'stylus-loader';
+        }
+
+        // Less loader is the default preprocessor
+        return 'less-loader';
+    }
 };
 
 

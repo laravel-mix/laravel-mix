@@ -117,10 +117,13 @@ module.exports.module = {
 
 
 if (Mix.cssPreprocessor) {
+
     Mix[Mix.cssPreprocessor].forEach(toCompile => {
         let extractPlugin = new plugins.ExtractTextPlugin(
             Mix.cssOutput(toCompile)
         );
+
+        let currentPreprocessor = Mix.getCurrentPreprocessorLoader();
 
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
@@ -130,7 +133,7 @@ if (Mix.cssPreprocessor) {
                     'css-loader',
                     'postcss-loader',
                     'resolve-url-loader',
-                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
+                    currentPreprocessor
                 ]
             })
         });
