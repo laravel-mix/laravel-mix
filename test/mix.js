@@ -305,7 +305,7 @@ test('that the setter methods work properly', t => {
 
     mix.config.inProduction = true;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, '#source-map');
+    t.is(Mix.sourcemaps, false);
 
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);
