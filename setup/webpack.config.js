@@ -239,7 +239,7 @@ module.exports.plugins = (module.exports.plugins || []).concat([
     new plugins.FriendlyErrorsWebpackPlugin(),
 
     new plugins.StatsWriterPlugin({
-        filename: "mix-manifest.json",
+        filename: 'mix-manifest.json',
         transform: Mix.manifest.transform,
     }),
 
