@@ -126,7 +126,7 @@ if (Mix.cssPreprocessor) {
             loader: extractPlugin.extract({
                 fallbackLoader: 'style-loader',
                 loader: [
-                    'css-loader',
+                    'css-loader?sourceMap',
                     'postcss-loader',
                     'resolve-url-loader',
                     (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
