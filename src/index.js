@@ -123,6 +123,13 @@ module.exports.preprocess = (type, src, output) => {
  * @param {string}       output
  */
 module.exports.combine = (src, output) => {
+    src.forEach(file => {
+        assert(
+            Mix.File.exists(file),
+            `Mix.combine() error: "${file} does not exist.`
+        );
+    });
+
     Mix.combine = (Mix.combine || []).concat({ src, output });
 
     return this;
