@@ -99,7 +99,8 @@ module.exports.module = {
             test: /\.(png|jpg|gif)$/,
             loader: 'file-loader',
             options: {
-                name: '[name].[ext]?[hash]'
+                name: 'images/[name].[ext]?[hash]',
+                publicPath: '/'
             }
         },
 
