@@ -121,16 +121,20 @@ if (Mix.cssPreprocessor) {
             Mix.cssOutput(toCompile)
         );
 
+        let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
             loader: extractPlugin.extract({
                 fallbackLoader: 'style-loader',
                 loader: [
-                    'css-loader',
-                    'postcss-loader',
-                    'resolve-url-loader',
-                    (Mix.cssPreprocessor == 'sass') ? 'sass-loader?sourceMap&precision=8' : 'less-loader'
-                ]
+                    'css-loader' + sourceMap,
+                    'postcss-loader' + sourceMap
+                ].concat(Mix.cssPreprocessor == 'sass' ? [
+                    'resolve-url-loader' + sourceMap,
+                    'sass-loader?sourceMap&precision=8'
+                ] : [
+                    'less-loader' + sourceMap
+                ])
             })
         });
 
