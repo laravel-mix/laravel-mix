@@ -108,7 +108,9 @@ module.exports.preprocess = (type, src, output) => {
         ).parsePath();
     }
 
-    Mix[type] = (Mix[type] || []).concat({ src, output });
+    Mix.preprocessors = (Mix.preprocessors || []).concat({
+        type, src, output
+    });
 
     Mix.cssPreprocessor = type;
 

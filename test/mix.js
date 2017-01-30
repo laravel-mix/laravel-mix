@@ -115,7 +115,8 @@ test('that it determines the CSS output path correctly.', t => {
        .js('js/stub.js', 'dist')
        .less('sass/stub.less', 'dist/stub.css');
 
-    let segments = mix.config.less;
+    let segments = mix.config.preprocessors;
+
 
     // Test the cssOutput which gets passed to ExtractTextPlugin
     segments.forEach(s => {
@@ -132,7 +133,7 @@ test('that it determines the CSS output path correctly.', t => {
     Mix.inProduction = false;
 
     // Test else path for this.cssPreprocessor being empty
-    Mix.cssPreprocessor = false;
+    Mix.preprocessors = false;
     t.deepEqual(Mix.entry(), {
         'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
     });

@@ -116,13 +116,14 @@ module.exports.module = {
 };
 
 
-if (Mix.cssPreprocessor) {
-    Mix[Mix.cssPreprocessor].forEach(toCompile => {
+if (Mix.preprocessors) {
+    Mix.preprocessors.forEach(toCompile => {
         let extractPlugin = new plugins.ExtractTextPlugin(
             Mix.cssOutput(toCompile)
         );
 
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
+
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
             loader: extractPlugin.extract({
@@ -130,7 +131,7 @@ if (Mix.cssPreprocessor) {
                 loader: [
                     'css-loader' + sourceMap,
                     'postcss-loader' + sourceMap
-                ].concat(Mix.cssPreprocessor == 'sass' ? [
+                ].concat(toCompile.type == 'sass' ? [
                     'resolve-url-loader' + sourceMap,
                     'sass-loader?sourceMap&precision=8'
                 ] : [

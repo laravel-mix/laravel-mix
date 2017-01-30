@@ -18,7 +18,6 @@ class Mix {
         this.hmr = false;
         this.sourcemaps = false;
         this.notifications = true;
-        this.cssPreprocessor = false;
         this.versioning = false;
         this.js = [];
         this.webpackEntry = new WebpackEntry(this);
@@ -199,7 +198,7 @@ class Mix {
      */
     reset() {
         [
-            'cssPreprocessor', 'sass',
+            'preprocessors', 'sass',
             'less', 'sourceMaps'
         ].forEach(prop => this[prop] = null);
 

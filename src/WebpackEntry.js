@@ -81,12 +81,12 @@ class WebpackEntry {
      * Add any relevant stylesheets to the entry.
      */
     addCss() {
-        let preprocessor = this.mix.cssPreprocessor;
+        let preprocessors = this.mix.preprocessors;
 
-        if (! preprocessor) return this;
+        if (! preprocessors) return this;
 
         let name = Object.keys(this.entry.get())[0];
-        let stylesheets = this.mix[preprocessor].map(css => css.src.path);
+        let stylesheets = preprocessors.map(css => css.src.path);
 
         this.entry.add(name, stylesheets);
 
