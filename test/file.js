@@ -11,7 +11,6 @@ test('that it parses a path into segments', t => {
         hashedPath: 'some/path/to/a/file.[hash].txt',
         base: 'some/path/to/a',
         file: 'file.txt',
-        fileWithDir: 'a/file.txt',
         hashedFile: 'file.[hash].txt',
         name: 'file',
         isDir: false,
