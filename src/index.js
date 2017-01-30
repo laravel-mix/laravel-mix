@@ -170,7 +170,7 @@ module.exports.minify = (src) => {
  * Enable sourcemap support.
  */
 module.exports.sourceMaps = () => {
-    Mix.sourcemaps = (Mix.inProduction ? '#source-map' : '#inline-source-map');
+    Mix.sourcemaps = (Mix.inProduction ? false : '#inline-source-map');
 
     return this;
 };
