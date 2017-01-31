@@ -1,9 +1,9 @@
 let path = require('path');
 let Collection = new require('./Collection');
 
-class WebpackEntry {
+class EntryBuilder {
     /**
-     * Create a new WebpackEntry instance.
+     * Create a new EntryBuilder instance.
      *
      * @param {object} mix
      */
@@ -117,4 +117,4 @@ class WebpackEntry {
     }
 }
 
-module.exports = WebpackEntry;
+module.exports = EntryBuilder;

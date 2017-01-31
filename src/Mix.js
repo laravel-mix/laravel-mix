@@ -5,7 +5,7 @@ let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let concatenate = require('concatenate');
 let mergeWith = require('lodash').mergeWith;
-let WebpackEntry = require('./WebpackEntry');
+let EntryBuilder = require('./EntryBuilder');
 let Dispatcher = require('./Dispatcher');
 
 class Mix {
@@ -20,7 +20,7 @@ class Mix {
         this.notifications = true;
         this.versioning = false;
         this.js = [];
-        this.webpackEntry = new WebpackEntry(this);
+        this.entryBuilder = new EntryBuilder(this);
         this.events = new Dispatcher;
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
@@ -77,7 +77,7 @@ class Mix {
      * Prepare the Webpack entry object.
      */
     entry() {
-        return this.webpackEntry.build();
+        return this.entryBuilder.build();
     }
 
 
@@ -204,7 +204,7 @@ class Mix {
 
         this.publicPath = './';
         this.js = [];
-        this.webpackEntry.reset();
+        this.entryBuilder.reset();
 
         return this;
     }
