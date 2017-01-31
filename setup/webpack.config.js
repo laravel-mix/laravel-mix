@@ -283,6 +283,13 @@ module.exports.plugins.push(
 );
 
 
+if (Mix.hmr) {
+    module.exports.plugins.push(
+        new webpack.NamedModulesPlugin()
+    );
+}
+
+
 if (Mix.versioning) {
     Mix.versioning.record();
 
