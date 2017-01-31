@@ -1,6 +1,6 @@
 let path = require('path');
-let assert = require('assert');
 let Mix = require('./Mix');
+let Verify = require('./Verify');
 
 /**
  * Register the Webpack entry/output paths.
@@ -9,8 +9,7 @@ let Mix = require('./Mix');
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    assert(entry && (typeof entry === 'string' || Array.isArray(entry)), 'mix.js() is missing required parameter 1: entry');
-    assert(output && typeof output === 'string', 'mix.js() is missing required parameter 2: output');
+    Verify.js(entry, output);
 
     entry = [].concat(entry).map(file => {
         return new Mix.File(path.resolve(file)).parsePath();
@@ -107,8 +106,7 @@ module.exports.less = (src, output) => {
  * @param {string} output
  */
 module.exports.preprocess = (type, src, output) => {
-    assert(src && typeof src === 'string', `mix.${type}() is missing required parameter 1: src`);
-    assert(output && typeof output === 'string', `mix.${type}() is missing required parameter 2: output`);
+    Verify.preprocessor(type, src, output);
 
     src = new Mix.File(path.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
@@ -136,12 +134,7 @@ module.exports.preprocess = (type, src, output) => {
  * @param {string}       output
  */
 module.exports.combine = (src, output) => {
-    src.forEach(file => {
-        assert(
-            Mix.File.exists(file),
-            `Mix.combine() error: "${file} does not exist.`
-        );
-    });
+    Verify.combine(src);
 
     Mix.combine = (Mix.combine || []).concat({ src, output });
 
