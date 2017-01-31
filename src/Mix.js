@@ -33,21 +33,22 @@ class Mix {
      * @param {string} rootPath
      */
     initialize(rootPath = '') {
-        if (this.isUsingLaravel()) {
-            this.publicPath = 'public';
-        }
+        if (rootPath) this.Paths.setRootPath(rootPath);
 
-        // We'll first load the user's webpack.mix.js file.
-        if (rootPath) {
-            this.Paths.setRootPath(rootPath);
-        }
+        if (this.isUsingLaravel()) this.publicPath = 'public';
+
+        // Here, we'll load the user's webpack.mix.js file and apply it.
         require(this.Paths.mix());
 
-        this.manifest = new Manifest(this.publicPath + '/mix-manifest.json');
+        this.manifest = new Manifest(
+            path.join(this.publicPath, 'mix-manifest.json')
+        );
 
         if (this.versioning) {
-            this.versioning = new Versioning(this.manifest);
+            this.versioning = new Versioning(this.manifest).record();
         }
+
+        this.registerEventListeners();
 
         this.detectHotReloading();
     }
@@ -70,6 +71,22 @@ class Mix {
         );
 
         return webpackConfig;
+    }
+
+
+    /**
+     * Register all necessary event listeners.
+     */
+    registerEventListeners() {
+        this.events.listen('build', () => {
+            if (this.combine || this.minify) {
+                this.concatenateAll().minifyAll();
+            }
+
+            if (this.versioning) {
+                this.versioning.prune(this.publicPath);
+            }
+        });
     }
 
 
@@ -205,6 +222,7 @@ class Mix {
         this.publicPath = './';
         this.js = [];
         this.entryBuilder.reset();
+        this.events = new Dispatcher;
 
         return this;
     }

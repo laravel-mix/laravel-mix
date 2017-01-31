@@ -68,6 +68,13 @@ test('that Mix initializes properly', t => {
 });
 
 
+test('that it registers event listeners', t => {
+    Mix.initialize(path.resolve(__dirname, 'fixtures'));
+
+    t.is(1, Mix.events.all().build.length);
+});
+
+
 test('that it determines the JS paths', t => {
     mix.js('js/stub.js', 'dist')
        .js('js/another.js', 'dist');

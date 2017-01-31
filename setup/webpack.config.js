@@ -269,7 +269,6 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 ]);
 
 
-
 if (Mix.notifications) {
     module.exports.plugins.push(
         new plugins.WebpackNotifierPlugin({
@@ -286,26 +285,6 @@ module.exports.plugins.push(
         stats => Mix.events.fire('build', stats)
     )
 );
-
-
-if (Mix.versioning) {
-    Mix.versioning.record();
-
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.versioning.prune(Mix.publicPath);
-        })
-    );
-}
-
-
-if (Mix.combine || Mix.minify) {
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.concatenateAll().minifyAll();
-        })
-    );
-}
 
 
 if (Mix.copy) {

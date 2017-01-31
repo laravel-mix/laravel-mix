@@ -29,6 +29,14 @@ class Dispatcher {
 
         this.events[event].forEach(handler => handler(data));
     }
+
+
+    /**
+     * Fetch all registered event listeners.
+     */
+    all() {
+        return this.events;
+    }
 }
 
 module.exports = Dispatcher;
