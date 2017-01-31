@@ -10,6 +10,7 @@ class EntryBuilder {
     constructor(mix) {
         this.mix = mix;
         this.entry = new Collection;
+        this.extractions = [];
     }
 
 
@@ -100,10 +101,13 @@ class EntryBuilder {
     addVendors() {
         if (! this.mix.js.length || ! this.mix.extract) return this;
 
-        let vendorPath = (this.mix.js.base + '/vendor')
-            .replace(this.mix.publicPath, '');
+        this.mix.extract.forEach(extract => {
+            let vendorPath = extract.output();
 
-        this.entry.add(vendorPath, this.mix.extract);
+            this.extractions.push(vendorPath);
+
+            this.entry.add(vendorPath, extract.libs);
+        });
 
         return this;
     }

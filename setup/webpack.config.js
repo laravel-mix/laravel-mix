@@ -315,7 +315,9 @@ if (Mix.copy) {
 if (Mix.extract) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: [Mix.js.base + '/vendor', Mix.js.base + '/' + 'manifest'],
+            names: Mix.entryBuilder.extractions.concat([
+                path.join(Mix.js.base, 'manifest')
+            ]),
             minChunks: Infinity
         })
     );

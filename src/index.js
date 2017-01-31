@@ -36,10 +36,21 @@ module.exports.js = (entry, output) => {
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
  *
- * @param {array} libs
+ * @param {array}  libs
+ * @param {string} output
  */
-module.exports.extract = (libs) => {
-    Mix.extract = libs;
+module.exports.extract = (libs, output) => {
+    Mix.extract = (Mix.extract || []).concat({
+        libs,
+        output: () => {
+            if (output) {
+                return output.replace(/\.js$/, '')
+                             .replace(Mix.publicPath, '');
+            }
+
+            return path.join(Mix.js.base, 'vendor');
+        }
+    });
 
     return this;
 };
