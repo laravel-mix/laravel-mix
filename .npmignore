@@ -3,3 +3,4 @@ test/
 .nyc_output
 coverage
 mix.sublime-project
+mix.sublime-workspace
