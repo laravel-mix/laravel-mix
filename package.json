@@ -30,7 +30,7 @@
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
-    "friendly-errors-webpack-plugin": "^1.1.2",
+    "friendly-errors-webpack-plugin": "^1.1.3",
     "fs": "0.0.1-security",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
