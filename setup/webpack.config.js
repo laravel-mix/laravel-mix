@@ -134,14 +134,25 @@ if (Mix.preprocessors) {
             loader: extractPlugin.extract({
                 fallbackLoader: 'style-loader',
                 loader: [
-                    'css-loader' + sourceMap,
-                    'postcss-loader' + sourceMap
-                ].concat(toCompile.type == 'sass' ? [
-                    'resolve-url-loader' + sourceMap,
-                    'sass-loader?sourceMap&precision=8'
-                ] : [
-                    'less-loader' + sourceMap
-                ])
+                    { loader: 'css-loader' + sourceMap },
+                    { loader: 'postcss-loader' + sourceMap }
+                ].concat(
+                    toCompile.type == 'sass' ? [
+                        { loader: 'resolve-url-loader' + sourceMap },
+                        {
+                            loader: 'sass-loader?sourceMap',
+                            options: Object.assign({
+                                precision: 8,
+                                outputStyle: 'expanded'
+                            }, toCompile.pluginOptions)
+                        }
+                    ] : [
+                        {
+                            loader: 'less-loader' + sourceMap,
+                            options: toCompile.pluginOptions
+                        }
+                    ]
+                )
             })
         });
 

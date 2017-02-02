@@ -81,9 +81,12 @@ module.exports.autoload = (libs) => {
  *
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.sass = (src, output) => {
-    return module.exports.preprocess('sass', src, output);
+module.exports.sass = (src, output, pluginOptions = {}) => {
+    return module.exports.preprocess(
+        'sass', src, output, pluginOptions
+    );
 };
 
 
@@ -92,9 +95,12 @@ module.exports.sass = (src, output) => {
  *
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.less = (src, output) => {
-    return module.exports.preprocess('less', src, output);
+module.exports.less = (src, output, pluginOptions = {}) => {
+    return module.exports.preprocess(
+        'less', src, output, pluginOptions
+    );
 };
 
 
@@ -104,8 +110,9 @@ module.exports.less = (src, output) => {
  * @param {string} type
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.preprocess = (type, src, output) => {
+module.exports.preprocess = (type, src, output, pluginOptions) => {
     Verify.preprocessor(type, src, output);
 
     src = new Mix.File(path.resolve(src)).parsePath();
@@ -118,7 +125,7 @@ module.exports.preprocess = (type, src, output) => {
     }
 
     Mix.preprocessors = (Mix.preprocessors || []).concat({
-        type, src, output
+        type, src, output, pluginOptions
     });
 
     Mix.cssPreprocessor = type;
