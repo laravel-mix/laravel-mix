@@ -5,7 +5,7 @@ let Verify = require('./Verify');
 /**
  * Register the Webpack entry/output paths.
  *
- * @param {mixed}  entry
+ * @param {string|array}  entry
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
