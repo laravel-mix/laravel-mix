@@ -1,8 +1,7 @@
 # CSS Preprocessors \(Sass, Less\)
 
 ```js
-mix.js('src', 'output')
-   .sass('src', 'output')
+mix.sass('src', 'output', { foo: 'bar' })
 ```
 
 A single method call allows you to compile your Sass \(`mix.sass()`\) or Less \(`mix.less()`\) files, while applying automatic CSS3 prefixing.
@@ -27,8 +26,7 @@ Let's review a quick example:
 ```js
 let mix = require('laravel-mix');
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.sass', 'public/css');
+mix.sass('resources/assets/sass/app.sass', 'public/css');
 ```
 
 **./resources/assets/sass/app.sass**
@@ -48,6 +46,17 @@ Compile this down as usual \(`npm run webpack`\), and you'll find a `./public/cs
 .app {
   background: grey;
 }
+```
+
+### Plugin Options
+
+Behind the scenes, Laravel Mix of courses defers to Node-Sass and Less to compile your Sass and Less files, respectively. From time to time, you may need to override the default options that we pass to them. You may provide these as the third argument to both `mix.sass()` and `mix.less()`.
+
+- **Node-Sass Options:** https://github.com/sass/node-sass#options
+- **Less Options:** https://github.com/webpack-contrib/less-loader#options```
+
+```js
+mix.sass('src', 'destination', { outputStyle: 'nested' });
 ```
 
 That's all there is to it!
