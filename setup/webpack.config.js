@@ -330,7 +330,8 @@ if (Mix.inProduction) {
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             compress: {
-                warnings: false
+                warnings: false,
+                drop_console: true
             }
         })
     ]);
