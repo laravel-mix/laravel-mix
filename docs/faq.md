@@ -62,3 +62,7 @@ mix.autoload({
   moment: 'moment' // only one
 })
 ```
+
+### Webpack's watcher isn't picking up on my file changes.
+
+[See here for some troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
