@@ -48,9 +48,9 @@ class Mix {
         if (this.versioning) {
             this.versioning = new Versioning(this.manifest).record();
 
-            this.events.listen('build', () => {
-                this.versioning.prune(this.publicPath);
-            });
+            this.events.listen(
+                'build', () => this.versioning.prune(this.publicPath)
+            );
         }
 
         if (this.concat.files.length) {
