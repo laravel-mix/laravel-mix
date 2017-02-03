@@ -47,9 +47,11 @@ class Mix {
 
         if (this.versioning) {
             this.versioning = new Versioning(this.manifest).record();
-        }
 
-        this.registerEventListeners();
+            this.events.listen('build', () => {
+                this.versioning.prune(this.publicPath);
+            });
+        }
 
         if (this.concat.files.length) {
             this.concat.watch();
@@ -76,18 +78,6 @@ class Mix {
         );
 
         return webpackConfig;
-    }
-
-
-    /**
-     * Register all necessary event listeners.
-     */
-    registerEventListeners() {
-        this.events.listen('build', () => {
-            if (this.versioning) {
-                this.versioning.prune(this.publicPath);
-            }
-        });
     }
 
 
