@@ -1,5 +1,5 @@
 import test from 'ava';
-import  * as mix from '../src/index';
+import * as mix from '../src/index';
 const Mix = mix.config;
 import path from 'path';
 import File from '../src/File';
@@ -228,44 +228,6 @@ test('that it knows if it is running within a Laravel project', t => {
 });
 
 
-test('that it can combine and minify files', t => {
-    let file1Path = path.resolve(__dirname, 'fixtures/file1.txt');
-    let file2Path = path.resolve(__dirname, 'fixtures/file2.txt');
-    let file1 = new File(file1Path).write('1+1');
-    let file2 = new File(file2Path).write('=2');
-
-    mix.combine([file1Path, file2Path],
-        path.resolve(__dirname, 'fixtures/file3.txt'));
-    mix.minify('fixtures/file3.txt');
-
-    // First see if it does nothing without being in production
-    mix.config.inProduction = false;
-    Mix.concatenateAll().minifyAll();
-
-    t.true(Array.isArray(Mix.combine));
-    t.true(Array.isArray(Mix.minify));
-
-    // fake prod since concatenateAll and minifyAll check production env
-    mix.config.inProduction = true;
-    Mix.concatenateAll().minifyAll();
-
-    // finally test if minifyAll and concatenateAll fallback to empty array
-    // files = files || this.combine || []; <-- third branch
-    Mix.minify = null;
-    Mix.combine = null;
-    Mix.concatenateAll().minifyAll();
-
-    t.deepEqual(Mix.combine, null);
-    t.deepEqual(Mix.minify, null);
-
-    let file3 = new File(path.resolve(__dirname, 'fixtures/file3.txt'));
-    t.is(file3.read(), '1+1\n=2');
-
-    file1.delete();
-    file2.delete();
-    file3.delete();
-});
-
 
 test('that it detects hmr correctly', t => {
     let root = path.resolve(__dirname);
@@ -319,8 +281,4 @@ test('that the setter methods work properly', t => {
     Mix.Paths.setRootPath(root);
     t.deepEqual(Mix.copy,
         [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures'), flatten: true }]);
-
-    Mix.minify = [];
-    mix.minify('fake/test.txt');
-    t.deepEqual(Mix.minify, ['fake/test.txt']);
 });

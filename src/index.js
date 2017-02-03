@@ -143,7 +143,7 @@ module.exports.preprocess = (type, src, output, pluginOptions) => {
 module.exports.combine = (src, output) => {
     Verify.combine(src);
 
-    Mix.combine = (Mix.combine || []).concat({ src, output });
+    Mix.concat.add({ src, output });
 
     return this;
 };
@@ -173,7 +173,9 @@ module.exports.copy = (from, to, flatten = true) => {
  * @param {string|array} src
  */
 module.exports.minify = (src) => {
-    Mix.minify = (Mix.minify || []).concat(src);
+    output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
+
+    Mix.concat.add({ src, output });
 
     return this;
 };

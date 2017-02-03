@@ -11,7 +11,7 @@ class File {
      */
     constructor(file) {
         this.file = file;
-        this.fileType = path.parse(file).ext;
+        this.fileType = path.extname(file);
     }
 
 

@@ -20,7 +20,7 @@ class Manifest {
      */
     transform(stats) {
         this.transformStats(stats)
-            .appendCombinedFiles(Mix.config.combine);
+            .appendCombinedFiles(Mix.config.concat.files);
 
         return JSON.stringify(this.manifest, null, 2);
     }

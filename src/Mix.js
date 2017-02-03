@@ -3,7 +3,7 @@ let File = require('./File');
 let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
-let concatenate = require('concatenate');
+let Concat = require('./Concat');
 let mergeWith = require('lodash').mergeWith;
 let EntryBuilder = require('./EntryBuilder');
 let Dispatcher = require('./Dispatcher');
@@ -22,6 +22,7 @@ class Mix {
         this.js = [];
         this.entryBuilder = new EntryBuilder(this);
         this.events = new Dispatcher;
+        this.concat = new Concat(this.events);
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -49,6 +50,10 @@ class Mix {
         }
 
         this.registerEventListeners();
+
+        if (this.concat.files.length) {
+            this.concat.watch();
+        }
 
         this.detectHotReloading();
     }
@@ -79,10 +84,6 @@ class Mix {
      */
     registerEventListeners() {
         this.events.listen('build', () => {
-            if (this.combine || this.minify) {
-                this.concatenateAll().minifyAll();
-            }
-
             if (this.versioning) {
                 this.versioning.prune(this.publicPath);
             }
@@ -122,42 +123,6 @@ class Mix {
         let pathVariant = this.versioning ? 'hashedPath' : 'path';
 
         return segments.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
-    }
-
-
-    /**
-     * Minify the given files, or those from Mix.minify().
-     *
-     * @param {array|null} files
-     */
-    minifyAll(files = null) {
-        if (! this.inProduction) return;
-
-        files = files || this.minify || [];
-
-        files.forEach(file => new File(file).minify());
-
-        return this;
-    }
-
-
-    /**
-     * Combine the given files, or those from Mix.combine().
-     *
-     * @param {array|null} files
-     */
-    concatenateAll(files = null) {
-        files = files || this.combine || [];
-
-        files.forEach(file => {
-            concatenate.sync(file.src, file.output);
-
-            if (! this.inProduction) return;
-
-            new this.File(file.output).minify();
-        });
-
-        return this;
     }
 
 
