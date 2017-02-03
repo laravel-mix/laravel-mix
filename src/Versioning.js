@@ -19,7 +19,7 @@ class Versioning {
      * Record versioned files.
      */
     record() {
-        if (! this.manifest.exists()) return;
+        if (! this.manifest.exists()) return this;
 
         this.reset();
 
