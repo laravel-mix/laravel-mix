@@ -1,6 +1,7 @@
 let chokidar = require('chokidar');
 let concatenate = require('concatenate');
 let File = require('./File');
+let mkdirp = require('mkdirp');
 
 class Concat {
     /**
@@ -48,7 +49,7 @@ class Concat {
      */
     run() {
         this.files.forEach(file => {
-            require('mkdirp').sync(
+            mkdirp.sync(
                 File.find(file.output).parsePath().base
             );
 
