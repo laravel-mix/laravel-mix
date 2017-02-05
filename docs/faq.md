@@ -12,13 +12,13 @@ Minification will only be performed, when your `NODE_ENV` is set to production. 
 export NODE_ENV=production && webpack --progress --hide-modules
 ```
 
-It's highly recommended that you add the following NPM scripts to your `package.json` file.
+It's highly recommended that you add the following NPM scripts to your `package.json` file. Please note that Laravel includes these out of the box.
 
 ```js
   "scripts": {
-    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
-    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
+    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
 ```
@@ -30,7 +30,7 @@ If you're running `npm run dev` through a VM, you may find that file changes are
 
 ```js
 "scripts": {
-    "dev": "NODE_ENV=development webpack --watch --watch-poll",
+    "watch": "NODE_ENV=development webpack --watch --watch-poll",
   }
 ```
 
@@ -66,3 +66,23 @@ mix.autoload({
 ### Webpack's watcher isn't picking up on my file changes.
 
 [See here for some troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
+
+
+### How might I manually add CoffeeScript compilation?
+
+Very easily! Most of the time, you only need to research the necessary steps for adding X to Webpack, and then reference those instructions within the `mix.webpackConfig()` method of your `webpack.mix.js` file. The object you provide to this method will be merged with Mix's default config.
+
+Here's how you might add CoffeeScript support.
+
+```js
+// npm install coffee-loader coffee-script
+
+mix.js('resources/assets/js/app.coffee', 'public/js')
+   .webpackConfig({
+        module: {
+            rules: [
+                { test: /\.coffee$/, loader: 'coffee-loader' }
+            ]
+        }
+   });
+   
