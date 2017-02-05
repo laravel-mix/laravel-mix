@@ -7,9 +7,11 @@ class Manifest {
      * Create a new Manifest instance.
      *
      * @param {string} path
+     * @param {Dispatcher} events
      */
-    constructor(path) {
+    constructor(path, events) {
         this.path = path;
+        events.listen('combined', this.appendCombinedFiles.bind(this));
     }
 
 
@@ -18,10 +20,8 @@ class Manifest {
      *
      * @param {object} stats
      */
-    transform(stats) {
-        this.transformStats(stats)
-            .appendCombinedFiles(Mix.config.concat.files);
-
+    transform(stats, options) {
+        this.transformStats(stats);
         return JSON.stringify(this.manifest, null, 2);
     }
 
@@ -53,19 +53,23 @@ class Manifest {
      *
      * @param {array} combine
      */
-    appendCombinedFiles(combine) {
+    appendCombinedFiles(toCombine) {
         // Even though calls to mix.combine() are not part of the
         // core Webpack compilation, we'll add their output paths
         // to the mix-manifest.json file, for user convenience.
-        if (combine) {
-            combine.forEach(toCombine => {
-                let output = toCombine.output
-                    .replace(/\\/g, '/')
-                    .replace(Mix.config.publicPath, '');
+        let output = toCombine.output
+            .replace(/\\/g, '/')
+            .replace(Mix.config.publicPath, '');
+        let original = output.replace(/\.(\w{32})(\..+)/, '$2');
+        this.manifest[original] = output;
+        this.refreshToFile();
+    }
 
-                this.manifest[output] = output;
-            });
-        }
+    /**
+     * Refresh mix-manifest.js file after combination finishi.
+     */
+    refreshToFile() {
+        File.find(this.path).write(JSON.stringify(this.manifest, null, 2));
     }
 
 
