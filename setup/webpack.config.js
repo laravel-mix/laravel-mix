@@ -131,9 +131,9 @@ if (Mix.preprocessors) {
 
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
-            loader: extractPlugin.extract({
-                fallbackLoader: 'style-loader',
-                loader: [
+            use: extractPlugin.extract({
+                fallback: 'style-loader',
+                use: [
                     { loader: 'css-loader' + sourceMap },
                     { loader: 'postcss-loader' + sourceMap }
                 ].concat(
