@@ -15,6 +15,29 @@ class Manifest {
 
 
     /**
+     * Add a key-value pair to the manifest file.
+     *
+     * @param {string} original
+     * @param {string} modified
+     */
+    add(original, modified) {
+        this.manifest[original] = modified;
+
+        return this;
+    }
+
+
+    /**
+     * Get the modified version of the given path.
+     *
+     * @param {string} original
+     */
+    get(original) {
+        return this.manifest[original];
+    }
+
+
+    /**
      * Register any applicable event listeners.
      *
      * @param {object} events
@@ -37,15 +60,13 @@ class Manifest {
             [], objectValues(stats.assetsByChunkName)
         );
 
-        this.manifest = flattenedPaths.reduce((manifest, path) => {
+        flattenedPaths.forEach(path => {
             path = path.replace(/\\/g, '/');
 
             let original = path.replace(/\.(\w{20})(\..+)/, '$2');
 
-            manifest[original] = path;
-
-            return manifest;
-        }, {});
+            this.manifest[original] = path;
+        });
 
         return JSON.stringify(this.manifest, null, 2);
     }
@@ -92,13 +113,14 @@ class Manifest {
         return JSON.parse(File.find(this.path).read());
     }
 
+
     /**
      * Delete the given file from the manifest.
      *
      * @param {string} file
      */
     remove(file) {
-        new File(file).delete();
+        File.find(file).delete();
     }
 }
 

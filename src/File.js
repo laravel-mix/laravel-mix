@@ -1,5 +1,6 @@
 let fs = require('fs');
 let path = require('path');
+let chokidar = require('chokidar');
 let mkdirp = require('mkdirp');
 let uglify = require('uglify-js');
 let UglifyCss = require('clean-css');
@@ -95,6 +96,18 @@ class File {
         if (fs.existsSync(this.file)) {
             fs.unlinkSync(this.file);
         }
+    }
+
+
+    /**
+     * Watch the current file for changes.
+     *
+     * @param {Function} callback
+     */
+    watch(callback) {
+        chokidar.watch(
+            this.path(), { persistent: true }
+        ).on('change', callback);
     }
 
 

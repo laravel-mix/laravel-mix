@@ -193,9 +193,12 @@ module.exports.sourceMaps = () => {
 
 /**
  * Enable compiled file versioning.
+ *
+ * @param {string|array} files
  */
-module.exports.version = () => {
+module.exports.version = (files = []) => {
     Mix.versioning = true;
+    Mix.version = [].concat(files);
 
     return this;
 };

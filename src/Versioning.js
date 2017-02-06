@@ -1,17 +1,54 @@
 let path = require('path');
 let Manifest = require('./Manifest');
 let objectValues = require('lodash').values;
+let md5 = require('md5');
+let File = require('./File');
 
 class Versioning {
     /**
      * Create a new Versioning instance.
      *
+     * @param {array}  manualFiles
      * @param {object} manifest
      */
-    constructor(manifest) {
-        this.manifest = manifest;
-
+    constructor(manualFiles = [], manifest) {
         this.files = [];
+        this.manualFiles = manualFiles;
+        this.manifest = manifest;
+    }
+
+
+    /**
+     * Register a watcher for any files that aren't
+     * included in Webpack's core bundle process.
+     */
+    watch() {
+        if (! process.argv.includes('--watch')) return;
+
+        this.manualFiles.forEach(file => {
+            new File(file).watch(() => {
+                File.find(this.manifest.get(file)).rename(
+                    this.generateHashedFilePath(file)
+                );
+
+                this.prune(this.baseDir);
+            });
+        });
+    }
+
+
+    /**
+     * Create all hashed files requested by the user,
+     * when they called mix.version(['file']);
+     */
+    writeHashedFiles() {
+        this.manualFiles.forEach(file => {
+            let hashedFile = this.generateHashedFilePath(file);
+
+            new File(hashedFile).write(File.find(file).read());
+        });
+
+        return this;
     }
 
 
@@ -21,7 +58,7 @@ class Versioning {
     record() {
         if (! this.manifest.exists()) return this;
 
-        this.reset();
+        this.addManualFilesToManifest();
 
         this.files = objectValues(this.manifest.read());
 
@@ -40,19 +77,51 @@ class Versioning {
 
 
     /**
+     * The user may optionally add extra files to be
+     * versioned. Here, we'll manually add those to
+     * Mix's manifest file.
+     */
+    addManualFilesToManifest() {
+        this.manualFiles.forEach(
+            file => this.manifest.add(file, this.generateHashedFilePath(file))
+        );
+    }
+
+
+    /**
+     * Fetch the proper hashed file path.
+     *
+     * @param {string} file
+     */
+    generateHashedFilePath(file) {
+        return new File(file).versionedPath(
+            md5(File.find(file).read())
+        );
+    }
+
+
+    /**
      * Replace all old hashed files with the new versions.
      *
      * @param {string} baseDir
      */
     prune(baseDir) {
-        let updated = new Versioning(this.manifest).record();
+        this.baseDir = baseDir;
+        let currentFiles = this.files;
 
-        if (! updated) return;
+        this.reset().record();
 
-        this.files.filter(file => ! updated.files.includes(file))
-                  .forEach(file => this.manifest.remove(path.join(baseDir, file)));
+        currentFiles
+            .filter(file => ! this.files.includes(file))
+            .forEach(file => {
+                if (! file.startsWith(baseDir)) {
+                    file = path.join(baseDir, file);
+                }
 
-        this.files = updated.files;
+                this.manifest.remove(file);
+            });
+
+        this.manifest.refresh();
 
         return this;
     }
