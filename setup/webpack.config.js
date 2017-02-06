@@ -140,10 +140,11 @@ if (Mix.preprocessors) {
                     toCompile.type == 'sass' ? [
                         { loader: 'resolve-url-loader' + sourceMap },
                         {
-                            loader: 'sass-loader?sourceMap',
+                            loader: 'sass-loader',
                             options: Object.assign({
                                 precision: 8,
-                                outputStyle: 'expanded'
+                                outputStyle: 'expanded',
+                                sourceMap: true
                             }, toCompile.pluginOptions)
                         }
                     ] : [
