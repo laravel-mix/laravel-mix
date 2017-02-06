@@ -10,11 +10,15 @@ class Dispatcher {
     /**
      * Listen for the given event.
      *
-     * @param {string}   event
-     * @param {Function} handler
+     * @param {string|array}   events
+     * @param {Function}       handler
      */
-    listen(event, handler) {
-        this.events[event] = (this.events[event] || []).concat(handler);
+    listen(events, handler) {
+        events = [].concat(events);
+
+        events.forEach(event => {
+            this.events[event] = (this.events[event] || []).concat(handler);
+        });
     }
 
 

@@ -38,27 +38,34 @@ class Mix {
 
         if (this.isUsingLaravel()) this.publicPath = 'public';
 
-        // Here, we'll load the user's webpack.mix.js file and apply it.
-        require(this.Paths.mix());
+        // This is where we load the user's webpack.mix.js config.
+        if (this.File.exists(this.Paths.mix() + '.js')) {
+            require(this.Paths.mix());
+        }
 
         this.manifest = new Manifest(
-            path.join(this.publicPath, 'mix-manifest.json'),
-            this.events
-        );
+            path.join(this.publicPath, 'mix-manifest.json')
+        ).listen(this.events);
 
-        if (this.versioning) {
-            this.versioning = new Versioning(this.manifest).record();
+        if (this.concat.any()) this.concat.watch();
 
-            this.events.listen(
-                'build', () => this.versioning.prune(this.publicPath)
-            );
-        }
-
-        if (this.concat.combinations.length) {
-            this.concat.initialize({versioning: this.versioning});
-        }
+        if (this.versioning) this.enableVersioning();
 
         this.detectHotReloading();
+    }
+
+
+    /**
+     * Enable file versioning for the build.
+     */
+    enableVersioning() {
+        this.versioning = new Versioning(this.manifest).record();
+
+        this.events.listen(
+            ['build', 'combined'], () => this.versioning.prune(this.publicPath)
+        );
+
+        this.concat.enableVersioning();
     }
 
 
@@ -179,6 +186,7 @@ class Mix {
         this.js = [];
         this.entryBuilder.reset();
         this.events = new Dispatcher;
+        this.concat = new Concat(this.events);
 
         return this;
     }

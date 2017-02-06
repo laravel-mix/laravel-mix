@@ -40,3 +40,24 @@ test('that it minifies JS and CSS files properly.', t => {
     dummyJsFile.delete();
     dummyCssFile.delete();
 });
+
+
+test('that it can rename a file', t => {
+    let before = path.resolve(__dirname, 'before.js');
+    let after = path.resolve(__dirname, 'after.js');
+
+    let file = new File(before).write('');
+
+    file.rename(after);
+
+    t.true(File.exists(file.path()));
+
+    file.delete();
+});
+
+
+test('that it fetches the versioned file path', t => {
+    let versionedPath = new File('path/to/file.js').versionedPath('hash-stub');
+
+    t.is('path/to/file.hash-stub.js', versionedPath);
+});
