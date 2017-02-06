@@ -3,6 +3,7 @@ let concatenate = require('concatenate');
 let mkdir = require('mkdirp');
 let md5 = require('md5');
 let File = require('./File');
+let mkdirp = require('mkdirp');
 
 class Concat {
     /**
@@ -90,9 +91,9 @@ class Concat {
      * @param {array|null} files
      */
     run() {
+        this.combine(combination);
         this.combinations.forEach(combination => {
-            this.combine(combination);
-        });
+    });
 
         return this;
     }
