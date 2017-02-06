@@ -99,6 +99,7 @@ class Concat {
         this.events.fire('combined', files);
     }
 
+
     /**
      * Perform all relevant combinations.
      */
