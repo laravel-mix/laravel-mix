@@ -1,7 +1,7 @@
-var path = require('path');
-var webpack = require('webpack');
-var Mix = require('laravel-mix').config;
-var plugins = require('laravel-mix').plugins;
+let path = require('path');
+let webpack = require('webpack');
+let Mix = require('laravel-mix').config;
+let plugins = require('laravel-mix').plugins;
 
 
 /*
