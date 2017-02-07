@@ -105,7 +105,7 @@ class File {
      * @param {Function} callback
      */
     watch(callback) {
-        chokidar.watch(
+        return chokidar.watch(
             this.path(), { persistent: true }
         ).on('change', callback);
     }

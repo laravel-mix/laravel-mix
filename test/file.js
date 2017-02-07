@@ -1,6 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import File from '../src/File';
+import sinon from 'sinon';
 
 test('that it parses a path into segments', t => {
     let file = new File('some/path/to/a/file.txt');
@@ -75,4 +76,20 @@ test('that it can be copied to a new location', t => {
 
     original.delete();
     copied.delete();
+});
+
+
+test('that it watches a file changes', t => {
+    let file = new File(path.resolve(__dirname, 'stub.txt'));
+
+    // If we watch the file, and then immediately
+    // force the "change" event...
+    let callback = sinon.spy();
+    file.watch(callback).emit('change');
+
+    // Then our callback function should be triggered.
+    t.true(callback.called);
+
+    // Clean up
+    file.delete();
 });
