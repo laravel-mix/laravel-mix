@@ -47,7 +47,7 @@ module.exports.extract = (libs, output) => {
                              .replace(Mix.publicPath, '');
             }
 
-            return path.join(Mix.js.base, 'vendor');
+            return path.join(Mix.js.base, 'vendor').replace(/\\/g, '/');
         }
     });
 
