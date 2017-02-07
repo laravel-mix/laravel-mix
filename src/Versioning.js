@@ -27,9 +27,9 @@ class Versioning {
 
         this.manualFiles.forEach(file => {
             new File(file).watch(() => {
-                File.find(this.manifest.get(file)).rename(
-                    this.generateHashedFilePath(file)
-                );
+                File.find(this.manifest.get(file))
+                    .rename(this.generateHashedFilePath(file))
+                    .write(File.find(file).read());
 
                 this.prune(this.baseDir);
             });

@@ -161,7 +161,7 @@ class File {
 
         this.file = to;
 
-        return to;
+        return this;
     }
 
 

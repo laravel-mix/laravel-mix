@@ -62,16 +62,17 @@ test('that it can combine files while applying versioning', t => {
 
     // We'll listen for the "combined" event, so that
     // we can fetch the generated file names.
-    let generatedFiles;
-    Mix.events.listen('combined', files => generatedFiles = files);
+
+    // Mix.events.listen('combined', files => generatedFiles = files);
+    Mix.events.listen('combined', files => {
+        // And then we'll ensure that the manifest contains the
+        // output path, as well as the hashed version.
+        t.deepEqual({
+            [files.outputOriginal]: files.output
+        }, Mix.manifest.manifest);
+    });
 
     Mix.concat.run();
-
-    // And then we'll ensure that the manifest contains the
-    // output path, as well as the hashed version.
-    t.deepEqual({
-        [generatedFiles.outputOriginal]: generatedFiles.output
-    }, Mix.manifest.manifest);
 });
 
 

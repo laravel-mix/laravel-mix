@@ -84,10 +84,10 @@ class Concat {
         // If file versioning is enabled, then we'll
         // rename the output file to apply a hash.
         if (this.versioning) {
-            files.output = output.rename(
-                File.find(files.outputOriginal)
-                    .versionedPath(md5(mergedFileContents))
-            );
+            let versionedPath = File.find(files.outputOriginal)
+                .versionedPath(md5(mergedFileContents));
+
+            files.output = output.rename(versionedPath).path();
         }
 
         if (process.env.NODE_ENV === 'production') {
