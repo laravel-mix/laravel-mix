@@ -26,6 +26,7 @@ test.afterEach(t => {
     output.delete();
     one.delete();
     two.delete();
+    File.find('mix-manifest.json').delete();
 
     process.env.NODE_ENV = 'development';
 
@@ -70,6 +71,9 @@ test('that it can combine files while applying versioning', t => {
         t.deepEqual({
             [files.outputOriginal]: files.output
         }, Mix.manifest.manifest);
+
+        // Clean up
+        File.find(files.output).delete();
     });
 
     Mix.concat.run();
