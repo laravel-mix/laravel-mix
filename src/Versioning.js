@@ -43,9 +43,8 @@ class Versioning {
      */
     writeHashedFiles() {
         this.manualFiles.forEach(file => {
-            let hashedFile = this.generateHashedFilePath(file);
-
-            new File(hashedFile).write(File.find(file).read());
+            File.find(file)
+                .copy(this.generateHashedFilePath(file));
         });
 
         return this;

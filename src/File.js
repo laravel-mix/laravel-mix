@@ -150,6 +150,7 @@ class File {
         };
     }
 
+
     /**
      * Rename the file.
      *
@@ -161,6 +162,16 @@ class File {
         this.file = to;
 
         return to;
+    }
+
+
+    /**
+     * Copy the current file to a new location.
+     *
+     * @param {string} to
+     */
+    copy(to) {
+        new File(to).write(this.read());
     }
 }
 

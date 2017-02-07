@@ -61,3 +61,18 @@ test('that it fetches the versioned file path', t => {
 
     t.is('path/to/file.hash-stub.js', versionedPath);
 });
+
+
+test('that it can be copied to a new location', t => {
+    let original = new File(path.resolve(__dirname, 'original.js'));
+    let copied = new File(path.resolve(__dirname, 'copied-original.js'));
+
+    original.write('foobar').copy(copied.path());
+
+    t.true(File.exists(original.path()));
+    t.true(File.exists(copied.path()));
+    t.is('foobar', copied.read());
+
+    original.delete();
+    copied.delete();
+});
