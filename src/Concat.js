@@ -87,7 +87,7 @@ class Concat {
             let versionedPath = File.find(files.outputOriginal)
                 .versionedPath(md5(mergedFileContents));
 
-            files.output = output.rename(versionedPath).path();
+            files.output = output.rename(versionedPath).file;
         }
 
         if (process.env.NODE_ENV === 'production') {
