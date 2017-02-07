@@ -25,6 +25,7 @@ class Mix {
         this.concat = new Concat(this.events);
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
+        this.resourceRoot = '/';
     }
 
 
@@ -185,6 +186,7 @@ class Mix {
         ].forEach(prop => this[prop] = null);
 
         this.publicPath = './';
+        this.resourceRoot = '/';
         this.js = [];
         this.entryBuilder.reset();
         this.events = new Dispatcher;
