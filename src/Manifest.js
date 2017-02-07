@@ -11,6 +11,7 @@ class Manifest {
     constructor(path) {
         this.path = path;
         this.manifest = {};
+        this.loaded = false;
     }
 
 
@@ -21,7 +22,7 @@ class Manifest {
      * @param {string} modified
      */
     add(original, modified) {
-        this.manifest[original] = modified;
+        this.manifest[this.preparePath(original)] = this.preparePath(modified);
 
         return this;
     }
@@ -33,7 +34,13 @@ class Manifest {
      * @param {string} original
      */
     get(original) {
-        return this.manifest[original];
+        if (original) {
+            original = this.preparePath(original);
+
+            return this.manifest[original];
+        }
+
+        return this.loaded ? this.manifest : this.read();
     }
 
 
@@ -61,7 +68,9 @@ class Manifest {
         );
 
         flattenedPaths.forEach(path => {
-            path = path.replace(/\\/g, '/');
+            path = this.preparePath(path);
+
+            if (! path.startsWith('/')) path = ('/'+path);
 
             let original = path.replace(/\.(\w{20})(\..+)/, '$2');
 
@@ -78,9 +87,7 @@ class Manifest {
      * @param {array} combine
      */
     appendCombinedFiles(toCombine) {
-        let output = toCombine.output
-            .replace(/\\/g, '/')
-            .replace(Mix.config.publicPath, '');
+        let output = this.preparePath(toCombine.output);
 
         this.manifest[
             output.replace(/\.(\w{32})(\..+)/, '$2')
@@ -94,7 +101,17 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        File.find(this.path).write(this.manifest);
+        let manifest = {};
+
+        for (let key in this.manifest) {
+            let val = this.preparePath(this.manifest[key]);
+
+            key = this.preparePath(key);
+
+            manifest[key] = val;
+        }
+
+        File.find(this.path).write(manifest);
     }
 
 
@@ -110,7 +127,26 @@ class Manifest {
      * Retrieve the JSON output from the manifest file.
      */
     read() {
-        return JSON.parse(File.find(this.path).read());
+        if (! this.loaded) {
+            this.manifest = JSON.parse(File.find(this.path).read());
+
+            this.loaded = true;
+
+            return this.manifest;
+        }
+
+        return this.manifest;
+    }
+
+
+    /**
+     * Prepare the provided path for processing.
+     *
+     * @param {string} path
+     */
+    preparePath(path) {
+        return path.replace(new RegExp('^' + Mix.config.publicPath), '')
+                   .replace(/\\/g, '/');
     }
 
 

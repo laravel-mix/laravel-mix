@@ -10,11 +10,13 @@ class Versioning {
      *
      * @param {array}  manualFiles
      * @param {object} manifest
+     * @param {string} publicPath
      */
-    constructor(manualFiles = [], manifest) {
+    constructor(manualFiles = [], manifest, publicPath) {
         this.files = [];
         this.manualFiles = manualFiles;
         this.manifest = manifest;
+        this.publicPath = publicPath;
     }
 
 
@@ -25,13 +27,17 @@ class Versioning {
     watch() {
         if (! process.argv.includes('--watch')) return;
 
-        this.manualFiles.forEach(file => {
-            new File(file).watch(() => {
-                File.find(this.manifest.get(file))
-                    .rename(this.generateHashedFilePath(file))
-                    .write(File.find(file).read());
+        this.manualFiles.forEach(fileName => {
+            let file = new File(fileName);
 
-                this.prune(this.baseDir);
+            file.watch(() => {
+                File.find(
+                    path.join(this.publicPath, this.manifest.get(fileName))
+                )
+                .rename(this.generateHashedFilePath(fileName))
+                .write(file.read());
+
+                this.prune();
             });
         });
     }
@@ -59,7 +65,7 @@ class Versioning {
 
         this.addManualFilesToManifest();
 
-        this.files = objectValues(this.manifest.read());
+        this.files = objectValues(this.manifest.get());
 
         return this;
     }
@@ -82,7 +88,10 @@ class Versioning {
      */
     addManualFilesToManifest() {
         this.manualFiles.forEach(
-            file => this.manifest.add(file, this.generateHashedFilePath(file))
+            file => this.manifest.add(
+                file.replace(this.publicPath, ''),
+                this.generateHashedFilePath(file)
+            )
         );
     }
 
@@ -101,11 +110,8 @@ class Versioning {
 
     /**
      * Replace all old hashed files with the new versions.
-     *
-     * @param {string} baseDir
      */
-    prune(baseDir) {
-        this.baseDir = baseDir;
+    prune() {
         let currentFiles = this.files;
 
         this.reset().record();
@@ -113,8 +119,8 @@ class Versioning {
         currentFiles
             .filter(file => ! this.files.includes(file))
             .forEach(file => {
-                if (! file.startsWith(baseDir)) {
-                    file = path.join(baseDir, file);
+                if (! file.startsWith(this.publicPath)) {
+                    file = path.join(this.publicPath, file);
                 }
 
                 this.manifest.remove(file);
