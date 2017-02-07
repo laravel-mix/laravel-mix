@@ -74,22 +74,6 @@ module.exports.output = Mix.output();
 module.exports.module = {
     rules: [
         {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: {
-                loaders: {
-                    js: 'babel-loader' + Mix.babelConfig(),
-                    scss: 'vue-style-loader!css-loader!sass-loader',
-                    sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
-                },
-
-                postcss: [
-                    require('autoprefixer')
-                ]
-            }
-        },
-
-        {
             test: /\.jsx?$/,
             exclude: /(node_modules|bower_components)/,
             loader: 'babel-loader' + Mix.babelConfig()
@@ -160,6 +144,50 @@ if (Mix.preprocessors) {
     });
 }
 
+
+// Vue rule start here.
+let vueRule = {
+    test: /\.vue$/,
+    loader: 'vue-loader',
+    options: {
+        loaders: {
+            js: 'babel-loader' + Mix.babelConfig()
+        },
+
+        postcss: [
+            require('autoprefixer')
+        ]
+    }
+}
+
+if (Mix.vueStyleOutput) {
+    let toCompile = {output: Mix.vueStyleOutput};
+    let extractPlugin = new plugins.ExtractTextPlugin(Mix.cssOutput(toCompile));
+
+    vueRule.options.loaders = Object.assign(vueRule.options.loaders, {
+        css: extractPlugin.extract({
+            loader: 'css-loader',
+            fallbackLoader: 'vue-style-loader'
+        }),
+        scss: extractPlugin.extract({
+            loader: ['css-loader', 'sass-loader'],
+            fallbackLoader: 'vue-style-loader'
+        }),
+        sass: extractPlugin.extract({
+            loader: ['css-loader', 'sass-loader?indentedSyntax'],
+            fallbackLoader: 'vue-style-loader'
+        })
+    });
+
+    module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
+} else {
+    vueRule.options.loaders = Object.assign(vueRule.options.loaders, {
+        scss: 'vue-style-loader!css-loader!sass-loader',
+        sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+    });
+}
+
+module.exports.module.rules.push(vueRule);
 
 
 /*
