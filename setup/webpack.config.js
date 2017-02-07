@@ -312,7 +312,7 @@ if (Mix.extract) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
             names: Mix.entryBuilder.extractions.concat([
-                path.join(Mix.js.base, 'manifest')
+                path.join(Mix.js.base, 'manifest').replace(/\\/g, '/')
             ]),
             minChunks: Infinity
         })
