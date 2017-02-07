@@ -157,10 +157,14 @@ module.exports.combine = (src, output) => {
  * @param {boolean} flatten
  */
 module.exports.copy = (from, to, flatten = true) => {
-    Mix.copy = (Mix.copy || []).concat({
-        from,
-        to: Mix.Paths.root(to),
-        flatten: flatten
+    Mix.copy = Mix.copy || [];
+
+    [].concat(from).forEach(src => {
+        Mix.copy.push({
+            from: src,
+            to: Mix.Paths.root(to),
+            flatten: flatten
+        });
     });
 
     return this;

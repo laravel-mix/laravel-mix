@@ -192,6 +192,7 @@ class Mix {
         this.entryBuilder.reset();
         this.events = new Dispatcher;
         this.concat = new Concat(this.events);
+        this.copy = [];
 
         return this;
     }
