@@ -126,11 +126,11 @@ class File {
      * Version the current file.
      */
     version() {
-        let hash = md5(this.read());
+        let contents = this.read();
 
-        let versionedPath = this.versionedPath(hash);
+        let versionedPath = this.versionedPath(md5(contents));
 
-        return new File(versionedPath).write(this.read());
+        return new File(versionedPath).write(contents);
     }
 
 

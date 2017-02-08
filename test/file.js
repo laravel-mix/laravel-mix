@@ -63,6 +63,7 @@ test('that it can create a duplicated, versioned file.', t => {
     let versionedFile = file.version();
 
     t.true(File.exists(versionedFile.file));
+    t.is('foo', versionedFile.read());
 
     // Clean up
     file.delete();
