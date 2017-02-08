@@ -243,6 +243,18 @@ module.exports.webpackConfig = (config) => {
 
 
 /**
+ * Set Mix-specific options.
+ *
+ * @param {object} options
+ */
+module.exports.options = (options) => {
+    Mix.options = options;
+
+    return this;
+};
+
+
+/**
  * Register a Webpack build event handler.
  *
  * @param {Function} callback

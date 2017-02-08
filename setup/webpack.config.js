@@ -77,7 +77,21 @@ module.exports.module = {
             test: /\.vue$/,
             loader: 'vue-loader',
             options: {
-                loaders: {
+                loaders: Mix.options.extractVueStyles ? {
+                    js: 'babel-loader' + Mix.babelConfig(),
+                    scss: plugins.ExtractTextPlugin.extract({
+                        use: 'css-loader!sass-loader',
+                        fallback: 'vue-style-loader'
+                    }),
+                    sass: plugins.ExtractTextPlugin.extract({
+                        use: 'css-loader!sass-loader?indentedSyntax',
+                        fallback: 'vue-style-loader'
+                    }),
+                    css: plugins.ExtractTextPlugin.extract({
+                        use: 'css-loader',
+                        fallback: 'vue-style-loader'
+                    })
+                }: {
                     js: 'babel-loader' + Mix.babelConfig(),
                     scss: 'vue-style-loader!css-loader!sass-loader',
                     sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
@@ -163,6 +177,10 @@ if (Mix.preprocessors) {
 
         module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
+} else if (Mix.options.extractVueStyles) {
+    module.exports.plugins = (module.exports.plugins || []).concat(
+        new plugins.ExtractTextPlugin(path.join(Mix.js.base, 'vue-styles.css'))
+    );
 }
 
 
