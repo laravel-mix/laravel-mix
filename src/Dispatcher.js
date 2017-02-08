@@ -10,7 +10,7 @@ class Dispatcher {
     /**
      * Listen for the given event.
      *
-     * @param {string|array}   events
+     * @param {string|Array}   events
      * @param {Function}       handler
      */
     listen(events, handler) {
@@ -26,7 +26,7 @@ class Dispatcher {
      * Trigger all handlers for the given event.
      *
      * @param {string} event
-     * @param {mixed} data
+     * @param {*} data
      */
     fire(event, data) {
         if (! this.events[event]) return false;

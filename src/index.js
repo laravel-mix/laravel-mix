@@ -5,7 +5,7 @@ let Verify = require('./Verify');
 /**
  * Register the Webpack entry/output paths.
  *
- * @param {string|array}  entry
+ * @param {string|Array}  entry
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
@@ -35,7 +35,7 @@ module.exports.js = (entry, output) => {
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
  *
- * @param {array}  libs
+ * @param {Array}  libs
  * @param {string} output
  */
 module.exports.extract = (libs, output) => {
@@ -137,7 +137,7 @@ module.exports.preprocess = (type, src, output, pluginOptions) => {
 /**
  * Combine a collection of files.
  *
- * @param {string|array} src
+ * @param {string|Array} src
  * @param {string}       output
  */
 module.exports.combine = (src, output) => {
@@ -174,7 +174,7 @@ module.exports.copy = (from, to, flatten = true) => {
 /**
  * Minify the provided file.
  *
- * @param {string|array} src
+ * @param {string|Array} src
  */
 module.exports.minify = (src) => {
     output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
@@ -198,7 +198,7 @@ module.exports.sourceMaps = () => {
 /**
  * Enable compiled file versioning.
  *
- * @param {string|array} files
+ * @param {string|Array} files
  */
 module.exports.version = (files = []) => {
     Mix.versioning = true;
