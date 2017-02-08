@@ -56,6 +56,18 @@ module.exports.extract = (libs, output) => {
 
 
 /**
+ * Extract vue component style into single file.
+ * 
+ * @param  {string} output
+ */
+module.exports.extractVueStyle = (output) => {
+    Mix.vueStyleOutput = new Mix.File(output).parsePath();
+    
+    return this;
+}
+
+
+/**
  * Register libraries to automatically "autoload" when
  * the appropriate variable is references in js
  *
