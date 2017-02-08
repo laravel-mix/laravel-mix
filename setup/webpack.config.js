@@ -101,6 +101,11 @@ module.exports.module = {
         },
 
         {
+            test: /\.html$/,
+            loaders: ['html-loader']
+        },
+
+        {
             test: /\.(png|jpg|gif)$/,
             loader: 'file-loader',
             options: {
