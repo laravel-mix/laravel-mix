@@ -178,16 +178,6 @@ class File {
 
         return this;
     }
-
-
-    /**
-     * Copy the current file to a new location.
-     *
-     * @param {string} to
-     */
-    copy(to) {
-        new File(to).write(this.read());
-    }
 }
 
 module.exports = File;
