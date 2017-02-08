@@ -57,25 +57,23 @@ test('that it can rename a file', t => {
 });
 
 
+test('that it can create a duplicated, versioned file.', t => {
+    let file = new File(path.resolve(__dirname, 'file.txt')).write('foo');
+
+    let versionedFile = file.version();
+
+    t.true(File.exists(versionedFile.file));
+
+    // Clean up
+    file.delete();
+    versionedFile.delete();
+});
+
+
 test('that it fetches the versioned file path', t => {
     let versionedPath = new File('path/to/file.js').versionedPath('hash-stub');
 
     t.is('path/to/file.hash-stub.js', versionedPath);
-});
-
-
-test('that it can be copied to a new location', t => {
-    let original = new File(path.resolve(__dirname, 'original.js'));
-    let copied = new File(path.resolve(__dirname, 'copied-original.js'));
-
-    original.write('foobar').copy(copied.path());
-
-    t.true(File.exists(original.path()));
-    t.true(File.exists(copied.path()));
-    t.is('foobar', copied.read());
-
-    original.delete();
-    copied.delete();
 });
 
 

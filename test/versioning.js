@@ -22,16 +22,11 @@ test.before(t => {
 
 
 test.beforeEach(() => {
+    let manifest = new Manifest(manifestPath);
+
     version = new Versioning(
-        [], new Manifest(manifestPath), root
+        [], manifest, root
     );
-});
-
-
-test.after.always('cleanup', t => {
-    manifestFile.delete();
-    cssFile.delete();
-    jsFile.delete();
 });
 
 
@@ -39,48 +34,6 @@ test('creates a new versioning instance', t => {
     let manifestPath = root +'/versioning.json';
 
     t.is(version.manifest.path, manifestPath);
-    t.deepEqual(version.files, []);
 });
 
-
-test('it records versioned files', t => {
-    version.record();
-
-    t.deepEqual(version.files, ["fixtures/versionapp.js","fixtures/versionapp.css"]);
-});
-
-
-test('it resets versioned files', t => {
-    version.reset();
-    t.deepEqual(version.files, []);
-});
-
-
-test('that it replaces all old hashed files with new version', t => {
-    // Make sure file exists
-    t.true(File.exists(cssFile.file));
-    t.true(File.exists(jsFile.file));
-
-    // Prune with nothing updated
-    version.prune();
-
-    t.deepEqual(version.files, [
-        "fixtures/versionapp.js",
-        "fixtures/versionapp.css"
-    ]);
-
-    // Fake a manifest.json update
-    delete version.manifest.manifest['app.css'];
-
-    // See if prune works...
-    version.prune();
-    t.deepEqual(version.files, ["fixtures/versionapp.js"]);
-});
-
-
-test('that it fails without a manifest.json', t => {
-    manifestFile.delete();
-    version.reset();
-    version.prune();
-    t.deepEqual(version.files, []);
-});
+// TODO: Test version pruning.

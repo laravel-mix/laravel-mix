@@ -1,5 +1,6 @@
 let fs = require('fs');
 let path = require('path');
+let md5 = require('md5');
 let chokidar = require('chokidar');
 let mkdirp = require('mkdirp');
 let uglify = require('uglify-js');
@@ -107,7 +108,7 @@ class File {
     watch(callback) {
         return chokidar.watch(
             this.path(), { persistent: true }
-        ).on('change', callback);
+        ).on('change', () => callback(this));
     }
 
 
@@ -122,11 +123,25 @@ class File {
 
 
     /**
+     * Version the current file.
+     */
+    version() {
+        let hash = md5(this.read());
+
+        let versionedPath = this.versionedPath(hash);
+
+        return new File(versionedPath).write(this.read());
+    }
+
+
+    /**
      * Fetch a full, versioned path to the file.
      *
      * @param {string} hash
      */
     versionedPath(hash) {
+        if (! hash) hash = md5(this.read());
+
         return this.parsePath().hashedPath.replace('[hash]', hash);
     }
 

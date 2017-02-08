@@ -59,12 +59,9 @@ class Mix {
      * Enable file versioning for the build.
      */
     enableVersioning() {
-        this.versioning = new Versioning(this.version, this.manifest, this.publicPath);
-
-        this.versioning
-            .writeHashedFiles()
-            .record()
-            .watch();
+        this.versioning = new Versioning(
+            this.version, this.manifest, this.publicPath
+        ).watch();
 
         this.events.listen(
             ['build', 'combined'], () => this.versioning.prune()

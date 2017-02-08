@@ -1,7 +1,5 @@
 let path = require('path');
-let Manifest = require('./Manifest');
 let objectValues = require('lodash').values;
-let md5 = require('md5');
 let File = require('./File');
 
 class Versioning {
@@ -13,10 +11,11 @@ class Versioning {
      * @param {string} publicPath
      */
     constructor(manualFiles = [], manifest, publicPath) {
-        this.files = [];
-        this.manualFiles = manualFiles;
+        this.manualFiles = manualFiles.map(file => new File(file));
         this.manifest = manifest;
         this.publicPath = publicPath;
+
+        this.writeHashedFiles().addManualFilesToManifest();
     }
 
 
@@ -25,21 +24,23 @@ class Versioning {
      * included in Webpack's core bundle process.
      */
     watch() {
-        if (! process.argv.includes('--watch')) return;
+        if (! process.argv.includes('--watch')) return this;
 
-        this.manualFiles.forEach(fileName => {
-            let file = new File(fileName);
-
-            file.watch(() => {
+        this.manualFiles.forEach(file => {
+            file.watch(file => {
+                // Delete the old versioned file.
                 File.find(
-                    path.join(this.publicPath, this.manifest.get(fileName))
-                )
-                .rename(this.generateHashedFilePath(fileName))
-                .write(file.read());
+                    path.join(this.publicPath, this.manifest.get(file))
+                ).delete();
+
+                // And then whip up a new one.
+                file.version();
 
                 this.prune();
             });
         });
+
+        return this;
     }
 
 
@@ -48,34 +49,7 @@ class Versioning {
      * when they called mix.version(['file']);
      */
     writeHashedFiles() {
-        this.manualFiles.forEach(file => {
-            File.find(file)
-                .copy(this.generateHashedFilePath(file));
-        });
-
-        return this;
-    }
-
-
-    /**
-     * Record versioned files.
-     */
-    record() {
-        if (! this.manifest.exists()) return this;
-
-        this.addManualFilesToManifest();
-
-        this.files = objectValues(this.manifest.get());
-
-        return this;
-    }
-
-
-    /**
-     * Reset all recorded files.
-     */
-    reset() {
-        this.files = [];
+        this.manualFiles.forEach(file => file.version());
 
         return this;
     }
@@ -87,24 +61,7 @@ class Versioning {
      * Mix's manifest file.
      */
     addManualFilesToManifest() {
-        this.manualFiles.forEach(
-            file => this.manifest.add(
-                file.replace(this.publicPath, ''),
-                this.generateHashedFilePath(file)
-            )
-        );
-    }
-
-
-    /**
-     * Fetch the proper hashed file path.
-     *
-     * @param {string} file
-     */
-    generateHashedFilePath(file) {
-        return new File(file).versionedPath(
-            md5(File.find(file).read())
-        );
+        this.manualFiles.forEach(file => this.manifest.add(file));
     }
 
 
@@ -112,23 +69,23 @@ class Versioning {
      * Replace all old hashed files with the new versions.
      */
     prune() {
-        let currentFiles = this.files;
+        this.addManualFilesToManifest();
 
-        this.reset().record();
+        let cachedFiles = objectValues(this.manifest.cache);
+        let currentFiles = objectValues(this.manifest.get());
 
-        currentFiles
-            .filter(file => ! this.files.includes(file))
-            .forEach(file => {
-                if (! file.startsWith(this.publicPath)) {
-                    file = path.join(this.publicPath, file);
-                }
-
-                this.manifest.remove(file);
-            });
+        cachedFiles
+            .filter(file => ! currentFiles.includes(file))
+            .map(file => {
+                return file.startsWith(this.publicPath)
+                    ? file
+                    : path.join(this.publicPath, file);
+            })
+            .forEach(file => this.manifest.remove(file));
 
         this.manifest.refresh();
 
-        return this;
+        return currentFiles;
     }
 }
 

@@ -11,7 +11,7 @@ class Manifest {
     constructor(path) {
         this.path = path;
         this.manifest = {};
-        this.loaded = false;
+        this.cache = this.exists() ? this.read() : {};
     }
 
 
@@ -21,8 +21,11 @@ class Manifest {
      * @param {string} original
      * @param {string} modified
      */
-    add(original, modified) {
-        this.manifest[this.preparePath(original)] = this.preparePath(modified);
+    add(file) {
+        let original = this.preparePath(file.file);
+        let modified = this.preparePath(file.versionedPath());
+
+        this.manifest[original] = modified;
 
         return this;
     }
@@ -35,12 +38,12 @@ class Manifest {
      */
     get(original) {
         if (original) {
-            original = this.preparePath(original);
+            if (original instanceof File) original = original.file;
 
-            return this.manifest[original];
+            return this.manifest[this.preparePath(original)];
         }
 
-        return this.loaded ? this.manifest : this.read();
+        return this.manifest;
     }
 
 
@@ -127,15 +130,7 @@ class Manifest {
      * Retrieve the JSON output from the manifest file.
      */
     read() {
-        if (! this.loaded) {
-            this.manifest = JSON.parse(File.find(this.path).read());
-
-            this.loaded = true;
-
-            return this.manifest;
-        }
-
-        return this.manifest;
+        return JSON.parse(File.find(this.path).read());
     }
 
 
