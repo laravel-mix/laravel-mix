@@ -18,8 +18,7 @@ class Manifest {
     /**
      * Add a key-value pair to the manifest file.
      *
-     * @param {string} original
-     * @param {string} modified
+     * @param {File} file
      */
     add(file) {
         let original = this.preparePath(file.file);
