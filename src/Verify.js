@@ -64,13 +64,6 @@ class Verify {
             Array.isArray(src),
             'mix.combine() requires an array as its first parameter.'
         );
-
-        src.forEach(file => {
-            assert(
-                File.exists(file),
-                `Mix.combine() error: "${file} does not exist.`
-            );
-        });
     }
 }
 
