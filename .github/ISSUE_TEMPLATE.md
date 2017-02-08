@@ -1,22 +1,24 @@
-<!-- *Before creating an issue please make sure you are using the latest version of laravel-mix.* -->
+<!-- 
+    Before posting this issue, please perform the following steps, and confirm that the issue is still present.
 
-### What is the current behavior?
+1. Update Laravel Mix to the latest version.
+2. Nuke your dependencies, and reinstall from scratch: `rm -rf node_modules && npm install`.
+3. Check your `package.json` file, and ensure that there are no old Laravel Elixir dependencies that might be interfering with Mix.
+
+-->
+
+- Laravel Mix Version: #.#.#
+- Node Version (`node -v`): 
+- NPM Version (`npm -v`): 
+- OS: 
+
+### Description:
 
 
+### Steps To Reproduce:
 
-### What is the expected or desired behavior?
+<!-- 
 
+Your issue will be addressed much more quickly if you can provide us exact steps to reproduce the problem.  Bonus points, if you link us to an installable GitHub repository that illustrates the problem.
 
-
----
-
-**Steps to reproduce, including full log output:**
-<!-- If you can, provide a link to a public repository which contains the files necessary to reproduce this. -->
-
-
-
-**Local environment:**
-
-Operating System: X
-
-NPM/Node version: X
+-->
