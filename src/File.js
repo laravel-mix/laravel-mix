@@ -1,5 +1,7 @@
 let fs = require('fs');
 let path = require('path');
+let chokidar = require('chokidar');
+let mkdirp = require('mkdirp');
 let uglify = require('uglify-js');
 let UglifyCss = require('clean-css');
 
@@ -11,7 +13,7 @@ class File {
      */
     constructor(file) {
         this.file = file;
-        this.fileType = path.parse(file).ext;
+        this.fileType = path.extname(file);
     }
 
 
@@ -22,6 +24,16 @@ class File {
      */
     static find(file) {
         return new File(file);
+    }
+
+
+    /**
+     * Make all nested directories in the current file path.
+     */
+    makeDirectories() {
+        mkdirp.sync(this.parsePath().base);
+
+        return this;
     }
 
 
@@ -67,6 +79,10 @@ class File {
      * @param {string} body
      */
     write(body) {
+        if (typeof body === 'object') {
+            body = JSON.stringify(body, null, 2);
+        }
+
         fs.writeFileSync(this.file, body);
 
         return this;
@@ -84,12 +100,34 @@ class File {
 
 
     /**
+     * Watch the current file for changes.
+     *
+     * @param {Function} callback
+     */
+    watch(callback) {
+        return chokidar.watch(
+            this.path(), { persistent: true }
+        ).on('change', callback);
+    }
+
+
+    /**
      * Fetch the full path to the file.
      *
      * @return {string}
      */
     path() {
         return path.resolve(this.file);
+    }
+
+
+    /**
+     * Fetch a full, versioned path to the file.
+     *
+     * @param {string} hash
+     */
+    versionedPath(hash) {
+        return this.parsePath().hashedPath.replace('[hash]', hash);
     }
 
 
@@ -105,12 +143,35 @@ class File {
             hashedPath: path.join(outputSegments.dir, `${outputSegments.name}.[hash]${outputSegments.ext}`),
             base: outputSegments.dir,
             file: outputSegments.base,
-            fileWithDir: path.join(outputSegments.dir.split('/').pop(), outputSegments.base),
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,
             name: outputSegments.name,
             isDir: ! outputSegments.ext,
             ext: outputSegments.ext
         };
+    }
+
+
+    /**
+     * Rename the file.
+     *
+     * @param {string} to
+     */
+    rename(to) {
+        fs.renameSync(this.file, to);
+
+        this.file = to;
+
+        return this;
+    }
+
+
+    /**
+     * Copy the current file to a new location.
+     *
+     * @param {string} to
+     */
+    copy(to) {
+        new File(to).write(this.read());
     }
 }
 

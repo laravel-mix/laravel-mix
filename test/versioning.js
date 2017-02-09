@@ -28,10 +28,13 @@ test.after.always('cleanup', t => {
 
 
 test('creates a new versioning instance', t => {
+    let manifestPath = root +'/versioning.json';
+
     version = new Versioning(
-        new Manifest(root + '/versioning.json')
+        [], new Manifest(manifestPath)
     );
-    t.is(version.manifest.path, root + '/versioning.json');
+
+    t.is(version.manifest.path, manifestPath);
     t.deepEqual(version.files, []);
 });
 

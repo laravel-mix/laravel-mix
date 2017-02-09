@@ -1,6 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import File from '../src/File';
+import sinon from 'sinon';
 
 test('that it parses a path into segments', t => {
     let file = new File('some/path/to/a/file.txt');
@@ -11,7 +12,6 @@ test('that it parses a path into segments', t => {
         hashedPath: 'some/path/to/a/file.[hash].txt',
         base: 'some/path/to/a',
         file: 'file.txt',
-        fileWithDir: 'a/file.txt',
         hashedFile: 'file.[hash].txt',
         name: 'file',
         isDir: false,
@@ -40,4 +40,56 @@ test('that it minifies JS and CSS files properly.', t => {
 
     dummyJsFile.delete();
     dummyCssFile.delete();
+});
+
+
+test('that it can rename a file', t => {
+    let before = path.resolve(__dirname, 'before.js');
+    let after = path.resolve(__dirname, 'after.js');
+
+    let file = new File(before).write('');
+
+    file.rename(after);
+
+    t.true(File.exists(file.path()));
+
+    file.delete();
+});
+
+
+test('that it fetches the versioned file path', t => {
+    let versionedPath = new File('path/to/file.js').versionedPath('hash-stub');
+
+    t.is('path/to/file.hash-stub.js', versionedPath);
+});
+
+
+test('that it can be copied to a new location', t => {
+    let original = new File(path.resolve(__dirname, 'original.js'));
+    let copied = new File(path.resolve(__dirname, 'copied-original.js'));
+
+    original.write('foobar').copy(copied.path());
+
+    t.true(File.exists(original.path()));
+    t.true(File.exists(copied.path()));
+    t.is('foobar', copied.read());
+
+    original.delete();
+    copied.delete();
+});
+
+
+test('that it watches a file changes', t => {
+    let file = new File(path.resolve(__dirname, 'stub.txt'));
+
+    // If we watch the file, and then immediately
+    // force the "change" event...
+    let callback = sinon.spy();
+    file.watch(callback).emit('change');
+
+    // Then our callback function should be triggered.
+    t.true(callback.called);
+
+    // Clean up
+    file.delete();
 });

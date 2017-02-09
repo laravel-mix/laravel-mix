@@ -1,15 +1,16 @@
 let path = require('path');
 let Collection = new require('./Collection');
 
-class WebpackEntry {
+class EntryBuilder {
     /**
-     * Create a new WebpackEntry instance.
+     * Create a new EntryBuilder instance.
      *
      * @param {object} mix
      */
     constructor(mix) {
         this.mix = mix;
         this.entry = new Collection;
+        this.extractions = [];
     }
 
 
@@ -81,12 +82,12 @@ class WebpackEntry {
      * Add any relevant stylesheets to the entry.
      */
     addCss() {
-        let preprocessor = this.mix.cssPreprocessor;
+        let preprocessors = this.mix.preprocessors;
 
-        if (! preprocessor) return this;
+        if (! preprocessors) return this;
 
         let name = Object.keys(this.entry.get())[0];
-        let stylesheets = this.mix[preprocessor].map(css => css.src.path);
+        let stylesheets = preprocessors.map(css => css.src.path);
 
         this.entry.add(name, stylesheets);
 
@@ -98,12 +99,15 @@ class WebpackEntry {
      * Add any relevant vendor extractions to the entry.
      */
     addVendors() {
-        if (! this.mix.js.length || ! this.mix.js.vendor) return this;
+        if (! this.mix.js.length || ! this.mix.extract) return this;
 
-        let vendorPath = (this.mix.js.base + '/vendor')
-            .replace(this.mix.publicPath, '');
+        this.mix.extract.forEach(extract => {
+            let vendorPath = extract.output();
 
-        this.entry.add(vendorPath, this.mix.js.vendor);
+            this.extractions.push(vendorPath);
+
+            this.entry.add(vendorPath, extract.libs);
+        });
 
         return this;
     }
@@ -117,4 +121,4 @@ class WebpackEntry {
     }
 }
 
-module.exports = WebpackEntry;
+module.exports = EntryBuilder;
