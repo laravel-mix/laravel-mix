@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix-stylus",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Laravel Mix fork with Stylus support.",
   "main": "src/index.js",
   "scripts": {
@@ -23,25 +23,27 @@
     "babel-core": "^6.20.0",
     "babel-loader": "^6.2.9",
     "babel-preset-es2015": "^6.18.0",
+    "chokidar": "^1.6.1",
     "clean-css": "^3.4.22",
     "concatenate": "0.0.2",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^3.1.3",
     "css-loader": "^0.26.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "file-loader": "^0.9.0",
-    "friendly-errors-webpack-plugin": "^1.1.2",
+    "friendly-errors-webpack-plugin": "^1.1.3",
     "fs": "0.0.1-security",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "lodash": "^4.17.4",
+    "mkdirp": "^0.5.1",
     "node-sass": "^4.0.0",
     "on-build-webpack": "^0.1.0",
     "path": "^0.12.7",
     "postcss-load-config": "^1.0.0",
     "postcss-loader": "^1.2.1",
     "resolve-url-loader": "^1.6.1",
-    "sass-loader": "^4.0.2",
+    "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
@@ -58,5 +60,8 @@
     "ava": "^0.17.0",
     "nyc": "^10.0.0",
     "sinon": "^1.17.7"
+  },
+  "engines": {
+    "node": ">=6.0.0"
   }
 }

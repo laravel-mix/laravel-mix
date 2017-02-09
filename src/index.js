@@ -1,16 +1,15 @@
 let path = require('path');
-let assert = require('assert');
 let Mix = require('./Mix');
+let Verify = require('./Verify');
 
 /**
  * Register the Webpack entry/output paths.
  *
- * @param {mixed}  entry
+ * @param {string|array}  entry
  * @param {string} output
  */
 module.exports.js = (entry, output) => {
-    assert(entry && (typeof entry === 'string' || Array.isArray(entry)), 'mix.js() is missing required parameter 1: entry');
-    assert(output && typeof output === 'string', 'mix.js() is missing required parameter 2: output');
+    Verify.js(entry, output);
 
     entry = [].concat(entry).map(file => {
         return new Mix.File(path.resolve(file)).parsePath();
@@ -36,10 +35,21 @@ module.exports.js = (entry, output) => {
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
  *
- * @param {array} libs
+ * @param {array}  libs
+ * @param {string} output
  */
-module.exports.extract = (libs) => {
-    Mix.js.vendor = libs;
+module.exports.extract = (libs, output) => {
+    Mix.extract = (Mix.extract || []).concat({
+        libs,
+        output: () => {
+            if (output) {
+                return output.replace(/\.js$/, '')
+                             .replace(Mix.publicPath, '');
+            }
+
+            return path.join(Mix.js.base, 'vendor').replace(/\\/g, '/');
+        }
+    });
 
     return this;
 };
@@ -71,9 +81,12 @@ module.exports.autoload = (libs) => {
  *
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.sass = (src, output) => {
-    return module.exports.preprocess('sass', src, output);
+module.exports.sass = (src, output, pluginOptions = {}) => {
+    return module.exports.preprocess(
+        'sass', src, output, pluginOptions
+    );
 };
 
 
@@ -82,9 +95,12 @@ module.exports.sass = (src, output) => {
  *
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.less = (src, output) => {
-    return module.exports.preprocess('less', src, output);
+module.exports.less = (src, output, pluginOptions = {}) => {
+    return module.exports.preprocess(
+        'less', src, output, pluginOptions
+    );
 };
 
 
@@ -93,10 +109,14 @@ module.exports.less = (src, output) => {
  *
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.stylus = (src, output) => {
-    return module.exports.preprocess('stylus', src, output);
+module.exports.stylus = (src, output, pluginOptions = {}) => {
+    return module.exports.preprocess(
+        'stylus', src, output, pluginOptions
+    );
 };
+
 
 
 /**
@@ -105,10 +125,10 @@ module.exports.stylus = (src, output) => {
  * @param {string} type
  * @param {string} src
  * @param {string} output
+ * @param {object} pluginOptions
  */
-module.exports.preprocess = (type, src, output) => {
-    assert(src && typeof src === 'string', `mix.${type}() is missing required parameter 1: src`);
-    assert(output && typeof output === 'string', `mix.${type}() is missing required parameter 2: output`);
+module.exports.preprocess = (type, src, output, pluginOptions) => {
+    Verify.preprocessor(type, src, output);
 
     src = new Mix.File(path.resolve(src)).parsePath();
     output = new Mix.File(output).parsePath();
@@ -119,7 +139,9 @@ module.exports.preprocess = (type, src, output) => {
         ).parsePath();
     }
 
-    Mix[type] = (Mix[type] || []).concat({ src, output });
+    Mix.preprocessors = (Mix.preprocessors || []).concat({
+        type, src, output, pluginOptions
+    });
 
     Mix.cssPreprocessor = type;
 
@@ -134,7 +156,9 @@ module.exports.preprocess = (type, src, output) => {
  * @param {string}       output
  */
 module.exports.combine = (src, output) => {
-    Mix.combine = (Mix.combine || []).concat({ src, output });
+    Verify.combine(src);
+
+    Mix.concat.add({ src, output });
 
     return this;
 };
@@ -148,10 +172,14 @@ module.exports.combine = (src, output) => {
  * @param {boolean} flatten
  */
 module.exports.copy = (from, to, flatten = true) => {
-    Mix.copy = (Mix.copy || []).concat({
-        from,
-        to: Mix.Paths.root(to),
-        flatten: flatten
+    Mix.copy = Mix.copy || [];
+
+    [].concat(from).forEach(src => {
+        Mix.copy.push({
+            from: src,
+            to: Mix.Paths.root(to),
+            flatten: flatten
+        });
     });
 
     return this;
@@ -164,7 +192,9 @@ module.exports.copy = (from, to, flatten = true) => {
  * @param {string|array} src
  */
 module.exports.minify = (src) => {
-    Mix.minify = (Mix.minify || []).concat(src);
+    output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
+
+    Mix.concat.add({ src, output });
 
     return this;
 };
@@ -174,7 +204,7 @@ module.exports.minify = (src) => {
  * Enable sourcemap support.
  */
 module.exports.sourceMaps = () => {
-    Mix.sourcemaps = (Mix.inProduction ? '#source-map' : '#inline-source-map');
+    Mix.sourcemaps = (Mix.inProduction ? false : '#inline-source-map');
 
     return this;
 };
@@ -182,9 +212,12 @@ module.exports.sourceMaps = () => {
 
 /**
  * Enable compiled file versioning.
+ *
+ * @param {string|array} files
  */
-module.exports.version = () => {
+module.exports.version = (files = []) => {
     Mix.versioning = true;
+    Mix.version = [].concat(files);
 
     return this;
 };

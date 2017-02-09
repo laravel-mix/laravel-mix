@@ -40,6 +40,26 @@ test('that you can use mix.sass() without mix.js()', t => {
     new Mix.File(entry).delete();
 });
 
+
+test('that you can use mix.less() without mix.js()', t => {
+    let entry = path.resolve('mix-entry.js');
+
+    mix.less('less/stub.less', 'dist');
+
+    t.deepEqual(
+        {
+            mix: [
+                entry,
+                path.resolve('less/stub.less')
+            ]
+        },
+        Mix.entry()
+    );
+
+    new Mix.File(entry).delete();
+});
+
+
 test('that you can use mix.stylus() without mix.js()', t => {
     let entry = path.resolve('mix-entry.js');
 
@@ -132,7 +152,8 @@ test('that it determines the CSS output path correctly.', t => {
        .js('js/stub.js', 'dist')
        .less('sass/stub.less', 'dist/stub.css');
 
-    let segments = mix.config.less;
+    let segments = mix.config.preprocessors;
+
 
     // Test the cssOutput which gets passed to ExtractTextPlugin
     segments.forEach(s => {
@@ -149,7 +170,7 @@ test('that it determines the CSS output path correctly.', t => {
     Mix.inProduction = false;
 
     // Test else path for this.cssPreprocessor being empty
-    Mix.cssPreprocessor = false;
+    Mix.preprocessors = false;
     t.deepEqual(Mix.entry(), {
         'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
     });
@@ -237,44 +258,6 @@ test('that it knows if it is running within a Laravel project', t => {
 });
 
 
-test('that it can combine and minify files', t => {
-    let file1Path = path.resolve(__dirname, 'fixtures/file1.txt');
-    let file2Path = path.resolve(__dirname, 'fixtures/file2.txt');
-    let file1 = new File(file1Path).write('1+1');
-    let file2 = new File(file2Path).write('=2');
-
-    mix.combine([file1Path, file2Path],
-        path.resolve(__dirname, 'fixtures/file3.txt'));
-    mix.minify('fixtures/file3.txt');
-
-    // First see if it does nothing without being in production
-    mix.config.inProduction = false;
-    Mix.concatenateAll().minifyAll();
-
-    t.true(Array.isArray(Mix.combine));
-    t.true(Array.isArray(Mix.minify));
-
-    // fake prod since concatenateAll and minifyAll check production env
-    mix.config.inProduction = true;
-    Mix.concatenateAll().minifyAll();
-
-    // finally test if minifyAll and concatenateAll fallback to empty array
-    // files = files || this.combine || []; <-- third branch
-    Mix.minify = null;
-    Mix.combine = null;
-    Mix.concatenateAll().minifyAll();
-
-    t.deepEqual(Mix.combine, null);
-    t.deepEqual(Mix.minify, null);
-
-    let file3 = new File(path.resolve(__dirname, 'fixtures/file3.txt'));
-    t.is(file3.read(), '1+1\n=2');
-
-    file1.delete();
-    file2.delete();
-    file3.delete();
-});
-
 
 test('that it detects hmr correctly', t => {
     let root = path.resolve(__dirname);
@@ -322,14 +305,10 @@ test('that the setter methods work properly', t => {
 
     mix.config.inProduction = true;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, '#source-map');
+    t.is(Mix.sourcemaps, false);
 
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);
     t.deepEqual(Mix.copy,
         [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures'), flatten: true }]);
-
-    Mix.minify = [];
-    mix.minify('fake/test.txt');
-    t.deepEqual(Mix.minify, ['fake/test.txt']);
 });

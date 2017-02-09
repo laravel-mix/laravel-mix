@@ -1,7 +1,7 @@
-var path = require('path');
-var webpack = require('webpack');
-var Mix = require('laravel-mix-stylus').config;
-var plugins = require('laravel-mix-stylus').plugins;
+let path = require('path');
+let webpack = require('webpack');
+let Mix = require('laravel-mix-stylus').config;
+let plugins = require('laravel-mix-stylus').plugins;
 
 
 /*
@@ -81,7 +81,7 @@ module.exports.module = {
                     js: 'babel-loader' + Mix.babelConfig(),
                     scss: 'vue-style-loader!css-loader!sass-loader',
                     sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
-                    stylus: 'vue-style-loader!css-loader!stylus-loader',
+                    stylus: 'vue-style-loader!css-loader!stylus-loader'
                 },
 
                 postcss: [
@@ -91,16 +91,22 @@ module.exports.module = {
         },
 
         {
-            test: /\.js$/,
+            test: /\.jsx?$/,
             exclude: /(node_modules|bower_components)/,
             loader: 'babel-loader' + Mix.babelConfig()
+        },
+
+        {
+            test: /\.css$/,
+            loaders: ['style-loader', 'css-loader']
         },
 
         {
             test: /\.(png|jpg|gif)$/,
             loader: 'file-loader',
             options: {
-                name: '[name].[ext]?[hash]'
+                name: 'images/[name].[ext]?[hash]',
+                publicPath: '/'
             }
         },
 
@@ -116,33 +122,30 @@ module.exports.module = {
 };
 
 
-if (Mix.cssPreprocessor) {
-
-    Mix[Mix.cssPreprocessor].forEach(toCompile => {
+if (Mix.preprocessors) {
+    Mix.preprocessors.forEach(toCompile => {
         let extractPlugin = new plugins.ExtractTextPlugin(
             Mix.cssOutput(toCompile)
         );
 
-        let currentPreprocessor = Mix.getCurrentPreprocessorLoader();
+        let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
         module.exports.module.rules.push({
-            test: new RegExp(toCompile.src.fileWithDir.replace(/\\/g, '\\\\') + '$'),
-            loader: extractPlugin.extract({
-                fallbackLoader: 'style-loader',
-                loader: [
-                    'css-loader',
-                    'postcss-loader',
-                    'resolve-url-loader',
-                    currentPreprocessor
-                ]
+            test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
+            use: extractPlugin.extract({
+                fallback: 'style-loader',
+                use: [
+                    { loader: 'css-loader' + sourceMap },
+                    { loader: 'postcss-loader' + sourceMap }
+                ].concat(
+                    Mix.getPreprocessorToCompile(toCompile, sourceMap)
+                )
             })
         });
 
         module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
 }
-
-
 
 /*
  |--------------------------------------------------------------------------
@@ -216,7 +219,8 @@ module.exports.devtool = Mix.sourcemaps;
 module.exports.devServer = {
     historyApiFallback: true,
     noInfo: true,
-    compress: true
+    compress: true,
+    quiet: true
 };
 
 
@@ -243,8 +247,8 @@ module.exports.plugins = (module.exports.plugins || []).concat([
     new plugins.FriendlyErrorsWebpackPlugin(),
 
     new plugins.StatsWriterPlugin({
-        filename: "mix-manifest.json",
-        transform: Mix.manifest.transform,
+        filename: 'mix-manifest.json',
+        transform: Mix.manifest.transform.bind(Mix.manifest),
     }),
 
     new plugins.WebpackMd5HashPlugin(),
@@ -260,7 +264,6 @@ module.exports.plugins = (module.exports.plugins || []).concat([
         }
     })
 ]);
-
 
 
 if (Mix.notifications) {
@@ -281,26 +284,6 @@ module.exports.plugins.push(
 );
 
 
-if (Mix.versioning) {
-    Mix.versioning.record();
-
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.versioning.prune(Mix.publicPath);
-        })
-    );
-}
-
-
-if (Mix.combine || Mix.minify) {
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.concatenateAll().minifyAll();
-        })
-    );
-}
-
-
 if (Mix.copy) {
     Mix.copy.forEach(copy => {
         module.exports.plugins.push(
@@ -310,10 +293,12 @@ if (Mix.copy) {
 }
 
 
-if (Mix.js.vendor) {
+if (Mix.extract) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: [Mix.js.base + '/vendor', Mix.js.base + '/' + 'manifest'],
+            names: Mix.entryBuilder.extractions.concat([
+                path.join(Mix.js.base, 'manifest').replace(/\\/g, '/')
+            ]),
             minChunks: Infinity
         })
     );
@@ -331,7 +316,8 @@ if (Mix.inProduction) {
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             compress: {
-                warnings: false
+                warnings: false,
+                drop_console: true
             }
         })
     ]);

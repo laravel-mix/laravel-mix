@@ -3,26 +3,26 @@ let File = require('./File');
 let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
-let concatenate = require('concatenate');
+let Concat = require('./Concat');
 let mergeWith = require('lodash').mergeWith;
-let WebpackEntry = require('./WebpackEntry');
+let EntryBuilder = require('./EntryBuilder');
 let Dispatcher = require('./Dispatcher');
 
 class Mix {
     /**
      * Create a new Laravel Mix instance.
      */
-    constructor() {
+     constructor() {
         this.File = File;
         this.Paths = new Paths;
         this.hmr = false;
         this.sourcemaps = false;
         this.notifications = true;
-        this.cssPreprocessor = false;
         this.versioning = false;
         this.js = [];
-        this.webpackEntry = new WebpackEntry(this);
+        this.entryBuilder = new EntryBuilder(this);
         this.events = new Dispatcher;
+        this.concat = new Concat(this.events);
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
     }
@@ -33,24 +33,44 @@ class Mix {
      *
      * @param {string} rootPath
      */
-    initialize(rootPath = '') {
-        if (this.isUsingLaravel()) {
-            this.publicPath = 'public';
+     initialize(rootPath = '') {
+        if (rootPath) this.Paths.setRootPath(rootPath);
+
+        if (this.isUsingLaravel()) this.publicPath = 'public';
+
+        // This is where we load the user's webpack.mix.js config.
+        if (this.File.exists(this.Paths.mix() + '.js')) {
+            require(this.Paths.mix());
         }
 
-        // We'll first load the user's webpack.mix.js file.
-        if (rootPath) {
-            this.Paths.setRootPath(rootPath);
-        }
-        require(this.Paths.mix());
+        this.manifest = new Manifest(
+            path.join(this.publicPath, 'mix-manifest.json')
+            ).listen(this.events);
 
-        this.manifest = new Manifest(this.publicPath + '/mix-manifest.json');
+        if (this.concat.any()) this.concat.watch();
 
-        if (this.versioning) {
-            this.versioning = new Versioning(this.manifest);
-        }
+        if (this.versioning) this.enableVersioning();
 
         this.detectHotReloading();
+    }
+
+
+    /**
+     * Enable file versioning for the build.
+     */
+     enableVersioning() {
+        this.versioning = new Versioning(this.version, this.manifest);
+
+        this.versioning
+        .writeHashedFiles()
+        .record()
+        .watch();
+
+        this.events.listen(
+            ['build', 'combined'], () => this.versioning.prune(this.publicPath)
+            );
+
+        this.concat.enableVersioning();
     }
 
 
@@ -59,7 +79,7 @@ class Mix {
      *
      * @param {object} webpackConfig
      */
-    finalize(webpackConfig) {
+     finalize(webpackConfig) {
         if (! this.webpackConfig) return webpackConfig;
 
         mergeWith(webpackConfig, this.webpackConfig,
@@ -68,7 +88,7 @@ class Mix {
                     return objValue.concat(srcValue);
                 }
             }
-        );
+            );
 
         return webpackConfig;
     }
@@ -77,15 +97,15 @@ class Mix {
     /**
      * Prepare the Webpack entry object.
      */
-    entry() {
-        return this.webpackEntry.build();
+     entry() {
+        return this.entryBuilder.build();
     }
 
 
     /**
      * Determine the Webpack output path.
      */
-    output() {
+     output() {
         let filename = this.versioning ? '[name].[chunkhash].js' : '[name].js';
 
         return {
@@ -101,7 +121,7 @@ class Mix {
      *
      * @param {object} segments
      */
-    cssOutput(segments) {
+     cssOutput(segments) {
         let regex = new RegExp('^(\.\/)?' + this.publicPath);
         let pathVariant = this.versioning ? 'hashedPath' : 'path';
 
@@ -110,47 +130,11 @@ class Mix {
 
 
     /**
-     * Minify the given files, or those from Mix.minify().
-     *
-     * @param {array|null} files
-     */
-    minifyAll(files = null) {
-        if (! this.inProduction) return;
-
-        files = files || this.minify || [];
-
-        files.forEach(file => new File(file).minify());
-
-        return this;
-    }
-
-
-    /**
-     * Combine the given files, or those from Mix.combine().
-     *
-     * @param {array|null} files
-     */
-    concatenateAll(files = null) {
-        files = files || this.combine || [];
-
-        files.forEach(file => {
-            concatenate.sync(file.src, file.output);
-
-            if (! this.inProduction) return;
-
-            new this.File(file.output).minify();
-        });
-
-        return this;
-    }
-
-
-    /**
      * Detect if the user desires hot reloading.
      *
      * @param {bool} force
      */
-    detectHotReloading(force = false) {
+     detectHotReloading(force = false) {
         let file = new this.File(this.publicPath + '/hot');
 
         file.delete();
@@ -171,7 +155,7 @@ class Mix {
     /**
      * Fetch the appropriate Babel config for babel-loader.
      */
-    babelConfig() {
+     babelConfig() {
         let file = this.Paths.root('.babelrc');
 
         // If the user has defined their own .babelrc file,
@@ -180,7 +164,7 @@ class Mix {
         return this.File.exists(file) ? '?cacheDirectory' : '?' + JSON.stringify({
             'cacheDirectory': true,
             'presets': [
-                ['es2015', { 'modules': false }]
+            ['es2015', { 'modules': false }]
             ]
         });
     }
@@ -189,7 +173,7 @@ class Mix {
     /**
      * Determine if we are working with a Laravel project.
      */
-    isUsingLaravel() {
+     isUsingLaravel() {
         return this.File.exists('./artisan');
     }
 
@@ -197,31 +181,53 @@ class Mix {
     /**
      * Reset all configuration to their defaults.
      */
-    reset() {
+     reset() {
         [
-            'cssPreprocessor', 'sass',
-            'less', 'stylus', 'sourceMaps'
+        'preprocessors', 'sass',
+        'less', 'sourceMaps'
         ].forEach(prop => this[prop] = null);
 
         this.publicPath = './';
         this.js = [];
-        this.webpackEntry.reset();
+        this.entryBuilder.reset();
+        this.events = new Dispatcher;
+        this.concat = new Concat(this.events);
+        this.copy = [];
 
         return this;
     }
 
-    getCurrentPreprocessorLoader() {
-
-        if (this.cssPreprocessor == 'sass') {
-            return 'sass-loader?sourceMap&precision=8';
+    getPreprocessorToCompile(toCompile, sourceMap) {
+        if ('sass' === toCompile.type) {
+            return [
+                { loader: 'resolve-url-loader' + sourceMap },
+                {
+                    loader: 'sass-loader',
+                    options: Object.assign({
+                        precision: 8,
+                        outputStyle: 'expanded'
+                    }, toCompile.pluginOptions, { sourceMap: true })
+                }
+            ]
         }
 
-        if (this.cssPreprocessor == 'stylus') {
-            return 'stylus-loader';
+        if ('less' === toCompile.type) {
+            return [
+                {
+                    loader: 'less-loader' + sourceMap,
+                    options: toCompile.pluginOptions
+                }
+            ]
         }
 
-        // Less loader is the default preprocessor
-        return 'less-loader';
+        if ('stylus' === toCompile.type) {
+            return [
+                {
+                    loader: 'stylus-loader' + sourceMap,
+                    options: toCompile.pluginOptions
+                }
+            ]
+        }
     }
 };
 
