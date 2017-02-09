@@ -4,3 +4,4 @@ test/
 coverage
 mix.sublime-project
 .travis.yml
+example/
