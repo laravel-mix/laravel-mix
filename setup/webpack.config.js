@@ -304,13 +304,13 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 ]);
 
 
-if (Mix.notifications) {
+if (Mix.browserSync) {
     module.exports.plugins.push(
-        new plugins.WebpackNotifierPlugin({
-            title: 'Laravel Mix',
-            alwaysNotify: true,
-            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
-        })
+        new plugins.BrowserSyncPlugin(Object.assign({
+            host: 'localhost',
+            port: 3000,
+            proxy: 'app.dev'
+        }, Mix.browserSync))
     );
 }
 
@@ -320,6 +320,17 @@ module.exports.plugins.push(
         stats => Mix.events.fire('build', stats)
     )
 );
+
+
+if (Mix.notifications) {
+    module.exports.plugins.push(
+        new plugins.WebpackNotifierPlugin({
+            title: 'Laravel Mix',
+            alwaysNotify: true,
+            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
+        })
+    );
+}
 
 
 if (Mix.copy) {

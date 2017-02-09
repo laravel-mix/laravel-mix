@@ -77,6 +77,22 @@ module.exports.autoload = (libs) => {
 
 
 /**
+ * Enable Browsersync support for the project.
+ *
+ * @param {object} config
+ */
+module.exports.browserSync = (config = {}) => {
+    if (typeof config === 'string') {
+        config = { proxy: config };
+    }
+
+    Mix.browserSync = config;
+
+    return this;
+};
+
+
+/**
  * Register Sass compilation.
  *
  * @param {string} src
@@ -275,5 +291,6 @@ module.exports.plugins = {
     CopyWebpackPlugin: require('copy-webpack-plugin'),
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
     StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
-    WebpackMd5HashPlugin: require('webpack-md5-hash')
+    WebpackMd5HashPlugin: require('webpack-md5-hash'),
+    BrowserSyncPlugin: require('browser-sync-webpack-plugin')
 };
