@@ -5,3 +5,4 @@ coverage
 .nyc_output
 .idea/
 docs/
+icons/fail.png
