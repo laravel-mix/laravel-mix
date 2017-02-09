@@ -26,6 +26,7 @@ class Mix {
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
         this.resourceRoot = '/';
+        this.options = {};
     }
 
 
@@ -192,6 +193,7 @@ class Mix {
         this.events = new Dispatcher;
         this.concat = new Concat(this.events);
         this.copy = [];
+        this.options = {};
 
         return this;
     }
