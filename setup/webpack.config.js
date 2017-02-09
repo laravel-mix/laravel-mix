@@ -309,7 +309,14 @@ if (Mix.browserSync) {
         new plugins.BrowserSyncPlugin(Object.assign({
             host: 'localhost',
             port: 3000,
-            proxy: 'app.dev'
+            proxy: 'app.dev',
+            files: [
+                'app/**/*.php',
+                'resources/views/**/*.php',
+                'public/mix-manifest.json',
+                'public/css/**/*.css',
+                'public/js/**/*.js'
+            ]
         }, Mix.browserSync))
     );
 }
