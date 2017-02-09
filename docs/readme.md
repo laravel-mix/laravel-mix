@@ -10,6 +10,7 @@
 ## API
 * [JavaScript](mixjs.md)
 * [Library Code Splitting](extract.md)
+* [BrowserSync](browsersync.md)
 * [Hot Module Replacement](hot-module-replacement.md)
 * [Versioning](versioning.md)
 * [CSS Preprocessors](css-preprocessors.md)
