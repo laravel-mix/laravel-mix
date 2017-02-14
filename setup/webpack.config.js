@@ -166,7 +166,7 @@ if (Mix.preprocessors) {
             );
         }
 
-        if (toCompile.type === 'sass') {
+        if (toCompile.type === 'less') {
             loaders.push({
                 loader: 'less-loader' + sourceMap,
                 options: toCompile.pluginOptions
