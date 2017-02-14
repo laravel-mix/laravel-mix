@@ -121,6 +121,25 @@ module.exports.less = (src, output, pluginOptions = {}) => {
 
 
 /**
+ * Register Stylus compilation.
+ *
+ * @param {string} src
+ * @param {string} output
+ * @param {object} pluginOptions
+ */
+module.exports.stylus = (src, output, pluginOptions = {}) => {
+    Verify.dependency(
+        'stylus-loader',
+        'npm install stylus-loader stylus --save-dev'
+    );
+
+    return module.exports.preprocess(
+        'stylus', src, output, pluginOptions
+    );
+};
+
+
+/**
  * Register a generic CSS preprocessor.
  *
  * @param {string} type

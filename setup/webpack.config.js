@@ -148,30 +148,43 @@ if (Mix.preprocessors) {
 
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
+        let loaders = [
+            { loader: 'css-loader' + sourceMap },
+            { loader: 'postcss-loader' + sourceMap }
+        ];
+
+        if (toCompile.type === 'sass') {
+            loaders.push(
+                { loader: 'resolve-url-loader' + sourceMap },
+                {
+                    loader: 'sass-loader',
+                    options: Object.assign({
+                        precision: 8,
+                        outputStyle: 'expanded'
+                    }, toCompile.pluginOptions, { sourceMap: true })
+                }
+            );
+        }
+
+        if (toCompile.type === 'sass') {
+            loaders.push({
+                loader: 'less-loader' + sourceMap,
+                options: toCompile.pluginOptions
+            });
+        }
+
+        if (toCompile.type === 'stylus') {
+            loaders.push({
+                loader: 'stylus-loader' + sourceMap,
+                options: toCompile.pluginOptions
+            });
+        }
+
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
             use: extractPlugin.extract({
                 fallback: 'style-loader',
-                use: [
-                    { loader: 'css-loader' + sourceMap },
-                    { loader: 'postcss-loader' + sourceMap }
-                ].concat(
-                    toCompile.type == 'sass' ? [
-                        { loader: 'resolve-url-loader' + sourceMap },
-                        {
-                            loader: 'sass-loader',
-                            options: Object.assign({
-                                precision: 8,
-                                outputStyle: 'expanded'
-                            }, toCompile.pluginOptions, { sourceMap: true })
-                        }
-                    ] : [
-                        {
-                            loader: 'less-loader' + sourceMap,
-                            options: toCompile.pluginOptions
-                        }
-                    ]
-                )
+                use: loaders
             })
         });
 
