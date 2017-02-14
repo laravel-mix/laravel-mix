@@ -166,7 +166,7 @@ class Mix {
             'cacheDirectory': true,
             'presets': [
                 ['es2015', { 'modules': false }]
-            ]
+            ].concat(this.react ? 'react' : [])
         });
     }
 

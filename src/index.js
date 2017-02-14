@@ -32,6 +32,23 @@ module.exports.js = (entry, output) => {
 
 
 /**
+ * Declare support for the React framework.
+ */
+module.exports.react = (entry, output) => {
+    Mix.react = true;
+
+    Verify.dependency(
+        'babel-preset-react',
+        'npm install babel-preset-react --save-dev'
+    );
+
+    module.exports.js(entry, output);
+
+    return this;
+};
+
+
+/**
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
  *

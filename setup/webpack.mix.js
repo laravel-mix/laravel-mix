@@ -16,6 +16,7 @@ mix.js('src/app.js', 'dist/')
 
 // Full API
 // mix.js(src, output);
+// mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.less(src, output);
