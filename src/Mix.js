@@ -25,7 +25,10 @@ class Mix {
         this.concat = new Concat(this.events);
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
-        this.options = {};
+        this.options = {
+            extractVueStyles: false,
+            processUrls: true
+        };
     }
 
 

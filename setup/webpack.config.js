@@ -149,7 +149,7 @@ if (Mix.preprocessors) {
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
         let loaders = [
-            { loader: 'css-loader' + sourceMap },
+            { loader: (Mix.options.processUrls ? 'css-loader' : 'raw-loader') + sourceMap },
             { loader: 'postcss-loader' + sourceMap }
         ];
 
