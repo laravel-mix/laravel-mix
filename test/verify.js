@@ -21,19 +21,3 @@ test('that it verifies mix.extract() params', t => {
     t.throws(() => Verify.extract('without-array'));
     t.notThrows(() => Verify.extract(['lib']));
 });
-
-
-test('that it verifies mix.combine() params', t => {
-    t.throws(() => Verify.combine());
-
-    // If a file passed to mix.combine() doesn't exist,
-    // Mix will throw an assertion error.
-    let stub = new File(__dirname + '/stub.js');
-    t.throws(() => Verify.combine([stub.path()]));
-
-    // But of course it won't fail, if the file
-    // does exist.
-    stub.write('');
-    t.notThrows(() => Verify.combine([stub.path()]));
-    stub.delete();
-});
