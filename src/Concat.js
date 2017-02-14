@@ -2,6 +2,7 @@ let md5 = require('md5');
 let File = require('./File');
 let chokidar = require('chokidar');
 let concatenate = require('concatenate');
+let babel;
 
 class Concat {
     /**
@@ -35,7 +36,8 @@ class Concat {
         this.combinations.push({
             src: files.src,
             output: files.output,
-            outputOriginal: files.output
+            outputOriginal: files.output,
+            babel: !! files.babel
         });
 
         return this;
@@ -77,9 +79,11 @@ class Concat {
     combine(files) {
         let output = File.find(files.output).makeDirectories();
 
-        let mergedFileContents = concatenate.sync(
-            files.src, files.output
-        );
+        let mergedFileContents = concatenate.sync(files.src, files.output);
+
+        if (files.babel && output.fileType === '.js') {
+            output.write(this.babelify(mergedFileContents));
+        }
 
         // If file versioning is enabled, then we'll
         // rename the output file to apply a hash.
@@ -97,6 +101,20 @@ class Concat {
         // We'll now fire an event, so that the Manifest class
         // can be refreshed to reflect these new files.
         this.events.fire('combined', files);
+    }
+
+
+    /**
+     * Apply Babel to the given contents.
+     *
+     * @param {string} contents
+     */
+    babelify(contents) {
+        if (! babel) babel = require('babel-core');
+
+        return babel.transform(
+            contents, { presets: ['es2015'] }
+        ).code;
     }
 
 

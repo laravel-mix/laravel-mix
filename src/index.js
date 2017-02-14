@@ -185,6 +185,21 @@ module.exports.combine = (src, output) => {
 
 
 /**
+ * Identical to mix.combine(), but includes Babel compilation.
+ *
+ * @param {string|Array} src
+ * @param {string}       output
+ */
+module.exports.babel = (src, output) => {
+    Verify.combine(src);
+
+    Mix.concat.add({ src, output, babel: true });
+
+    return this;
+};
+
+
+/**
  * Copy one or more files to a new location.
  *
  * @param {string}  from
