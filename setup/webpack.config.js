@@ -115,6 +115,12 @@ module.exports.module = {
         },
 
         {
+            test: /\.s[ac]ss$/,
+            include: /node_modules/,
+            loaders: ['style-loader', 'css-loader', 'fast-sass-loader']
+        },
+
+        {
             test: /\.html$/,
             loaders: ['html-loader']
         },
