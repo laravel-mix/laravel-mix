@@ -34,5 +34,6 @@ mix.js('src/app.js', 'dist/')
 // mix.webpackConfig({}); <-- Override webpack.config.js, without editing the file directly.
 // mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.
 // mix.options({
-//   extractVueStyles: false // default
+//   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.
+//   processUrls: true // Process/optimize relative stylesheet url()'s. Set to false, if you don't want them touched.
 // });
