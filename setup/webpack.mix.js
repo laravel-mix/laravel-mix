@@ -20,6 +20,7 @@ mix.js('src/app.js', 'dist/')
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.less(src, output);
+// mix.stylus(src, output);
 // mix.browserSync('my-site.dev');
 // mix.combine(files, destination);
 // mix.babel(files, destination); <-- Identical to mix.combine(), but also includes Babel compilation.
