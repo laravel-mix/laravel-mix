@@ -155,9 +155,8 @@ if (Mix.preprocessors) {
 
         if (toCompile.type === 'sass') {
             loaders.push(
-                { loader: 'resolve-url-loader' + sourceMap },
                 {
-                    loader: 'sass-loader',
+                    loader: 'fast-sass-loader',
                     options: Object.assign({
                         precision: 8,
                         outputStyle: 'expanded'
