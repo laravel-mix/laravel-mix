@@ -63,7 +63,7 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
     "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   }
 ```
