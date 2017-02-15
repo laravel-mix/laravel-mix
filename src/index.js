@@ -117,6 +117,11 @@ module.exports.browserSync = (config = {}) => {
  * @param {object} pluginOptions
  */
 module.exports.sass = (src, output, pluginOptions = {}) => {
+    pluginOptions = Object.assign({
+        precision: 8,
+        outputStyle: 'expanded'
+    }, pluginOptions, { sourceMap: true });
+
     return module.exports.preprocess(
         'sass', src, output, pluginOptions
     );

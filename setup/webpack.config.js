@@ -148,9 +148,7 @@ module.exports.module = {
 
 if (Mix.preprocessors) {
     Mix.preprocessors.forEach(toCompile => {
-        let extractPlugin = new plugins.ExtractTextPlugin(
-            Mix.cssOutput(toCompile)
-        );
+        let extractPlugin = new plugins.ExtractTextPlugin(Mix.cssOutput(toCompile));
 
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
@@ -160,15 +158,10 @@ if (Mix.preprocessors) {
         ];
 
         if (toCompile.type === 'sass') {
-            loaders.push(
-                {
-                    loader: 'sass-loader',
-                    options: Object.assign({
-                        precision: 8,
-                        outputStyle: 'expanded'
-                    }, toCompile.pluginOptions, { sourceMap: true })
-                }
-            );
+            loaders.push({
+                loader: 'sass-loader',
+                options: toCompile.pluginOptions
+            });
         }
 
         if (toCompile.type === 'less') {
@@ -195,7 +188,10 @@ if (Mix.preprocessors) {
 
         module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
-} else if (Mix.options.extractVueStyles) {
+}
+
+
+if (! Mix.preprocessors && Mix.options.extractVueStyles) {
     module.exports.plugins = (module.exports.plugins || []).concat(
         new plugins.ExtractTextPlugin(path.join(Mix.js.base, 'vue-styles.css'))
     );
@@ -340,13 +336,6 @@ if (Mix.browserSync) {
 }
 
 
-module.exports.plugins.push(
-    new plugins.WebpackOnBuildPlugin(
-        stats => Mix.events.fire('build', stats)
-    )
-);
-
-
 if (Mix.notifications) {
     module.exports.plugins.push(
         new plugins.WebpackNotifierPlugin({
@@ -396,6 +385,13 @@ if (Mix.inProduction) {
         })
     );
 }
+
+
+module.exports.plugins.push(
+    new plugins.WebpackOnBuildPlugin(
+        stats => Mix.events.fire('build', stats)
+    )
+);
 
 
 /*
