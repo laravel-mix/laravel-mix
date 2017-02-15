@@ -180,8 +180,6 @@ module.exports.preprocess = (type, src, output, pluginOptions) => {
         type, src, output, pluginOptions
     });
 
-    Mix.cssPreprocessor = type;
-
     return this;
 };
 
