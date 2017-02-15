@@ -11,7 +11,7 @@ test.afterEach('cleanup', t => {
 
 
 test('that it uses a default entry, if mix.js() is never called', t => {
-    let entry = path.resolve('mix-entry.js');
+    let entry = path.resolve('src/mock-entry.js');
 
     t.deepEqual(
         { mix: [entry] },
@@ -23,7 +23,7 @@ test('that it uses a default entry, if mix.js() is never called', t => {
 
 
 test('that you can use mix.sass() without mix.js()', t => {
-    let entry = path.resolve('mix-entry.js');
+    let entry = path.resolve('src/mock-entry.js');
 
     mix.sass('sass/stub.scss', 'dist');
 

@@ -32,6 +32,23 @@ module.exports.js = (entry, output) => {
 
 
 /**
+ * Declare support for the React framework.
+ */
+module.exports.react = (entry, output) => {
+    Mix.react = true;
+
+    Verify.dependency(
+        'babel-preset-react',
+        'npm install babel-preset-react --save-dev'
+    );
+
+    module.exports.js(entry, output);
+
+    return this;
+};
+
+
+/**
  * Register vendor libs that should be extracted.
  * This helps drastically with long-term caching.
  *
@@ -77,6 +94,22 @@ module.exports.autoload = (libs) => {
 
 
 /**
+ * Enable Browsersync support for the project.
+ *
+ * @param {object} config
+ */
+module.exports.browserSync = (config = {}) => {
+    if (typeof config === 'string') {
+        config = { proxy: config };
+    }
+
+    Mix.browserSync = config;
+
+    return this;
+};
+
+
+/**
  * Register Sass compilation.
  *
  * @param {string} src
@@ -100,6 +133,25 @@ module.exports.sass = (src, output, pluginOptions = {}) => {
 module.exports.less = (src, output, pluginOptions = {}) => {
     return module.exports.preprocess(
         'less', src, output, pluginOptions
+    );
+};
+
+
+/**
+ * Register Stylus compilation.
+ *
+ * @param {string} src
+ * @param {string} output
+ * @param {object} pluginOptions
+ */
+module.exports.stylus = (src, output, pluginOptions = {}) => {
+    Verify.dependency(
+        'stylus-loader',
+        'npm install stylus-loader stylus --save-dev'
+    );
+
+    return module.exports.preprocess(
+        'stylus', src, output, pluginOptions
     );
 };
 
@@ -144,6 +196,21 @@ module.exports.combine = (src, output) => {
     Verify.combine(src);
 
     Mix.concat.add({ src, output });
+
+    return this;
+};
+
+
+/**
+ * Identical to mix.combine(), but includes Babel compilation.
+ *
+ * @param {string|Array} src
+ * @param {string}       output
+ */
+module.exports.babel = (src, output) => {
+    Verify.combine(src);
+
+    Mix.concat.add({ src, output, babel: true });
 
     return this;
 };
@@ -287,5 +354,6 @@ module.exports.plugins = {
     CopyWebpackPlugin: require('copy-webpack-plugin'),
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
     StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
-    WebpackMd5HashPlugin: require('webpack-md5-hash')
+    WebpackMd5HashPlugin: require('webpack-md5-hash'),
+    BrowserSyncPlugin: require('browser-sync-webpack-plugin')
 };

@@ -1,5 +1,6 @@
 let assert = require('assert');
 let File = require('./File');
+let exec = require('child_process').execSync;
 
 class Verify {
     /**
@@ -64,6 +65,26 @@ class Verify {
             Array.isArray(src),
             'mix.combine() requires an array as its first parameter.'
         );
+    }
+
+
+    /**
+     * Verify that the necessary dependency is available.
+     *
+     * @param {string} dependency
+     * @param {string} installCommand
+     */
+    static dependency(dependency, installCommand) {
+        try {
+            require.resolve(dependency);
+        } catch (e) {
+            console.log(
+                'Additional dependencies must be installed. ' +
+                'This will only take a moment.'
+            );
+
+            exec(installCommand);
+        }
     }
 }
 

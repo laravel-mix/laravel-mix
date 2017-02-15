@@ -115,6 +115,12 @@ module.exports.module = {
         },
 
         {
+            test: /\.s[ac]ss$/,
+            include: /node_modules/,
+            loaders: ['style-loader', 'css-loader', 'fast-sass-loader']
+        },
+
+        {
             test: /\.html$/,
             loaders: ['html-loader']
         },
@@ -148,30 +154,42 @@ if (Mix.preprocessors) {
 
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
+        let loaders = [
+            { loader: (Mix.options.processUrls ? 'css-loader' : 'raw-loader') + sourceMap },
+            { loader: 'postcss-loader' + sourceMap }
+        ];
+
+        if (toCompile.type === 'sass') {
+            loaders.push(
+                {
+                    loader: 'fast-sass-loader',
+                    options: Object.assign({
+                        precision: 8,
+                        outputStyle: 'expanded'
+                    }, toCompile.pluginOptions, { sourceMap: true })
+                }
+            );
+        }
+
+        if (toCompile.type === 'less') {
+            loaders.push({
+                loader: 'less-loader' + sourceMap,
+                options: toCompile.pluginOptions
+            });
+        }
+
+        if (toCompile.type === 'stylus') {
+            loaders.push({
+                loader: 'stylus-loader' + sourceMap,
+                options: toCompile.pluginOptions
+            });
+        }
+
         module.exports.module.rules.push({
             test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
             use: extractPlugin.extract({
                 fallback: 'style-loader',
-                use: [
-                    { loader: 'css-loader' + sourceMap },
-                    { loader: 'postcss-loader' + sourceMap }
-                ].concat(
-                    toCompile.type == 'sass' ? [
-                        { loader: 'resolve-url-loader' + sourceMap },
-                        {
-                            loader: 'sass-loader',
-                            options: Object.assign({
-                                precision: 8,
-                                outputStyle: 'expanded'
-                            }, toCompile.pluginOptions, { sourceMap: true })
-                        }
-                    ] : [
-                        {
-                            loader: 'less-loader' + sourceMap,
-                            options: toCompile.pluginOptions
-                        }
-                    ]
-                )
+                use: loaders
             })
         });
 
@@ -304,13 +322,20 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 ]);
 
 
-if (Mix.notifications) {
+if (Mix.browserSync) {
     module.exports.plugins.push(
-        new plugins.WebpackNotifierPlugin({
-            title: 'Laravel Mix',
-            alwaysNotify: true,
-            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
-        })
+        new plugins.BrowserSyncPlugin(Object.assign({
+            host: 'localhost',
+            port: 3000,
+            proxy: 'app.dev',
+            files: [
+                'app/**/*.php',
+                'resources/views/**/*.php',
+                'public/mix-manifest.json',
+                'public/css/**/*.css',
+                'public/js/**/*.js'
+            ]
+        }, Mix.browserSync))
     );
 }
 
@@ -320,6 +345,17 @@ module.exports.plugins.push(
         stats => Mix.events.fire('build', stats)
     )
 );
+
+
+if (Mix.notifications) {
+    module.exports.plugins.push(
+        new plugins.WebpackNotifierPlugin({
+            title: 'Laravel Mix',
+            alwaysNotify: true,
+            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
+        })
+    );
+}
 
 
 if (Mix.copy) {
