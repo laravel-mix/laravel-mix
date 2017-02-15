@@ -26,7 +26,7 @@
     "browser-sync": "^2.18.7",
     "browser-sync-webpack-plugin": "^1.1.4",
     "chokidar": "^1.6.1",
-    "clean-css": "^3.4.22",
+    "clean-css": "^4.0.7",
     "concatenate": "0.0.2",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^3.1.3",
