@@ -130,7 +130,7 @@ module.exports.module = {
             loader: 'file-loader',
             options: {
                 name: 'images/[name].[ext]?[hash]',
-                publicPath: '/'
+                publicPath: Mix.resourceRoot
             }
         },
 
@@ -139,7 +139,7 @@ module.exports.module = {
             loader: 'file-loader',
             options: {
                 name: 'fonts/[name].[ext]?[hash]',
-                publicPath: '/'
+                publicPath: Mix.resourceRoot
             }
         }
     ]

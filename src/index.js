@@ -301,6 +301,18 @@ module.exports.setPublicPath = (path) => {
 
 
 /**
+ * Set prefix for generated asset paths
+ *
+ * @param {string} path
+ */
+module.exports.setResourceRoot = (path) => {
+    Mix.resourceRoot = path;
+
+    return this;
+};
+
+
+/**
  * Merge custom config with the provided webpack.config file.
  *
  * @param {object} config
