@@ -27,7 +27,7 @@ class Mix {
         this.publicPath = './';
         this.options = {
             extractVueStyles: false,
-            processUrls: true
+            processCssUrls: true
         };
     }
 
