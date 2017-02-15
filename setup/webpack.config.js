@@ -117,7 +117,7 @@ module.exports.module = {
         {
             test: /\.s[ac]ss$/,
             include: /node_modules/,
-            loaders: ['style-loader', 'css-loader', 'fast-sass-loader']
+            loaders: ['style-loader', 'css-loader', 'sass-loader']
         },
 
         {
@@ -162,7 +162,7 @@ if (Mix.preprocessors) {
         if (toCompile.type === 'sass') {
             loaders.push(
                 {
-                    loader: 'fast-sass-loader',
+                    loader: 'sass-loader',
                     options: Object.assign({
                         precision: 8,
                         outputStyle: 'expanded'
