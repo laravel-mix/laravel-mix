@@ -158,10 +158,13 @@ if (Mix.preprocessors) {
         ];
 
         if (toCompile.type === 'sass') {
-            loaders.push({
-                loader: 'sass-loader',
-                options: toCompile.pluginOptions
-            });
+            loaders.push(
+                { loader: 'resolve-url-loader' + sourceMap },
+                {
+                    loader: 'sass-loader',
+                    options: toCompile.pluginOptions
+                }
+            );
         }
 
         if (toCompile.type === 'less') {
