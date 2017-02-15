@@ -380,7 +380,7 @@ if (Mix.extract) {
 
 
 if (Mix.inProduction) {
-    module.exports.plugins = module.exports.plugins.concat([
+    module.exports.plugins.push(
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
@@ -394,7 +394,7 @@ if (Mix.inProduction) {
                 drop_console: true
             }
         })
-    ]);
+    );
 }
 
 
