@@ -36,16 +36,25 @@ class EntryBuilder {
         }
 
         this.mix.js.forEach(paths => {
-            let name = paths.output.pathWithoutExt
-                .replace(this.mix.publicPath, '')
-                .replace(/\\/g, '/');
-
             this.entry.add(
-                name, paths.entry.map(src => src.path)
+                this.entryName(paths.output),
+                paths.entry.map(src => src.path)
             );
         });
 
         return this;
+    }
+
+
+    /**
+     * Calculate the entry named from the output path.
+     *
+     * @param {object} output
+     */
+    entryName(output) {
+        return output.pathWithoutExt
+            .replace(this.mix.publicPath + '/', '/')
+            .replace(/\\/g, '/');
     }
 
 
