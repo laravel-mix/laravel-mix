@@ -378,13 +378,13 @@ if (Mix.inProduction) {
             }
         }),
 
-        new webpack.optimize.UglifyJsPlugin({
+        new webpack.optimize.UglifyJsPlugin(Object.assign({
             sourceMap: true,
             compress: {
                 warnings: false,
                 drop_console: true
             }
-        })
+        }, Mix.options.uglify))
     );
 }
 

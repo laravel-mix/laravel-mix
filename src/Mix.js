@@ -28,7 +28,8 @@ class Mix {
         this.resourceRoot = '/';
         this.options = {
             extractVueStyles: false,
-            processCssUrls: true
+            processCssUrls: true,
+            uglify: {}
         };
     }
 
