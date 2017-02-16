@@ -77,7 +77,7 @@ class EntryBuilder {
                 .name;
 
             this.mix.File.find(
-                path.join(this.mix.output().path, temporaryOutputFile)
+                path.resolve(this.mix.output().path, temporaryOutputFile)
             ).delete();
         });
 
