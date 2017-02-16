@@ -205,6 +205,28 @@ module.exports.combine = (src, output) => {
 
 
 /**
+ * Alias for mix.combine().
+ *
+ * @param {string|Array} src
+ * @param {string}       output
+ */
+module.exports.scripts = (src, output) => {
+    return module.exports.combine(src, output);
+};
+
+
+/**
+ * Alias for mix.combine().
+ *
+ * @param {string|Array} src
+ * @param {string}       output
+ */
+module.exports.styles = (src, output) => {
+    return module.exports.combine(src, output);
+};
+
+
+/**
  * Identical to mix.combine(), but includes Babel compilation.
  *
  * @param {string|Array} src
