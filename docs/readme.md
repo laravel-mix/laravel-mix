@@ -22,6 +22,5 @@
 * [Quick Webpack Configuration](quick-webpack-configuration.md)
 
 ## Advanced Configuration
-* [Laravel Mix Helpers](mix-helpers.md)
-* [The Webpack Configuration File](the-webpack-configuration-file.md)
+* [Laravel Mix Options](options.md)
 

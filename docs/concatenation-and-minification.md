@@ -2,6 +2,7 @@
 
 ```js
 mix.combine(['src', 'files'], 'destination');
+mix.babel(['src', 'files'], destination);
 mix.minify('src');
 mix.minify(['src']);
 ```
@@ -17,6 +18,14 @@ mix.combine(['one.js', 'two.js'], 'merged.js');
 ```
 
 This will naturally merge `one.js` and `two.js` into a single file, called `merged.js`. As always, during development, that merged file will remain uncompressed. However, for production \(`export NODE_ENV=production`\), this command will additionally minify `merged.js`.
+
+#### Combine Files With Babel Compilation
+
+If you need to concatenate JavaScript files that have been written in ES2015, you may update your `mix.combine()` call to `mix.babel()`. The method signature is identical. The only difference is that, after the files have been concatenated, Laravel Mix will perform Babel compilation on the result to transform the code to vanilla JavaScript that all browsers can understand.
+
+```js
+mix.babel(['one.js', 'two.js'], 'merged.js');
+```
 
 ### Minify Files
 

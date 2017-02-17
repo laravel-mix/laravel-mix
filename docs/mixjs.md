@@ -49,7 +49,7 @@ mix.js('resources/assets/js/app.js', 'public/js');
 
 Done! Now, all of the bullet items above are available to you, and it required exactly one method call.
 
-To trigger the compilation, run `node_modules/.bin/webpack` from the command line.
+To trigger the compilation, run `npm run dev` from the command line.
 
 ### Vue Components
 
@@ -107,4 +107,14 @@ let mix = require('laravel-mix');
 mix.js('resources/assets/js/app.js', 'public/js');
 ```
 
-And that should do it! Run `node_modules/.bin/webpack` to compile it all down. At this point, simply create an HTML file, import your `./js/app.js` bundle, and load the browser. Tada!
+And that should do it! Run `npm run dev` to compile it all down. At this point, simply create an HTML file, import your `./js/app.js` bundle, and load the browser. Tada!
+
+### React Support
+
+Laravel Mix also ships with basic React support. Simply update your `mix.js()` call to `mix.react()`, and then use the exact same set of arguments. Behind the scenes, Mix will pull in and reference any necessary Babel plugins for React.
+
+```js
+mix.react('resources/assets/js/app.jsx', 'public/js/app.js');
+```
+
+Of course, you'll still want to install React and ReactDOM through NPM, per usual, but everything else should be taken care of.
