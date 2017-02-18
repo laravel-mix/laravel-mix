@@ -70,7 +70,8 @@ mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
     use: [
         require('rupture')()
     ]
-});```
+});
+```
 
 That's all there is to it!
 
