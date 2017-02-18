@@ -73,5 +73,21 @@ mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
 });
 ```
 
+Should you wish to take it further, and automatically import plugins globally, you may use the `import` option. Here's an example:
+
+```js
+mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
+    use: [
+        require('rupture')(),
+        require('nib')(),
+        require('jeet')()
+    ],
+    import: [
+        '~nib/index.styl',
+        '~jeet/jeet.styl'
+    ]
+});
+```
+
 That's all there is to it!
 
