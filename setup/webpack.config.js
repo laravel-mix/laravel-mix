@@ -141,6 +141,15 @@ module.exports.module = {
                 name: 'fonts/[name].[ext]?[hash]',
                 publicPath: Mix.resourceRoot
             }
+        },
+
+        {
+            test: /\.(cur|ani)$/,
+            loader: 'file-loader',
+            options: {
+                name: '[name].[ext]?[hash]',
+                publicPath: Mix.resourceRoot
+            }
         }
     ]
 };
