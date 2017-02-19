@@ -126,7 +126,7 @@ module.exports.module = {
         },
 
         {
-            test: /\.(png|jpg|gif)$/,
+            test: /\.(png|jpe?g|gif)$/,
             loader: 'file-loader',
             options: {
                 name: 'images/[name].[ext]?[hash]',
