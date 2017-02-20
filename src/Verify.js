@@ -65,6 +65,13 @@ class Verify {
             Array.isArray(src),
             'mix.combine() requires an array as its first parameter.'
         );
+
+        Array.from(src).map(file => {
+            assert(
+                File.exists(file),
+                'mix.combine() requires an array of paths to files that already exist.'
+            );
+        });
     }
 
 
