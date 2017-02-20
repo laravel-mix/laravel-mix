@@ -196,8 +196,6 @@ module.exports.preprocess = (type, src, output, pluginOptions) => {
  * @param {string}       output
  */
 module.exports.combine = (src, output) => {
-    Verify.combine(src);
-
     Mix.concat.add({ src, output });
 
     return this;

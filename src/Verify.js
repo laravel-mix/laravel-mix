@@ -56,19 +56,6 @@ class Verify {
 
 
     /**
-     * Verify that the call the mix.combine() is valid.
-     *
-     * @param {Array} src
-     */
-    static combine(src) {
-        assert(
-            Array.isArray(src),
-            'mix.combine() requires an array as its first parameter.'
-        );
-    }
-
-
-    /**
      * Verify that the necessary dependency is available.
      *
      * @param {string} dependency
