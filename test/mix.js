@@ -110,36 +110,6 @@ test('that it can merge a user\'s Webpack config', t => {
 });
 
 
-test('that it determines the CSS output path correctly.', t => {
-    mix.setPublicPath('./public')
-       .js('js/stub.js', 'dist')
-       .less('sass/stub.less', 'dist/stub.css');
-
-    let segments = mix.config.preprocessors;
-
-
-    // Test the cssOutput which gets passed to ExtractTextPlugin
-    segments.forEach(s => {
-        t.is('dist/stub.css', Mix.cssOutput(s));
-    });
-
-    // Test to see if it returns hashedPath in production
-    Mix.versioning = true;
-    Mix.inProduction = true;
-    segments.forEach(s => {
-        t.is('dist/stub.[hash].css', Mix.cssOutput(s));
-    });
-    Mix.versioning = false;
-    Mix.inProduction = false;
-
-    // Test else path for this.cssPreprocessor being empty
-    Mix.preprocessors = false;
-    t.deepEqual(Mix.entry(), {
-        'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
-    });
-});
-
-
 test('that it calculates the output correctly', t => {
     mix.js('js/stub.js', 'dist')
        .sass('sass/stub.scss', 'dist');

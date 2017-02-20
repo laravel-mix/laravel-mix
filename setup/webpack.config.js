@@ -71,6 +71,15 @@ module.exports.output = Mix.output();
  |
  */
 
+let vueExtractTextPlugin = false;
+
+if (Mix.options.extractVueStyles) {
+    vueExtractTextPlugin = Mix.vueExtractTextPlugin();
+
+    module.exports.plugins = (module.exports.plugins || []).concat(vueExtractTextPlugin);
+}
+
+
 module.exports.module = {
     rules: [
         {
@@ -79,15 +88,15 @@ module.exports.module = {
             options: {
                 loaders: Mix.options.extractVueStyles ? {
                     js: 'babel-loader' + Mix.babelConfig(),
-                    scss: plugins.ExtractTextPlugin.extract({
+                    scss: vueExtractTextPlugin.extract({
                         use: 'css-loader!sass-loader',
                         fallback: 'vue-style-loader'
                     }),
-                    sass: plugins.ExtractTextPlugin.extract({
+                    sass: vueExtractTextPlugin.extract({
                         use: 'css-loader!sass-loader?indentedSyntax',
                         fallback: 'vue-style-loader'
                     }),
-                    css: plugins.ExtractTextPlugin.extract({
+                    css: vueExtractTextPlugin.extract({
                         use: 'css-loader',
                         fallback: 'vue-style-loader'
                     })
@@ -156,59 +165,12 @@ module.exports.module = {
 
 
 if (Mix.preprocessors) {
-    Mix.preprocessors.forEach(toCompile => {
-        let extractPlugin = new plugins.ExtractTextPlugin(Mix.cssOutput(toCompile));
+    Mix.preprocessors.forEach(preprocessor => {
+        module.exports.module.rules.push(preprocessor.rules());
 
-        let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
-
-        let loaders = [
-            { loader: (Mix.options.processCssUrls ? 'css-loader' : 'raw-loader') + sourceMap },
-            { loader: 'postcss-loader' + sourceMap }
-        ];
-
-        if (toCompile.type === 'sass') {
-            loaders.push(
-                { loader: 'resolve-url-loader' + sourceMap },
-                {
-                    loader: 'sass-loader',
-                    options: toCompile.pluginOptions
-                }
-            );
-        }
-
-        if (toCompile.type === 'less') {
-            loaders.push({
-                loader: 'less-loader' + sourceMap,
-                options: toCompile.pluginOptions
-            });
-        }
-
-        if (toCompile.type === 'stylus') {
-            loaders.push({
-                loader: 'stylus-loader' + sourceMap,
-                options: toCompile.pluginOptions
-            });
-        }
-
-        module.exports.module.rules.push({
-            test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
-            use: extractPlugin.extract({
-                fallback: 'style-loader',
-                use: loaders
-            })
-        });
-
-        module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
+        module.exports.plugins = (module.exports.plugins || []).concat(preprocessor.extractPlugin);
     });
 }
-
-
-if (! Mix.preprocessors && Mix.options.extractVueStyles) {
-    module.exports.plugins = (module.exports.plugins || []).concat(
-        new plugins.ExtractTextPlugin(path.join(Mix.js.base, 'vue-styles.css'))
-    );
-}
-
 
 
 /*

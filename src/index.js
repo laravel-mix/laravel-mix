@@ -117,13 +117,8 @@ module.exports.browserSync = (config = {}) => {
  * @param {object} pluginOptions
  */
 module.exports.sass = (src, output, pluginOptions = {}) => {
-    pluginOptions = Object.assign({
-        precision: 8,
-        outputStyle: 'expanded'
-    }, pluginOptions, { sourceMap: true });
-
     return module.exports.preprocess(
-        'sass', src, output, pluginOptions
+        'Sass', src, output, pluginOptions
     );
 };
 
@@ -137,7 +132,7 @@ module.exports.sass = (src, output, pluginOptions = {}) => {
  */
 module.exports.less = (src, output, pluginOptions = {}) => {
     return module.exports.preprocess(
-        'less', src, output, pluginOptions
+        'Less', src, output, pluginOptions
     );
 };
 
@@ -156,7 +151,7 @@ module.exports.stylus = (src, output, pluginOptions = {}) => {
     );
 
     return module.exports.preprocess(
-        'stylus', src, output, pluginOptions
+        'Stylus', src, output, pluginOptions
     );
 };
 
@@ -172,18 +167,11 @@ module.exports.stylus = (src, output, pluginOptions = {}) => {
 module.exports.preprocess = (type, src, output, pluginOptions) => {
     Verify.preprocessor(type, src, output);
 
-    src = new Mix.File(path.resolve(src)).parsePath();
-    output = new Mix.File(output).parsePath();
+    let Preprocessor = require('./Preprocessors/' + type);
 
-    if (output.isDir) {
-        output = new Mix.File(
-            path.join(output.path, src.name + '.css')
-        ).parsePath();
-    }
-
-    Mix.preprocessors = (Mix.preprocessors || []).concat({
-        type, src, output, pluginOptions
-    });
+    Mix.preprocessors = (Mix.preprocessors || []).concat(
+        new Preprocessor(src, output, pluginOptions)
+    );
 
     return this;
 };

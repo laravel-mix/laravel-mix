@@ -120,19 +120,6 @@ class Mix {
 
 
     /**
-     * Determine the appropriate CSS output path.
-     *
-     * @param {object} segments
-     */
-    cssOutput(segments) {
-        let regex = new RegExp('^(\.\/)?' + this.publicPath);
-        let pathVariant = this.versioning ? 'hashedPath' : 'path';
-
-        return segments.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
-    }
-
-
-    /**
      * Detect if the user desires hot reloading.
      *
      * @param {boolean} force
@@ -178,6 +165,16 @@ class Mix {
      */
     isUsingLaravel() {
         return this.File.exists('./artisan');
+    }
+
+
+    /**
+     * Fetch the Vue-specific ExtractTextPlugin.
+     */
+    vueExtractTextPlugin() {
+        let VueExtractTextPluginFactory = require('./Vue/ExtractTextPluginFactory');
+
+        return new VueExtractTextPluginFactory(this.options.extractVueStyles).build();
     }
 
 
