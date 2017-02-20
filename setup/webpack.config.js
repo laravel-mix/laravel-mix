@@ -298,18 +298,22 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 
 if (Mix.browserSync) {
     module.exports.plugins.push(
-        new plugins.BrowserSyncPlugin(Object.assign({
-            host: 'localhost',
-            port: 3000,
-            proxy: 'app.dev',
-            files: [
-                'app/**/*.php',
-                'resources/views/**/*.php',
-                'public/mix-manifest.json',
-                'public/css/**/*.css',
-                'public/js/**/*.js'
-            ]
-        }, Mix.browserSync))
+        new plugins.BrowserSyncPlugin(
+            Object.assign({
+                host: 'localhost',
+                port: 3000,
+                proxy: 'app.dev',
+                files: [
+                    'app/**/*.php',
+                    'resources/views/**/*.php',
+                    'public/js/**/*.js',
+                    'public/css/**/*.css'
+                ]
+            }, Mix.browserSync),
+            {
+                reload: false
+            }
+        )
     );
 }
 
