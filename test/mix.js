@@ -110,7 +110,7 @@ test('that it can merge a user\'s Webpack config', t => {
 });
 
 
-test('that it determines the CSS output path correctly.', t => {
+test('that it determines the Sass CSS output path correctly.', t => {
     mix.setPublicPath('./public')
        .js('js/stub.js', 'dist')
        .less('sass/stub.less', 'dist/stub.css');
@@ -137,6 +137,24 @@ test('that it determines the CSS output path correctly.', t => {
     t.deepEqual(Mix.entry(), {
         'dist/stub': [path.resolve(__dirname, '../js/stub.js')]
     });
+});
+
+
+test('that it determines the Less CSS output path correctly.', t => {
+    mix.setPublicPath('./public')
+       .js('js/stub.js', 'dist')
+       .less('less/stub.less', 'dist');
+
+    t.is('dist/stub.css', mix.config.cssOutput());
+});
+
+
+test('that it determines the Stylus CSS output path correctly.', t => {
+    mix.setPublicPath('./public')
+       .js('js/stub.js', 'dist')
+       .stylus('stylus/stub.styl', 'dist');
+
+    t.is('dist/stub.css', mix.config.cssOutput());
 });
 
 

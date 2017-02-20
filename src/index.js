@@ -162,6 +162,17 @@ module.exports.stylus = (src, output, pluginOptions = {}) => {
 
 
 /**
+ * Register Stylus compilation.
+ *
+ * @param {string} src
+ * @param {string} output
+ */
+module.exports.stylus = (src, output) => {
+    return module.exports.preprocess('stylus', src, output);
+};
+
+
+/**
  * Register a generic CSS preprocessor.
  *
  * @param {string} type

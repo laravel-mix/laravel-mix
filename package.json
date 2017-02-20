@@ -50,6 +50,8 @@
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^5.0.0",
     "style-loader": "^0.13.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.4.0",
     "uglify-js": "^2.7.5",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.1.9",
