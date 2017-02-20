@@ -96,6 +96,10 @@ module.exports.module = {
                         use: 'css-loader!sass-loader?indentedSyntax',
                         fallback: 'vue-style-loader'
                     }),
+                    stylus: vueExtractTextPlugin.extract({
+                        use: 'css-loader!stylus-loader?paths[]=node_modules',
+                        fallback: 'vue-style-loader'
+                    }),
                     css: vueExtractTextPlugin.extract({
                         use: 'css-loader',
                         fallback: 'vue-style-loader'
@@ -103,7 +107,8 @@ module.exports.module = {
                 }: {
                     js: 'babel-loader' + Mix.babelConfig(),
                     scss: 'vue-style-loader!css-loader!sass-loader',
-                    sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                    sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                    stylus: 'vue-style-loader!css-loader!stylus-loader?paths[]=node_modules'
                 },
 
                 postcss: [
