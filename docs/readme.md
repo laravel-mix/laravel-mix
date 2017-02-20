@@ -11,7 +11,6 @@
 * [JavaScript](mixjs.md)
 * [Library Code Splitting](extract.md)
 * [BrowserSync](browsersync.md)
-* [LiveReload](livereload.md)
 * [Hot Module Replacement](hot-module-replacement.md)
 * [Versioning](versioning.md)
 * [CSS Preprocessors](css-preprocessors.md)
@@ -21,6 +20,9 @@
 * [Autoloading](autoloading.md)
 * [Event Hooks](event-hooks.md)
 * [Quick Webpack Configuration](quick-webpack-configuration.md)
+
+## Custom Recipes
+* [LiveReload](livereload.md)
 
 ## Advanced Configuration
 * [Laravel Mix Options](options.md)

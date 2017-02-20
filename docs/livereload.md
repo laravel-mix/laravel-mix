@@ -1,17 +1,14 @@
 # LiveReload
 
-There is a webpack plugin for those who prefer LiveReload to BrowserSync.
-LiveReload will automatically monitor your files for changes and refresh the page when the changes are detected.
-
-To make LiveReload work for your Laravel (^5.4) site, do the following:
+While Laravel Mix ships with Browsersync support out of the box, you may prefer to use LiveReload. LiveReload can automatically monitor your files for changes and refresh the page when a modification is detected.
 
 ## 1. Install webpack-livereload-plugin
 
 ```
-npm install --save-dev webpack-livereload-plugin
+npm install webpack-livereload-plugin --save-dev
 ```
 
-## 2. Configure Laravel.mix
+## 2. Configure `webpack.mix.js`
 
 Add the following lines to the bottom of your webpack.mix.js:
 
@@ -25,25 +22,23 @@ mix.webpackConfig({
 });
 ```
 
-Although Webpack LiveReload plugin works well with its defaults, a list of available options which you may pass to LiveRealodPlugin is available in [the plugin documentation](https://github.com/statianzo/webpack-livereload-plugin/blob/master/README.md).
+Although LiveReload works well with its defaults, a list of available plugin options may be reviewed [here](https://github.com/statianzo/webpack-livereload-plugin/blob/master/README.md).
 
-## 3. Install LiveReload.js to your site
+## 3. Install LiveReload.js
 
-You may do it through [LiveReload Chrome plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
-or by adding the following code right before the closing </body> tag in your main site template:
- 
-```blade 
+Finally, we need to install LiveReload.js. You may do so through the [LiveReload Chrome plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei),
+or by adding the following code just before the closing `</body>` tag in your main site template:
+
+```blade
     @if(env('APP_ENV') == 'local')
         <script src="http://localhost:35729/livereload.js"></script>
     @endif
 ```
 
-## 4. Run the dev server
+## 4. Run the Dev Server
 
 ```bash
 npm run watch
 ```
 
-Now, LiveReload will automatically monitor your files and refresh the page when necessary.
-
-Enjoy.
+Now, LiveReload will automatically monitor your files and refresh the page when necessary. Enjoy!
