@@ -191,7 +191,7 @@ if (Mix.preprocessors) {
         }
 
         module.exports.module.rules.push({
-            test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
+            test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\').replace(/(\s|\(|\))/g,'\\$1') + '$'),
             use: extractPlugin.extract({
                 fallback: 'style-loader',
                 use: loaders
