@@ -350,7 +350,7 @@ module.exports.webpackConfig = (config) => {
  * @param {object} options
  */
 module.exports.options = (options) => {
-    Mix.options = options;
+    Mix.options = Object.assign(Mix.options, options);
 
     return this;
 };
