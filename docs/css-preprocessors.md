@@ -91,3 +91,44 @@ mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
 
 That's all there is to it!
 
+
+### CSS `url()` Rewriting
+
+One key Webpack concept to understand is that it will rewrite any `url()`s within your stylesheets. While this might initially sound strange, it's an incredibly powerful piece of functionality.
+
+#### An Example
+
+Imagine that we want to compile a bit of Sass that includes a relative url to an image.
+
+```scss
+.example {
+    background: url('../images/thing.png');
+}
+```
+
+> **Tip:** Absolute paths for `url()`s will of course be excluded from url-rewriting. As such, `url('/images/thing.png')` or `url('http://example.com/images/thing.png')` won't be touched.
+
+Notice that relative URL? By default, Laravel Mix and Webpack will find `thing.png`, copy it to your `public/images` folder, and then rewrite the `url()` within your generated stylesheet. As such, your compiled CSS will be:
+
+```css
+.example {
+  background: url(/images/thing.png?d41d8cd98f00b204e9800998ecf8427e);
+}
+```
+
+This, again, is a very cool feature of Webpack's. However, it does have a tendency to confuse those who don't understand how Webpack and the css-loader plugin works. It's possible that your folder structure is already just how you want it, and you'd prefer that Mix not modify those `url()`s. If that's the case, we do offer an override:
+
+```js
+mix.sass('src/app.scss', 'dist/')
+   .options({
+      processCssUrls: false
+   });
+```
+
+With this addition to your `webpack.mix.js` file, we will no longer match `url()`s or copy assets to your public directory. As such, the compiled CSS will remain exactly as you typed it:
+
+```css
+.example {
+  background: url("../images/thing.png");
+}
+```
