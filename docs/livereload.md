@@ -30,7 +30,7 @@ Finally, we need to install LiveReload.js. You may do so through the [LiveReload
 or by adding the following code just before the closing `</body>` tag in your main site template:
 
 ```blade
-    @if(env('APP_ENV') == 'local')
+    @if(config('app.env') == 'local')
         <script src="http://localhost:35729/livereload.js"></script>
     @endif
 ```
