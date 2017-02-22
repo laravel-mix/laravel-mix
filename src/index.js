@@ -219,8 +219,6 @@ module.exports.styles = (src, output) => {
  * @param {string}       output
  */
 module.exports.babel = (src, output) => {
-    Verify.combine(src);
-
     Mix.concat.add({ src, output, babel: true });
 
     return this;
