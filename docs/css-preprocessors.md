@@ -132,3 +132,40 @@ With this addition to your `webpack.mix.js` file, we will no longer match `url()
   background: url("../images/thing.png");
 }
 ```
+
+### PostCSS Plugins
+
+By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As a result, you are free to use the latest CSS 3 syntax, with the understanding that we'll apply any necessary browser-prefixes automatically.
+
+It's possible, however, that you'd like to apply [additional PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to your build. No problem. Simply install the desired plugin through NPM, and then reference it in your `webpack.mix.js` file, like so:
+
+```js
+mix.sass('resources/assets/sass/app.scss', 'public/css')
+   .options({
+        postCss: [
+            require('postcss-css-variables')()
+        ]
+   });
+```
+
+Done! You may now use and compile custom CSS properties (if that's your thing). For example, if `resources/assets/sass/app.scss` contains...
+
+```css
+:root {
+    --some-color: red;
+}
+
+.example {
+    color: var(--some-color);
+}
+```
+
+...when compiled, you'll now see:
+
+```css
+.example {
+  color: red;
+}
+```
+
+Nifty!
