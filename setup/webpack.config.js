@@ -111,9 +111,7 @@ module.exports.module = {
                     stylus: 'vue-style-loader!css-loader!stylus-loader?paths[]=node_modules'
                 },
 
-                postcss: [
-                    require('autoprefixer')
-                ]
+                postcss: Mix.options.postCss
             }
         },
 
@@ -286,9 +284,7 @@ module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
-            postcss: [
-                require('autoprefixer')
-            ],
+            postcss: Mix.options.postCss,
             context: __dirname,
             output: { path: './' }
         }
@@ -358,13 +354,7 @@ if (Mix.inProduction) {
             }
         }),
 
-        new webpack.optimize.UglifyJsPlugin(Object.assign({
-            sourceMap: true,
-            compress: {
-                warnings: false,
-                drop_console: true
-            }
-        }, Mix.options.uglify))
+        new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
     );
 }
 

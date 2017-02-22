@@ -7,6 +7,7 @@ let Concat = require('./Concat');
 let mergeWith = require('lodash').mergeWith;
 let EntryBuilder = require('./EntryBuilder');
 let Dispatcher = require('./Dispatcher');
+let options = require('./Options');
 
 class Mix {
     /**
@@ -26,11 +27,7 @@ class Mix {
         this.inProduction = process.env.NODE_ENV === 'production';
         this.publicPath = './';
         this.resourceRoot = '/';
-        this.options = {
-            extractVueStyles: false,
-            processCssUrls: true,
-            uglify: {}
-        };
+        this.options = options;
     }
 
 

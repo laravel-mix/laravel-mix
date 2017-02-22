@@ -338,7 +338,7 @@ module.exports.webpackConfig = (config) => {
  * @param {object} options
  */
 module.exports.options = (options) => {
-    Mix.options = Object.assign(Mix.options, options);
+    Mix.options.merge(options);
 
     return this;
 };
