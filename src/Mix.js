@@ -24,7 +24,7 @@ class Mix {
         this.entryBuilder = new EntryBuilder(this);
         this.events = new Dispatcher;
         this.concat = new Concat(this.events);
-        this.inProduction = process.env.NODE_ENV === 'production';
+        this.inProduction = (process.env.NODE_ENV === 'production' || process.argv.includes('-p'));
         this.publicPath = './';
         this.resourceRoot = '/';
         this.options = options;

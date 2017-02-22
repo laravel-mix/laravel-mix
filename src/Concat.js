@@ -94,7 +94,7 @@ class Concat {
             files.output = output.rename(versionedPath).file;
         }
 
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production' || process.argv.includes('-p')) {
             new File(files.output).minify();
         }
 
