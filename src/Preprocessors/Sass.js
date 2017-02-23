@@ -1,14 +1,22 @@
 let Preprocessor = require('./Preprocessor');
+let Mix = require('../Mix');
 
 class Sass extends Preprocessor {
     /**
      * Fetch the Webpack loaders for Sass.
      */
     loaders(sourceMaps) {
-        return [
-            { loader: 'resolve-url-loader' + (sourceMaps ? '?sourceMap' : '') },
+        let loaders = [
             { loader: 'sass-loader', options: this.sassPluginOptions() }
         ];
+
+        if (Mix.options.processCssUrls) {
+            loaders.unshift(
+                { loader: 'resolve-url-loader' + (sourceMaps ? '?sourceMap' : '') }
+            );
+        }
+
+        return loaders;
     }
 
 
