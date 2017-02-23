@@ -53,8 +53,8 @@ class EntryBuilder {
      */
     entryName(output) {
         return output.pathWithoutExt
-            .replace(this.mix.publicPath + '/', '/')
             .replace(/\\/g, '/');
+            .replace(this.mix.publicPath + '/', '/')
     }
 
 
