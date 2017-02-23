@@ -14,8 +14,6 @@ class Versioning {
         this.manualFiles = manualFiles.map(file => new File(file));
         this.manifest = manifest;
         this.publicPath = publicPath;
-
-        this.writeHashedFiles().addManualFilesToManifest();
     }
 
 
@@ -69,7 +67,7 @@ class Versioning {
      * Replace all old hashed files with the new versions.
      */
     prune() {
-        this.addManualFilesToManifest();
+        this.writeHashedFiles().addManualFilesToManifest();
 
         let cachedFiles = objectValues(this.manifest.cache);
         let currentFiles = objectValues(this.manifest.get());
