@@ -10,10 +10,10 @@ Both Laravel and Laravel Mix work together to abstract away the complexities in 
 
 ```js
   "scripts": {
-    "dev": "webpack --progress --hide-modules",
-    "watch": "webpack --watch --progress --hide-modules",
-    "hot": "webpack-dev-server --inline --hot",
-    "production": "webpack --progress --hide-modules -p"
+    "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
+    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   }
 ```
 
@@ -35,7 +35,7 @@ However, it can be a burden to manually change this URL for production deploys. 
 ```html
 <body>
     <div id="app"></div>
-
+    
     <script src="{{ mix('js/bundle.js') }}"></script>
 </body>
 ```
