@@ -34,6 +34,41 @@ If you're running `npm run dev` through a VM, you may find that file changes are
   }
 ```
 
+If you're still having trouble, [see here for additional troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
+
+### Why is it saying that an image in my CSS file can't be found in `node_modules`?
+
+Let's imagine that you have a relative path to an asset that doesn't exist in your `resources/assets/sass/app.scss` file.
+
+```css
+body {
+    background: url('../img/example.jpg');
+}
+```
+
+When referencing a relative path, always think in terms of the current file. As such, Webpack will look for `resources/assets/img/example.jpg`. If it can't find it, it'll then begin searching for the file location, including within `node_modules`. If it still can't be found, you'll receive the error:
+
+```
+ ERROR  Failed to compile with 1 errors                                                                                                                                                                                                                                      
+
+This dependency was not found in node_modules:
+```
+
+You have two possible solutions:
+
+1. Make sure that `resources/assets/img/example.jpg` exists. 
+2. Add the following to your `webpack.mix.js` file to disable CSS url() processing.
+
+```
+mix.sass('resources/assets/sass/app.scss', 'public/css')
+   .options({
+        processCssUrls: false
+   });
+```
+
+This is particularly useful for legacy projects where your folder structure is already exactly as you desire.
+
+
 ### My mix-manifest.json file shouldn't be in the project root.
 
 If you're not using Laravel, your `mix-manifest.json` file will be dumped into the project root. If you need to change this, call `mix.setPublicPath('dist/');`, and your manifest file will now be saved in that base directory.
@@ -62,11 +97,6 @@ mix.autoload({
   moment: 'moment' // only one
 })
 ```
-
-### Webpack's watcher isn't picking up on my file changes.
-
-[See here for some troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
-
 
 ### How might I manually add CoffeeScript compilation?
 
