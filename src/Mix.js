@@ -120,6 +120,33 @@ class Mix {
         return '?' + JSON.stringify(this.options.babel);
     }
 
+    /**
+     * Fetch definitions for DefinePlugin
+     *
+     * @param {object} merge
+     */
+    definitions(merge = {}) {
+        let regex = /^MIX_/i
+
+        // Filter out environment variables that doesn't pass regex
+        let env = Object.keys(process.env)
+            .filter(key => regex.test(key))
+            .reduce((value, key) => {
+                value[key] = process.env[key]
+                return value
+            }, {});
+
+        let values = Object.assign(env, merge);
+
+        return {
+            'process.env': Object.keys(values)
+                // Stringify all values so we can feed into Webpack DefinePlugin
+                .reduce((value, key) => {
+                    value[key] = JSON.stringify(values[key])
+                    return value
+                }, {})
+        };
+    }
 
     /**
      * Determine if we are working with a Laravel project.
