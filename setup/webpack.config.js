@@ -141,7 +141,13 @@ module.exports.module = {
             test: /\.(png|jpe?g|gif)$/,
             loader: 'file-loader',
             options: {
-                name: 'images/[name].[ext]?[hash]',
+                name: path => {
+                    if (!/node_modules|bower_components/.test(path)) {
+                        return 'images/[name].[ext]?[hash]';
+                    }
+
+                    return 'images/vendor/' + path.replace(/((.*(node_modules|bower_components))|images|image|img|assets)(\/|\\)/g, '') + '?[hash]';
+                },
                 publicPath: Mix.resourceRoot
             }
         },
@@ -150,7 +156,13 @@ module.exports.module = {
             test: /\.(woff2?|ttf|eot|svg|otf)$/,
             loader: 'file-loader',
             options: {
-                name: 'fonts/[name].[ext]?[hash]',
+                name: path => {
+                    if (!/node_modules|bower_components/.test(path)) {
+                        return 'fonts/[name].[ext]?[hash]';
+                    }
+
+                    return 'fonts/vendor/' + path.replace(/((.*(node_modules|bower_components))|fonts|font|assets)(\/|\\)/g, '') + '?[hash]';
+                },
                 publicPath: Mix.resourceRoot
             }
         },
