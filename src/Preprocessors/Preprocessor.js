@@ -68,7 +68,12 @@ class Preprocessor {
         let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
         return [
-            { loader: (Mix.options.processCssUrls ? 'css-loader' : 'raw-loader') + sourceMap },
+            {
+                loader: 'css-loader' + sourceMap,
+                options: {
+                    url: Mix.options.processCssUrls
+                }
+            },
             { loader: 'postcss-loader' + sourceMap }
         ];
     }

@@ -46,7 +46,6 @@
     "path": "^0.12.7",
     "postcss-load-config": "^1.0.0",
     "postcss-loader": "^1.2.1",
-    "raw-loader": "^0.5.1",
     "resolve-url-loader": "^2.0.0",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
