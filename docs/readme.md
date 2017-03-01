@@ -23,6 +23,7 @@
 
 ## Custom Recipes
 * [LiveReload](livereload.md)
+* [jQuery UI](jquery-ui.md)
 
 ## Advanced Configuration
 * [Laravel Mix Options](options.md)
