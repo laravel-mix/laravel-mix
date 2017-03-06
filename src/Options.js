@@ -17,6 +17,17 @@ module.exports = {
 
 
     /**
+     * Determine if Mix should remove unused selectors from your CSS bundle.
+     * You may provide a boolean, or object for the Purify plugin.
+     *
+     * https://github.com/webpack-contrib/purifycss-webpack#options
+     *
+     * @type {Boolean|object}
+     */
+    purifyCss: false,
+
+
+    /**
      * Uglify-specific settings for Webpack.
      *
      * See: https://github.com/mishoo/UglifyJS2#compressor-options
