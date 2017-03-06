@@ -58,10 +58,11 @@ class Verify {
     /**
      * Verify that the necessary dependency is available.
      *
-     * @param {string} dependency
-     * @param {string} installCommand
+     * @param {string}  dependency
+     * @param {string}  installCommand
+     * @param {Boolean} abortOnComplete
      */
-    static dependency(dependency, installCommand) {
+    static dependency(dependency, installCommand, abortOnComplete = false) {
         try {
             require.resolve(dependency);
         } catch (e) {
@@ -71,6 +72,12 @@ class Verify {
             );
 
             exec(installCommand);
+
+            if (abortOnComplete) {
+                console.log('Finished. Please run Mix again.');
+
+               process.exit();
+            }
         }
     }
 }

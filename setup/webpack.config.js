@@ -1,4 +1,5 @@
 let path = require('path');
+let glob = require('glob');
 let webpack = require('webpack');
 let Mix = require('laravel-mix').config;
 let plugins = require('laravel-mix').plugins;
@@ -356,6 +357,17 @@ if (Mix.extract) {
             ]),
             minChunks: Infinity
         })
+    );
+}
+
+
+if (Mix.options.purifyCss) {
+    let PurifyCSSPlugin = require('purifycss-webpack');
+
+    module.exports.plugins.push(
+        new PurifyCSSPlugin(Object.assign({
+          paths: glob.sync(Mix.Paths.root('resources/views/**/*.blade.php')),
+        }, Mix.options.purifyCss, { minimize: Mix.inProduction }))
     );
 }
 

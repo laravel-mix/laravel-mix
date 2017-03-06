@@ -336,6 +336,16 @@ module.exports.webpackConfig = (config) => {
  * @param {object} options
  */
 module.exports.options = (options) => {
+    if (options.purifyCss) {
+        options.purifyCss = require('./PurifyPaths').build(options.purifyCss);
+
+        Verify.dependency(
+            'purifycss-webpack',
+            'npm install purifycss-webpack --save-dev',
+            true // abortOnComplete
+        );
+    }
+
     Mix.options.merge(options);
 
     return this;
