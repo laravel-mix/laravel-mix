@@ -4,8 +4,8 @@
 1. Update Laravel Mix to the latest version.
 2. Nuke your dependencies, and reinstall from scratch: `rm -rf node_modules && npm install`.
 3. Check your `package.json` file, and ensure that there are no old Laravel Elixir dependencies that might be interfering with Mix.
-
--->
+4. Are you using a custom .babelrc file? If so, that may affect your compile, as we depend upon the es2015 plugin with modules set to false.
+t-->
 
 - Laravel Mix Version: #.#.#
 - Node Version (`node -v`): 
