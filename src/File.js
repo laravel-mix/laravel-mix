@@ -3,6 +3,7 @@ let path = require('path');
 let md5 = require('md5');
 let chokidar = require('chokidar');
 let mkdirp = require('mkdirp');
+let options = require('./Options');
 let uglify = require('uglify-js');
 let UglifyCss = require('clean-css');
 
@@ -43,7 +44,7 @@ class File {
      */
     minify() {
         if (this.fileType === '.js') {
-            this.write(uglify.minify(this.file).code);
+            this.write(uglify.minify(this.file, options.uglify).code);
         }
 
         if (this.fileType === '.css') {
