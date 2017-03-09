@@ -1,0 +1,7 @@
+machine:
+  node:
+    version: 6
+
+dependencies:
+  cache_directories:
+    - "~/.cache/yarn"
