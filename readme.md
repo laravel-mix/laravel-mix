@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Laravel Mix provides a clean, fluent API for defining basic Webpack build steps for your Laravel application. Mix supports several common CSS and JavaScript pre-processors.
+Laravel Mix provides a clean, fluent API for defining basic [webpack](http://github.com/webpack/webpack) build steps for your Laravel application. Mix supports several common CSS and JavaScript pre-processors.
 
 If you've ever been confused about how to get started with module bundling and asset compilation, you will love Laravel Mix!
 
