@@ -83,7 +83,7 @@ And reload the page in your browser. Great! It works.
 
 It would be nice if we could update a Vue component, and instantly see it refresh in the browser, without having to perform a manual refresh. Even better, it would be nice if this refresh didn't reset our component's state. Well, hot module replacement to the rescue!
 
-Return to the command line, and hit `Ctrl+c` to cancel the Webpack watcher. Instead, we'll run:
+Return to the command line, and hit `Ctrl+c` to cancel the webpack watcher. Instead, we'll run:
 
 ```bash
 npm run hot

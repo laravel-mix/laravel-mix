@@ -8,11 +8,11 @@ mix.stylus('src', 'output', pluginOptions);
 
 A single method call allows you to compile your Sass, Less, or Stylus files, while applying automatic CSS3 prefixing.
 
-Though Webpack can inline all of your CSS directly into the bundled JavaScript, Laravel Mix automatically performs the necessary steps to extract it to your desired output path.
+Though webpack can inline all of your CSS directly into the bundled JavaScript, Laravel Mix automatically performs the necessary steps to extract it to your desired output path.
 
 ### Multiple Builds
 
-Should you need to compile more than one root file, you may call `mix.sass()` (or any of the preprocessor variants) as many as times as is needed. For each call, Webpack will output a new file with the relevant contents.
+Should you need to compile more than one root file, you may call `mix.sass()` (or any of the preprocessor variants) as many as times as is needed. For each call, webpack will output a new file with the relevant contents.
 
 ```js
 mix.sass('src/app.scss', 'dist/') // creates 'dist/app.css'
@@ -94,7 +94,7 @@ That's all there is to it!
 
 ### CSS `url()` Rewriting
 
-One key Webpack concept to understand is that it will rewrite any `url()`s within your stylesheets. While this might initially sound strange, it's an incredibly powerful piece of functionality.
+One key webpack concept to understand is that it will rewrite any `url()`s within your stylesheets. While this might initially sound strange, it's an incredibly powerful piece of functionality.
 
 #### An Example
 
@@ -108,7 +108,7 @@ Imagine that we want to compile a bit of Sass that includes a relative url to an
 
 > **Tip:** Absolute paths for `url()`s will of course be excluded from url-rewriting. As such, `url('/images/thing.png')` or `url('http://example.com/images/thing.png')` won't be touched.
 
-Notice that relative URL? By default, Laravel Mix and Webpack will find `thing.png`, copy it to your `public/images` folder, and then rewrite the `url()` within your generated stylesheet. As such, your compiled CSS will be:
+Notice that relative URL? By default, Laravel Mix and webpack will find `thing.png`, copy it to your `public/images` folder, and then rewrite the `url()` within your generated stylesheet. As such, your compiled CSS will be:
 
 ```css
 .example {
@@ -116,7 +116,7 @@ Notice that relative URL? By default, Laravel Mix and Webpack will find `thing.p
 }
 ```
 
-This, again, is a very cool feature of Webpack's. However, it does have a tendency to confuse those who don't understand how Webpack and the css-loader plugin works. It's possible that your folder structure is already just how you want it, and you'd prefer that Mix not modify those `url()`s. If that's the case, we do offer an override:
+This, again, is a very cool feature of webpack's. However, it does have a tendency to confuse those who don't understand how webpack and the css-loader plugin works. It's possible that your folder structure is already just how you want it, and you'd prefer that Mix not modify those `url()`s. If that's the case, we do offer an override:
 
 ```js
 mix.sass('src/app.scss', 'dist/')

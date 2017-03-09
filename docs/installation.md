@@ -35,8 +35,8 @@ You should now have the following directory structure:
 
 Laravel Mix consists of two core components:
 
-* **webpack.mix.js:** This is your configuration layer on top of Webpack. Most of your time will be spent here.
-* **webpack.config.js:** This is the traditional Webpack configuration file. Only advanced users need to visit this file.
+* **webpack.mix.js:** This is your configuration layer on top of webpack. Most of your time will be spent here.
+* **webpack.config.js:** This is the traditional webpack configuration file. Only advanced users need to visit this file.
 
 Head over to your webpack.mix.js file:
 

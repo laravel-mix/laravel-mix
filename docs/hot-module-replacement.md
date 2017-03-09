@@ -35,7 +35,7 @@ However, it can be a burden to manually change this URL for production deploys. 
 ```html
 <body>
     <div id="app"></div>
-    
+
     <script src="{{ mix('js/bundle.js') }}"></script>
 </body>
 ```

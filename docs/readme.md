@@ -19,7 +19,7 @@
 * [Concatenation and Minification](concatenation-and-minification.md)
 * [Autoloading](autoloading.md)
 * [Event Hooks](event-hooks.md)
-* [Quick Webpack Configuration](quick-webpack-configuration.md)
+* [Quick webpack Configuration](quick-webpack-configuration.md)
 
 ## Custom Recipes
 * [LiveReload](livereload.md)
