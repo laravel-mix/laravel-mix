@@ -248,6 +248,17 @@ module.exports.copy = (from, to, flatten = true) => {
 
 
 /**
+ * Copy an entire directory to a new location.
+ *
+ * @param {string} from
+ * @param {string} to
+ */
+module.exports.copyDirectory = (from, to) => {
+    return module.exports.copy(from, to, false);
+};
+
+
+/**
  * Minify the provided file.
  *
  * @param {string|Array} src
