@@ -17,7 +17,7 @@ mix.browserSync({
 })
 ```
 
-You may pass either a string (proxy) or object (BrowserSync settings) to this method. The domain name you declare as your proxy is vital. This will proxy output from Webpack Dev Server through BrowserSync.
+You may pass either a string (proxy) or object (BrowserSync settings) to this method. The domain name you declare as your proxy is vital. This will proxy output from webpack Dev Server through BrowserSync.
 
 Now, boot up the dev server (`npm run watch`), and you're all set go!
 

@@ -6,7 +6,7 @@ No. It has a few optimizations for Laravel, but it can be used for any project.
 
 ### My code isn't being minified.
 
-Minification will only be performed, when your `NODE_ENV` is set to production. Not only will this speed up your compilation time, but it's also unnecessary during development. Here's an example of running Webpack for production.
+Minification will only be performed, when your `NODE_ENV` is set to production. Not only will this speed up your compilation time, but it's also unnecessary during development. Here's an example of running webpack for production.
 
 ```bash
 export NODE_ENV=production && webpack --progress --hide-modules
@@ -24,9 +24,9 @@ It's highly recommended that you add the following NPM scripts to your `package.
 ```
 
 
-### I'm using a VM, and Webpack isn't picking up my file changes.
+### I'm using a VM, and webpack isn't picking up my file changes.
 
-If you're running `npm run dev` through a VM, you may find that file changes are not picked up by Webpack. If that's the case, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
+If you're running `npm run dev` through a VM, you may find that file changes are not picked up by webpack. If that's the case, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
 
 ```js
 "scripts": {
@@ -46,17 +46,17 @@ body {
 }
 ```
 
-When referencing a relative path, always think in terms of the current file. As such, Webpack will look for `resources/assets/img/example.jpg`. If it can't find it, it'll then begin searching for the file location, including within `node_modules`. If it still can't be found, you'll receive the error:
+When referencing a relative path, always think in terms of the current file. As such, webpack will look for `resources/assets/img/example.jpg`. If it can't find it, it'll then begin searching for the file location, including within `node_modules`. If it still can't be found, you'll receive the error:
 
 ```
- ERROR  Failed to compile with 1 errors                                                                                                                                                                                                                                      
+ ERROR  Failed to compile with 1 errors
 
 This dependency was not found in node_modules:
 ```
 
 You have two possible solutions:
 
-1. Make sure that `resources/assets/img/example.jpg` exists. 
+1. Make sure that `resources/assets/img/example.jpg` exists.
 2. Add the following to your `webpack.mix.js` file to disable CSS url() processing.
 
 ```
@@ -73,9 +73,9 @@ This is particularly useful for legacy projects where your folder structure is a
 
 If you're not using Laravel, your `mix-manifest.json` file will be dumped into the project root. If you need to change this, call `mix.setPublicPath('dist/');`, and your manifest file will now be saved in that base directory.
 
-### How Do I autoload modules with Webpack?
+### How Do I autoload modules with webpack?
 
-Through its `ProvidePlugin` plugin, Webpack allows you to automatically load modules, where needed. A common use-case for this is when we need to pull in jQuery.
+Through its `ProvidePlugin` plugin, webpack allows you to automatically load modules, where needed. A common use-case for this is when we need to pull in jQuery.
 
 ```js
 new webpack.ProvidePlugin({
@@ -100,7 +100,7 @@ mix.autoload({
 
 ### How might I manually add CoffeeScript compilation?
 
-Very easily! Most of the time, you only need to research the necessary steps for adding X to Webpack, and then reference those instructions within the `mix.webpackConfig()` method of your `webpack.mix.js` file. The object you provide to this method will be merged with Mix's default config.
+Very easily! Most of the time, you only need to research the necessary steps for adding X to webpack, and then reference those instructions within the `mix.webpackConfig()` method of your `webpack.mix.js` file. The object you provide to this method will be merged with Mix's default config.
 
 Here's how you might add CoffeeScript support.
 
@@ -115,4 +115,4 @@ mix.js('resources/assets/js/app.coffee', 'public/js')
             ]
         }
    });
-   
+
