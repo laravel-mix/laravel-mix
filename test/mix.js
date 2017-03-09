@@ -117,7 +117,8 @@ test('that it calculates the output correctly', t => {
     t.deepEqual({
         path: './',
         filename: '[name].js',
-        publicPath: './'
+        chunkFilename:"dist/[name].js",
+        publicPath: ''
     }, mix.config.output());
 
 
@@ -127,7 +128,8 @@ test('that it calculates the output correctly', t => {
     t.deepEqual({
         path: '/',
         filename: '[name].js',
-        publicPath: 'http://localhost:8080/'
+        chunkFilename:"dist/[name].js",
+        publicPath: 'http://localhost:8080'
     }, mix.config.output());
 
 
@@ -138,7 +140,8 @@ test('that it calculates the output correctly', t => {
     t.deepEqual({
         path: './',
         filename: '[name].js',
-        publicPath: './'
+        chunkFilename:"dist/[name].js",
+        publicPath: ''
     }, mix.config.output());
 });
 
@@ -155,7 +158,8 @@ test('that it calculates versioned output correctly', t => {
     t.deepEqual({
         path: './',
         filename: '[name].[chunkhash].js',
-        publicPath: './'
+        chunkFilename:"dist/[name].[chunkhash].js",
+        publicPath: ''
     }, mix.config.output());
 
     // // Enabling Hot Reloading should change this output.
@@ -164,7 +168,8 @@ test('that it calculates versioned output correctly', t => {
     t.deepEqual({
         path: '/',
         filename: '[name].[chunkhash].js',
-        publicPath: 'http://localhost:8080/'
+        chunkFilename: "dist/[name].[chunkhash].js",
+        publicPath: 'http://localhost:8080'
     }, mix.config.output());
 
     mix.config.hmr = false;
@@ -173,9 +178,9 @@ test('that it calculates versioned output correctly', t => {
     t.deepEqual({
         path: './',
         filename: '[name].[chunkhash].js',
-        publicPath: './'
+        chunkFilename:"dist/[name].[chunkhash].js",
+        publicPath: ''
     }, mix.config.output());
-
 });
 
 
