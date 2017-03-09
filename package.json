@@ -3,6 +3,10 @@
   "version": "0.3.0",
   "description": "Laravel Mix fork with Stylus support.",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rogervila/laravel-mix-stylus.git"
+  },
   "scripts": {
     "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules",
     "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
