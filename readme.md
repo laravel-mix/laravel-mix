@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/rogervila/laravel-mix-stylus.svg?branch=master)](https://travis-ci.org/rogervila/laravel-mix-stylus)
 [![Watch Dependencies](https://david-dm.org/rogervila/laravel-mix-stylus.svg)](https://david-dm.org/rogervila/laravel-mix-stylus.svg)
+[![CircleCI](https://circleci.com/gh/rogervila/laravel-mix-stylus.svg?style=svg)](https://circleci.com/gh/rogervila/laravel-mix-stylus)
 
 ## Introduction
 
