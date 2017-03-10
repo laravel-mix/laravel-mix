@@ -1,6 +1,6 @@
 import test from 'ava';
-import mix from '../src/Mix';
 import path from 'path';
+let mix = require('../src/index').config;
 
 test('that it calculates the project root', t => {
     // The project root should be three dirs up from where

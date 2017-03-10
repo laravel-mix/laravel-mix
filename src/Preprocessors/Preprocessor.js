@@ -1,5 +1,4 @@
 let File = require('../File');
-let Mix = require('../Mix');
 let path = require('path');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -10,8 +9,9 @@ class Preprocessor {
      * @param {string} src
      * @param {string} output
      * @param {object} pluginOptions
+     * @param {object} mixOptions
      */
-    constructor(src, output, pluginOptions) {
+    constructor(src, output, pluginOptions, mixOptions) {
         src = new File(path.resolve(src)).parsePath();
         output = new File(output).parsePath();
 
@@ -24,6 +24,7 @@ class Preprocessor {
         this.src = src;
         this.output = output;
         this.pluginOptions = pluginOptions;
+        this.mixOptions = mixOptions;
     }
 
 
@@ -47,7 +48,7 @@ class Preprocessor {
             test: this.test(),
             use: this.getExtractPlugin().extract({
                 fallback: 'style-loader',
-                use: this.defaultLoaders().concat(this.loaders(Mix.sourceMaps))
+                use: this.defaultLoaders().concat(this.loaders(this.mixOptions.sourceMaps))
             })
         };
     }
@@ -65,13 +66,13 @@ class Preprocessor {
      * Fetch the default Webpack loaders.
      */
     defaultLoaders() {
-        let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
+        let sourceMap = this.mixOptions.sourcemaps ? '?sourceMap' : '';
 
         return [
             {
                 loader: 'css-loader' + sourceMap,
                 options: {
-                    url: Mix.options.processCssUrls
+                    url: this.mixOptions.processCssUrls
                 }
             },
             { loader: 'postcss-loader' + sourceMap }
@@ -85,8 +86,8 @@ class Preprocessor {
      * @param {object} output
      */
     outputPath() {
-        let regex = new RegExp('^(\.\/)?' + Mix.publicPath);
-        let pathVariant = Mix.versioning ? 'hashedPath' : 'path';
+        let regex = new RegExp('^(\.\/)?' + this.mixOptions.publicPath);
+        let pathVariant = this.mixOptions.versioning ? 'hashedPath' : 'path';
 
         return this.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
     }

@@ -1,30 +1,28 @@
 import test from 'ava';
-import * as mix from '../src/index';
-const Mix = mix.config;
+var mix = require('../src/index');
+var Mix = mix.config;
 import path from 'path';
 import File from '../src/File';
 import sinon from 'sinon';
 
+let entry = path.resolve('src/mock-entry.js');
+
 test.afterEach('cleanup', t => {
-    Mix.reset();
+    Mix.entryBuilder.reset();
 });
 
 
 test('that it uses a default entry, if mix.js() is never called', t => {
-    let entry = path.resolve('src/mock-entry.js');
-
     t.deepEqual(
         { mix: [entry] },
         Mix.entry()
     );
 
-    new Mix.File(entry).delete();
+    // new Mix.File(entry).delete();
 });
 
 
 test('that you can use mix.sass() without mix.js()', t => {
-    let entry = path.resolve('src/mock-entry.js');
-
     mix.sass('sass/stub.scss', 'dist');
 
     t.deepEqual(
@@ -36,35 +34,6 @@ test('that you can use mix.sass() without mix.js()', t => {
         },
         Mix.entry()
     );
-
-    new Mix.File(entry).delete();
-});
-
-
-test('that Mix initializes properly', t => {
-    let initSpy = sinon.spy(Mix, 'initialize');
-
-    // Test if (rootPath) branch
-    Mix.initialize(path.resolve(__dirname, 'fixtures'));
-    t.true(initSpy.called);
-
-    // Test rootPath = '' branch
-    Mix.initialize();
-    t.true(initSpy.called);
-
-    // Test if (this.versioning) branch
-    Mix.versioning = true;
-    Mix.initialize();
-    t.true(initSpy.called);
-    Mix.versioning = false;
-
-    // Test if (this.isUsingLaravel()) branch
-    let artisan = new mix.config.File('./artisan').write('I am Laravel');
-    Mix.initialize();
-    t.true(initSpy.called);
-    t.is(Mix.publicPath, 'public');
-    artisan.delete();
-    t.is(initSpy.callCount, 4);
 });
 
 
@@ -80,7 +49,8 @@ test('that it determines the JS paths', t => {
     t.is('dist/stub.js', js[0].output.path);
     t.falsy(js[0].vendor);
 
-    Mix.reset();
+    // reset
+    Mix.js = [];
 
     // We can also pass an array of entry scripts, to be bundled together.
     mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');
@@ -94,15 +64,15 @@ test('that it calculates the output correctly', t => {
        .sass('sass/stub.scss', 'dist');
 
     t.deepEqual({
-        path: './',
+        path: '',
         filename: '[name].js',
         chunkFilename:"dist/[name].js",
         publicPath: ''
     }, mix.config.output());
 
 
-    // // Enabling Hot Reloading should change this output.
-    mix.config.hmr = true;
+    // Enabling Hot Reloading should change this output.
+    Mix.options.hmr = true;
 
     t.deepEqual({
         path: '/',
@@ -112,12 +82,12 @@ test('that it calculates the output correctly', t => {
     }, mix.config.output());
 
 
-    // // Extracting vendor libraries should change this output.
-    mix.config.hmr = false;
+    // Extracting vendor libraries should change this output.
+    Mix.options.hmr = false;
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: './',
+        path: '',
         filename: '[name].js',
         chunkFilename:"dist/[name].js",
         publicPath: ''
@@ -135,31 +105,31 @@ test('that it calculates versioned output correctly', t => {
     mix.config.inProduction = true;
 
     t.deepEqual({
-        path: './',
+        path: '',
         filename: '[name].[chunkhash].js',
         chunkFilename:"dist/[name].[chunkhash].js",
         publicPath: ''
-    }, mix.config.output());
+    }, Mix.output());
 
     // // Enabling Hot Reloading should change this output.
-    mix.config.hmr = true;
+    Mix.options.hmr = true;
 
     t.deepEqual({
         path: '/',
         filename: '[name].[chunkhash].js',
         chunkFilename: "dist/[name].[chunkhash].js",
         publicPath: 'http://localhost:8080'
-    }, mix.config.output());
+    }, Mix.output());
 
-    mix.config.hmr = false;
+    Mix.options.hmr = false;
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: './',
+        path: '',
         filename: '[name].[chunkhash].js',
         chunkFilename:"dist/[name].[chunkhash].js",
         publicPath: ''
-    }, mix.config.output());
+    }, Mix.output());
 });
 
 
@@ -175,19 +145,21 @@ test('that it knows if it is running within a Laravel project', t => {
 });
 
 
-
 test('that it detects hmr correctly', t => {
     let root = path.resolve(__dirname);
     mix.setPublicPath(root);
-    let hmrFile = Mix.publicPath + '/hot';
+    let hmrFile = Mix.options.publicPath + '/hot';
 
     Mix.detectHotReloading(); // normal
-    t.false(Mix.hmr);
+    t.false(Mix.options.hmr);
+
     Mix.detectHotReloading(true); // force hmr mode
-    t.true(Mix.hmr);
+    t.true(Mix.options.hmr);
     t.true(File.exists(hmrFile));
+    Mix.options.hmr = false; // reset
+
     Mix.detectHotReloading(); // run it again in normal mode to delete the file
-    t.false(Mix.hmr);
+    t.false(Mix.options.hmr);
     t.false(File.exists(hmrFile));
 });
 

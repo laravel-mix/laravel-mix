@@ -1,11 +1,12 @@
 import test from 'ava';
-import * as mix from '../src/index';
+let mix = require('../src/index');
 import File from '../src/File';
 import path from 'path';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
-
-test.afterEach(() => mix.config.reset());
+test.afterEach(() => {
+    mix.config.copy = []; // reset
+});
 
 test('that it can copy a file to a new location', t => {
     let from = new File(path.resolve(__dirname, 'from.txt'));

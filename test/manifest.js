@@ -19,7 +19,7 @@ test.before(t => {
     cssFile = new File(path.resolve(__dirname, 'fixtures/app.css')).write('css file');
     jsFile = new File(path.resolve(__dirname, 'fixtures/app.js')).write('js file');
 
-    manifest = new Manifest(manifestFile.file);
+    manifest = new Manifest(__dirname);
 });
 
 
