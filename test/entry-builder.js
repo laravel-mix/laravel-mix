@@ -2,7 +2,12 @@ import test from 'ava';
 import mix from '../src/index';
 import {resolve} from 'path';
 
-test.afterEach(t => mix.config.reset());
+test.afterEach(t => {
+    mix.config.js = [];
+    mix.config.preprocessors = false;
+    mix.config.extract = false;
+    mix.config.entryBuilder.reset();
+});
 
 test('that it builds the entry for basic JS and vendor extraction', t => {
     mix.js('src/app.js', 'dist')

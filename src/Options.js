@@ -1,5 +1,74 @@
 module.exports = {
     /**
+     * Determine if webpack should be triggered in a production environment.
+     *
+     * @type {Booolean}
+     */
+    production:  (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
+
+
+    /**
+     * Determine if we should enable hot reloading.
+     *
+     * @type {Boolean}
+     */
+    hmr: process.argv.includes('--hot'),
+
+
+    /**
+     * Determine if sourcemaps should be created for the build.
+     *
+     * @type {Boolean}
+     */
+    sourcemaps: false,
+
+
+    /**
+     * Determine if notifications should be displayed for each build.
+     *
+     * @type {Boolean}
+     */
+    notifications: true,
+
+
+    /**
+     * The public path for the build.
+     *
+     * @type {String}
+     */
+    publicPath: '',
+
+
+    /**
+     * The resource root for the build.
+     *
+     * @type {String}
+     */
+    resourceRoot: '/',
+
+
+    /**
+     * The default Babel configuration.
+     *
+     * @type {Object}
+     */
+    babel: {
+        cacheDirectory: true,
+        presets: [
+            ['es2015', { 'modules': false }]
+        ]
+    },
+
+
+    /**
+     * Determine if the bundled assets should be versioned.
+     *
+     * @type {Boolean}
+     */
+    versioning: false,
+
+
+    /**
      * Whether to extract .vue component styles into a dedicated file.
      * You may provide a boolean, or a dedicated path to extract to.
      *

@@ -329,7 +329,7 @@ if (Mix.browserSync) {
 }
 
 
-if (Mix.notifications) {
+if (Mix.options.notifications) {
     module.exports.plugins.push(
         new plugins.WebpackNotifierPlugin({
             title: 'Laravel Mix',

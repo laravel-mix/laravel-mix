@@ -1,11 +1,11 @@
 import test from 'ava';
-import * as mix from '../src/index';
-const Mix = mix.config;
+import mix from '../src/index';
 import path from 'path';
-import File from '../src/File';
 import sinon from 'sinon';
-
 var one, two, output;
+
+let Mix = mix.config;
+let File = Mix.File;
 
 test.beforeEach(t => {
     one = new File(
@@ -30,7 +30,11 @@ test.afterEach(t => {
 
     process.env.NODE_ENV = 'development';
 
-    Mix.reset();
+
+    // reset
+    Mix.events.events = {};
+    var Concat = require('../src/Concat');
+    Mix.concat = new Concat(Mix.events);
 });
 
 
@@ -63,8 +67,6 @@ test('that it can combine files while applying versioning', t => {
 
     // We'll listen for the "combined" event, so that
     // we can fetch the generated file names.
-
-    // Mix.events.listen('combined', files => generatedFiles = files);
     Mix.events.listen('combined', files => {
         // And then we'll ensure that the manifest contains the
         // output path, as well as the hashed version.

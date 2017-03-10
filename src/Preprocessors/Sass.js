@@ -1,5 +1,4 @@
 let Preprocessor = require('./Preprocessor');
-let Mix = require('../Mix');
 
 class Sass extends Preprocessor {
     /**
@@ -10,7 +9,7 @@ class Sass extends Preprocessor {
             { loader: 'sass-loader', options: this.sassPluginOptions() }
         ];
 
-        if (Mix.options.processCssUrls) {
+        if (this.mixOptions.processCssUrls) {
             loaders.unshift(
                 { loader: 'resolve-url-loader' + (sourceMaps ? '?sourceMap' : '') }
             );

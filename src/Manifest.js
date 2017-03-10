@@ -1,15 +1,16 @@
+let path = require('path');
 let File = require('./File');
-let Mix = require('./index');
 let objectValues = require('lodash').values;
 
 class Manifest {
     /**
      * Create a new Manifest instance.
      *
-     * @param {string} path
+     * @param {string} publicPath
      */
-    constructor(path) {
-        this.path = path;
+    constructor(publicPath) {
+        this.publicPath = publicPath;
+        this.path = path.join(publicPath, 'mix-manifest.json');
         this.manifest = {};
         this.cache = this.exists() ? this.read() : {};
     }
@@ -139,7 +140,7 @@ class Manifest {
      * @param {string} path
      */
     preparePath(path) {
-        return path.replace(new RegExp('^' + Mix.config.publicPath), '')
+        return path.replace(new RegExp('^' + this.publicPath), '')
                    .replace(/\\/g, '/');
     }
 
