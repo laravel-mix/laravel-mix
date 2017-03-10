@@ -89,27 +89,6 @@ test('that it determines the JS paths', t => {
 });
 
 
-test('that it can merge a user\'s Webpack config', t => {
-    mix.webpackConfig({ entry: 'override' });
-    t.deepEqual(
-        Mix.finalize({ entry: 'default' }),
-        { entry: 'override' }
-    );
-
-    mix.webpackConfig({ entry: [1] });
-    t.deepEqual(
-        Mix.finalize({ entry: [2] }),
-        { entry: [2, 1] }
-    );
-
-    Mix.webpackConfig = null;
-    t.deepEqual(
-        Mix.finalize({ entry: 'default' }),
-        { entry: 'default' }
-    );
-});
-
-
 test('that it calculates the output correctly', t => {
     mix.js('js/stub.js', 'dist')
        .sass('sass/stub.scss', 'dist');
