@@ -2,4 +2,6 @@ machine:
   node:
     version: 6
 test:
-  pre: npm install --force
+  pre: 
+    - npm -v
+    - npm install --force
