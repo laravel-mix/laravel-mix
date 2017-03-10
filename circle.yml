@@ -4,4 +4,4 @@ machine:
 test:
   pre: 
     - npm -v
-    - npm install --force
+    - npm install md5 --save-dev
