@@ -4,7 +4,6 @@ let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
 let Concat = require('./Concat');
-let mergeWith = require('lodash').mergeWith;
 let EntryBuilder = require('./EntryBuilder');
 let Dispatcher = require('./Dispatcher');
 let options = require('./Options');
@@ -82,15 +81,8 @@ class Mix {
     finalize(webpackConfig) {
         if (! this.webpackConfig) return webpackConfig;
 
-        mergeWith(webpackConfig, this.webpackConfig,
-            (objValue, srcValue) => {
-                if (Array.isArray(objValue)) {
-                    return objValue.concat(srcValue);
-                }
-            }
-        );
-
-        return webpackConfig;
+        return require('webpack-merge')
+            .smart(webpackConfig, this.webpackConfig);
     }
 
 
