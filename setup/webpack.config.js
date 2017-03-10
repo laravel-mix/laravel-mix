@@ -402,4 +402,9 @@ module.exports.plugins.push(
  | If mix.webpackConfig() is called, we'll merge it in, and build!
  |
  */
-module.exports = Mix.finalize(module.exports);
+
+if (Mix.webpackConfig) {
+    module.exports = require('webpack-merge').smart(
+        module.exports, Mix.webpackConfig
+    );
+}

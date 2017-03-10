@@ -74,19 +74,6 @@ class Mix {
 
 
     /**
-     * Finalize the Webpack configuration.
-     *
-     * @param {object} webpackConfig
-     */
-    finalize(webpackConfig) {
-        if (! this.webpackConfig) return webpackConfig;
-
-        return require('webpack-merge')
-            .smart(webpackConfig, this.webpackConfig);
-    }
-
-
-    /**
      * Prepare the Webpack entry object.
      */
     entry() {
