@@ -6,12 +6,12 @@ class Sass extends Preprocessor {
      */
     loaders(sourceMaps) {
         let loaders = [
-            { loader: 'sass-loader', options: this.sassPluginOptions() }
+            { loader: 'sass-loader' + (sourceMaps ? '?sourceMap' : ''), options: this.sassPluginOptions() }
         ];
 
         if (this.mixOptions.processCssUrls) {
             loaders.unshift(
-                { loader: 'resolve-url-loader' + (sourceMaps ? '?sourceMap' : '') }
+                { loader: 'resolve-url-loader' }
             );
         }
 
