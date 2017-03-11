@@ -149,7 +149,7 @@ module.exports.module = {
 
                     return 'images/vendor/' + path.replace(/\\/g, '/').replace(/((.*(node_modules|bower_components))|images|image|img|assets)\//g, '') + '?[hash]';
                 },
-                publicPath: Mix.resourceRoot
+                publicPath: Mix.options.resourceRoot
             }
         },
 
@@ -164,7 +164,7 @@ module.exports.module = {
 
                     return 'fonts/vendor/' + path.replace(/\\/g, '/').replace(/((.*(node_modules|bower_components))|fonts|font|assets)\//g, '') + '?[hash]';
                 },
-                publicPath: Mix.resourceRoot
+                publicPath: Mix.options.resourceRoot
             }
         },
 
@@ -173,7 +173,7 @@ module.exports.module = {
             loader: 'file-loader',
             options: {
                 name: '[name].[ext]?[hash]',
-                publicPath: Mix.resourceRoot
+                publicPath: Mix.options.resourceRoot
             }
         }
     ]
