@@ -320,7 +320,9 @@ class Api {
      * @param {string} path
      */
     setPublicPath(path) {
-        this.Mix.options.publicPath = path;
+        this.Mix.publicPath = new this.Mix.File(path)
+            .parsePath()
+            .pathWithoutExt;
 
         return this;
     };
