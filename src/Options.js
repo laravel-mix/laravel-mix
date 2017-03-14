@@ -55,7 +55,12 @@ module.exports = {
     babel: {
         cacheDirectory: true,
         presets: [
-            ['es2015', { 'modules': false }]
+            ['env', {
+                'modules': false,
+                'targets': {
+                    'browsers': ['> 2%']
+                }
+            }]
         ]
     },
 
