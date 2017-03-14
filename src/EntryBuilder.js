@@ -108,15 +108,31 @@ class EntryBuilder {
     addVendors() {
         if (! this.mix.js.length || ! this.mix.extract) return this;
 
-        this.mix.extract.forEach(extract => {
-            let vendorPath = extract.output();
+        this.mix.extract.forEach(extract => this.addVendor(extract));
 
-            this.extractions.push(vendorPath);
-
-            this.entry.add(vendorPath, extract.libs);
-        });
+        // We also need to extract webpack's manifest file,
+        // so that it doesn't bust the cache.
+        this.extractions.push(
+            path.join(this.extractionBase, 'manifest').replace(/\\/g, '/')
+        );
 
         return this;
+    }
+
+
+    /**
+     * Add a single vendor extraction to the entry object.
+     *
+     * @param {object} extract
+     */
+    addVendor(extract) {
+        let vendorPath = extract.output();
+
+        this.extractions.push(vendorPath);
+
+        this.extractionBase = new this.mix.File(vendorPath).parsePath().base;
+
+        this.entry.add(vendorPath, extract.libs);
     }
 
 

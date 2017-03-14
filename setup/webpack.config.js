@@ -356,13 +356,9 @@ if (Mix.copy) {
 }
 
 if (Mix.extract) {
-    let basePath = new Mix.File(Mix.entryBuilder.extractions[0]).parsePath().base;
-
     plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: Mix.entryBuilder.extractions.concat([
-                path.join(basePath, 'manifest').replace(/\\/g, '/')
-            ]),
+            names: Mix.entryBuilder.extractions,
             minChunks: Infinity
         })
     );
