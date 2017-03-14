@@ -195,7 +195,7 @@ if (Mix.preprocessors) {
     });
 }
 
-module.exports.module.rules = rules;
+module.exports.module = { rules }
 
 
 
@@ -290,7 +290,7 @@ module.exports.devServer = {
  |
  */
 
-plugins.push([
+plugins.push(
     new webpack.ProvidePlugin(Mix.autoload || {
         jQuery: 'jquery',
         $: 'jquery',
@@ -314,7 +314,7 @@ plugins.push([
             output: { path: './' }
         }
     })
-]);
+);
 
 if (Mix.browserSync) {
     plugins.push(
