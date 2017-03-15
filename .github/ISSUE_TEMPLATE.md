@@ -7,7 +7,7 @@
 4. Are you using a custom .babelrc file? If so, that may affect your compile, as we depend upon the es2015 plugin with modules set to false.
 t-->
 
-- Laravel Mix Version: #.#.#
+- Laravel Mix Version: #.#.# (`npm list --depth=0`)
 - Node Version (`node -v`): 
 - NPM Version (`npm -v`): 
 - OS: 
