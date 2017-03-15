@@ -141,21 +141,26 @@ let rules = [
 
     {
         test: /\.(png|jpe?g|gif)$/,
-        loader: 'file-loader',
-        options: {
-            name: path => {
-                if (! /node_modules|bower_components/.test(path)) {
-                    return 'images/[name].[ext]?[hash]';
-                }
+        loaders: [
+            {
+                loader: 'file-loader',
+                options: {
+                    name: path => {
+                        if (! /node_modules|bower_components/.test(path)) {
+                            return 'images/[name].[ext]?[hash]';
+                        }
 
-                return 'images/vendor/' + path
-                    .replace(/\\/g, '/')
-                    .replace(
-                        /((.*(node_modules|bower_components))|images|image|img|assets)\//g, ''
-                    ) + '?[hash]';
+                        return 'images/vendor/' + path
+                            .replace(/\\/g, '/')
+                            .replace(
+                                /((.*(node_modules|bower_components))|images|image|img|assets)\//g, ''
+                            ) + '?[hash]';
+                    },
+                    publicPath: Mix.options.resourceRoot
+                }
             },
-            publicPath: Mix.options.resourceRoot
-        }
+            'img-loader'
+        ]
     },
 
     {
