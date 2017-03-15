@@ -37,6 +37,7 @@
     "friendly-errors-webpack-plugin": "^1.5.0",
     "fs": "0.0.1-security",
     "html-loader": "^0.4.4",
+    "img-loader": "^2.0.0",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "lodash": "^4.17.4",
