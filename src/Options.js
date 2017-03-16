@@ -130,6 +130,17 @@ module.exports = {
 
 
     /**
+     * Determine if Mix should ask the friendly errors plugin to
+     * clear the console before outputting the results or not.
+     *
+     * https://github.com/geowarin/friendly-errors-webpack-plugin#options
+     *
+     * @type {Boolean}
+     */
+    clearConsole: true,
+
+
+    /**
      * Merge the given options with the current defaults.
      *
      * @param {object} options
