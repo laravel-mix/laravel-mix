@@ -80,7 +80,7 @@ class Mix {
             path: this.options.hmr ? '/' : this.options.publicPath,
             filename: filename,
             chunkFilename: chunkFilename,
-            publicPath: this.options.hmr ? 'http://localhost:8080' : ''
+            publicPath: this.options.hmr ? 'http://localhost:8080' : './'
         };
     }
 
