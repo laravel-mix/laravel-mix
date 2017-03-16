@@ -302,7 +302,7 @@ plugins.push(
         jquery: 'jquery'
     }),
 
-    new webpackPlugins.FriendlyErrorsWebpackPlugin(),
+    new webpackPlugins.FriendlyErrorsWebpackPlugin({ clearConsole: Mix.options.clearConsole }),
 
     new webpackPlugins.StatsWriterPlugin({
         filename: 'mix-manifest.json',
