@@ -19,6 +19,6 @@ module.exports.plugins = {
     CopyWebpackPlugin: require('copy-webpack-plugin'),
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
     StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
-    WebpackMd5HashPlugin: require('webpack-md5-hash'),
+    WebpackChunkHashPlugin: require('webpack-chunk-hash'),
     BrowserSyncPlugin: require('browser-sync-webpack-plugin')
 };
