@@ -305,8 +305,6 @@ plugins.push(
         transform: Mix.manifest.transform.bind(Mix.manifest),
     }),
 
-    new webpackPlugins.WebpackMd5HashPlugin(),
-
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
@@ -362,6 +360,13 @@ if (Mix.extract) {
             names: Mix.entryBuilder.extractions,
             minChunks: Infinity
         })
+    );
+}
+
+if (Mix.options.versioning) {
+    plugins.push(
+        new webpack[Mix.inProduction ? 'HashedModuleIdsPlugin': 'NamedModulesPlugin'](),
+        new webpackPlugins.WebpackChunkHashPlugin()
     );
 }
 
