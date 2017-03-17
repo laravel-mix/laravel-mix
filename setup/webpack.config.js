@@ -296,11 +296,7 @@ module.exports.devServer = {
  */
 
 plugins.push(
-    new webpack.ProvidePlugin(Mix.autoload || {
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery'
-    }),
+    new webpack.ProvidePlugin(Mix.autoload || {}),
 
     new webpackPlugins.FriendlyErrorsWebpackPlugin(),
 
