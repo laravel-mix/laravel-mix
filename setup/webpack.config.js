@@ -298,7 +298,7 @@ module.exports.devServer = {
 plugins.push(
     new webpack.ProvidePlugin(Mix.autoload || {}),
 
-    new webpackPlugins.FriendlyErrorsWebpackPlugin(),
+    new webpackPlugins.FriendlyErrorsWebpackPlugin({ clearConsole: Mix.options.clearConsole }),
 
     new webpackPlugins.StatsWriterPlugin({
         filename: 'mix-manifest.json',
