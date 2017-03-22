@@ -133,6 +133,8 @@ With this addition to your `webpack.mix.js` file, we will no longer match `url()
 }
 ```
 
+> As an added bonus, when you disable url processing, your Webpack Sass compilation and extraction can compile far more quickly.
+
 ### PostCSS Plugins
 
 By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As a result, you are free to use the latest CSS 3 syntax, with the understanding that we'll apply any necessary browser-prefixes automatically.
