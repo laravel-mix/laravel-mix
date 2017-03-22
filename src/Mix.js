@@ -79,7 +79,7 @@ class Mix {
         return {
             path: path.resolve(this.options.hmr ? '/' : this.options.publicPath),
             filename: filename,
-            chunkFilename: chunkFilename,
+            chunkFilename: chunkFilename.replace(/^\//, ''),
             publicPath: this.options.hmr ? 'http://localhost:8080' : ''
         };
     }
