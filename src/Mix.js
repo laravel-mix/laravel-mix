@@ -109,7 +109,7 @@ class Mix {
         let filename = this.versioning ? '[name].[chunkhash].js' : '[name].js';
 
         return {
-            path: this.hmr ? '/' : this.publicPath,
+            path: path.resolve(this.hmr ? '/' : this.publicPath),
             filename: filename,
             publicPath: this.hmr ? 'http://localhost:8080/' : './'
         };
