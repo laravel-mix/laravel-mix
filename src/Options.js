@@ -58,7 +58,8 @@ module.exports = {
             ['env', {
                 'modules': false,
                 'targets': {
-                    'browsers': ['> 2%']
+                    'browsers': ['> 2%'],
+                    uglify: true
                 }
             }]
         ]
