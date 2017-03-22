@@ -135,7 +135,7 @@ class Mix {
     vueExtractTextPlugin() {
         let VueExtractTextPluginFactory = require('./Vue/ExtractTextPluginFactory');
 
-        return new VueExtractTextPluginFactory(this.options.extractVueStyles).build();
+        return new VueExtractTextPluginFactory(this, this.options.extractVueStyles).build();
     }
 };
 

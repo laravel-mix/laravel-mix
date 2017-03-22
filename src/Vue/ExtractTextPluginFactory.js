@@ -1,4 +1,3 @@
-let Mix = require('../Mix');
 let path = require('path');
 let WebpackExtractPlugin = require('extract-text-webpack-plugin')
 
@@ -8,13 +7,14 @@ class ExtractTextPluginFactory {
      *
      * @param {string|boolean} cssPath
      */
-    constructor(cssPath) {
+    constructor(mix, cssPath) {
         if (typeof cssPath === 'boolean') {
-            cssPath = path.join(Mix.js.base, 'vue-styles.css');
+            cssPath = path.join(mix.js.base || '', 'vue-styles.css');
 
             this.useDefault = true;
         }
 
+        this.mix = mix;
         this.path = cssPath;
     }
 
@@ -23,9 +23,9 @@ class ExtractTextPluginFactory {
      * Build up the necessary ExtractTextPlugin instance.
      */
     build() {
-        if (Mix.preprocessors) {
+        if (this.mix.preprocessors) {
             // If no output path is provided, we can use the default plugin.
-            if (this.useDefault) return Mix.preprocessors[0].getExtractPlugin();
+            if (this.useDefault) return this.mix.preprocessors[0].getExtractPlugin();
 
             // If what the user passed matches the output to mix.preprocessor(),
             // then we can use that plugin instead and append to it.
@@ -41,7 +41,7 @@ class ExtractTextPluginFactory {
      * Check if the the provided path is already registered as an extract instance.
      */
     pluginIsAlreadyBuilt() {
-        return Mix.preprocessors.find(
+        return this.mix.preprocessors.find(
             preprocessor => preprocessor.output.path === this.path
         );
     }
@@ -51,7 +51,7 @@ class ExtractTextPluginFactory {
      * Fetch the Extract plugin instance that matches the current output path.
      */
     getPlugin() {
-        return Mix.preprocessors.find(
+        return this.mix.preprocessors.find(
             preprocessor => preprocessor.getExtractPlugin().filename === this.outputPath()
         ).getExtractPlugin();
     }
@@ -61,10 +61,10 @@ class ExtractTextPluginFactory {
      * Prepare the appropriate output path.
      */
     outputPath() {
-        let segments = new Mix.File(this.path).parsePath();
+        let segments = new this.mix.File(this.path).parsePath();
 
         let regex = new RegExp('^(\.\/)?' + Mix.options.publicPath);
-        let pathVariant = Mix.options.versioning ? 'hashedPath' : 'path';
+        let pathVariant = this.mix.options.versioning ? 'hashedPath' : 'path';
 
         return segments[pathVariant].replace(regex, '').replace(/\\/g, '/');
     }
