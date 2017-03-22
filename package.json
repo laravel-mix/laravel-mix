@@ -53,7 +53,7 @@
     "uglify-js": "^2.7.5",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.1.9",
-    "webpack": "^2.2.0",
+    "webpack": "~2.3.0",
     "webpack-dev-server": "^2.2.0",
     "webpack-md5-hash": "0.0.5",
     "webpack-notifier": "^1.4.1",
