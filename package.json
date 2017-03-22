@@ -11,6 +11,14 @@
     "test": "nyc ava --verbose",
     "posttest": "nyc report --reporter=html"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeffreyWay/laravel-mix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JeffreyWay/laravel-mix/issues"
+  },
+  "homepage": "https://github.com/JeffreyWay/laravel-mix#readme",
   "keywords": [
     "laravel",
     "webpack",
