@@ -64,9 +64,9 @@ test('that it calculates the output correctly', t => {
        .sass('sass/stub.scss', 'dist');
 
     t.deepEqual({
-        path: '',
+        path: path.resolve(''),
         filename: '[name].js',
-        chunkFilename:"dist/[name].js",
+        chunkFilename: "dist/[name].js",
         publicPath: ''
     }, mix.config.output());
 
@@ -75,9 +75,9 @@ test('that it calculates the output correctly', t => {
     Mix.options.hmr = true;
 
     t.deepEqual({
-        path: '/',
+        path: path.resolve('/'),
         filename: '[name].js',
-        chunkFilename:"dist/[name].js",
+        chunkFilename: "dist/[name].js",
         publicPath: 'http://localhost:8080'
     }, mix.config.output());
 
@@ -87,9 +87,9 @@ test('that it calculates the output correctly', t => {
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: '',
+        path: path.resolve(''),
         filename: '[name].js',
-        chunkFilename:"dist/[name].js",
+        chunkFilename: "dist/[name].js",
         publicPath: ''
     }, mix.config.output());
 });
@@ -105,9 +105,9 @@ test('that it calculates versioned output correctly', t => {
     mix.config.inProduction = true;
 
     t.deepEqual({
-        path: '',
+        path: path.resolve(''),
         filename: '[name].[chunkhash].js',
-        chunkFilename:"dist/[name].[chunkhash].js",
+        chunkFilename: "dist/[name].[chunkhash].js",
         publicPath: ''
     }, Mix.output());
 
@@ -115,7 +115,7 @@ test('that it calculates versioned output correctly', t => {
     Mix.options.hmr = true;
 
     t.deepEqual({
-        path: '/',
+        path: path.resolve('/'),
         filename: '[name].[chunkhash].js',
         chunkFilename: "dist/[name].[chunkhash].js",
         publicPath: 'http://localhost:8080'
@@ -125,7 +125,7 @@ test('that it calculates versioned output correctly', t => {
     mix.extract(['some-lib']);
 
     t.deepEqual({
-        path: '',
+        path: path.resolve(''),
         filename: '[name].[chunkhash].js',
         chunkFilename:"dist/[name].[chunkhash].js",
         publicPath: ''
@@ -146,9 +146,7 @@ test('that it knows if it is running within a Laravel project', t => {
 
 
 test('that it detects hmr correctly', t => {
-    let root = path.resolve(__dirname);
-    mix.setPublicPath(root);
-    let hmrFile = Mix.options.publicPath + '/hot';
+    let hmrFile = path.resolve(__dirname, Mix.options.publicPath + '/hot');
 
     Mix.detectHotReloading(); // normal
     t.false(Mix.options.hmr);
@@ -161,22 +159,6 @@ test('that it detects hmr correctly', t => {
     Mix.detectHotReloading(); // run it again in normal mode to delete the file
     t.false(Mix.options.hmr);
     t.false(File.exists(hmrFile));
-});
-
-
-test('that it reads the Babel config properly', t => {
-    // First lets test when there's no .babelrc
-    let root = path.resolve(__dirname);
-    Mix.Paths.setRootPath(root);
-    let config = Mix.babelConfig();
-    t.is(config,
-        "?{\"cacheDirectory\":true,\"presets\":[[\"es2015\",{\"modules\":false}]]}");
-
-    // Now, create a fake .babelrc
-    let babel = new File(root + '/.babelrc').write(JSON.stringify({ "presets": ["react", ["es2015", { "modules": false }]] }));
-    config = Mix.babelConfig();
-    t.is(config, "?cacheDirectory");
-    babel.delete();
 });
 
 
