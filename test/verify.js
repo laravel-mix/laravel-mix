@@ -21,3 +21,10 @@ test('that it verifies mix.extract() params', t => {
     t.throws(() => Verify.extract('without-array'));
     t.notThrows(() => Verify.extract(['lib']));
 });
+
+test('that it verifies mix.task() params', t => {
+    t.throws(() => Verify.task());
+    t.throws(() => Verify.task('task'));
+    t.notThrows(() => Verify.task('task', (mix) => {}));
+    t.notThrows(() => Verify.task('task', ['another-task']))
+});

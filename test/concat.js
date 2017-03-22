@@ -65,7 +65,7 @@ test('that it can combine files while applying versioning', t => {
     mix.combine([one.path(), two.path()], output.path())
        .version();
 
-    Mix.initialize();
+    Mix.initialize({});
 
     // We'll listen for the "combined" event, so that
     // we can fetch the generated file names.

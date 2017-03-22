@@ -17,8 +17,10 @@ class Mix {
 
     /**
      * Initialize the user's webpack.mix.js configuration file.
+     *
+     * @param {string} tasks
      */
-    initialize() {
+    initialize({tasks}) {
         if (this.isUsingLaravel()) {
             this.publicPath = options.publicPath = 'public';
         }
@@ -27,6 +29,8 @@ class Mix {
 
         // This is where we load the user's webpack.mix.js config.
         File.exists(Paths.mix() + '.js') && require(Paths.mix());
+
+        typeof tasks === 'string' && global.tasks.initializeTasks(tasks.split(','));
 
         if (options.versioning) {
             this.versioning = new Versioning(this.version, this.manifest).watch();

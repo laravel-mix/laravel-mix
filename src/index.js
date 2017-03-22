@@ -4,6 +4,7 @@ global.path = require('path');
 global.Paths = new (require('./Paths'));
 global.events = new (require('./Dispatcher'));
 global.File = require('./File');
+global.tasks = require('./Tasks');
 
 let mix = new (require('./Mix'));
 
