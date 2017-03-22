@@ -17,6 +17,7 @@ class Mix {
         this.File = File;
         this.Paths = new Paths;
         this.hmr = false;
+        this.hmrHttps = false;
         this.sourcemaps = false;
         this.notifications = true;
         this.versioning = false;
@@ -111,7 +112,7 @@ class Mix {
         return {
             path: path.resolve(this.hmr ? '/' : this.publicPath),
             filename: filename,
-            publicPath: this.hmr ? 'http://localhost:8080/' : './'
+            publicPath: this.hmr ? 'http' + (this.hmrHttps ? 's' : '') + '://localhost:8080/' : './'
         };
     }
 
@@ -135,6 +136,12 @@ class Mix {
             file.write('hot reloading enabled');
         } else {
             this.hmr = false;
+        }
+
+        if (process.argv.includes('--https')) {
+            this.hmrHttps = true;
+        } else {
+            this.hmrHttps = false;
         }
     }
 
