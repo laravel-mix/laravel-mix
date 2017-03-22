@@ -113,7 +113,7 @@ class Concat {
         if (! babel) babel = require('babel-core');
 
         return babel.transform(
-            contents, { presets: ['es2015'] }
+            contents, { presets: ['env'] }
         ).code;
     }
 
