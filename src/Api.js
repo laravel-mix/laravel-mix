@@ -308,7 +308,7 @@ class Api {
      * Disable all OS notifications.
      */
     disableNotifications() {
-        this.Mix.notifications = false;
+        this.Mix.options.notifications = false;
 
         return this;
     };
@@ -320,7 +320,7 @@ class Api {
      * @param {string} path
      */
     setPublicPath(path) {
-        this.Mix.publicPath = new this.Mix.File(path)
+        this.Mix.options.publicPath = new this.Mix.File(path)
             .parsePath()
             .pathWithoutExt;
 
