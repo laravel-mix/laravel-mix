@@ -133,6 +133,22 @@ class Api {
 
 
     /**
+     * Register standalone-Sass compilation that will not run through Webpack.
+     *
+     * @param {string} src
+     * @param {string} output
+     * @param {object} pluginOptions
+     */
+    standaloneSass(src, output, pluginOptions = {}) {
+        let Preprocessor = require('./Preprocessors/StandaloneSass');
+
+        this.Mix.standaloneSass = new Preprocessor(src, output, pluginOptions);
+
+        return this;
+    };
+
+
+    /**
      * Register Less compilation.
      *
      * @param {string} src
