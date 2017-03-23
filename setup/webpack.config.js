@@ -261,7 +261,7 @@ module.exports.performance = { hints: false };
  |
  */
 
-module.exports.devtool = Mix.sourcemaps;
+module.exports.devtool = Mix.options.sourcemaps;
 
 
 

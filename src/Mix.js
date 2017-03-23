@@ -29,7 +29,9 @@ class Mix {
      * Initialize the user's webpack.mix.js configuration file.
      */
     initialize() {
-        if (this.isUsingLaravel()) this.options.publicPath = 'public';
+        if (this.isUsingLaravel()) {
+            this.publicPath = this.options.publicPath = 'public';
+        }
 
         // This is where we load the user's webpack.mix.js config.
         this.File.exists(this.Paths.mix() + '.js') && require(this.Paths.mix());
