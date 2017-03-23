@@ -39,7 +39,7 @@ class Mix {
         if (this.concat.any()) this.concat.watch();
         if (this.options.versioning) this.enableVersioning();
 
-        if (this.standaloneSass) this.standaloneSass.run(this.inProduction);
+        if (this.standaloneSass) this.standaloneSass.run(this);
 
         this.detectHotReloading();
     }

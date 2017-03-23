@@ -301,7 +301,7 @@ class Api {
      * Enable sourcemap support.
      */
     sourceMaps() {
-        this.Mix.sourcemaps = (this.Mix.inProduction ? false : '#inline-source-map');
+        this.Mix.options.sourcemaps = (this.Mix.inProduction ? false : '#inline-source-map');
 
         return this;
     };

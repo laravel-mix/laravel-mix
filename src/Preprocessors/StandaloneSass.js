@@ -31,10 +31,10 @@ class StandaloneSass {
     /**
      * Run the node-sass compiler.
      *
-     * @param {Boolean} inProduction
+     * @param {Boolean} Mix
      */
-    run(inProduction) {
-        this.inProduction = inProduction;
+    run(Mix) {
+        this.Mix = Mix;
 
         this.compile();
 
@@ -53,13 +53,26 @@ class StandaloneSass {
      * @param {Boolean} watch
      */
     compile(watch) {
-        this.command = spawn('node-sass', [
-            this.src.path,
-            this.output.path,
-            watch ? '-w' : '',
+        let options = [
             '--precision=8',
-            '--output-style=' + (this.inProduction ? 'compressed' : 'expanded')
-        ]);
+            '--output-style=' + (this.Mix.inProduction ? 'compressed' : 'expanded'),
+        ];
+
+        if (watch) options.push('-w');
+
+        if (this.pluginOptions.includePaths) {
+            this.pluginOptions.includePaths.forEach(path => options.push('--include-path=' + path))
+        }
+
+        if (this.Mix.options.sourcemap) {
+            this.pluginOptions.push('--sourcemap=true', '--source-map-embed')
+        }
+
+        if ()
+
+        this.command = spawn(
+            'node-sass', [this.src.path, this.output.path].concat(options)
+        );
 
         return this;
     }

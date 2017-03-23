@@ -48,7 +48,7 @@ class Preprocessor {
             test: this.test(),
             use: this.getExtractPlugin().extract({
                 fallback: 'style-loader',
-                use: this.defaultLoaders().concat(this.loaders(this.mixOptions.sourceMaps))
+                use: this.defaultLoaders().concat(this.loaders(this.mixOptions.sourcemaps))
             })
         };
     }
