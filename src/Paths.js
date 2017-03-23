@@ -1,4 +1,5 @@
 let path = require('path');
+let argv = require('yargs').argv;
 
 class Paths {
     /**
@@ -25,7 +26,7 @@ class Paths {
      * Determine the path to the user's webpack.mix.js file.
      */
     mix() {
-        return this.root('webpack.mix');
+        return argv.env && argv.env.mixfile !== undefined ? this.root(argv.env.mixfile) : this.root('webpack.mix');
     }
 
 
