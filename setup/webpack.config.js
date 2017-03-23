@@ -391,10 +391,14 @@ if (Mix.inProduction) {
             'process.env': {
                 NODE_ENV: '"production"'
             }
-        }),
-
-        new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+        })
     );
+
+    if (Mix.options.uglify) {
+        plugins.push(
+            new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+        );
+    }
 }
 
 plugins.push(
