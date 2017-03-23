@@ -63,7 +63,7 @@ class ExtractTextPluginFactory {
     outputPath() {
         let segments = new this.mix.File(this.path).parsePath();
 
-        let regex = new RegExp('^(\.\/)?' + Mix.options.publicPath);
+        let regex = new RegExp('^(\.\/)?' + this.mix.options.publicPath);
         let pathVariant = this.mix.options.versioning ? 'hashedPath' : 'path';
 
         return segments[pathVariant].replace(regex, '').replace(/\\/g, '/');
