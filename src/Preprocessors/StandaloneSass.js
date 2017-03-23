@@ -53,8 +53,14 @@ class StandaloneSass {
      * @param {Boolean} watch
      */
     compile(watch) {
+        let output = this.output.path;
+
+        if (! output.startsWith(this.Mix.publicPath)) {
+            output = path.join(this.Mix.publicPath, output);
+        }
+
         this.command = spawn(
-            'node-sass', [this.src.path, this.output.path].concat(this.options(watch))
+            'node-sass', [this.src.path, output].concat(this.options(watch))
         );
 
         return this;
