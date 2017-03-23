@@ -53,6 +53,19 @@ class StandaloneSass {
      * @param {Boolean} watch
      */
     compile(watch) {
+        this.command = spawn(
+            'node-sass', [this.src.path, this.output.path].concat(this.options(watch))
+        );
+
+        return this;
+    }
+
+    /**
+     * Fetch the node-sass options.
+     *
+     * @param {Boolean} watch
+     */
+    options(watch) {
         let options = [
             '--precision=8',
             '--output-style=' + (this.Mix.inProduction ? 'compressed' : 'expanded'),
@@ -61,20 +74,16 @@ class StandaloneSass {
         if (watch) options.push('-w');
 
         if (this.pluginOptions.includePaths) {
-            this.pluginOptions.includePaths.forEach(path => options.push('--include-path=' + path))
+            this.pluginOptions.includePaths.forEach(
+                path => options.push('--include-path=' + path)
+            );
         }
 
-        if (this.Mix.options.sourcemap) {
-            this.pluginOptions.push('--sourcemap=true', '--source-map-embed')
+        if (this.Mix.options.sourcemaps && ! this.Mix.inProduction) {
+            options.push('--source-map-embed');
         }
 
-        if ()
-
-        this.command = spawn(
-            'node-sass', [this.src.path, this.output.path].concat(options)
-        );
-
-        return this;
+        return options;
     }
 
 
