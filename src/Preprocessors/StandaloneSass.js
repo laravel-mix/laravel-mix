@@ -38,12 +38,7 @@ class StandaloneSass {
 
         this.compile();
 
-        if (this.shouldWatch) this.watch(true);
-
-        this.whenOutputIsAvailable((output, event) => {
-            if (event === 'error') this.onFail(output);
-            if (event === 'success') this.onSuccess(output);
-        });
+        if (this.shouldWatch) this.watch();
     }
 
 
@@ -52,7 +47,7 @@ class StandaloneSass {
      *
      * @param {Boolean} watch
      */
-    compile(watch) {
+    compile(watch = false) {
         let output = this.output.path;
 
         if (! output.startsWith(this.Mix.publicPath)) {
@@ -62,6 +57,11 @@ class StandaloneSass {
         this.command = spawn(
             'node-sass', [this.src.path, output].concat(this.options(watch))
         );
+
+        this.whenOutputIsAvailable((output, event) => {
+            if (event === 'error') this.onFail(output);
+            if (event === 'success') this.onSuccess(output);
+        });
 
         return this;
     }
@@ -77,7 +77,7 @@ class StandaloneSass {
             '--output-style=' + (this.Mix.inProduction ? 'compressed' : 'expanded'),
         ];
 
-        if (watch) options.push('-w');
+        if (watch) options.push('--watch');
 
         if (this.pluginOptions.includePaths) {
             this.pluginOptions.includePaths.forEach(
@@ -126,7 +126,7 @@ class StandaloneSass {
      */
     onSuccess(output) {
         console.log("\n");
-        console.log('Sass Compilation Successful!');
+        console.log(output);
 
         notifier.notify({
             title: 'Laravel Mix',
