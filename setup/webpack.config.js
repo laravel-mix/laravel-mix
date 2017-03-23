@@ -393,8 +393,13 @@ if (Mix.inProduction) {
             }
         }),
 
-        new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
     );
+
+    if (Mix.options.uglify) {
+        plugins.push(
+            new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+        );
+    }
 }
 
 plugins.push(
