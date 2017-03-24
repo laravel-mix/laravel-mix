@@ -23,5 +23,6 @@ module.exports.plugins = {
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
     StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
     WebpackChunkHashPlugin: require('webpack-chunk-hash'),
-    BrowserSyncPlugin: require('browser-sync-webpack-plugin')
+    BrowserSyncPlugin: require('browser-sync-webpack-plugin'),
+    MockEntryPlugin: require('./WebpackPlugins/MockEntryPlugin')
 };

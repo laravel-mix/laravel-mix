@@ -407,6 +407,10 @@ plugins.push(
     )
 );
 
+if (! Mix.js.length) {
+    plugins.push(new webpackPlugins.MockEntryPlugin(Mix.output().path));
+}
+
 module.exports.plugins = plugins;
 
 
