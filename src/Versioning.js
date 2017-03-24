@@ -1,6 +1,4 @@
-let path = require('path');
 let objectValues = require('lodash').values;
-let File = require('./File');
 
 class Versioning {
     /**
@@ -10,10 +8,27 @@ class Versioning {
      * @param {object} manifest
      * @param {string} publicPath
      */
-    constructor(manualFiles = [], manifest, publicPath) {
+    constructor(manualFiles = [], manifest) {
         this.manualFiles = manualFiles.map(file => new File(file));
         this.manifest = manifest;
-        this.publicPath = publicPath;
+
+        this.registerEvents();
+    }
+
+
+    /**
+     * Register all relevant event listeners.
+     */
+    registerEvents() {
+        global.events.listen('standalone-sass-compiled', compiledFile => {
+            compiledFile.rename(compiledFile.versionedPath());
+
+            // this.prune();
+        });
+
+        global.events.listen(
+            ['build', 'combined'], () => this.prune()
+        );
     }
 
 
@@ -28,7 +43,7 @@ class Versioning {
             file.watch(file => {
                 // Delete the old versioned file.
                 File.find(
-                    path.join(this.publicPath, this.manifest.get(file))
+                    path.join(global.options.publicPath, this.manifest.get(file))
                 ).delete();
 
                 // And then whip up a new one.
@@ -75,11 +90,14 @@ class Versioning {
         cachedFiles
             .filter(file => ! currentFiles.includes(file))
             .map(file => {
-                return file.startsWith(this.publicPath)
+                return file.startsWith(global.options.publicPath)
                     ? file
-                    : path.join(this.publicPath, file);
+                    : path.join(global.options.publicPath, file);
             })
-            .forEach(file => this.manifest.remove(file));
+            .forEach(file => {
+                console.log('removing ' + file);
+                this.manifest.remove(file)
+            });
 
         this.manifest.refresh();
         this.manifest.cache = currentFiles;

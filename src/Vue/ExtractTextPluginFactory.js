@@ -1,4 +1,3 @@
-let path = require('path');
 let WebpackExtractPlugin = require('extract-text-webpack-plugin')
 
 class ExtractTextPluginFactory {
@@ -61,10 +60,10 @@ class ExtractTextPluginFactory {
      * Prepare the appropriate output path.
      */
     outputPath() {
-        let segments = new this.mix.File(this.path).parsePath();
+        let segments = new File(this.path).parsePath();
 
-        let regex = new RegExp('^(\.\/)?' + this.mix.options.publicPath);
-        let pathVariant = this.mix.options.versioning ? 'hashedPath' : 'path';
+        let regex = new RegExp('^(\.\/)?' + global.options.publicPath);
+        let pathVariant = global.options.versioning ? 'hashedPath' : 'path';
 
         return segments[pathVariant].replace(regex, '').replace(/\\/g, '/');
     }

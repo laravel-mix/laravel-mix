@@ -1,11 +1,14 @@
-let Api = require('./Api');
-let Mix = require('./Mix');
+global.options = require('./Options');
+global.path = require('path');
+global.Paths = new (require('./Paths'));
+global.events = new (require('./Dispatcher'));
+global.File = require('./File');
 
-let mix = new Mix();
+let mix = new (require('./Mix'));
 
 // The default export for this module will in fact
 // be the fluent API for your webpack.mix.js file.
-module.exports = api = new Api(mix);
+module.exports = api = new (require('./Api'))(mix);
 module.exports.mix = api; // Deprecated.
 
 // However, you can access the Mix instance like this:

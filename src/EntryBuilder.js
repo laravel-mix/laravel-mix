@@ -1,4 +1,3 @@
-let path = require('path');
 let Collection = new require('./Collection');
 
 class EntryBuilder {
@@ -54,7 +53,7 @@ class EntryBuilder {
     entryName(output) {
         return output.pathWithoutExt
             .replace(/\\/g, '/')
-            .replace(this.mix.options.publicPath + '/', '/');
+            .replace(global.options.publicPath + '/', '/');
     }
 
 
@@ -63,11 +62,11 @@ class EntryBuilder {
      * user hasn't called mix.js().
      */
     addTemporaryScript() {
-        let file = new this.mix.File(path.resolve(__dirname, 'mock-entry.js'));
+        let file = new File(path.resolve(__dirname, 'mock-entry.js'));
 
         this.entry.add('mix', file.path());
 
-        this.mix.events.listen('build', stats => {
+        global.events.listen('build', stats => {
             // If no mix.js() call was requested, we'll also need
             // to delete the output script for the user. Since we
             // won't know the exact name, we'll hunt it down.
@@ -76,7 +75,7 @@ class EntryBuilder {
                 .find(asset => asset.chunkNames.includes('mix'))
                 .name;
 
-            this.mix.File.find(
+            File.find(
                 path.resolve(this.mix.output().path, temporaryOutputFile)
             ).delete();
         });
@@ -130,7 +129,7 @@ class EntryBuilder {
 
         this.extractions.push(vendorPath);
 
-        this.extractionBase = new this.mix.File(vendorPath).parsePath().base;
+        this.extractionBase = new File(vendorPath).parsePath().base;
 
         this.entry.add(vendorPath, extract.libs);
     }

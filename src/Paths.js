@@ -1,5 +1,3 @@
-let path = require('path');
-
 class Paths {
     /**
      * Create a new Paths instance.

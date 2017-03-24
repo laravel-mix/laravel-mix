@@ -403,7 +403,7 @@ if (Mix.inProduction) {
 
 plugins.push(
     new webpackPlugins.WebpackOnBuildPlugin(
-        stats => Mix.events.fire('build', stats)
+        stats => global.events.fire('build', stats)
     )
 );
 

@@ -30,12 +30,8 @@ class StandaloneSass {
 
     /**
      * Run the node-sass compiler.
-     *
-     * @param {Boolean} Mix
      */
-    run(Mix) {
-        this.Mix = Mix;
-
+    run() {
         this.compile();
 
         if (this.shouldWatch) this.watch();
@@ -50,8 +46,8 @@ class StandaloneSass {
     compile(watch = false) {
         let output = this.output.path;
 
-        if (! output.startsWith(this.Mix.publicPath)) {
-            output = path.join(this.Mix.publicPath, output);
+        if (! output.startsWith(options.publicPath)) {
+            output = path.join(options.publicPath, output);
         }
 
         this.command = spawn(
@@ -72,24 +68,24 @@ class StandaloneSass {
      * @param {Boolean} watch
      */
     options(watch) {
-        let options = [
+        let sassOptions = [
             '--precision=8',
-            '--output-style=' + (this.Mix.inProduction ? 'compressed' : 'expanded'),
+            '--output-style=' + (global.options.production ? 'compressed' : 'expanded'),
         ];
 
-        if (watch) options.push('--watch');
+        if (watch) sassOptions.push('--watch');
 
         if (this.pluginOptions.includePaths) {
             this.pluginOptions.includePaths.forEach(
-                path => options.push('--include-path=' + path)
+                path => sassOptions.push('--include-path=' + path)
             );
         }
 
-        if (this.Mix.options.sourcemaps && ! this.Mix.inProduction) {
-            options.push('--source-map-embed');
+        if (global.options.sourcemaps && ! global.options.production) {
+            sassOptions.push('--source-map-embed');
         }
 
-        return options;
+        return sassOptions;
     }
 
 
@@ -125,14 +121,20 @@ class StandaloneSass {
      * @param {string} output
      */
     onSuccess(output) {
+        console.log('Successful compile');
         console.log("\n");
         console.log(output);
 
         notifier.notify({
             title: 'Laravel Mix',
             message: 'Sass Compilation Successful',
+
             contentImage: 'node_modules/laravel-mix/icons/laravel.png'
         });
+
+        global.events.fire(
+            'standalone-sass-compiled', File.find(this.output.path)
+        );
     }
 
 

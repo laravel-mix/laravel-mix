@@ -1,5 +1,4 @@
 let assert = require('assert');
-let File = require('./File');
 let exec = require('child_process').execSync;
 
 class Verify {

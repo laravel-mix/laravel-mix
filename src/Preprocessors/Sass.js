@@ -9,7 +9,7 @@ class Sass extends Preprocessor {
             { loader: 'sass-loader', options: this.sassPluginOptions() }
         ];
 
-        if (this.mixOptions.processCssUrls) {
+        if (global.options.processCssUrls) {
             loaders.unshift(
                 { loader: 'resolve-url-loader' + (sourceMaps ? '?sourceMap' : '') }
             );
