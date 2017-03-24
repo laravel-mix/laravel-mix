@@ -121,7 +121,6 @@ class StandaloneSass {
      * @param {string} output
      */
     onSuccess(output) {
-        console.log('Successful compile');
         console.log("\n");
         console.log(output);
 
