@@ -3,59 +3,11 @@ import mix from '../src/index';
 var Mix = mix.config;
 import sinon from 'sinon';
 
-let entry = path.resolve('src/mock-entry.js');
+let mockEntry = path.resolve('src/mock-entry.js');
 
 test.afterEach('cleanup', t => {
-    Mix.entryBuilder.reset();
+    global.entry = Mix.entry().reset();
 });
-
-
-test('that it uses a default entry, if mix.js() is never called', t => {
-    t.deepEqual(
-        { mix: [entry] },
-        Mix.entry()
-    );
-});
-
-
-test('that you can use mix.sass() without mix.js()', t => {
-    mix.sass('sass/stub.scss', 'dist');
-
-    t.deepEqual(
-        {
-            mix: [
-                entry,
-                path.resolve('sass/stub.scss')
-            ]
-        },
-        Mix.entry()
-    );
-});
-
-
-test('that it determines the JS paths', t => {
-    mix.js('js/stub.js', 'dist')
-       .js('js/another.js', 'dist');
-
-    let js = global.scripts.get();
-    let root = path.resolve(__dirname, '../');
-
-    t.is(path.resolve(root, 'js/stub.js'), js[0].entry[0].path);
-    t.is(path.resolve(root, 'js/another.js'), js[1].entry[0].path);
-    t.is('dist/stub.js', js[0].output.path);
-    t.falsy(js[0].vendor);
-
-    // reset
-    global.scripts.reset();
-
-    // We can also pass an array of entry scripts, to be bundled together.
-    mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');
-
-    js = global.scripts.get();
-    t.is('dist/bundle.js', js[0].output.path);
-    t.is(2, js[0].entry.length);
-});
-
 
 test('that it calculates the output correctly', t => {
     mix.js('js/stub.js', 'dist')

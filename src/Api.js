@@ -17,7 +17,7 @@ class Api {
      * @param {string} output
      */
     js(entry, output) {
-        global.scripts.add(entry, output);
+        global.entry.addScript(entry, output);
 
         return this;
     };
@@ -48,17 +48,7 @@ class Api {
      * @param {string} output
      */
     extract(libs, output) {
-        this.Mix.extract = (this.Mix.extract || []).concat({
-            libs,
-            output: () => {
-                if (output) {
-                    return output.replace(/\.js$/, '')
-                                 .replace(global.options.publicPath, '');
-                }
-
-                return path.join(global.scripts.base, 'vendor').replace(/\\/g, '/');
-            }
-        });
+        global.entry.addVendor(libs, output);
 
         return this;
     };
@@ -174,6 +164,8 @@ class Api {
      */
     preprocess(type, src, output, pluginOptions) {
         Verify.preprocessor(type, src, output);
+
+        global.entry.addStylesheet(src, output);
 
         let Preprocessor = require('./Preprocessors/' + type);
 

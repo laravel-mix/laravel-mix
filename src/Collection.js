@@ -35,6 +35,14 @@ class Collection {
 
 
     /**
+     * Determine if there are any items in the collection.
+     */
+    any() {
+        return Object.keys(this.get()).length > 0;
+    }
+
+
+    /**
      * Empty the collection.
      */
     empty() {

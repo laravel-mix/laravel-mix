@@ -45,7 +45,7 @@ module.exports.context = Mix.Paths.root();
  |
  */
 
-module.exports.entry = Mix.entry();
+module.exports.entry = Mix.entry().get();
 
 
 
@@ -200,7 +200,7 @@ if (Mix.preprocessors) {
     });
 }
 
-module.exports.module = { rules }
+module.exports.module = { rules };
 
 
 
@@ -354,10 +354,10 @@ if (Mix.copy) {
     });
 }
 
-if (Mix.extract) {
+if (Mix.entry().hasExtractions()) {
     plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: Mix.entryBuilder.extractions,
+            names: Mix.entry().getExtractions(),
             minChunks: Infinity
         })
     );
@@ -375,7 +375,7 @@ if (Mix.options.purifyCss) {
 
     // By default, we'll scan all Blade and Vue files in our project.
     let paths = glob.sync(Mix.Paths.root('resources/views/**/*.blade.php')).concat(
-        global.scripts.get().reduce((carry, js) => {
+        Mix.entry().get().scripts().reduce((carry, js) => {
             return carry.concat(glob.sync(js.entry.map(entry => entry.base) + '/**/*.vue'));
         }, [])
     );
@@ -407,7 +407,7 @@ plugins.push(
     )
 );
 
-if (! global.scripts.any()) {
+if (! Mix.entry().hasScripts()) {
     plugins.push(new webpackPlugins.MockEntryPlugin(Mix.output().path));
 }
 

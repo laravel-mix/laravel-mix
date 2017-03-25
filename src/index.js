@@ -1,5 +1,5 @@
 global.options = require('./Options');
-global.scripts = new (require('./Scripts'));
+global.entry = require('./Entry');
 global.path = require('path');
 global.Paths = new (require('./Paths'));
 global.events = new (require('./Dispatcher'));

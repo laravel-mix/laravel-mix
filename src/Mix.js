@@ -1,14 +1,12 @@
 let Concat = require('./Concat');
 let Manifest = require('./Manifest');
 let Versioning = require('./Versioning');
-let EntryBuilder = require('./EntryBuilder');
 
 class Mix {
     /**
      * Create a new Laravel Mix instance.
      */
     constructor() {
-        this.entryBuilder = new EntryBuilder(this);
         this.concat = new Concat();
         this.inProduction = options.production;
         this.publicPath = options.publicPath;
@@ -46,7 +44,7 @@ class Mix {
      * Prepare the Webpack entry object.
      */
     entry() {
-        return this.entryBuilder.build();
+        return global.entry;
     }
 
 
@@ -56,7 +54,7 @@ class Mix {
     output() {
         let filename = options.versioning ? '[name].[chunkhash].js' : '[name].js';
         let chunkFilename = path.join(
-            global.scripts.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
+            global.entry.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
         );
 
         return {
