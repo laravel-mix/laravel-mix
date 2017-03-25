@@ -127,7 +127,6 @@ class StandaloneSass {
         notifier.notify({
             title: 'Laravel Mix',
             message: 'Sass Compilation Successful',
-
             contentImage: 'node_modules/laravel-mix/icons/laravel.png'
         });
 

@@ -1,8 +1,6 @@
 import test from 'ava';
-var mix = require('../src/index');
+import mix from '../src/index';
 var Mix = mix.config;
-import path from 'path';
-import File from '../src/File';
 import sinon from 'sinon';
 
 let entry = path.resolve('src/mock-entry.js');
@@ -17,8 +15,6 @@ test('that it uses a default entry, if mix.js() is never called', t => {
         { mix: [entry] },
         Mix.entry()
     );
-
-    // new Mix.File(entry).delete();
 });
 
 
@@ -137,9 +133,9 @@ test('that it knows if it is running within a Laravel project', t => {
     t.falsy(mix.config.isUsingLaravel());
 
     // If an ./artisan file exists in the root, it's a Laravel app.
-    let artisan = new mix.config.File('./artisan').write('I am Laravel');
+    let artisan = new File('./artisan').write('I am Laravel');
 
-    t.truthy(mix.config.isUsingLaravel());
+    t.truthy(Mix.isUsingLaravel());
 
     artisan.delete();
 });
@@ -167,16 +163,16 @@ test('that the setter methods work properly', t => {
     let root = path.resolve(__dirname);
 
     mix.disableNotifications();
-    t.false(Mix.notifications);
+    t.false(Mix.options.notifications);
 
-    // Source maps
-    mix.config.inProduction = false;
+    // // Source maps
+    Mix.inProduction = false;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, '#inline-source-map');
+    t.is(Mix.options.sourcemaps, '#inline-source-map');
 
-    mix.config.inProduction = true;
+    Mix.inProduction = true;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, false);
+    t.is(Mix.options.sourcemaps, false);
 
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);

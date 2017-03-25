@@ -1,7 +1,6 @@
 import test from 'ava';
-import path from 'path';
+import mix from '../src/index';
 import Manifest from '../src/Manifest';
-import File from '../src/File';
 import ObjectValues from 'lodash/values';
 
 let manifestPath = null;
@@ -19,7 +18,9 @@ test.before(t => {
     cssFile = new File(path.resolve(__dirname, 'fixtures/app.css')).write('css file');
     jsFile = new File(path.resolve(__dirname, 'fixtures/app.js')).write('js file');
 
-    manifest = new Manifest(__dirname);
+    global.options.publicPath = __dirname;
+
+    manifest = new Manifest();
 });
 
 
@@ -27,11 +28,6 @@ test.after.always(t => {
     manifestFile.delete();
     cssFile.delete();
     jsFile.delete();
-});
-
-
-test('that the mix-manifest.json path is set', t => {
-    t.is(manifest.path, manifestPath);
 });
 
 

@@ -53,7 +53,7 @@ test('it deletes the temporary script once Webpack finishes compiling.', t => {
     };
 
     // And create the corresponding temporary script.
-    new mix.config.File(temporaryScript).write('stub');
+    new File(temporaryScript).write('stub');
 
     // If we then set up a Mix configuration, and build the entry...
     mix.sass('src/app.scss', 'dist');
@@ -61,6 +61,6 @@ test('it deletes the temporary script once Webpack finishes compiling.', t => {
 
     // Then, after the build event is fired, the temporary script
     // should be deleted. It's not needed by the user.
-    mix.config.events.fire('build', statsFake);
-    t.false(mix.config.File.exists());
+    global.events.fire('build', statsFake);
+    t.false(File.exists());
 });
