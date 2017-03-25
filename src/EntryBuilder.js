@@ -30,11 +30,11 @@ class EntryBuilder {
      * Add any relevant scripts to the entry.
      */
     addScripts() {
-        if (! this.mix.js.length) {
+        if (! global.scripts.any()) {
             return this.addTemporaryScript();
         }
 
-        this.mix.js.forEach(paths => {
+        global.scripts.forEach(paths => {
             this.entry.add(
                 this.entryName(paths.output),
                 paths.entry.map(src => src.path)
@@ -91,7 +91,7 @@ class EntryBuilder {
      * Add any relevant vendor extractions to the entry.
      */
     addVendors() {
-        if (! this.mix.js.length || ! this.mix.extract) return this;
+        if (! global.scripts.any() || ! this.mix.extract) return this;
 
         this.mix.extract.forEach(extract => this.addVendor(extract));
 

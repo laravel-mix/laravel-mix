@@ -17,23 +17,7 @@ class Api {
      * @param {string} output
      */
     js(entry, output) {
-        Verify.js(entry, output);
-
-        entry = [].concat(entry).map(file => {
-            return new File(path.resolve(file)).parsePath();
-        });
-
-        output = new File(output).parsePath();
-
-        if (output.isDir) {
-            output = new File(
-                path.join(output.path, entry[0].file)
-            ).parsePath();
-        }
-
-        this.Mix.js = (this.Mix.js || []).concat({ entry, output });
-
-        this.Mix.js.base = output.base.replace(global.options.publicPath, '');
+        global.scripts.add(entry, output);
 
         return this;
     };
@@ -72,7 +56,7 @@ class Api {
                                  .replace(global.options.publicPath, '');
                 }
 
-                return path.join(this.Mix.js.base, 'vendor').replace(/\\/g, '/');
+                return path.join(global.scripts.base, 'vendor').replace(/\\/g, '/');
             }
         });
 

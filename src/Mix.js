@@ -8,7 +8,6 @@ class Mix {
      * Create a new Laravel Mix instance.
      */
     constructor() {
-        this.js = [];
         this.entryBuilder = new EntryBuilder(this);
         this.concat = new Concat();
         this.inProduction = options.production;
@@ -57,7 +56,7 @@ class Mix {
     output() {
         let filename = options.versioning ? '[name].[chunkhash].js' : '[name].js';
         let chunkFilename = path.join(
-            this.js.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
+            global.scripts.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
         );
 
         return {

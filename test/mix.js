@@ -37,7 +37,7 @@ test('that it determines the JS paths', t => {
     mix.js('js/stub.js', 'dist')
        .js('js/another.js', 'dist');
 
-    let js = mix.config.js;
+    let js = global.scripts.get();
     let root = path.resolve(__dirname, '../');
 
     t.is(path.resolve(root, 'js/stub.js'), js[0].entry[0].path);
@@ -46,12 +46,14 @@ test('that it determines the JS paths', t => {
     t.falsy(js[0].vendor);
 
     // reset
-    Mix.js = [];
+    global.scripts.reset();
 
     // We can also pass an array of entry scripts, to be bundled together.
     mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');
-    t.is('dist/bundle.js', mix.config.js[0].output.path);
-    t.is(2, mix.config.js[0].entry.length);
+
+    js = global.scripts.get();
+    t.is('dist/bundle.js', js[0].output.path);
+    t.is(2, js[0].entry.length);
 });
 
 

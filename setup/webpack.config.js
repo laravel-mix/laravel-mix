@@ -375,7 +375,7 @@ if (Mix.options.purifyCss) {
 
     // By default, we'll scan all Blade and Vue files in our project.
     let paths = glob.sync(Mix.Paths.root('resources/views/**/*.blade.php')).concat(
-        Mix.js.reduce((carry, js) => {
+        global.scripts.get().reduce((carry, js) => {
             return carry.concat(glob.sync(js.entry.map(entry => entry.base) + '/**/*.vue'));
         }, [])
     );
@@ -407,7 +407,7 @@ plugins.push(
     )
 );
 
-if (! Mix.js.length) {
+if (! global.scripts.any()) {
     plugins.push(new webpackPlugins.MockEntryPlugin(Mix.output().path));
 }
 

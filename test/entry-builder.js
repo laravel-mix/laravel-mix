@@ -3,7 +3,7 @@ import mix from '../src/index';
 import {resolve} from 'path';
 
 test.afterEach(t => {
-    mix.config.js = [];
+    global.scripts.reset();
     mix.config.preprocessors = false;
     mix.config.extract = false;
     mix.config.entryBuilder.reset();
