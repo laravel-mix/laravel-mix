@@ -23,7 +23,7 @@ class Versioning {
         global.events.listen('standalone-sass-compiled', compiledFile => {
             compiledFile.rename(compiledFile.versionedPath());
 
-            // this.prune();
+            this.prune();
         });
 
         global.events.listen(
