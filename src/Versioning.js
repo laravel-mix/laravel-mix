@@ -82,7 +82,7 @@ class Versioning {
             .forEach(file => this.manifest.remove(file));
 
         this.manifest.refresh();
-        this.manifest.cache = currentFiles;
+        this.manifest.cache = this.manifest.get();
 
         return currentFiles;
     }
