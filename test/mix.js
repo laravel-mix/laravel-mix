@@ -1,63 +1,13 @@
 import test from 'ava';
-var mix = require('../src/index');
+import mix from '../src/index';
 var Mix = mix.config;
-import path from 'path';
-import File from '../src/File';
 import sinon from 'sinon';
 
-let entry = path.resolve('src/mock-entry.js');
+let mockEntry = path.resolve('src/mock-entry.js');
 
 test.afterEach('cleanup', t => {
-    Mix.entryBuilder.reset();
+    global.entry = Mix.entry().reset();
 });
-
-
-test('that it uses a default entry, if mix.js() is never called', t => {
-    t.deepEqual(
-        { mix: [entry] },
-        Mix.entry()
-    );
-
-    // new Mix.File(entry).delete();
-});
-
-
-test('that you can use mix.sass() without mix.js()', t => {
-    mix.sass('sass/stub.scss', 'dist');
-
-    t.deepEqual(
-        {
-            mix: [
-                entry,
-                path.resolve('sass/stub.scss')
-            ]
-        },
-        Mix.entry()
-    );
-});
-
-
-test('that it determines the JS paths', t => {
-    mix.js('js/stub.js', 'dist')
-       .js('js/another.js', 'dist');
-
-    let js = mix.config.js;
-    let root = path.resolve(__dirname, '../');
-
-    t.is(path.resolve(root, 'js/stub.js'), js[0].entry[0].path);
-    t.is(path.resolve(root, 'js/another.js'), js[1].entry[0].path);
-    t.is('dist/stub.js', js[0].output.path);
-    t.falsy(js[0].vendor);
-
-    // reset
-    Mix.js = [];
-
-    // We can also pass an array of entry scripts, to be bundled together.
-    mix.js(['js/stub.js', 'js/another.js'], 'dist/bundle.js');
-    t.is('dist/bundle.js', mix.config.js[0].output.path);
-    t.is(2, mix.config.js[0].entry.length);
-});
-
 
 test('that it calculates the output correctly', t => {
     mix.js('js/stub.js', 'dist')
@@ -137,9 +87,9 @@ test('that it knows if it is running within a Laravel project', t => {
     t.falsy(mix.config.isUsingLaravel());
 
     // If an ./artisan file exists in the root, it's a Laravel app.
-    let artisan = new mix.config.File('./artisan').write('I am Laravel');
+    let artisan = new File('./artisan').write('I am Laravel');
 
-    t.truthy(mix.config.isUsingLaravel());
+    t.truthy(Mix.isUsingLaravel());
 
     artisan.delete();
 });
@@ -167,16 +117,16 @@ test('that the setter methods work properly', t => {
     let root = path.resolve(__dirname);
 
     mix.disableNotifications();
-    t.false(Mix.notifications);
+    t.false(Mix.options.notifications);
 
-    // Source maps
-    mix.config.inProduction = false;
+    // // Source maps
+    Mix.inProduction = false;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, '#inline-source-map');
+    t.is(Mix.options.sourcemaps, '#inline-source-map');
 
-    mix.config.inProduction = true;
+    Mix.inProduction = true;
     mix.sourceMaps();
-    t.is(Mix.sourcemaps, false);
+    t.is(Mix.options.sourcemaps, false);
 
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);

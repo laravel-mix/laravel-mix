@@ -19,6 +19,8 @@ class Dispatcher {
         events.forEach(event => {
             this.events[event] = (this.events[event] || []).concat(handler);
         });
+
+        return this;
     }
 
 

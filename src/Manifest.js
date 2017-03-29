@@ -1,19 +1,29 @@
-let path = require('path');
-let File = require('./File');
 let objectValues = require('lodash').values;
 let object = require('lodash/fp/object');
 
 class Manifest {
     /**
      * Create a new Manifest instance.
-     *
-     * @param {string} publicPath
      */
-    constructor(publicPath) {
-        this.publicPath = publicPath;
-        this.path = path.join(publicPath, 'mix-manifest.json');
+    constructor() {
         this.cache = this.exists() ? this.read() : {};
         this.manifest = this.cache;
+
+        this.registerEvents();
+    }
+
+
+    /**
+     * Register any applicable event listeners.
+     */
+    registerEvents() {
+        global.events.listen('combined', this.appendCombinedFiles.bind(this))
+            .listen('standalone-sass-compiled', compiledFile => {
+                this.add(compiledFile);
+                this.refresh();
+            });
+
+        return this;
     }
 
 
@@ -24,9 +34,8 @@ class Manifest {
      */
     add(file) {
         let original = this.preparePath(file.file);
-        let modified = this.preparePath(file.versionedPath());
 
-        this.manifest[original] = modified;
+        this.manifest[original] = global.options.versioning ? this.preparePath(file.versionedPath()) : original;
 
         return this;
     }
@@ -45,18 +54,6 @@ class Manifest {
         }
 
         return this.manifest;
-    }
-
-
-    /**
-     * Register any applicable event listeners.
-     *
-     * @param {object} events
-     */
-    listen(events) {
-        events.listen('combined', this.appendCombinedFiles.bind(this));
-
-        return this;
     }
 
 
@@ -125,7 +122,15 @@ class Manifest {
 
         manifest = object.merge(manifest, this.cache);
 
-        File.find(this.path).write(manifest);
+        File.find(this.path()).write(manifest);
+    }
+
+
+    /**
+     * Get the path to the manifest file.
+     */
+    path() {
+        return path.join(global.options.publicPath, 'mix-manifest.json');
     }
 
 
@@ -133,7 +138,7 @@ class Manifest {
      * Determine if the manifest file exists.
      */
     exists() {
-        return File.exists(this.path);
+        return File.exists(this.path());
     }
 
 
@@ -141,7 +146,7 @@ class Manifest {
      * Retrieve the JSON output from the manifest file.
      */
     read() {
-        return JSON.parse(File.find(this.path).read());
+        return JSON.parse(File.find(this.path()).read());
     }
 
 
@@ -151,7 +156,7 @@ class Manifest {
      * @param {string} path
      */
     preparePath(path) {
-        return path.replace(new RegExp('^' + this.publicPath), '')
+        return path.replace(new RegExp('^' +  global.options.publicPath), '')
                    .replace(/\\/g, '/');
     }
 

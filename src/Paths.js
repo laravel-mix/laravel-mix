@@ -1,4 +1,3 @@
-let path = require('path');
 let argv = require('yargs').argv;
 
 class Paths {

@@ -3,6 +3,9 @@ import path from 'path';
 import File from '../src/File';
 import sinon from 'sinon';
 
+global.File = File;
+global.path = path;
+
 test('that it parses a path into segments', t => {
     let file = new File('some/path/to/a/file.txt');
 

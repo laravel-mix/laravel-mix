@@ -1,5 +1,4 @@
 let fs = require('fs');
-let path = require('path');
 let md5 = require('md5');
 let chokidar = require('chokidar');
 let mkdirp = require('mkdirp');

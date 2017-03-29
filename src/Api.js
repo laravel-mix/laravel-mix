@@ -1,4 +1,3 @@
-let path = require('path');
 let Verify = require('./Verify');
 
 class Api {
@@ -18,23 +17,7 @@ class Api {
      * @param {string} output
      */
     js(entry, output) {
-        Verify.js(entry, output);
-
-        entry = [].concat(entry).map(file => {
-            return new this.Mix.File(path.resolve(file)).parsePath();
-        });
-
-        output = new this.Mix.File(output).parsePath();
-
-        if (output.isDir) {
-            output = new this.Mix.File(
-                path.join(output.path, entry[0].file)
-            ).parsePath();
-        }
-
-        this.Mix.js = (this.Mix.js || []).concat({ entry, output });
-
-        this.Mix.js.base = output.base.replace(this.Mix.options.publicPath, '');
+        global.entry.addScript(entry, output);
 
         return this;
     };
@@ -65,17 +48,7 @@ class Api {
      * @param {string} output
      */
     extract(libs, output) {
-        this.Mix.extract = (this.Mix.extract || []).concat({
-            libs,
-            output: () => {
-                if (output) {
-                    return output.replace(/\.js$/, '')
-                                 .replace(this.Mix.options.publicPath, '');
-                }
-
-                return path.join(this.Mix.js.base, 'vendor').replace(/\\/g, '/');
-            }
-        });
+        global.entry.addVendor(libs, output);
 
         return this;
     };
@@ -133,6 +106,22 @@ class Api {
 
 
     /**
+     * Register standalone-Sass compilation that will not run through Webpack.
+     *
+     * @param {string} src
+     * @param {string} output
+     * @param {object} pluginOptions
+     */
+    standaloneSass(src, output, pluginOptions = {}) {
+        let Preprocessor = require('./Preprocessors/StandaloneSass');
+
+        this.Mix.standaloneSass = new Preprocessor(src, output, pluginOptions);
+
+        return this;
+    };
+
+
+    /**
      * Register Less compilation.
      *
      * @param {string} src
@@ -176,10 +165,12 @@ class Api {
     preprocess(type, src, output, pluginOptions) {
         Verify.preprocessor(type, src, output);
 
+        global.entry.addStylesheet(src, output);
+
         let Preprocessor = require('./Preprocessors/' + type);
 
         this.Mix.preprocessors = (this.Mix.preprocessors || []).concat(
-            new Preprocessor(src, output, pluginOptions, this.Mix.options)
+            new Preprocessor(src, output, pluginOptions)
         );
 
         return this;
@@ -247,7 +238,7 @@ class Api {
         [].concat(from).forEach(src => {
             this.Mix.copy.push({
                 from: src,
-                to: this.Mix.Paths.root(to),
+                to: global.Paths.root(to),
                 flatten: flatten
             });
         });
@@ -285,7 +276,7 @@ class Api {
      * Enable sourcemap support.
      */
     sourceMaps() {
-        this.Mix.sourcemaps = (this.Mix.inProduction ? false : '#inline-source-map');
+        global.options.sourcemaps = (this.Mix.inProduction ? false : '#inline-source-map');
 
         return this;
     };
@@ -297,7 +288,7 @@ class Api {
      * @param {string|Array} files
      */
     version(files = []) {
-        this.Mix.options.versioning = true;
+        global.options.versioning = true;
         this.Mix.version = [].concat(files);
 
         return this;
@@ -308,7 +299,7 @@ class Api {
      * Disable all OS notifications.
      */
     disableNotifications() {
-        this.Mix.options.notifications = false;
+        global.options.notifications = false;
 
         return this;
     };
@@ -320,7 +311,7 @@ class Api {
      * @param {string} path
      */
     setPublicPath(path) {
-        this.Mix.options.publicPath = this.Mix.publicPath = new this.Mix.File(path)
+        global.options.publicPath = this.Mix.publicPath = new File(path)
             .parsePath()
             .pathWithoutExt;
 
@@ -334,7 +325,7 @@ class Api {
      * @param {string} path
      */
     setResourceRoot(path) {
-        this.Mix.options.resourceRoot = path;
+        global.options.resourceRoot = path;
 
         return this;
     };
@@ -368,7 +359,7 @@ class Api {
             );
         }
 
-        this.Mix.options.merge(options);
+        global.options.merge(options);
 
         return this;
     };
@@ -380,7 +371,7 @@ class Api {
      * @param {Function} callback
      */
     then(callback) {
-        this.Mix.events.listen('build', callback);
+        global.events.listen('build', callback);
 
         return this;
     }

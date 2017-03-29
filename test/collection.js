@@ -30,3 +30,12 @@ test('that a collection can be emptied', t => {
 
     t.deepEqual({}, collection.get());
 });
+
+
+test('that it can check if the collection has any items', t => {
+    t.false(collection.any());
+
+    collection.add('foo', ['bar']);
+
+    t.true(collection.any());
+})
