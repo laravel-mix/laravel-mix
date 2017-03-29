@@ -130,7 +130,15 @@ let rules = [
 
     {
         test: /\.s[ac]ss$/,
-        include: /node_modules/,
+        exclude: (()=>{
+            if (Mix.preprocessors) {
+                let preprocessorsExcludes = [];
+                Mix.preprocessors.forEach(preprocessor => {
+                    preprocessorsExcludes.push(preprocessor.test());
+                });
+                return preprocessorsExcludes;
+            }
+        })(),
         loaders: ['style-loader', 'css-loader', 'sass-loader']
     },
 
