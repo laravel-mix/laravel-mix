@@ -130,15 +130,7 @@ let rules = [
 
     {
         test: /\.s[ac]ss$/,
-        exclude: (()=>{
-            if (Mix.preprocessors) {
-                let preprocessorsExcludes = [];
-                Mix.preprocessors.forEach(preprocessor => {
-                    preprocessorsExcludes.push(preprocessor.test());
-                });
-                return preprocessorsExcludes;
-            }
-        })(),
+        exclude: Mix.preprocessors.map(preprocessor => preprocessor.test()),
         loaders: ['style-loader', 'css-loader', 'sass-loader']
     },
 
