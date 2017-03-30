@@ -95,7 +95,6 @@ class Versioning {
                     : path.join(global.options.publicPath, file);
             })
             .forEach(file => {
-                console.log('removing ' + file);
                 this.manifest.remove(file)
             });
 
