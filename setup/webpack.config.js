@@ -375,8 +375,8 @@ if (Mix.options.purifyCss) {
 
     // By default, we'll scan all Blade and Vue files in our project.
     let paths = glob.sync(Mix.Paths.root('resources/views/**/*.blade.php')).concat(
-        Mix.entry().get().scripts().reduce((carry, js) => {
-            return carry.concat(glob.sync(js.entry.map(entry => entry.base) + '/**/*.vue'));
+        Mix.entry().scripts.reduce((carry, js) => {
+            return carry.concat(glob.sync(js.base + '/**/*.vue'));
         }, [])
     );
 
