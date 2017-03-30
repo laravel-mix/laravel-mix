@@ -2,6 +2,7 @@
 
 ```js
 mix.sass('src', 'output', pluginOptions);
+mix.standaloneSass('src', 'output', pluginOptions); // Isolated from Webpack build.
 mix.less('src', 'output', pluginOptions);
 mix.stylus('src', 'output', pluginOptions);
 ```
@@ -171,3 +172,11 @@ Done! You may now use and compile custom CSS properties (if that's your thing). 
 ```
 
 Nifty!
+
+### Standalone Sass Builds
+
+If you do not wish Mix and Webpack to process your Sass in any way, you may instead use `mix.standaloneSass()`, which will improve the build time of your app drastically. Just remember: if you choose this route, Webpack won't touch your CSS. It won't rewrite URLs, copy assets (via file-loader), or apply automatic image optimization or CSS purification. If those features are unnecessary for your application, definitely use this option instead of `mix.sass()`.
+
+```js
+mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
+```
