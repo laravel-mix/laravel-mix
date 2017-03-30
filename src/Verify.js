@@ -79,6 +79,24 @@ class Verify {
             }
         }
     }
+
+    /**
+     * Verify that the call the mix.task() is valid.
+     *
+     * @param {string} taskName
+     * @param {(function()|Array)} task
+     */
+    static task(taskName, task) {
+        assert(
+            typeof taskName === 'string',
+            'mix.task() is missing required parameter 1: {string} taskName'
+        );
+
+        assert(
+            typeof task === 'function' || Array.isArray(task),
+            'mix.task() is missing required parameter 2: ({function(mix)}|Array) task'
+        );
+    }
 }
 
 module.exports = Verify;

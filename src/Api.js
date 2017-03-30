@@ -375,6 +375,21 @@ class Api {
 
         return this;
     }
+
+    /**
+     * Add task to tasks collection.
+     *
+     * @param {string} taskName
+     * @param {(function()|Array)} callbackOrDependencies
+     * @returns {Api}
+     */
+    task(taskName, callbackOrDependencies) {
+        Verify.task(taskName, callbackOrDependencies);
+
+        global.tasks.addTask(taskName, callbackOrDependencies);
+
+        return this;
+    }
 }
 
 module.exports = Api;
