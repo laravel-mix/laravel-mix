@@ -8,7 +8,7 @@ class ExtractTextPluginFactory {
      */
     constructor(mix, cssPath) {
         if (typeof cssPath === 'boolean') {
-            cssPath = path.join(global.scripts.base || '', 'vue-styles.css');
+            cssPath = path.join(global.entry.base || '', 'vue-styles.css');
 
             this.useDefault = true;
         }
