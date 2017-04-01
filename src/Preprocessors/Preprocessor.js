@@ -63,16 +63,22 @@ class Preprocessor {
      * Fetch the default Webpack loaders.
      */
     defaultLoaders() {
-        let sourceMap = global.options.sourcemaps ? '?sourceMap' : '';
+        let sourceMap = !!global.options.sourcemaps;
 
         return [
             {
-                loader: 'css-loader' + sourceMap,
+                loader: 'css-loader',
                 options: {
-                    url: global.options.processCssUrls
+                    url: global.options.processCssUrls,
+                    sourceMap: sourceMap
                 }
             },
-            { loader: 'postcss-loader' + sourceMap }
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: sourceMap
+                }
+            }
         ];
     }
 
