@@ -51,7 +51,7 @@ class StandaloneSass {
         }
 
         this.command = spawn(
-            'node-sass', [this.src.path, output].concat(this.options(watch))
+            'node-sass', [this.src.path, output].concat(this.options(watch)), { shell: true }
         );
 
         this.whenOutputIsAvailable((output, event) => {
