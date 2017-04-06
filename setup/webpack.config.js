@@ -164,7 +164,7 @@ let rules = [
     },
 
     {
-        test: /\.(woff2?|ttf|eot|svg|otf)$/,
+        test: /\.(woff2?|ttf|eot|otf)$/,
         loader: 'file-loader',
         options: {
             name: path => {
