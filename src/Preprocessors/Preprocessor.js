@@ -92,7 +92,7 @@ class Preprocessor {
         let regex = new RegExp('^(\.\/)?' + global.options.publicPath);
         let pathVariant = global.options.versioning ? 'hashedPath' : 'path';
 
-        return this.output[pathVariant].replace(regex, '').replace(/\\/g, '/');
+        return this.output[pathVariant].replace(regex, '').replace(/\\/g, '/').replace('[hash]','[contenthash]');
     }
 }
 
