@@ -9,7 +9,7 @@ While, of course, you're free to edit the provided `webpack.config.js` file, in 
 As an example, perhaps you want to add a custom array of modules that should be automatically loaded by webpack. You have two options in this scenario:
 
 1. Edit your `webpack.config.js` file, as needed.
-2. Call `mix.webpackConfig()` within your `webpack.mix.js` file, and pass your overrides. Laravel will then perform a deep merge.
+2. Call `mix.webpackConfig()` within your `webpack.mix.js` file, and pass your overrides. Mix will then perform a deep merge.
 
 Below, as an example, we'll add a custom module path for Laravel Spark.
 
