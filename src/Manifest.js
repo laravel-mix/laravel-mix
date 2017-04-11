@@ -72,7 +72,7 @@ class Manifest {
 
             if (! path.startsWith('/')) path = ('/'+path);
 
-            let original = path.replace(/\.(\w{20})(\..+)/, '$2');
+            let original = path.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
 
             this.manifest[original] = path;
         });
