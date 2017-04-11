@@ -417,12 +417,12 @@ module.exports.plugins = plugins;
 
 /*
  |--------------------------------------------------------------------------
- | Mix Finalizing
+ | Mix Finalizing - Part 1
  |--------------------------------------------------------------------------
  |
- | Now that we've declared the entirety of our Webpack configuration, the
- | final step is to scan for any custom configuration in the Mix file.
- | If mix.webpackConfig() is called, we'll merge it in, and build!
+ | Now that we've declared the entirety of our Webpack configuration, scan
+ | for any custom configuration in the Mix file.
+ | If mix.webpackConfig() is called, we'll merge it in.
  |
  */
 
@@ -430,4 +430,18 @@ if (Mix.webpackConfig) {
     module.exports = require('webpack-merge').smart(
         module.exports, Mix.webpackConfig
     );
+}
+
+/*
+ |--------------------------------------------------------------------------
+ | Mix Finalizing - Part 2
+ |--------------------------------------------------------------------------
+ |
+ | Lastly and if provided via mix.finalizeWebpackConfig, invoke the
+ | finalizer callback to modify the final config object and build!
+ |
+ */
+
+if (Mix.webpackConfigFinalizer) {
+    Mix.webpackConfigFinalizer(module.exports);
 }
