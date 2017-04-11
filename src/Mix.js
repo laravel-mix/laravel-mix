@@ -57,11 +57,13 @@ class Mix {
             global.entry.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
         );
 
+        let http = process.argv.includes('--https') ? 'https' : '';
+
         return {
             path: path.resolve(options.hmr ? '/' : options.publicPath),
             filename: filename,
             chunkFilename: chunkFilename.replace(/^\//, ''),
-            publicPath: options.hmr ? 'http://localhost:8080/' : ''
+            publicPath: options.hmr ? (http + '://localhost:8080/') : ''
         };
     }
 
