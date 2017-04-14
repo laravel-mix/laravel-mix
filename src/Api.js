@@ -274,9 +274,11 @@ class Api {
 
     /**
      * Enable sourcemap support.
+     *
+     * @param {boolean} always
      */
-    sourceMaps() {
-        global.options.sourcemaps = (this.Mix.inProduction ? false : '#inline-source-map');
+    sourceMaps(always = false) {
+        global.options.sourcemaps = ( this.Mix.inProduction ? ( always ? '#source-map' : false ) : '#inline-source-map' );
 
         return this;
     };
