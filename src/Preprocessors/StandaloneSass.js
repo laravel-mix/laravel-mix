@@ -124,11 +124,13 @@ class StandaloneSass {
         console.log("\n");
         console.log(output);
 
-        notifier.notify({
-            title: 'Laravel Mix',
-            message: 'Sass Compilation Successful',
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
-        });
+        if (global.options.notifications) {
+            notifier.notify({
+                title: 'Laravel Mix',
+                message: 'Sass Compilation Successful',
+                contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+            });
+        }
 
         global.events.fire(
             'standalone-sass-compiled', File.find(this.output.path)
@@ -147,12 +149,14 @@ class StandaloneSass {
         console.log();
         console.log(output);
 
-        notifier.notify({
-            title: 'Laravel Mix',
-            subtitle: 'Sass Compilation Failed',
-            message: JSON.parse(output).message,
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
-        });
+        if (global.options.notifications) {
+            notifier.notify({
+                title: 'Laravel Mix',
+                subtitle: 'Sass Compilation Failed',
+                message: JSON.parse(output).message,
+                contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+            });
+        }
 
         if (! this.shouldWatch) process.exit();
     }
