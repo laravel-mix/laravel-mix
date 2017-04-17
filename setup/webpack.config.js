@@ -3,6 +3,23 @@ let glob = require('glob');
 let webpack = require('webpack');
 let Mix = require('laravel-mix').config;
 let webpackPlugins = require('laravel-mix').plugins;
+let dotenv = require('dotenv')
+
+/*
+ |--------------------------------------------------------------------------
+ | Load Environment Variables
+ |--------------------------------------------------------------------------
+ |
+ | Load environment variables from .env file. dotenv will never modify
+ | any environment variables that have already been set.
+ |
+ */
+
+dotenv.config({
+    path: Mix.Paths.root('.env')
+});
+
+
 
 /*
  |--------------------------------------------------------------------------
@@ -390,23 +407,21 @@ if (Mix.options.purifyCss) {
     ));
 }
 
-if (Mix.inProduction) {
+if (Mix.inProduction && Mix.options.uglify) {
     plugins.push(
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        })
+        new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
     );
-
-    if (Mix.options.uglify) {
-        plugins.push(
-            new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
-        );
-    }
 }
 
 plugins.push(
+    new webpack.DefinePlugin(
+        Mix.definitions({
+            NODE_ENV: Mix.inProduction
+                ? 'production'
+                : ( process.env.NODE_ENV || 'development' )
+        })
+    ),
+
     new webpackPlugins.WebpackOnBuildPlugin(
         stats => global.events.fire('build', stats)
     )
