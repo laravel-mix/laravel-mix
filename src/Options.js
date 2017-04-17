@@ -131,6 +131,17 @@ module.exports = {
 
 
     /**
+     * vue-loader specific options.
+     *
+     * @type {Object}
+     */
+    vue: {
+        preLoaders: {},
+        postLoaders: {}
+    },
+
+
+    /**
      * Determine if Mix should ask the friendly errors plugin to
      * clear the console before outputting the results or not.
      *

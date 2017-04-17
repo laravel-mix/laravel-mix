@@ -135,7 +135,11 @@ let rules = [
                 stylus: 'vue-style-loader!css-loader!stylus-loader?paths[]=node_modules'
             },
 
-            postcss: Mix.options.postCss
+            postcss: Mix.options.postCss,
+
+            preLoaders: Mix.options.vue.preLoaders,
+
+            postLoaders: Mix.options.vue.postLoaders
         }
     },
 
