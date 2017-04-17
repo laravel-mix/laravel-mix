@@ -98,6 +98,10 @@ let rules = [
                     use: 'css-loader!sass-loader?indentedSyntax',
                     fallback: 'vue-style-loader'
                 }),
+                less: vueExtractTextPlugin.extract({
+                    use: 'css-loader!less-loader',
+                    fallback: 'vue-style-loader'
+                }),
                 stylus: vueExtractTextPlugin.extract({
                     use: 'css-loader!stylus-loader?paths[]=node_modules',
                     fallback: 'vue-style-loader'
@@ -110,6 +114,7 @@ let rules = [
                 js: 'babel-loader' + Mix.babelConfig(),
                 scss: 'vue-style-loader!css-loader!sass-loader',
                 sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                less: 'vue-style-loader!css-loader!less-loader',
                 stylus: 'vue-style-loader!css-loader!stylus-loader?paths[]=node_modules'
             },
 
