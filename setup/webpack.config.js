@@ -135,7 +135,7 @@ let rules = [
 
     {
         test: /\.s[ac]ss$/,
-        include: /node_modules/,
+        exclude: Mix.preprocessors.map(preprocessor => preprocessor.test()),
         loaders: ['style-loader', 'css-loader', 'sass-loader']
     },
 
