@@ -155,12 +155,6 @@ let rules = [
     },
 
     {
-        test: /\.s[ac]ss$/,
-        exclude: Mix.preprocessors.map(preprocessor => preprocessor.test()),
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
-    },
-
-    {
         test: /\.html$/,
         loaders: ['html-loader']
     },
@@ -217,6 +211,17 @@ let rules = [
         }
     }
 ];
+
+let sassRule = {
+    test: /\.s[ac]ss$/,
+    loaders: ['style-loader', 'css-loader', 'sass-loader']
+};
+
+if (Mix.preprocessors) {
+    sassRule.exclude = Mix.preprocessors.map(preprocessor => preprocessor.test());
+}
+
+rules.push(sassRule);
 
 if (Mix.preprocessors) {
     Mix.preprocessors.forEach(preprocessor => {
