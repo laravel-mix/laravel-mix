@@ -2,7 +2,7 @@
 
 ```js
 mix.copy(from, to);
-mix.copy(from/regex/**/*.txt', to);
+mix.copy('from/regex/**/*.txt', to);
 mix.copy([path1, path2], to);
 mix.copyDirectory(fromDir, toDir);
 ```
