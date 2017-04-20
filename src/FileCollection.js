@@ -56,7 +56,7 @@ class FileCollection {
         // If the src path is a file, but the output is a directory,
         // we have to append the src filename to the output path.
         if (src.isFile && output.isDir) {
-            return path.join(output.base, src.base, src.file);
+            return path.join(output.path, src.path.replace(this.files, ''));
         }
 
         return output.path;
