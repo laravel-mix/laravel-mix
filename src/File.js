@@ -160,6 +160,7 @@ class File {
             file: outputSegments.base,
             hashedFile: `${outputSegments.name}.[hash]${outputSegments.ext}`,
             name: outputSegments.name,
+            isFile: !! outputSegments.ext,
             isDir: ! outputSegments.ext,
             ext: outputSegments.ext
         };

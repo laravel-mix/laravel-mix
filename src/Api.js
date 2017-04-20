@@ -228,33 +228,25 @@ class Api {
     /**
      * Copy one or more files to a new location.
      *
-     * @param {string}  from
-     * @param {string}  to
-     * @param {boolean} flatten
+     * @param {string} from
+     * @param {string} to
      */
-    copy(from, to, flatten = true) {
-        this.Mix.copy = this.Mix.copy || [];
-
-        [].concat(from).forEach(src => {
-            this.Mix.copy.push({
-                from: src,
-                to: global.Paths.root(to),
-                flatten: flatten
-            });
-        });
+    copy(from, to) {
+        this.Mix.copy.push({ from, to: global.Paths.root(to) });
 
         return this;
     };
 
 
     /**
-     * Copy an entire directory to a new location.
+     * Copy a directory to a new location. This is identical
+     * to mix.copy().
      *
      * @param {string} from
      * @param {string} to
      */
     copyDirectory(from, to) {
-        return this.copy(from, to, false);
+        return this.copy(from, to);
     };
 
 

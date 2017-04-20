@@ -377,12 +377,8 @@ if (Mix.options.notifications) {
     );
 }
 
-if (Mix.copy) {
-    Mix.copy.forEach(copy => {
-        plugins.push(
-            new webpackPlugins.CopyWebpackPlugin([copy])
-        );
-    });
+if (Mix.copy.length) {
+    new webpackPlugins.CopyWebpackPlugin(Mix.copy);
 }
 
 if (Mix.entry().hasExtractions()) {

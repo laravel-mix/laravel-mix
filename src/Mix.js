@@ -8,6 +8,7 @@ class Mix {
      */
     constructor() {
         this.concat = new Concat();
+        this.copy = [];
         this.inProduction = options.production;
         this.publicPath = options.publicPath;
         this.options = global.options; // deprecated

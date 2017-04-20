@@ -20,10 +20,10 @@ module.exports.plugins = {
     WebpackNotifierPlugin: require('webpack-notifier'),
     WebpackOnBuildPlugin: require('on-build-webpack'),
     ExtractTextPlugin: require('extract-text-webpack-plugin'),
-    CopyWebpackPlugin: require('copy-webpack-plugin'),
     FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
     StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
     WebpackChunkHashPlugin: require('webpack-chunk-hash'),
     BrowserSyncPlugin: require('browser-sync-webpack-plugin'),
+    CopyWebpackPlugin: require('./WebpackPlugins/CopyWebpackPlugin'),
     MockEntryPlugin: require('./WebpackPlugins/MockEntryPlugin')
 };
