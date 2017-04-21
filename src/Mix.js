@@ -58,7 +58,7 @@ class Mix {
             global.entry.base || '', (options.versioning ? '[name].[chunkhash].js' : '[name].js')
         );
 
-        let http = process.argv.includes('--https') ? 'https' : '';
+        let http = process.argv.includes('--https') ? 'https' : 'http';
 
         return {
             path: path.resolve(options.hmr ? '/' : options.publicPath),
