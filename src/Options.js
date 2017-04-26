@@ -153,6 +153,16 @@ module.exports = {
 
 
     /**
+     * CleanCss-specific settings for Webpack.
+     *
+     * See: https://github.com/jakubpawlowicz/clean-css#constructor-options
+     *
+     * @type {Object}
+     */
+    cleanCss: {
+    },
+
+    /**
      * Merge the given options with the current defaults.
      *
      * @param {object} options

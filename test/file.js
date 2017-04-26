@@ -2,6 +2,7 @@ import test from 'ava';
 import path from 'path';
 import File from '../src/File';
 import sinon from 'sinon';
+import options from '../src/Options';
 
 global.File = File;
 global.path = path;
@@ -45,6 +46,23 @@ test('that it minifies JS and CSS files properly.', t => {
     dummyCssFile.delete();
 });
 
+test('that it minifies CSS files properly with specific options', t => {
+    let dummyCssFilePath = path.resolve(__dirname, 'dummy.css');
+
+    let cssCodeToMinify = new File(path.resolve(__dirname, 'fixtures/minifyme-options.css')).read();
+    let cssCodeMinified = new File(path.resolve(__dirname, 'fixtures/minifyme-options.min.css')).read();
+
+    options.cleanCss = {
+        level: 2
+    };
+
+    let dummyCssFile = new File(dummyCssFilePath).write(cssCodeToMinify);
+
+    dummyCssFile.minify();
+    t.is(dummyCssFile.read(), cssCodeMinified);
+
+    dummyCssFile.delete();
+});
 
 test('that it can rename a file', t => {
     let before = path.resolve(__dirname, 'before.js');

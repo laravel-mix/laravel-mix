@@ -48,7 +48,7 @@ class File {
 
         if (this.fileType === '.css') {
             this.write(
-                new UglifyCss().minify(this.read()).styles
+                new UglifyCss(options.cleanCss).minify(this.read()).styles
             );
         }
     }
