@@ -33,7 +33,9 @@ class Mix {
             this.versioning = new Versioning(this.version, this.manifest).watch();
         }
 
-        if (this.standaloneSass) this.standaloneSass.run();
+        if (this.standaloneSass) {
+            this.standaloneSass.forEach(sass => sass.run());
+        }
 
         this.detectHotReloading();
 

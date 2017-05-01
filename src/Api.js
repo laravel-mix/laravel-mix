@@ -115,7 +115,9 @@ class Api {
     standaloneSass(src, output, pluginOptions = {}) {
         let Preprocessor = require('./Preprocessors/StandaloneSass');
 
-        this.Mix.standaloneSass = new Preprocessor(src, output, pluginOptions);
+        this.Mix.standaloneSass = (this.Mix.standaloneSass || []).concat(
+            new Preprocessor(src, output, pluginOptions)
+        );
 
         return this;
     };
