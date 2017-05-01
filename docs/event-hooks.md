@@ -12,3 +12,15 @@ mix.js('resources/assets/js/app.js', 'public/js')
         console.log('webpack has finished building!');
    });
 ```
+
+The callback function will be passed a webpack `Stats` object allowing for inspection of the performed compilation:
+
+```js
+mix.js('resources/assets/js/app.js', 'public/js')
+   .then((stats) => {
+        // array of all asset paths output by webpack
+        console.log(Object.keys(stats.compilation.assets));
+   });
+```
+
+Official documentation for the `Stats` object can be found here: https://github.com/webpack/docs/wiki/node.js-api#stats
