@@ -1,0 +1,8 @@
+.minify {
+  /* this rule will be discard */
+  color: red;
+}
+
+.minify {
+  color: green;
+}
