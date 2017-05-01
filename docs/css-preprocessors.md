@@ -180,3 +180,5 @@ If you do not wish Mix and Webpack to process your Sass in any way, you may inst
 ```js
 mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
 ```
+
+> **Note:** If you are using standaloneSass while watching for file changes with `npm run watch` then you will need to prefix imported files with underscores in order to flag them as partials (e.g. _header.scss, _alert.scss). Failing to do this will result in Sass compilation errors and/or extraneous CSS files.
