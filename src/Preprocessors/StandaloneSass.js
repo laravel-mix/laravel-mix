@@ -32,7 +32,9 @@ class StandaloneSass {
      * Run the node-sass compiler.
      */
     run() {
-        this.compile(this.shouldWatch);        
+        this.compile();
+
+        if (this.shouldWatch) this.watch();
     }
 
 
@@ -84,6 +86,14 @@ class StandaloneSass {
         }
 
         return sassOptions;
+    }
+
+
+    /**
+     * Compile Sass, while registering a watcher.
+     */
+    watch() {
+        return this.compile(true);
     }
 
 
