@@ -30,7 +30,10 @@ class Preprocessor {
      */
     getExtractPlugin() {
         if (! this.extractPlugin) {
-            this.extractPlugin = new ExtractTextPlugin(this.outputPath());
+            this.extractPlugin = new ExtractTextPlugin({
+                filename: this.outputPath(),
+                disable: global.options.hmr
+            });
         }
 
         return this.extractPlugin;
