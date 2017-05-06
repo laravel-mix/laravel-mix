@@ -179,7 +179,10 @@ let rules = [
                     publicPath: Mix.options.resourceRoot
                 }
             },
-            'img-loader'
+            {
+                loader: 'img-loader',
+                options: Mix.options.imgLoaderOptions
+            }
         ]
     },
 
