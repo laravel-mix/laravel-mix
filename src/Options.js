@@ -32,6 +32,14 @@ module.exports = {
 
 
     /**
+     * The public path for the processed URLs.
+     *
+     * @type {String}
+     */
+    urlProcessPath: '',
+
+
+    /**
      * The public path for the build.
      *
      * @type {String}

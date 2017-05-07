@@ -167,10 +167,10 @@ let rules = [
                 options: {
                     name: path => {
                         if (! /node_modules|bower_components/.test(path)) {
-                            return 'images/[name].[ext]?[hash]';
+                            return Mix.options.urlProcessPath + 'images/[name].[ext]?[hash]';
                         }
 
-                        return 'images/vendor/' + path
+                        return Mix.options.urlProcessPath + 'images/vendor/' + path
                             .replace(/\\/g, '/')
                             .replace(
                                 /((.*(node_modules|bower_components))|images|image|img|assets)\//g, ''
@@ -189,10 +189,10 @@ let rules = [
         options: {
             name: path => {
                 if (! /node_modules|bower_components/.test(path)) {
-                    return 'fonts/[name].[ext]?[hash]';
+                    return Mix.options.urlProcessPath + 'fonts/[name].[ext]?[hash]';
                 }
 
-                return 'fonts/vendor/' + path
+                return Mix.options.urlProcessPath + 'fonts/vendor/' + path
                     .replace(/\\/g, '/')
                     .replace(
                         /((.*(node_modules|bower_components))|fonts|font|assets)\//g, ''
