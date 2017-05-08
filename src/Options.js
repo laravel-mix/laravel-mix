@@ -117,6 +117,18 @@ module.exports = {
         }
     },
 
+    /**
+    * img-loader settings for Webpack.
+    * See: https://github.com/thetalecrafter/img-loader#options
+    * @type {Object}
+    */
+    imgLoaderOptions: {
+        enabled: false,
+        gifsicle: false,
+        mozjpeg: false,
+        optipng: false,
+        svgo: false,
+    },
 
     /**
      * PostCSS plugins to be applied to compiled CSS.
