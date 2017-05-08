@@ -19,6 +19,7 @@ test('that it parses a path into segments', t => {
         hashedFile: 'file.[hash].txt',
         name: 'file',
         isDir: false,
+        isFile: true,
         ext: '.txt'
     });
 });

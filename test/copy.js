@@ -17,7 +17,6 @@ test('that it can copy a file to a new location', t => {
     t.deepEqual([{
         from: from.path(),
         to: to,
-        flatten: true
     }], mix.config.copy);
 });
 
@@ -35,12 +34,10 @@ test('that it can copy multiple files to a new location', t => {
         {
             from: from1,
             to: to1,
-            flatten: true
         },
         {
             from: from2,
             to: to2,
-            flatten: true
         }
     ], mix.config.copy);
 });
@@ -55,14 +52,8 @@ test('that it can copy an array of files to a new location', t => {
 
     t.deepEqual([
         {
-            from: from1,
+            from: [from1, from2],
             to: to,
-            flatten: true
-        },
-        {
-            from: from2,
-            to: to,
-            flatten: true
         }
     ], mix.config.copy);
 });

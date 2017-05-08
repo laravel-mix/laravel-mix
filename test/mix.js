@@ -28,7 +28,7 @@ test('that it calculates the output correctly', t => {
         path: path.resolve('/'),
         filename: '[name].js',
         chunkFilename: "dist/[name].js",
-        publicPath: 'http://localhost:8080'
+        publicPath: 'http://localhost:8080/'
     }, mix.config.output());
 
 
@@ -68,7 +68,7 @@ test('that it calculates versioned output correctly', t => {
         path: path.resolve('/'),
         filename: '[name].[chunkhash].js',
         chunkFilename: "dist/[name].[chunkhash].js",
-        publicPath: 'http://localhost:8080'
+        publicPath: 'http://localhost:8080/'
     }, Mix.output());
 
     Mix.options.hmr = false;
@@ -131,5 +131,5 @@ test('that the setter methods work properly', t => {
     mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
     Mix.Paths.setRootPath(root);
     t.deepEqual(Mix.copy,
-        [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures'), flatten: true }]);
+        [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures') }]);
 });

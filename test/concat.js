@@ -31,7 +31,6 @@ test.afterEach(t => {
 
     process.env.NODE_ENV = 'development';
 
-
     // reset
     global.options.versioning = false;
     global.events.events = {};
