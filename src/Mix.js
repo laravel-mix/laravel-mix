@@ -26,8 +26,8 @@ class Mix {
 
         this.manifest = new Manifest();
 
-        // This is where we load the user's webpack.mix.js config.
-        File.exists(Paths.mix() + '.js') && require(Paths.mix());
+        try { require(Paths.mix()); }
+        catch (e) {}
 
         if (options.versioning) {
             this.versioning = new Versioning(this.version, this.manifest).watch();
