@@ -144,6 +144,7 @@ class StandaloneSass {
      * @param {string} output
      */
     onFail(output) {
+        output = output.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
         console.log("\n");
         console.log('Sass Compilation Failed!');
         console.log();
