@@ -99,7 +99,7 @@ class Versioning {
             });
 
         this.manifest.refresh();
-        this.manifest.cache = currentFiles;
+        this.manifest.cache = this.manifest.get();
 
         return currentFiles;
     }

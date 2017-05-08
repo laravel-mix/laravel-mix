@@ -1,12 +1,13 @@
 let objectValues = require('lodash').values;
+let object = require('lodash/fp/object');
 
 class Manifest {
     /**
      * Create a new Manifest instance.
      */
     constructor() {
-        this.manifest = {};
         this.cache = this.exists() ? this.read() : {};
+        this.manifest = this.cache;
 
         this.registerEvents();
     }
@@ -74,6 +75,14 @@ class Manifest {
 
             let original = path.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
 
+            if(Object.keys(this.cache).length) {
+              let old = this.cache[original];
+
+              if(old && File.exists(old.replace(/^\//, ''))) {
+                File.find(old.replace(/^\//, '')).delete();
+              }
+            }
+
             this.manifest[original] = path;
         });
 
@@ -110,6 +119,8 @@ class Manifest {
 
             manifest[key] = val;
         }
+
+        manifest = object.merge(manifest, this.cache);
 
         File.find(this.path()).write(manifest);
     }

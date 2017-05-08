@@ -67,7 +67,8 @@
     "webpack-dev-server": "^2.4.0",
     "webpack-merge": "^4.0.0",
     "webpack-notifier": "^1.4.1",
-    "webpack-stats-plugin": "^0.1.4"
+    "webpack-stats-plugin": "^0.1.4",
+    "yargs": "^7.0.2"
   },
   "devDependencies": {
     "ava": "^0.19.1",
