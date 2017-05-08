@@ -122,14 +122,9 @@ test('that the setter methods work properly', t => {
     // // Source maps
     Mix.inProduction = false;
     mix.sourceMaps();
-    t.is(Mix.options.sourcemaps, '#inline-source-map');
+    t.is(Mix.options.sourcemaps, 'cheap-module-eval-source-map');
 
     Mix.inProduction = true;
     mix.sourceMaps();
-    t.is(Mix.options.sourcemaps, false);
-
-    mix.copy('fake/*.txt', path.resolve(__dirname, 'fixtures'));
-    Mix.Paths.setRootPath(root);
-    t.deepEqual(Mix.copy,
-        [{ from: 'fake/*.txt', to: Mix.Paths.root('fixtures') }]);
+    t.is(Mix.options.sourcemaps, 'cheap-source-map');
 });
