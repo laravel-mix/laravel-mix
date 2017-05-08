@@ -269,10 +269,16 @@ class Api {
     /**
      * Enable sourcemap support.
      *
-     * @param {string} type
+     * @param {Boolean} productionToo
      */
-    sourceMaps(type = '#inline-source-map') {
-        global.options.sourcemaps = (this.Mix.inProduction ? false : type);
+    sourceMaps(productionToo = true) {
+        let type = 'cheap-module-eval-source-map';
+
+        if (this.Mix.inProduction) {
+            type = productionToo ? 'cheap-source-map' : false;
+        }
+
+        global.options.sourcemaps = type;
 
         return this;
     };
