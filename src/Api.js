@@ -39,6 +39,21 @@ class Api {
         return this;
     };
 
+    /**
+     * Declare support for the TypeScript.
+     */
+    ts(entry, output) {
+        this.Mix.ts = true;
+
+        Verify.dependency(
+            'ts-loader',
+            'npm install ts-loader typescript --save-dev'
+        );
+
+        this.js(entry, output);
+
+        return this;
+    };
 
     /**
      * Register vendor libs that should be extracted.

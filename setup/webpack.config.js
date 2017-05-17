@@ -215,6 +215,18 @@ let rules = [
     }
 ];
 
+let extensions = ['*', '.js', '.jsx', '.vue'];
+
+if (Mix.ts) {
+    rules.push({
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+    });
+
+    extensions.push('.ts', '.tsx')
+}
+
 let sassRule = {
     test: /\.s[ac]ss$/,
     loaders: ['style-loader', 'css-loader', 'sass-loader']
@@ -250,7 +262,7 @@ module.exports.module = { rules };
  */
 
 module.exports.resolve = {
-    extensions: ['*', '.js', '.jsx', '.vue'],
+    extensions,
 
     alias: {
         'vue$': 'vue/dist/vue.common.js'
