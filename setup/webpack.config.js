@@ -315,6 +315,12 @@ plugins.push(
     })
 );
 
+if (Mix.options.hmr) {
+    plugins.push(
+        new webpack.NamedModulesPlugin()
+    );
+}
+
 if (Mix.browserSync) {
     plugins.push(
         new webpackPlugins.BrowserSyncPlugin(
