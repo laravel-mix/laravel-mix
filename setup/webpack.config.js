@@ -413,6 +413,10 @@ if (Mix.options.versioning) {
         new webpack[Mix.inProduction ? 'HashedModuleIdsPlugin': 'NamedModulesPlugin'](),
         new webpackPlugins.WebpackChunkHashPlugin()
     );
+} else if (Mix.options.hmr) {
+    plugins.push(
+        new webpack.NamedModulesPlugin()
+    );
 }
 
 if (Mix.options.purifyCss) {
