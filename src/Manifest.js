@@ -75,12 +75,12 @@ class Manifest {
 
             let original = path.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
 
-            if(Object.keys(this.cache).length) {
-              let old = this.cache[original];
+            if (Object.keys(this.cache).length) {
+                let old = this.cache[original];
 
-              if(old && File.exists(old.replace(/^\//, ''))) {
-                File.find(old.replace(/^\//, '')).delete();
-              }
+                if(old && File.exists(old.replace(/^\//, ''))) {
+                    File.find(old.replace(/^\//, '')).delete();
+                }
             }
 
             this.manifest[original] = path;
