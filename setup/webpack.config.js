@@ -224,7 +224,7 @@ if (Mix.ts) {
         exclude: /node_modules/,
     });
 
-    extensions.push('.ts', '.tsx')
+    extensions.push('.ts', '.tsx');
 }
 
 let sassRule = {
