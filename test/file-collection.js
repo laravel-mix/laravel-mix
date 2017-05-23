@@ -20,3 +20,19 @@ test('that it sets the output file if a src file and output directory are provid
         new File('node_modules/path/to/it/nested/file.txt').parsePath()
     ));
 });
+
+
+test('that it sets the output path for an array of src files properly', t => {
+    let collection = new FileCollection([
+        'resources/assets/img/one.jpg',
+        'resources/assets/img/two.jpg'
+    ]);
+
+    collection.destination = 'public/img';
+
+    let output = collection.outputPath(
+        new File('resources/assets/img/one.jpg').parsePath()
+    );
+
+    t.is('public/img/one.jpg', output);
+});
