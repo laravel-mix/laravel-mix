@@ -6,7 +6,7 @@ class Sass extends Preprocessor {
      */
     loaders(sourceMaps) {
         let loaders = [
-            { loader: 'sass-loader', options: this.sassPluginOptions() }
+            { loader: 'sass-loader', options: this.sassPluginOptions(sourceMaps) }
         ];
 
         if (global.options.processCssUrls) {
@@ -22,11 +22,11 @@ class Sass extends Preprocessor {
     /**
      * Fetch the Node-Sass-specififc plugin options.
      */
-    sassPluginOptions() {
+    sassPluginOptions(sourceMaps) {
         return Object.assign({
             precision: 8,
             outputStyle: 'expanded'
-        }, this.pluginOptions, { sourceMap: true })
+        }, this.pluginOptions, { sourceMap: sourceMaps })
     }
 }
 
