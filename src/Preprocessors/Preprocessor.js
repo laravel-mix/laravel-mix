@@ -55,7 +55,7 @@ class Preprocessor {
      * Get the regular expression test for the Extract plugin.
      */
     test() {
-        return new RegExp(this.src.path.replace(/\\/g, '\\\\') + '$');
+        return new RegExp(this.src.file.replace(/\\/g, '\\\\') + '$');
     }
 
 
