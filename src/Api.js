@@ -359,6 +359,17 @@ class Api {
         return this;
     }
 
+    /**
+     * Provide a finalizer callback that receives the full config object
+     * for an opportunity to do custom modifications to it.
+     * 
+     * @param {function} callback
+     */
+    finalizeWebpackConfig(callback) {
+        this.Mix.webpackConfigFinalizer = callback;
+
+        return this;
+    }
 
     /**
      * Set Mix-specific options.
