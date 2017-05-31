@@ -101,7 +101,11 @@ class Concat {
         if (! babel) babel = require('babel-core');
 
         return babel.transform(
-            contents, { presets: ['env'] }
+            contents, {
+                presets: [
+                    [ 'env', global.options.babelify ]
+                ],
+            }
         ).code;
     }
 

@@ -67,6 +67,18 @@ module.exports = {
 
 
     /**
+     * Configuration used by mix.babel(), this object will be passed to env preset.
+     *
+     * env preset options {@link http://babeljs.io/docs/plugins/preset-env/#options}
+     *
+     * @type {Object}
+     */
+    babelify: {
+        modules: 'commonjs',
+    },
+
+
+    /**
      * Determine if the bundled assets should be versioned.
      *
      * @type {Boolean}
