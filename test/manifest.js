@@ -1,74 +1,63 @@
 import test from 'ava';
+import mockFs from 'mock-fs';
 import mix from '../src/index';
 import Manifest from '../src/Manifest';
-import ObjectValues from 'lodash/values';
 
-let manifestPath = null;
-let manifestFile = null;
-let cssFile = null;
-let jsFile = null;
-let manifest = null;
+test.beforeEach(() => Mix.manifest = new Manifest());
 
-let json = '{"/js/app.js":"/js/app.js","/css/app.css":"/css/app.css","/css/forum.css":"/css/forum.css","/js/admin.js":"/js/admin.js"}';
 
-test.before(t => {
-    manifestPath = path.resolve(__dirname, 'mix-manifest.json');
-    manifestFile = new File(manifestPath).write(json);
+test('that it can get fetch the underlying manifest object', t => {
+    Mix.manifest.add('file/path.js');
 
-    cssFile = new File(path.resolve(__dirname, 'fixtures/app.css')).write('css file');
-    jsFile = new File(path.resolve(__dirname, 'fixtures/app.js')).write('js file');
-
-    global.options.publicPath = __dirname;
-
-    manifest = new Manifest();
+    t.deepEqual({ '/file/path.js': '/file/path.js' }, Mix.manifest.get());
 });
 
 
-test.after.always(t => {
-    manifestFile.delete();
-    cssFile.delete();
-    jsFile.delete();
+test('that it can get fetch a single versioned path from the underlying manifest', t => {
+    Mix.manifest.add('file/path.js');
+
+    t.is('public/file/path.js', Mix.manifest.get('file/path.js'));
 });
 
 
-test('that the mix-manifest.json file exists', t => {
-    t.is(manifest.exists(), true);
+test('it transforms the generated stats assets to the appropriate format', t => {
+    let stats = { assetsByChunkName: { '/js/app': [ '/js/app.a218bd06338f6bc2f5ec.js', 'css/app.a77184666fc90f945bfb72e339c8dcf1.css' ] } };
+
+    let transformed = Mix.manifest.transform(stats);
+
+    t.deepEqual(JSON.stringify({
+        '/js/app.js': '/js/app.a218bd06338f6bc2f5ec.js',
+        '/css/app.css': '/css/app.a77184666fc90f945bfb72e339c8dcf1.css'
+    }, null, 2), transformed);
 });
 
 
-test('that it reads parses the JSON from the manifest', t => {
-    t.deepEqual(manifest.read(), JSON.parse(json));
+test('it can get the underlying manifest object', t => {
+    t.deepEqual({}, Mix.manifest.get());
 });
 
 
-test('that it transforms the Webpack stats to a format we require', t => {
-    let transformed = manifest.transform({
-        assetsByChunkName: {
-            app: [
-                '/js/app.js',
-                '/css/app.css',
-                '/css/forum.css',
-                '\\admin\\js/manifest.js'
-            ],
+test('it knows the path to the underlying file', t => {
+    t.is(path.join(Config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
+});
 
-            admin: '/js/admin.js'
-        }
+
+test('it can be refreshed', t => {
+    mix.setPublicPath(__dirname);
+
+    mockFs({
+        [__dirname + '/js/app.js']: 'var foo;',
+        [Mix.manifest.path()]: '{}'
     });
 
-    t.deepEqual({
-        '/js/app.js': '/js/app.js',
-        '/css/app.css': '/css/app.css',
-        '/css/forum.css': '/css/forum.css',
-        '/admin/js/manifest.js': '/admin/js/manifest.js',
-        '/js/admin.js': '/js/admin.js'
-    }, JSON.parse(transformed));
-});
+    // The initial state of the manifest file should be an empty object.
+    t.deepEqual({}, Mix.manifest.read());
 
+    // But after we add to the manifest, and then refresh it...
+    Mix.manifest.add(__dirname + '/js/app.js').refresh();
 
-test('that it can remove the manifest file', t => {
-    let filesToDelete = ObjectValues(manifest.read());
+    // Then the manifest file should be updated on the fs.
+    t.deepEqual({ '/js/app.js': '/js/app.js' }, Mix.manifest.read());
 
-    filesToDelete.forEach(f => {
-        manifest.remove(path.resolve(__dirname, f));
-    });
+    mockFs.restore();
 });

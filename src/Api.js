@@ -2,32 +2,31 @@ let Verify = require('./Verify');
 
 class Api {
     /**
-     * Create a new API instance.
-     *
-     * @param {Mix} Mix
-     */
-    constructor(Mix) {
-        this.Mix = Mix;
-    }
-
-    /**
      * Register the Webpack entry/output paths.
      *
-     * @param {string|Array}  entry
+     * @param {string|Array} entry
      * @param {string} output
      */
     js(entry, output) {
-        global.entry.addScript(entry, output);
+        Verify.js(entry, output);
+
+        entry = [].concat(entry).map(file => new File(file));
+        output = new File(output);
+
+        Config.js.push({ entry, output });
 
         return this;
-    };
+    }
 
 
     /**
-     * Declare support for the React framework.
+     * Register support for the React framework.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
      */
     react(entry, output) {
-        this.Mix.react = true;
+        Config.react = true;
 
         Verify.dependency(
             'babel-preset-react',
@@ -39,11 +38,12 @@ class Api {
         return this;
     };
 
+
     /**
-     * Declare support for the TypeScript.
+     * Register support for the TypeScript.
      */
     ts(entry, output) {
-        this.Mix.ts = true;
+        Config.typeScript = true;
 
         Verify.dependency(
             'ts-loader',
@@ -55,55 +55,13 @@ class Api {
         return this;
     };
 
-    /**
-     * Register vendor libs that should be extracted.
-     * This helps drastically with long-term caching.
-     *
-     * @param {Array}  libs
-     * @param {string} output
-     */
-    extract(libs, output) {
-        global.entry.addVendor(libs, output);
-
-        return this;
-    };
-
 
     /**
-     * Register libraries to automatically "autoload" when
-     * the appropriate variable is references in js
-     *
-     * @param {object} libs
+     * Register support for the TypeScript.
      */
-    autoload(libs) {
-        let aliases = {};
-
-        Object.keys(libs).forEach(library => {
-            [].concat(libs[library]).forEach(alias => {
-                aliases[alias] = library;
-            });
-        });
-
-        this.Mix.autoload = aliases;
-
-        return this;
-    };
-
-
-    /**
-     * Enable Browsersync support for the project.
-     *
-     * @param {object} config
-     */
-    browserSync(config = {}) {
-        if (typeof config === 'string') {
-            config = { proxy: config };
-        }
-
-        this.Mix.browserSync = config;
-
-        return this;
-    };
+    typeScript(entry, output) {
+        return this.ts(entry, output);
+    }
 
 
     /**
@@ -114,10 +72,13 @@ class Api {
      * @param {object} pluginOptions
      */
     sass(src, output, pluginOptions = {}) {
-        return this.preprocess(
-            'Sass', src, output, pluginOptions
-        );
-    };
+        pluginOptions = Object.assign({
+            precision: 8,
+            outputStyle: 'expanded'
+        }, pluginOptions, { sourceMap: true });
+
+        return this.preprocessor('sass', src, output, pluginOptions);
+    }
 
 
     /**
@@ -128,13 +89,7 @@ class Api {
      * @param {object} pluginOptions
      */
     standaloneSass(src, output, pluginOptions = {}) {
-        let Preprocessor = require('./Preprocessors/StandaloneSass');
-
-        this.Mix.standaloneSass = (this.Mix.standaloneSass || []).concat(
-            new Preprocessor(src, output, pluginOptions)
-        );
-
-        return this;
+        return this.preprocessor('fastSass', src, output, pluginOptions);
     };
 
 
@@ -145,11 +100,14 @@ class Api {
      * @param {string} output
      * @param {object} pluginOptions
      */
-    less(src, output, pluginOptions = {}) {
-        return this.preprocess(
-            'Less', src, output, pluginOptions
+    less(src, output, pluginOptions) {
+        Verify.dependency(
+            'less-loader',
+            'npm install less-loader less --save-dev'
         );
-    };
+
+        return this.preprocessor('less', src, output, pluginOptions);
+    }
 
 
     /**
@@ -165,9 +123,7 @@ class Api {
             'npm install stylus-loader stylus --save-dev'
         );
 
-        return this.preprocess(
-            'Stylus', src, output, pluginOptions
-        );
+        return this.preprocessor('stylus', src, output, pluginOptions);
     };
 
 
@@ -179,19 +135,19 @@ class Api {
      * @param {string} output
      * @param {object} pluginOptions
      */
-    preprocess(type, src, output, pluginOptions) {
+    preprocessor(type, src, output, pluginOptions = {}) {
         Verify.preprocessor(type, src, output);
 
-        global.entry.addStylesheet(src, output);
+        src = new File(src);
 
-        let Preprocessor = require('./Preprocessors/' + type);
+        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
 
-        this.Mix.preprocessors = (this.Mix.preprocessors || []).concat(
-            new Preprocessor(src, output, pluginOptions)
-        );
+        Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
+            src, output, pluginOptions
+        });
 
         return this;
-    };
+    }
 
 
     /**
@@ -199,9 +155,12 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      babel
      */
-    combine(src, output) {
-        this.Mix.concat.add({ src, output });
+    combine(src, output, babel = false) {
+        Config.customAssets.push(new File(output));
+
+        Config.combine.push({ src, output: new File(output), babel });
 
         return this;
     };
@@ -219,6 +178,19 @@ class Api {
 
 
     /**
+     * Identical to this.Mix.combine(), but includes Babel compilation.
+     *
+     * @param {string|Array} src
+     * @param {string}       output
+     */
+    babel(src, output) {
+        return this.combine(src, output, true);
+
+        return this;
+    };
+
+
+    /**
      * Alias for this.Mix.combine().
      *
      * @param {string|Array} src
@@ -230,15 +202,14 @@ class Api {
 
 
     /**
-     * Identical to this.Mix.combine(), but includes Babel compilation.
+     * Minify the provided file.
      *
      * @param {string|Array} src
-     * @param {string}       output
      */
-    babel(src, output) {
-        this.Mix.concat.add({ src, output, babel: true });
+    minify(src) {
+        let output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
 
-        return this;
+        return this.combine(src, output);
     };
 
 
@@ -249,7 +220,7 @@ class Api {
      * @param {string} to
      */
     copy(from, to) {
-        this.Mix.copy.push({ from, to: global.Paths.root(to) });
+        Config.copy.push({ from, to: new File(to) });
 
         return this;
     };
@@ -268,14 +239,51 @@ class Api {
 
 
     /**
-     * Minify the provided file.
+     * Enable Browsersync support for the project.
      *
-     * @param {string|Array} src
+     * @param {object} config
      */
-    minify(src) {
-        let output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
+    browserSync(config = {}) {
+        Verify.dependency(
+            'browser-sync-webpack-plugin',
+            'npm install browser-sync-webpack-plugin browser-sync --save-dev'
+        );
 
-        this.Mix.concat.add({ src, output });
+        if (typeof config === 'string') {
+            config = { proxy: config };
+        }
+
+        Config.browserSync = config;
+
+        return this;
+    };
+
+
+
+    /**
+     * Enable automatic file versioning.
+     *
+     * @param {Array} files
+     */
+    version(files = []) {
+        Config.versioning = true;
+        Config.version = Config.version.concat(files);
+
+        files.map(file => Mix.addAsset(new File(file)));
+
+        return this;
+    }
+
+
+    /**
+     * Register vendor libs that should be extracted.
+     * This helps drastically with long-term caching.
+     *
+     * @param {Array}  libs
+     * @param {string} output
+     */
+    extract(libs, output) {
+        Config.extractions.push({ libs, output });
 
         return this;
     };
@@ -289,24 +297,34 @@ class Api {
     sourceMaps(productionToo = true) {
         let type = 'cheap-module-eval-source-map';
 
-        if (this.Mix.inProduction) {
+        if (Mix.inProduction()) {
             type = productionToo ? 'cheap-source-map' : false;
         }
 
-        global.options.sourcemaps = type;
+        Config.sourcemaps = type;
 
         return this;
     };
 
+    /**
+     * Override the default path to your project's public directory.
+     *
+     * @param {string} path
+     */
+    setPublicPath(path) {
+        Config.publicPath = path;
+
+        return this;
+    }
+
 
     /**
-     * Enable compiled file versioning.
+     * Set a prefix for all generated asset paths.
      *
-     * @param {string|Array} files
+     * @param {string} path
      */
-    version(files = []) {
-        global.options.versioning = true;
-        this.Mix.version = [].concat(files);
+    setResourceRoot(path) {
+        Config.resourceRoot = path;
 
         return this;
     };
@@ -316,33 +334,28 @@ class Api {
      * Disable all OS notifications.
      */
     disableNotifications() {
-        global.options.notifications = false;
+        Config.notifications = false;
 
         return this;
-    };
+    }
 
 
     /**
-     * Set the path to your public folder.
+     * Register libraries to automatically "autoload" when
+     * the appropriate variable is references in your JS.
      *
-     * @param {string} path
+     * @param {Object} libs
      */
-    setPublicPath(path) {
-        global.options.publicPath = this.Mix.publicPath = new File(path)
-            .parsePath()
-            .pathWithoutExt;
+    autoload(libs) {
+        let aliases = {};
 
-        return this;
-    };
+        Object.keys(libs).forEach(library => {
+            [].concat(libs[library]).forEach(alias => {
+                aliases[alias] = library;
+            });
+        });
 
-
-    /**
-     * Set prefix for generated asset paths
-     *
-     * @param {string} path
-     */
-    setResourceRoot(path) {
-        global.options.resourceRoot = path;
+        Config.autoload = aliases;
 
         return this;
     };
@@ -354,14 +367,13 @@ class Api {
      * @param {object} config
      */
     webpackConfig(config) {
-        this.Mix.webpackConfig = config;
+        Config.webpackConfig = config;
 
         return this;
     }
 
 
-    /**
-     * Set Mix-specific options.
+    /* Set Mix-specific options.
      *
      * @param {object} options
      */
@@ -371,12 +383,12 @@ class Api {
 
             Verify.dependency(
                 'purifycss-webpack',
-                'npm install purifycss-webpack --save-dev',
+                'npm install purifycss-webpack purify-css --save-dev',
                 true // abortOnComplete
             );
         }
 
-        global.options.merge(options);
+        Config.merge(options);
 
         return this;
     };
@@ -388,9 +400,25 @@ class Api {
      * @param {Function} callback
      */
     then(callback) {
-        global.events.listen('build', callback);
+        Mix.listen('build', callback);
 
         return this;
+    }
+
+
+    /**
+     * Generate a full output path, using a fallback
+     * file name, if a directory is provided.
+     *
+     * @param {Object} output
+     * @param {Object} fallbackName
+     */
+    _normalizeOutput(output, fallbackName) {
+        if (output.isDirectory()) {
+            output = new File(path.join(output.filePath, fallbackName));
+        }
+
+        return output;
     }
 }
 

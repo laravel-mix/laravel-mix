@@ -1,6 +1,6 @@
 let glob = require('glob');
 
-class Purify {
+class PurifyPaths {
     /**
      * Build up the proper Purify file paths.
      *
@@ -23,4 +23,4 @@ class Purify {
     }
 }
 
-module.exports = Purify;
+module.exports = PurifyPaths;

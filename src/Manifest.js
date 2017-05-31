@@ -1,59 +1,46 @@
 let objectValues = require('lodash').values;
-let object = require('lodash/fp/object');
+let path = require('path');
 
 class Manifest {
     /**
      * Create a new Manifest instance.
-     */
-    constructor() {
-        this.cache = this.exists() ? this.read() : {};
-        this.manifest = this.cache;
-
-        this.registerEvents();
-    }
-
-
-    /**
-     * Register any applicable event listeners.
-     */
-    registerEvents() {
-        global.events.listen('combined', this.appendCombinedFiles.bind(this))
-            .listen('standalone-sass-compiled', compiledFile => {
-                this.add(compiledFile);
-                this.refresh();
-            });
-
-        return this;
-    }
-
-
-    /**
-     * Add a key-value pair to the manifest file.
      *
-     * @param {File} file
+     * @param {string} name
      */
-    add(file) {
-        let original = this.preparePath(file.file);
-
-        this.manifest[original] = global.options.versioning ? this.preparePath(file.versionedPath()) : original;
-
-        return this;
+    constructor(name = 'mix-manifest.json') {
+        this.manifest = {};
+        this.name = name;
     }
 
 
     /**
-     * Get the modified version of the given path.
-     *
-     * @param {string} original
+     * Get the underlying manifest collection.
      */
-    get(original) {
-        if (original) {
-            if (original instanceof File) original = original.file;
-
-            return this.manifest[this.preparePath(original)];
+    get(file = null) {
+        if (file) {
+            return path.join(
+                Config.publicPath,
+                this.manifest[this.normalizePath(file)]
+            );
         }
 
         return this.manifest;
+    }
+
+
+    /**
+     * Add the given path to the manifest file.
+     *
+     * @param {string} filePath
+     */
+    add(filePath) {
+        filePath = this.normalizePath(filePath);
+
+        let original = filePath.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
+
+        this.manifest[original] = filePath;
+
+        return this;
     }
 
 
@@ -64,45 +51,11 @@ class Manifest {
      * @param {object} options
      */
     transform(stats, options) {
-        let flattenedPaths = [].concat.apply(
-            [], objectValues(stats.assetsByChunkName)
-        );
+        let customAssets = Config.customAssets.map(asset => asset.pathFromPublic());
 
-        flattenedPaths.forEach(path => {
-            path = this.preparePath(path);
-
-            if (! path.startsWith('/')) path = ('/'+path);
-
-            let original = path.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
-
-            if (Object.keys(this.cache).length) {
-                let old = this.cache[original];
-
-                if(old && File.exists(old.replace(/^\//, ''))) {
-                    File.find(old.replace(/^\//, '')).delete();
-                }
-            }
-
-            this.manifest[original] = path;
-        });
+        this.flattenAssets(stats).concat(customAssets).forEach(this.add.bind(this));
 
         return JSON.stringify(this.manifest, null, 2);
-    }
-
-
-    /**
-     * Append any mix.combine()'d output paths to the manifest.
-     *
-     * @param {Array} toCombine
-     */
-    appendCombinedFiles(toCombine) {
-        let output = this.preparePath(toCombine.output);
-
-        this.manifest[
-            output.replace(/\.(\w{32})(\..+)/, '$2')
-        ] = output;
-
-        this.refresh();
     }
 
 
@@ -110,35 +63,7 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        let manifest = {};
-
-        for (let key in this.manifest) {
-            let val = this.preparePath(this.manifest[key]);
-
-            key = this.preparePath(key);
-
-            manifest[key] = val;
-        }
-
-        manifest = object.merge(manifest, this.cache);
-
-        File.find(this.path()).write(manifest);
-    }
-
-
-    /**
-     * Get the path to the manifest file.
-     */
-    path() {
-        return path.join(global.options.publicPath, 'mix-manifest.json');
-    }
-
-
-    /**
-     * Determine if the manifest file exists.
-     */
-    exists() {
-        return File.exists(this.path());
+        File.find(this.path()).write(this.manifest);
     }
 
 
@@ -151,23 +76,40 @@ class Manifest {
 
 
     /**
-     * Prepare the provided path for processing.
-     *
-     * @param {string} path
+     * Get the path to the manifest file.
      */
-    preparePath(path) {
-        return path.replace(new RegExp('^' +  global.options.publicPath), '')
-                   .replace(/\\/g, '/');
+    path() {
+        return path.join(Config.publicPath, this.name);
     }
 
 
     /**
-     * Delete the given file from the manifest.
+     * Flatten the generated stats assets into an array.
      *
-     * @param {string} file
+     * @param {Object} stats
      */
-    remove(file) {
-        File.find(file).delete();
+    flattenAssets(stats) {
+        return [].concat.apply(
+            [], objectValues(stats.assetsByChunkName)
+        );
+    }
+
+
+    /**
+     * Prepare the provided path for processing.
+     *
+     * @param {string} filePath
+     */
+    normalizePath(filePath) {
+        filePath = filePath.replace(
+            new RegExp('^' +  Config.publicPath), ''
+        ).replace(/\\/g, '/');
+
+        if (! filePath.startsWith('/')) {
+            filePath = '/' + filePath;
+        }
+
+        return filePath;
     }
 }
 

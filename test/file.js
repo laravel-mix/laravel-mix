@@ -1,116 +1,227 @@
 import test from 'ava';
-import path from 'path';
-import File from '../src/File';
-import sinon from 'sinon';
-import options from '../src/Options';
+import mockFs from 'mock-fs';
+import '../src/index';
 
-global.File = File;
-global.path = path;
 
-test('that it parses a path into segments', t => {
-    let file = new File('some/path/to/a/file.txt');
+test.afterEach(t => mockFs.restore());
 
-    t.deepEqual(file.parsePath(), {
-        path: 'some/path/to/a/file.txt',
-        pathWithoutExt: 'some/path/to/a/file',
-        hashedPath: 'some/path/to/a/file.[hash].txt',
-        base: 'some/path/to/a',
-        file: 'file.txt',
-        hashedFile: 'file.[hash].txt',
-        name: 'file',
-        isDir: false,
-        isFile: true,
-        ext: '.txt'
+
+test('it knows the file name', t => {
+    let file = new File('path/to/file.js');
+
+    t.is('file.js', file.name());
+});
+
+
+test('it has a static constructor', t => {
+    let file = File.find('path/to/file.js');
+
+    t.true(file instanceof File);
+});
+
+
+test('it knows the file name without the extension', t => {
+    let file = new File('path/to/file.js');
+
+    t.is('file', file.nameWithoutExtension());
+});
+
+
+test('it knows the extension of the file', t => {
+    let file = new File('path/to/file.js');
+
+    t.is('.js', file.extension());
+});
+
+
+test('it knows if a file exists', t => {
+    t.false(File.exists('path/to/some/file.js'));
+
+    mockFs({
+        'path/to/some/file.js': 'foobar'
     });
+
+    t.true(File.exists('path/to/some/file.js'));
 });
 
 
-test('that it minifies JS and CSS files properly.', t => {
-    let dummyJsFilePath = path.resolve(__dirname, 'dummy.js');
-    let dummyCssFilePath = path.resolve(__dirname, 'dummy.css');
+test('it knows the size of a file', t => {
+    let file = 'path/to/some/file.js';
 
-    let jsCodeToMinify = new File(path.resolve(__dirname, 'fixtures/minifyme.js')).read();
-    let cssCodeToMinify = new File(path.resolve(__dirname, 'fixtures/minifyme.css')).read();
-    let jsCodeMinified = new File(path.resolve(__dirname, 'fixtures/minifyme.min.js')).read();
-    let cssCodeMinified = new File(path.resolve(__dirname, 'fixtures/minifyme.min.css')).read();
+    // Assume this file exists...
+    mockFs({ [file]: '123456' });
 
-    let dummyJsFile = new File(dummyJsFilePath).write(jsCodeToMinify);
-    let dummyCssFile = new File(dummyCssFilePath).write(cssCodeToMinify);
+    t.true(File.exists(file));
 
-    dummyJsFile.minify();
-    t.is(dummyJsFile.read(), jsCodeMinified);
-
-    dummyCssFile.minify();
-    t.is(dummyCssFile.read(), cssCodeMinified);
-
-    dummyJsFile.delete();
-    dummyCssFile.delete();
+    t.is(6, new File(file).size());
 });
 
-test('that it minifies CSS files properly with specific options', t => {
-    let dummyCssFilePath = path.resolve(__dirname, 'dummy.css');
 
-    let cssCodeToMinify = new File(path.resolve(__dirname, 'fixtures/minifyme-options.css')).read();
-    let cssCodeMinified = new File(path.resolve(__dirname, 'fixtures/minifyme-options.min.css')).read();
+test('it knows the path to the file', t => {
+    let file = new File('path/to/file.js');
 
-    options.cleanCss = {
-        level: 2
-    };
-
-    let dummyCssFile = new File(dummyCssFilePath).write(cssCodeToMinify);
-
-    dummyCssFile.minify();
-    t.is(dummyCssFile.read(), cssCodeMinified);
-
-    dummyCssFile.delete();
+    t.is(path.resolve('path/to/file.js'), file.path());
 });
 
-test('that it can rename a file', t => {
-    let before = path.resolve(__dirname, 'before.js');
-    let after = path.resolve(__dirname, 'after.js');
 
-    let file = new File(before).write('');
+test('it knows the relative to the file', t => {
+    let file = new File('path/to/file.js');
 
-    file.rename(after);
+    t.is('path/to/file.js', file.relativePath());
+});
 
+
+test('it can force the file to begin from the public path for the project.', t => {
+    let file = new File('some/path/here.js');
+
+    let newFile = file.forceFromPublic();
+
+    t.true(newFile instanceof File);
+
+    t.is('public/some/path/here.js', newFile.relativePath());
+});
+
+
+test('it knows the path to the file starting from the project public directory', t => {
+    let file = new File('public/js/file.js');
+
+    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+
+    file = new File('js/file.js');
+
+    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+});
+
+
+test('it knows the full path to the file without the extension', t => {
+    let file = new File('path/to/file.js');
+
+    t.is(path.resolve('path/to/file'), file.pathWithoutExtension());
+});
+
+
+test('it knows the base directory path for the file', t => {
+    let file = new File('path/to/file.js');
+
+    t.is(path.resolve('path/to'), file.base());
+});
+
+
+test('it knows if the current file path is a directory', t => {
+    t.true(new File('path/to').isDirectory());
+    t.false(new File('path/to/file.js').isDirectory());
+});
+
+
+test('it knows if the current file path is a file', t => {
+    t.false(new File('path/to').isFile());
+    t.true(new File('path/to/file.js').isFile());
+});
+
+
+test('it can read and write to a file', t => {
+    mockFs({
+        'path/to/some/file.js': 'foobar'
+    });
+
+    let file = new File('path/to/some/file.js');
+
+    t.is('foobar', file.read());
+
+    file.write('changed');
+});
+
+
+test('it can version a file', t => {
+    mockFs({
+        'path/to/some/file.js': 'foobar'
+    });
+
+    let file = new File('path/to/some/file.js');
+
+    // If we version the file, then it should be
+    // renamed behind the scenes.
+    file = file.version();
+
+    // So let's make sure the original file doesn't exist.
+    t.false(File.exists('path/to/some/file.js'));
+
+    // And the new path does.
     t.true(File.exists(file.path()));
-
-    file.delete();
 });
 
 
-test('that it can create a duplicated, versioned file.', t => {
-    let file = new File(path.resolve(__dirname, 'file.txt')).write('foo');
+test('it can version a file without deleting the unversioned counterpart', t => {
+    mockFs({
+        'path/to/some/file.js': 'foobar'
+    });
 
-    let versionedFile = file.version();
+    let file = new File('path/to/some/file.js');
 
-    t.true(File.exists(versionedFile.file));
-    t.is('foo', versionedFile.read());
+    // If we version the file, then it should be
+    // renamed behind the scenes.
+    let deleteUnversionedFile = false;
+    file = file.version(deleteUnversionedFile);
 
-    // Clean up
-    file.delete();
-    versionedFile.delete();
+    // Because we specified tha the unversioned counterpart
+    // shouldn't be deleted, it should still exist.
+    t.true(File.exists('path/to/some/file.js'));
+
+    // // And the new path does.
+    t.true(File.exists(file.path()));
 });
 
 
-test('that it fetches the versioned file path', t => {
-    let versionedPath = new File('path/to/file.js').versionedPath('hash-stub');
+test('it can minify JS files.', t => {
+    mockFs({
+        'path/to/some/file.js': `
+            var one = 'one';
+            var two = 'two';
+        `
+    });
 
-    t.is('path/to/file.hash-stub.js', versionedPath);
+    let file = new File('path/to/some/file.js');
+
+    t.is('var one="one",two="two";', file.minify().read());
 });
 
 
-test('that it watches a file changes', t => {
-    let file = new File(path.resolve(__dirname, 'stub.txt'));
+test('it can minify CSS files.', t => {
+    mockFs({
+        'path/to/file.css': `
+            body {
+                color: red;
+            }
+        `
+    });
 
-    // If we watch the file, and then immediately
-    // force the "change" event...
-    let callback = sinon.spy();
-    file.watch(callback).emit('change');
+    let file = new File('path/to/file.css').minify();
 
-    // Then our callback function should be triggered.
-    t.true(callback.called);
+    t.is('body{color:red}', file.read());
+});
 
-    // Clean up
-    file.delete();
+
+test('it can copy a file to a new location', t => {
+    mockFs({
+        'path/to/file.css': '.foo {}'
+    });
+
+    let file = new File('path/to/file.css').copyTo('path/to/new.css');
+
+    t.true(File.exists('path/to/new.css'));
+    t.is('.foo {}', new File('path/to/new.css').read());
+});
+
+
+test('it knows if its path contains a set of chars', t => {
+    let file = new File('some/path/**');
+
+    t.true(file.contains('*'));
+});
+
+
+test('it can append to the current file path', t => {
+    let file = new File('some/path');
+
+    t.true(file.append('**').contains('**'));
 });

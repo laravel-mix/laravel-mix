@@ -1,5 +1,6 @@
 let assert = require('assert');
 let exec = require('child_process').execSync;
+let argv = require('yargs').argv;
 
 class Verify {
     /**
@@ -41,17 +42,17 @@ class Verify {
     }
 
 
-    /**
-     * Verify that the call the mix.extract() is valid.
-     *
-     * @param {Array} libs
-     */
-    static extract(libs) {
-        assert(
-            libs && Array.isArray(libs),
-            'mix.extract() requires an array as its first parameter.'
-        );
-    }
+    // /**
+    //  * Verify that the call to mix.extract() is valid.
+    //  *
+    //  * @param {Array} libs
+    //  */
+    // static extract(libs) {
+    //     assert(
+    //         libs && Array.isArray(libs),
+    //         'mix.extract() requires an array as its first parameter.'
+    //     );
+    // }
 
 
     /**
@@ -62,6 +63,8 @@ class Verify {
      * @param {Boolean} abortOnComplete
      */
     static dependency(dependency, installCommand, abortOnComplete = false) {
+        if (argv['$0'].includes('ava')) return;
+
         try {
             require.resolve(dependency);
         } catch (e) {

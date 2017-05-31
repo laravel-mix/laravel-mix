@@ -1,29 +1,43 @@
-global.options = require('./Options');
-global.entry = require('./Entry');
+/*
+ |--------------------------------------------------------------------------
+ | Welcome to Laravel Mix!
+ |--------------------------------------------------------------------------
+ |
+ | Laravel Mix provides a clean, fluent API for defining basic webpack
+ | build steps for your Laravel application. Mix supports a variety
+ | of common CSS and JavaScript pre-processors out of the box.
+ |
+ */
+
+
+/**
+ * We'll begin by pulling in a few globals that Mix often uses.
+ */
+
+require('./helpers');
+
 global.path = require('path');
-global.Paths = new (require('./Paths'));
-global.events = new (require('./Dispatcher'));
 global.File = require('./File');
 
-let mix = new (require('./Mix'));
 
-// The default export for this module will in fact
-// be the fluent API for your webpack.mix.js file.
-module.exports = api = new (require('./Api'))(mix);
-module.exports.mix = api; // Deprecated.
+/**
+ * This config object is what Mix will reference, when it's time
+ * to dynamically build up your Webpack configuration object.
+ */
 
-// However, you can access the Mix instance like this:
-module.exports.config = mix;
+global.Config = require('./config')();
 
-// We'll export a handful of common plugins for a cleaner config file.
-module.exports.plugins = {
-    WebpackNotifierPlugin: require('webpack-notifier'),
-    WebpackOnBuildPlugin: require('on-build-webpack'),
-    ExtractTextPlugin: require('extract-text-webpack-plugin'),
-    FriendlyErrorsWebpackPlugin: require('friendly-errors-webpack-plugin'),
-    StatsWriterPlugin: require('webpack-stats-plugin').StatsWriterPlugin,
-    WebpackChunkHashPlugin: require('webpack-chunk-hash'),
-    BrowserSyncPlugin: require('browser-sync-webpack-plugin'),
-    CopyWebpackPlugin: require('./WebpackPlugins/CopyWebpackPlugin'),
-    MockEntryPlugin: require('./WebpackPlugins/MockEntryPlugin')
-};
+global.Mix = new (require('./Mix'))();
+
+
+/**
+ * Mix exposes a simple, fluent API for activating many common build
+ * steps that a typical project should require. Behind the scenes,
+ * all calls to this fluent API will update the above config.
+ */
+
+let Api = require('./Api');
+let api = new Api();
+
+module.exports = api;
+module.exports.config = Mix.config;

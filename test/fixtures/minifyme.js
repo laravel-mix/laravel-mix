@@ -1,3 +1,0 @@
-alert('minify');
-
-alert('me');

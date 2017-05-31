@@ -26,15 +26,3 @@ test('that it attach multiple event listeners at once', t => {
 
     t.truthy(handler.withArgs('foo').calledTwice);
 });
-
-
-test('that it can fetch all registered events', t => {
-    let events = new Dispatcher;
-
-    t.is(0, Object.keys(events.all()).length);
-
-    events.listen('some-event', () => {});
-
-    t.is(1, Object.keys(events.all()).length);
-});
-

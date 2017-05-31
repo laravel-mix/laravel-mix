@@ -1,83 +1,98 @@
-let fs = require('fs-extra');
-let chokidar = require('chokidar');
+let concatenate = require('concatenate');
+let babel = require('babel-core');
 let glob = require('glob');
 
 class FileCollection {
     /**
      * Create a new FileCollection instance.
      *
-     * @param {string|array} files
+     * @param {Array|string} files
      */
-    constructor(files) {
-        this.files = files;
+    constructor(files = []) {
+        this.files = [].concat(files);
     }
 
 
     /**
-     * Copy the src files to the given destination.
-     *
-     * @param  {string} destination
-     * @param  {string|array|null} src
-     * @return {this}
+     * Fetch the underlying files.
      */
-    copyTo(destination, src) {
-        src = src || this.files;
-        this.destination = destination;
+    get() {
+        return this.files;
+    }
 
-        if (Array.isArray(src)) {
-            src.forEach(file => this.copyTo(this.destination, file));
 
-            return this;
+    /**
+     * Merge all files in the collection into one.
+     *
+     * @param {object} output
+     * @param {object} wantsBabel
+     */
+    merge(output, wantsBabel = false) {
+        let contents = concatenate.sync(
+            this.files, output.makeDirectories().path()
+        );
+
+        if (this.shouldCompileWithBabel(wantsBabel, output)) {
+            output.write(this.babelify(contents));
         }
-
-        if (src.includes('*')) {
-            return this.copyTo(this.destination, glob.sync(src));
-        }
-
-        src = new File(src).parsePath();
-        let output = this.outputPath(src);
-
-        console.log('Copying ' + src.path + ' to ' + output);
-        fs.copySync(src.path, output);
 
         return this;
     }
 
 
     /**
-     * Construct the appropriate output path for the copy.
+     * Determine if we should add a Babel pass to the concatenated file.
      *
-     * @param  {Object} src
-     * @return {string}
+     * @param {Boolean}  wantsBabel
+     * @param {Object}  output
      */
-    outputPath(src) {
-        let output = new File(this.destination).parsePath();
-
-        // If the src path is a file, but the output is a directory,
-        // we have to append the src filename to the output path.
-        if (src.isFile && output.isDir) {
-            output = path.join(
-                output.path,
-                Array.isArray(this.files) ? src.file : src.path.replace(this.files, '')
-            );
-
-            if (new File(output).parsePath().isDir) {
-                output = path.join(output, src.file);
-            }
-
-            return output;
-        }
-
-        return output.path;
+    shouldCompileWithBabel(wantsBabel, output) {
+        return wantsBabel && output.extension() === '.js';
     }
 
 
     /**
-     * Watch all files in the collection for changes.
+     * Apply Babel to the given contents.
+     *
+     * @param {string} contents
      */
-    watch() {
-        chokidar.watch(this.files, { persistent: true })
-            .on('change', updatedFile => this.copyTo(this.destination, updatedFile));
+    babelify(contents) {
+        return babel.transform(
+            contents, { presets: ['env'] }
+        ).code;
+    }
+
+
+    /**
+     * Copy the src files to the given destination.
+     *
+     * @param {string} destination
+     * @param {string|array|null} src
+     */
+    copyTo(destination, src = this.files) {
+        this.destination = destination;
+
+        if (Array.isArray(src)) {
+            src.forEach(file => this.copyTo(destination, new File(file)));
+
+            return this;
+        }
+
+        if (src.contains('*') || src.isDirectory()) {
+            if (src.isDirectory()) src = src.append('*');
+
+            return this.copyTo(destination, glob.sync(src.path()));
+        }
+
+        if (destination.isDirectory()) {
+            destination = destination.append(src.name());
+        }
+
+        Mix.addAsset(destination);
+
+        src.copyTo(destination.path());
+
+        return this;
     }
 }
 
