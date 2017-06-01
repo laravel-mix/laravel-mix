@@ -19,19 +19,7 @@ FileVersioningPlugin.prototype.apply = function () {
         this.watch(this.files);
     }
 
-    Mix.listen('files-concatenated', file => {
-        file = new File(file);
-
-        // Find and delete all matching versioned files in the directory.
-        glob(path.join(file.base(), '**'), (err, files) => {
-            files.filter(file => {
-                return /\.(\w{20}|\w{32})(\..+)/.test(file);
-            }).forEach(file => new File(file).delete());
-        });
-
-        // Then create a fresh versioned file.
-        this.reversion(file.path());
-    });
+    Mix.listen('files-concatenated', this.reversion);
 };
 
 
@@ -53,10 +41,12 @@ FileVersioningPlugin.prototype.watch = function (files, destination) {
  * @param {string} updatedFile
  */
 FileVersioningPlugin.prototype.reversion = function (updatedFile) {
-    let name = new File(updatedFile).version(false).pathFromPublic();
+    updatedFile = new File(updatedFile);
 
-    try { File.find(Mix.manifest.get(updatedFile)).delete(); }
+    try { File.find(Mix.manifest.get(updatedFile.pathFromPublic())).delete(); }
     catch (e) {}
+
+    let name = updatedFile.version(false).pathFromPublic();
 
     Mix.manifest.add(name).refresh();
 };
