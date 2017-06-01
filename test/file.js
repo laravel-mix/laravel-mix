@@ -72,6 +72,8 @@ test('it knows the relative to the file', t => {
 
 
 test('it can force the file to begin from the public path for the project.', t => {
+    Config.publicPath = 'public';
+
     let file = new File('some/path/here.js');
 
     let newFile = file.forceFromPublic();

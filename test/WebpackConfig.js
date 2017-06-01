@@ -3,7 +3,11 @@ import mix from  '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
 
-test.beforeEach(t => Config = defaultConfig());
+test.beforeEach(t => {
+    Config = defaultConfig();
+
+    Config.publicPath = 'public';
+});
 
 
 test('basic JS compilation config.', t => {

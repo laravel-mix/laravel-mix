@@ -14,6 +14,8 @@ test('that it can get fetch the underlying manifest object', t => {
 
 
 test('that it can get fetch a single versioned path from the underlying manifest', t => {
+    Config.publicPath = 'public';
+
     Mix.manifest.add('file/path.js');
 
     t.is('public/file/path.js', Mix.manifest.get('file/path.js'));
