@@ -150,9 +150,11 @@ module.exports = function () {
     }
 
 
-    plugins.push(
-        new (require('../plugins/FileVersioningPlugin'))(Config.version)
-    );
+    if (Config.versioning) {
+        plugins.push(
+            new (require('../plugins/FileVersioningPlugin'))(Config.version)
+        );
+    }
 
 
     if (Config.copy.length) {

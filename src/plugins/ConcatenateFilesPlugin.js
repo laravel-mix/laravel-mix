@@ -1,5 +1,4 @@
 let FileCollection = require('../FileCollection');
-let FileVersioning = require('./FileVersioningPlugin');
 let chokidar = require('chokidar');
 
 /**
