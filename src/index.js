@@ -62,4 +62,5 @@ let Api = require('./Api');
 let api = new Api();
 
 module.exports = api;
+module.exports.mix = api; // Deprecated.
 module.exports.config = Mix.config;
