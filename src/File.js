@@ -186,7 +186,7 @@ class File {
 
 
     /**
-     * Fetch a full, versioned path to the file.
+     * Version the file.
      *
      * @param {Boolean} shouldRemoveOriginal
      */
