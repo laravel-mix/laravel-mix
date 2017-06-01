@@ -40,6 +40,20 @@ class Mix {
 
 
     /**
+     * Determine if Mix sees a particular tool or framework.
+     *
+     * @param {string} tool
+     */
+    sees(tool) {
+        if (tool === 'laravel') {
+            return File.exists('./artisan');
+        }
+
+        return false;
+    }
+
+
+    /**
      * Add a custom file to the webpack assets collection.
      *
      * @param {string} asset

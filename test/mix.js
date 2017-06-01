@@ -1,6 +1,7 @@
 import test from 'ava';
 import mix from '../src/index';
 import sinon from 'sinon';
+import mockFs from 'mock-fs';
 
 test('that it knows if its being executed in a production environment', t => {
     Config.production = true;
@@ -37,4 +38,15 @@ test('that it can dispatch events', t => {
     Mix.dispatch('some-event');
 
     t.true(callback.called);
+});
+
+
+test('that it can see if we are using a Laravel app', t => {
+    t.false(Mix.sees('laravel'));
+
+    mockFs({
+        './artisan': 'all laravel apps have one'
+    });
+
+    t.true(Mix.sees('laravel'));
 });

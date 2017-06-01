@@ -31,6 +31,16 @@ global.Mix = new (require('./Mix'))();
 
 
 /**
+ * If we're working in a Laravel app, we'll explicitly
+ * set the default public path, as a convenience.
+ */
+
+if (Mix.sees('laravel')) {
+    Config.publicPath = 'public';
+}
+
+
+/**
  * Mix exposes a simple, fluent API for activating many common build
  * steps that a typical project should require. Behind the scenes,
  * all calls to this fluent API will update the above config.

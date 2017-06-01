@@ -126,7 +126,7 @@ module.exports = function () {
          *
          * @type {String}
          */
-        publicPath: 'public',
+        publicPath: '',
 
 
         /**
