@@ -54,6 +54,16 @@ class Mix {
 
 
     /**
+     * Determine if Mix should activate hot reloading.
+     */
+    shouldHotReload() {
+        new File(Config.publicPath + '/hot').delete();
+
+        return this.isUsing('hmr');
+    }
+
+
+    /**
      * Add a custom file to the webpack assets collection.
      *
      * @param {string} asset

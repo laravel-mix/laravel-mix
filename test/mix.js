@@ -49,4 +49,15 @@ test('that it can see if we are using a Laravel app', t => {
     });
 
     t.true(Mix.sees('laravel'));
+
+    mockFs.restore();
+});
+
+
+test('that it detect if hot reloading should be enabled', t => {
+    t.false(Mix.shouldHotReload());
+
+    Config.hmr = true;
+
+    t.true(Mix.shouldHotReload());
 });
