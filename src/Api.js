@@ -146,6 +146,10 @@ class Api {
             src, output, pluginOptions
         });
 
+        if (type === 'fastSass') {
+            Config.customAssets.push(output);
+        }
+
         return this;
     }
 
