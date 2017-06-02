@@ -77,7 +77,7 @@ class Api {
             outputStyle: 'expanded'
         }, pluginOptions, { sourceMap: true });
 
-        return this.preprocessor('sass', src, output, pluginOptions);
+        return this.preprocess('sass', src, output, pluginOptions);
     }
 
 
@@ -89,7 +89,7 @@ class Api {
      * @param {object} pluginOptions
      */
     standaloneSass(src, output, pluginOptions = {}) {
-        return this.preprocessor('fastSass', src, output, pluginOptions);
+        return this.preprocess('fastSass', src, output, pluginOptions);
     };
 
 
@@ -118,7 +118,7 @@ class Api {
             'npm install less-loader less --save-dev'
         );
 
-        return this.preprocessor('less', src, output, pluginOptions);
+        return this.preprocess('less', src, output, pluginOptions);
     }
 
 
@@ -135,7 +135,7 @@ class Api {
             'npm install stylus-loader stylus --save-dev'
         );
 
-        return this.preprocessor('stylus', src, output, pluginOptions);
+        return this.preprocess('stylus', src, output, pluginOptions);
     };
 
 
@@ -147,7 +147,7 @@ class Api {
      * @param {string} output
      * @param {object} pluginOptions
      */
-    preprocessor(type, src, output, pluginOptions = {}) {
+    preprocess(type, src, output, pluginOptions = {}) {
         Verify.preprocessor(type, src, output);
 
         src = new File(src);
