@@ -94,6 +94,18 @@ class Api {
 
 
     /**
+     * Alias for standaloneSass.
+     *
+     * @param {string} src
+     * @param {string} output
+     * @param {object} pluginOptions
+     */
+    fastSass(...args) {
+        return this.standaloneSass(...args);
+    }
+
+
+    /**
      * Register Less compilation.
      *
      * @param {string} src

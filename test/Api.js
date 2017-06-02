@@ -82,7 +82,7 @@ test('mix.sass()', t => {
 });
 
 
-test('mix.standaloneSass()', t => {
+test('mix.standaloneSass/fastSass()', t => {
     let response = mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
 
     t.is(mix, response);
@@ -92,6 +92,8 @@ test('mix.standaloneSass()', t => {
         output: new File('public/css/app.css'),
         pluginOptions: {}
     }], Config.preprocessors.fastSass);
+
+    t.is(mix, mix.fastSass('resources/assets/sass/app.scss', 'public/css'));
 });
 
 
