@@ -191,7 +191,7 @@ class File {
      * @param {Boolean} shouldRemoveOriginal
      */
     version(shouldRemoveOriginal = true) {
-        let versionedName = this.nameWithoutExtension() + '.' + md5(this.read()) + this.extension();
+        let versionedName = this.nameWithoutExtension() + '.' + md5(this.read()).substr(0, 20) + this.extension();
 
         if (shouldRemoveOriginal) {
             return this.rename(versionedName);

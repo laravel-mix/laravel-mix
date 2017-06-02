@@ -23,12 +23,18 @@ CustomAssetsPlugin.prototype.apply = function (compiler) {
             // If versioning is turned on, all custom assets
             // need to be versioned manually.
             if (this.version) {
+                if (/\.(\w{20}|\w{32})(\..+)/.test(name)) {
+                    return;
+                }
+
                 let deleteUnversionedFile = false;
 
-                asset = asset.version(deleteUnversionedFile);
-                name = asset.pathFromPublic();
+                try {
+                    asset = asset.version(deleteUnversionedFile);
+                    name = asset.pathFromPublic();
 
-                Mix.manifest.add(name);
+                    Mix.manifest.add(name);
+                } catch (e) {}
             }
 
             if (this.inProduction) {

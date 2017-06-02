@@ -41,7 +41,7 @@ CleanVersionedFilesPlugin.prototype.oldFile = function (file) {
     }
 
     // And ignore files that are currently present in the manifest.
-    if (objectValues(Mix.manifest.get()).includes(file)) {
+    if (objectValues(Mix.manifest.get()).includes(file.replace(Config.publicPath, ''))) {
         return false;
     }
 

@@ -128,13 +128,6 @@ module.exports = function () {
     }
 
 
-    // Display custom asset compilation performed outside of Webpack
-    // in the Terminal output that lists all compiled assets.
-    plugins.push(
-        new CustomAssetsPlugin(Config.customAssets)
-    );
-
-
     // Notify the rest of our app when Webpack has finished its build.
     plugins.push(
         new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
@@ -148,18 +141,6 @@ module.exports = function () {
     }
 
 
-    if (Config.versioning) {
-        plugins.push(
-            new (require('../plugins/FileVersioningPlugin'))(Config.version)
-        );
-    }
-
-
-    if (Config.copy.length) {
-        new (require('../plugins/CopyWebpackPlugin'))(Config.copy);
-    }
-
-
     // Concatenate all relevant files.
     if (Config.combine.length) {
         plugins.push(
@@ -168,9 +149,30 @@ module.exports = function () {
     }
 
 
+    if (Config.copy.length) {
+        plugins.push(
+            new (require('../plugins/CopyWebpackPlugin'))(Config.copy)
+        );
+    }
+
+
+    if (Config.versioning) {
+        plugins.push(
+            new (require('../plugins/FileVersioningPlugin'))(Config.version)
+        );
+    }
+
+
     // Clean up all old versioned files.
     plugins.push(
         new (require('../plugins/CleanVersionedFilesPlugin'))
+    );
+
+
+    // Display custom asset compilation performed outside of Webpack
+    // in the Terminal output that lists all compiled assets.
+    plugins.push(
+        new CustomAssetsPlugin(Config.customAssets)
     );
 
     return plugins;

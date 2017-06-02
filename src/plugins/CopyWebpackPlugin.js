@@ -7,16 +7,28 @@ let chokidar = require('chokidar');
  * @param {array} copy
  */
 function CopyWebpackPlugin(copy) {
-    copy.forEach(copy => {
-        let files = new FileCollection(copy.from);
-
-        files.copyTo(copy.to);
-
-        if (Mix.isWatching()) {
-            this.watch(files, copy.to);
-        }
-    });
+    this.copy = copy;
 }
+
+
+/**
+ * Apply the plugin.
+ *
+ * @param {Object} compiler
+ */
+CopyWebpackPlugin.prototype.apply = function (compiler) {
+    compiler.plugin('done', () => {
+        this.copy.forEach(copy => {
+            let files = new FileCollection(copy.from);
+
+            files.copyTo(copy.to);
+
+            if (Mix.isWatching()) {
+                this.watch(files, copy.to);
+            }
+        });
+    });
+};
 
 
 /**
