@@ -39,7 +39,7 @@ ConcatenateFilesPlugin.prototype.watch = function (files, destination, wantsBabe
 
             files.merge(destination, wantsBabel);
 
-            Mix.dispatch('files-concatenated', destination.path());
+            Mix.dispatch('asset-updated', destination.path());
         });
 };
 

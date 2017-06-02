@@ -130,11 +130,9 @@ module.exports = function () {
 
     // Display custom asset compilation performed outside of Webpack
     // in the Terminal output that lists all compiled assets.
-    if (Config.customAssets.length) {
-        plugins.push(
-            new CustomAssetsPlugin(Config.customAssets)
-        );
-    }
+    plugins.push(
+        new CustomAssetsPlugin(Config.customAssets)
+    );
 
 
     // Notify the rest of our app when Webpack has finished its build.

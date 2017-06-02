@@ -8,7 +8,9 @@ let chokidar = require('chokidar');
  */
 function CopyWebpackPlugin(copy) {
     copy.forEach(copy => {
-        let files = new FileCollection(copy.from).copyTo(copy.to);
+        let files = new FileCollection(copy.from);
+
+        files.copyTo(copy.to);
 
         if (Mix.isWatching()) {
             this.watch(files, copy.to);
@@ -28,7 +30,9 @@ CopyWebpackPlugin.prototype.watch = function (files, destination) {
         .on('change', updatedFile => {
             console.log(`Copying ${updatedFile} to ${destination.path()}`);
 
-            files.copyTo(destination, new File(updatedFile));
+            let to = files.copyTo(destination, new File(updatedFile));
+
+            Mix.dispatch('asset-updated', to);
         });
 };
 

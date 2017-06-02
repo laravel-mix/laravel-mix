@@ -92,7 +92,7 @@ class FileCollection {
 
         src.copyTo(destination.path());
 
-        return this;
+        return destination.path();
     }
 }
 

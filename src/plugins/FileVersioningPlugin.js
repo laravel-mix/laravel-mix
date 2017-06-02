@@ -19,7 +19,7 @@ FileVersioningPlugin.prototype.apply = function () {
         this.watch(this.files);
     }
 
-    Mix.listen('files-concatenated', this.reversion);
+    Mix.listen('asset-updated', this.reversion);
 };
 
 
