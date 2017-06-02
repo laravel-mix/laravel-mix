@@ -105,9 +105,7 @@ module.exports = function () {
          *
          * @type {Array}
          */
-        postCss: [
-            require('autoprefixer')
-        ],
+        postCss: [],
 
 
         /**

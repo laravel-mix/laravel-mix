@@ -126,14 +126,18 @@ module.exports = function () {
                         loader: 'css-loader',
                         options: {
                             url: Config.processCssUrls,
-                            sourceMap: Mix.isUsing('sourcemaps')
+                            sourceMap: Mix.isUsing('sourcemaps'),
+                            importLoaders: 1
                         }
                     },
 
                     {
                         loader: 'postcss-loader',
                         options: {
-                            sourceMap: Mix.isUsing('sourcemaps')
+                            sourceMap: Mix.isUsing('sourcemaps'),
+                            plugins: [
+                                require('autoprefixer')
+                            ].concat(Config.postCss)
                         }
                     },
                 ];
