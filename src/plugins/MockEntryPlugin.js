@@ -23,8 +23,6 @@ MockEntryPlugin.prototype.apply = function (compiler) {
                 path.resolve(Config.publicPath, temporaryOutputFile.name)
             ).delete();
         }
-
-        delete stats.compilation.assets[temporaryOutputFile.name];
     });
 };
 

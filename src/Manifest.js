@@ -1,4 +1,6 @@
 let objectValues = require('lodash').values;
+let without = require('lodash').without;
+
 let path = require('path');
 
 class Manifest {
@@ -89,8 +91,15 @@ class Manifest {
      * @param {Object} stats
      */
     flattenAssets(stats) {
+        let assets = Object.assign({}, stats.assetsByChunkName);
+
+        // If there's a temporary mix.js chunk, we can safely remove it.
+        if (assets.mix) {
+            assets.mix = without(assets.mix, 'mix.js');
+        }
+
         return [].concat.apply(
-            [], objectValues(stats.assetsByChunkName)
+            [], objectValues(assets)
         );
     }
 
