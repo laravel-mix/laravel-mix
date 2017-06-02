@@ -1,6 +1,7 @@
 let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Dispatcher = require('./Dispatcher');
+let isFunction = require('lodash').isFunction;
 
 class Mix {
     /**
@@ -91,6 +92,10 @@ class Mix {
      * @param {*}      data
      */
     dispatch(event, data) {
+        if (isFunction(data)) {
+            data = data();
+        }
+
         this.dispatcher.fire(event, data);
     }
 }

@@ -42,9 +42,9 @@ CopyWebpackPlugin.prototype.watch = function (files, destination) {
         .on('change', updatedFile => {
             console.log(`Copying ${updatedFile} to ${destination.path()}`);
 
-            let to = files.copyTo(destination, new File(updatedFile));
-
-            Mix.dispatch('asset-updated', to);
+            Mix.dispatch('asset-updated', function () {
+                return files.copyTo(destination, new File(updatedFile));
+            });
         });
 };
 

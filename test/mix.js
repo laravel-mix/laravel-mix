@@ -41,6 +41,15 @@ test('that it can dispatch events', t => {
 });
 
 
+test('that it can dispatch events using a function to determine the data', t => {
+    let callback = sinon.spy();
+
+    Mix.listen('some-event', callback);
+    Mix.dispatch('some-event', () => 'foo');
+
+    t.true(callback.calledWith('foo'));
+});
+
 test('that it can see if we are using a Laravel app', t => {
     t.false(Mix.sees('laravel'));
 
