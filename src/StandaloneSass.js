@@ -17,7 +17,7 @@ class StandaloneSass {
         this.pluginOptions = pluginOptions;
         this.shouldWatch = process.argv.includes('--watch');
 
-        Config.customAssets.push(this.output);
+        Mix.addAsset(this.output);
     }
 
 

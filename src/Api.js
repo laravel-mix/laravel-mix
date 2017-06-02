@@ -159,7 +159,7 @@ class Api {
         });
 
         if (type === 'fastSass') {
-            Config.customAssets.push(output);
+            Mix.addAsset(output);
         }
 
         return this;
@@ -174,7 +174,7 @@ class Api {
      * @param {Boolean}      babel
      */
     combine(src, output, babel = false) {
-        Config.customAssets.push(new File(output));
+        Mix.addAsset(new File(output));
 
         Config.combine.push({ src, output: new File(output), babel });
 
