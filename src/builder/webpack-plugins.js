@@ -3,9 +3,9 @@ let FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 let MockEntryPlugin = require('../plugins/MockEntryPlugin');
 let MixDefinitionsPlugin = require('../plugins/MixDefinitionsPlugin');
 let BuildCallbackPlugin = require('../plugins/BuildCallbackPlugin');
-let CustomAssetsPlugin = require('../plugins/CustomAssetsPlugin');
+let CustomTasksPlugin = require('../plugins/CustomTasksPlugin');
+let ManifestPlugin = require('../plugins/ManifestPlugin');
 let WebpackChunkHashPlugin = require('webpack-chunk-hash');
-let StatsWriterPlugin = require("webpack-stats-plugin").StatsWriterPlugin;
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function () {
@@ -14,15 +14,6 @@ module.exports = function () {
     // Activate better error feedback in the console.
     plugins.push(
         new FriendlyErrorsWebpackPlugin({ clearConsole: Config.clearConsole })
-    );
-
-
-    // Write the mix-manifest.json file.
-    plugins.push(
-        new StatsWriterPlugin({
-            filename: 'mix-manifest.json',
-            transform: Mix.manifest.transform.bind(Mix.manifest),
-        })
     );
 
 
@@ -128,12 +119,6 @@ module.exports = function () {
     }
 
 
-    // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(
-        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
-    );
-
-
     if (Config.preprocessors.fastSass && Config.preprocessors.fastSass.length) {
         plugins.push(
             new (require('../plugins/FastSassPlugin'))(Config.preprocessors.fastSass)
@@ -141,38 +126,21 @@ module.exports = function () {
     }
 
 
-    // Concatenate all relevant files.
-    if (Config.combine.length) {
-        plugins.push(
-            new (require('../plugins/ConcatenateFilesPlugin'))(Config.combine)
-        );
-    }
-
-
-    if (Config.copy.length) {
-        plugins.push(
-            new (require('../plugins/CopyWebpackPlugin'))(Config.copy)
-        );
-    }
-
-
-    if (Config.versioning) {
-        plugins.push(
-            new (require('../plugins/FileVersioningPlugin'))(Config.version)
-        );
-    }
-
-
-    // Clean up all old versioned files.
+    // Notify the rest of our app when Webpack has finished its build.
     plugins.push(
-        new (require('../plugins/CleanVersionedFilesPlugin'))
+        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
     );
 
 
-    // Display custom asset compilation performed outside of Webpack
-    // in the Terminal output that lists all compiled assets.
+    // Handle all custom, non-webpack tasks.
     plugins.push(
-        new CustomAssetsPlugin(Config.customAssets)
+        new ManifestPlugin()
+    );
+
+
+    // Handle all custom, non-webpack tasks.
+    plugins.push(
+        new CustomTasksPlugin()
     );
 
     return plugins;

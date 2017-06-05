@@ -38,9 +38,23 @@ class Manifest {
     add(filePath) {
         filePath = this.normalizePath(filePath);
 
-        let original = filePath.replace(/\.(\w{20}|\w{32})(\..+)/, '$2');
+        let original = filePath.replace(/\?id=\w{20}/, '');
 
         this.manifest[original] = filePath;
+
+        return this;
+    }
+
+
+    /**
+     * Add a new hashed key to the manifest.
+     *
+     * @param {string} file
+     */
+    hash(file) {
+        let hash = new File(path.join(Config.publicPath, file)).version();
+
+        this.manifest[file] = file + '?id=' + hash;
 
         return this;
     }
@@ -50,14 +64,13 @@ class Manifest {
      * Transform the Webpack stats into the shape we need.
      *
      * @param {object} stats
-     * @param {object} options
      */
-    transform(stats, options) {
+    transform(stats) {
         let customAssets = Config.customAssets.map(asset => asset.pathFromPublic());
 
         this.flattenAssets(stats).concat(customAssets).forEach(this.add.bind(this));
 
-        return JSON.stringify(this.manifest, null, 2);
+        return this;
     }
 
 

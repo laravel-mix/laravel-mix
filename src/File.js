@@ -186,22 +186,10 @@ class File {
 
 
     /**
-     * Version the file.
-     *
-     * @param {Boolean} shouldRemoveOriginal
+     * Calculate the proper version hash for the file.
      */
-    version(shouldRemoveOriginal = true) {
-        let versionedName = this.nameWithoutExtension() + '.' + md5(this.read()).substr(0, 20) + this.extension();
-
-        if (shouldRemoveOriginal) {
-            return this.rename(versionedName);
-        }
-
-        let copyPath = path.join(this.base(), versionedName);
-
-        this.copyTo(copyPath);
-
-        return new File(copyPath);
+    version() {
+        return md5(this.read()).substr(0, 20);
     }
 
 

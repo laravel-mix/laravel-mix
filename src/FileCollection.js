@@ -36,7 +36,7 @@ class FileCollection {
             output.write(this.babelify(contents));
         }
 
-        return this;
+        return new File(output.makeDirectories().path());
     }
 
 
@@ -75,7 +75,7 @@ class FileCollection {
         if (Array.isArray(src)) {
             src.forEach(file => this.copyTo(destination, new File(file)));
 
-            return this;
+            return;
         }
 
         if (src.contains('*') || src.isDirectory()) {
@@ -88,34 +88,9 @@ class FileCollection {
             destination = destination.append(src.name());
         }
 
-        // We'll try to copy the given file to the new destination...
-        try {
-            src.copyTo(destination.path());
-        }
+        src.copyTo(destination.path());
 
-        // However, if there was an issue or file not found, we'll take
-        // one more pass and try to copy the hashed version of the file
-        // instead.
-        catch (e) {
-            try {
-                // Try to find a hashed version of the src file in the manifest.
-                src = new File(Mix.manifest.get(src.pathFromPublic()));
-
-                // Then update the destination to reflect the already hashed file name.
-                destination = new File(destination.base()).append(src.name());
-
-                src.copyTo(destination.path());
-            } catch (e) {
-                return false;
-            }
-
-            Mix.manifest.add(destination.pathFromPublic()).refresh();
-        }
-
-        // We'll finally add this newly copied file to our custom
-        // assets list, so that it can be optionally versioned,
-        // and listed in the mix-manifest.json file.
-        Mix.addAsset(destination);
+        this.assets = (this.assets || []).concat(destination);
 
         return destination.path();
     }

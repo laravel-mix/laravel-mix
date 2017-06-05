@@ -42,6 +42,19 @@ class Verify {
     }
 
 
+    /**
+     * Assert that the given file exists.
+     *
+     * @param {string} file
+     */
+    static exists(file) {
+        assert(
+            File.exists(file),
+            `Whoops, you are trying to compile ${file}, but that file does not exist.`
+        );
+    }
+
+
     // /**
     //  * Verify that the call to mix.extract() is valid.
     //  *

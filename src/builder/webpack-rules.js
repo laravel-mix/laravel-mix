@@ -115,11 +115,6 @@ module.exports = function () {
         Config.preprocessors[type].forEach(preprocessor => {
             let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
 
-            if (Config.versioning) {
-                let ext = path.extname(outputPath);
-                outputPath = outputPath.replace(ext, '.[contenthash]' + ext);
-            }
-
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
                 let loaders = [
                     {

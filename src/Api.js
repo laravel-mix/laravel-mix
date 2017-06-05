@@ -1,4 +1,8 @@
 let Verify = require('./Verify');
+let CopyFilesTask = require('./tasks/CopyFilesTask');
+let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
+let VersionFilesTask = require('./tasks/VersionFilesTask');
+let glob = require('glob');
 
 class Api {
     /**
@@ -33,9 +37,7 @@ class Api {
             'npm install babel-preset-react --save-dev'
         );
 
-        this.js(entry, output);
-
-        return this;
+        return this.js(entry, output);
     };
 
 
@@ -50,9 +52,7 @@ class Api {
             'npm install ts-loader typescript --save-dev'
         );
 
-        this.js(entry, output);
-
-        return this;
+        return this.js(entry, output);
     };
 
 
@@ -89,6 +89,8 @@ class Api {
      * @param {object} pluginOptions
      */
     standaloneSass(src, output, pluginOptions = {}) {
+        Verify.exists(src);
+
         return this.preprocess('fastSass', src, output, pluginOptions);
     };
 
@@ -174,9 +176,13 @@ class Api {
      * @param {Boolean}      babel
      */
     combine(src, output, babel = false) {
-        Mix.addAsset(new File(output));
+        let task = new ConcatFilesTask({
+            src,
+            output: new File(output),
+            babel
+        });
 
-        Config.combine.push({ src, output: new File(output), babel });
+        Mix.addTask(task);
 
         return this;
     };
@@ -236,7 +242,11 @@ class Api {
      * @param {string} to
      */
     copy(from, to) {
-        Config.copy.push({ from, to: new File(to) });
+        let task = new CopyFilesTask({
+            from, to: new File(to)
+        });
+
+        Mix.addTask(task);
 
         return this;
     };
@@ -283,9 +293,22 @@ class Api {
      */
     version(files = []) {
         Config.versioning = true;
-        Config.version = Config.version.concat(files);
 
-        files.map(file => Mix.addAsset(new File(file)));
+        files = flatten([].concat(files).map(filePath => {
+            if (File.find(filePath).isDirectory()) {
+                filePath += (path.sep + '*');
+            }
+
+            if (! filePath.includes('*')) return filePath;
+
+            return glob.sync(
+                new File(filePath).forceFromPublic().relativePath()
+            );
+        }));
+
+        Mix.addTask(
+            new VersionFilesTask({ files })
+        );
 
         return this;
     }

@@ -11,6 +11,7 @@ class Mix {
         this.paths = new Paths;
         this.manifest = new Manifest;
         this.dispatcher = new Dispatcher;
+        this.tasks = [];
     }
 
 
@@ -71,6 +72,16 @@ class Mix {
      */
     addAsset(asset) {
         Config.customAssets.push(asset);
+    }
+
+
+    /**
+     * Queue up a new task.
+     *
+     * @param {Task} task
+     */
+    addTask(task) {
+        this.tasks.push(task);
     }
 
 

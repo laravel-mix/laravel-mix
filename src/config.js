@@ -27,22 +27,6 @@ module.exports = function () {
 
 
         /**
-         * Sets of files that should be copied to a new location.
-         *
-         * @type {Array}
-         */
-        copy: [],
-
-
-        /**
-         * Sets of files that need to be combined.
-         *
-         * @type {Array}
-         */
-        combine: [],
-
-
-        /**
          * The list of vendor chunks to extract.
          *
          * @type {Array}
@@ -133,14 +117,6 @@ module.exports = function () {
          * @type {Boolean}
          */
         versioning: false,
-
-
-        /**
-         * A list of files to version.
-         *
-         * @type {Array}
-         */
-        version: [],
 
 
         /**

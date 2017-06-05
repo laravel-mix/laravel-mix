@@ -95,8 +95,8 @@ class StandaloneSass {
             output = output.toString();
 
             let event = 'change';
-            if (/Error/.test(output)) event = 'error';
-            if (/Wrote CSS/.test(output)) event = 'success';
+            if (output.includes('Error')) event = 'error';
+            if (output.includes('Wrote CSS')) event = 'success';
 
             callback(output, event);
         });

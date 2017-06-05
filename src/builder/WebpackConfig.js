@@ -61,7 +61,7 @@ class WebpackConfig {
     buildOutput() {
         this.webpackConfig.output = {
             path: path.resolve(Config.publicPath),
-            filename: Config.versioning ? '[name].[chunkhash].js' : '[name].js',
+            filename: Config.versioning ? '[name].js' : '[name].js',
             chunkFilename: Config.versioning ? '[name].[chunkhash].js' : '[name].js',
             publicPath: ''
         };

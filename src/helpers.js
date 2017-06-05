@@ -1,3 +1,5 @@
+let objectValues = require('lodash').values;
+
 /**
  * Generic tap function.
  *
@@ -8,4 +10,16 @@ global.tap = function (val, callback) {
     callback(val);
 
     return val;
+};
+
+
+/**
+ * Flatten the given array.
+ *
+ * @param {Array} arr
+ */
+global.flatten = function (arr) {
+    return [].concat.apply(
+        [], objectValues(arr)
+    );
 };
