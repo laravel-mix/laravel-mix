@@ -4,7 +4,6 @@ import webpack from 'webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import fs from 'fs-extra';
 
-
 test.beforeEach(t => {
     // Reset state.
     global.Config = require('../../src/config')();
@@ -75,6 +74,42 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
         }, readManifest());
     });
 });
+
+
+test.cb.serial('it compiles JavaScript and copies the output to a new location.', t => {
+    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
+       .copy('test/fake-app/public/js/app.js', 'test/fake-app/public/somewhere');
+
+    compile(t, () => {
+        t.true(File.exists('test/fake-app/public/somewhere/app.js'));
+
+        t.deepEqual({
+            "/js/app.js": "/js/app.js",
+            "/somewhere/app.js": "/somewhere/app.js"
+        }, readManifest());
+    });
+});
+
+
+test.cb.serial('it compiles JS and then combines the bundles files.', t => {
+    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
+       .js('test/fake-app/resources/assets/js/another.js', 'js')
+       .scripts([
+            'test/fake-app/public/js/app.js',
+            'test/fake-app/public/js/another.js'
+        ], 'test/fake-app/public/js/all.js');
+
+    compile(t, () => {
+        t.true(File.exists('test/fake-app/public/js/all.js'));
+
+        t.deepEqual({
+            "/js/app.js": "/js/app.js",
+            "/js/another.js": "/js/another.js",
+            "/js/all.js": "/js/all.js"
+        }, readManifest());
+    });
+});
+
 
 
 function compile(t, callback) {
