@@ -63,8 +63,6 @@ class File {
     }
 
 
-
-
     /**
      * Get the name of the file, minus the extension.
      */
