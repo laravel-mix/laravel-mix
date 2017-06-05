@@ -35,7 +35,6 @@
     "chokidar": "^1.7.0",
     "clean-css": "^4.1.3",
     "concatenate": "0.0.2",
-    "cross-env": "^3.2.3",
     "css-loader": "^0.28.3",
     "dotenv": "^4.0.0",
     "extract-text-webpack-plugin": "^2.1.0",
