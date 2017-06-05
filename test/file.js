@@ -134,43 +134,14 @@ test('it can read and write to a file', t => {
 });
 
 
-test('it can version a file', t => {
+test('it can calculate a unique versioned hash for the file', t => {
     mockFs({
         'path/to/some/file.js': 'foobar'
     });
 
     let file = new File('path/to/some/file.js');
 
-    // If we version the file, then it should be
-    // renamed behind the scenes.
-    file = file.version();
-
-    // So let's make sure the original file doesn't exist.
-    t.false(File.exists('path/to/some/file.js'));
-
-    // And the new path does.
-    t.true(File.exists(file.path()));
-});
-
-
-test('it can version a file without deleting the unversioned counterpart', t => {
-    mockFs({
-        'path/to/some/file.js': 'foobar'
-    });
-
-    let file = new File('path/to/some/file.js');
-
-    // If we version the file, then it should be
-    // renamed behind the scenes.
-    let deleteUnversionedFile = false;
-    file = file.version(deleteUnversionedFile);
-
-    // Because we specified tha the unversioned counterpart
-    // shouldn't be deleted, it should still exist.
-    t.true(File.exists('path/to/some/file.js'));
-
-    // // And the new path does.
-    t.true(File.exists(file.path()));
+    t.true(file.version().length === 20);
 });
 
 

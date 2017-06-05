@@ -3,6 +3,7 @@ import mix from  '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
 
+
 test.beforeEach(t => {
     Config = defaultConfig();
 
@@ -40,27 +41,6 @@ test('basic JS compilation with output public directory omitted config.', t => {
             path.resolve('resources/assets/js/app.js')
         ]
     }, webpackConfig.entry);
-});
-
-
-test('basic JS compilation with file versioning config.', t => {
-    mix.js('resources/assets/js/app.js', 'public/js')
-       .version();
-
-    let webpackConfig = new WebpackConfig().build();
-
-    t.deepEqual({
-        '/js/app': [
-            path.resolve('resources/assets/js/app.js')
-        ]
-    }, webpackConfig.entry);
-
-    t.deepEqual({
-        path: path.resolve('public'),
-        filename: '[name].[chunkhash].js',
-        chunkFilename: '[name].[chunkhash].js',
-        publicPath: ''
-    }, webpackConfig.output);
 });
 
 

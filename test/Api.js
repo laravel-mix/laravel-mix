@@ -1,9 +1,17 @@
 import test from 'ava';
 import path from 'path';
 import mix from '../src/index';
+import mockFs from 'mock-fs';
+
 
 test.beforeEach(t => {
     Config = require('../src/config')();
+    Mix.tasks = [];
+});
+
+
+test.afterEach(t => {
+    mockFs.restore();
 });
 
 
@@ -83,6 +91,10 @@ test('mix.sass()', t => {
 
 
 test('mix.standaloneSass/fastSass()', t => {
+    mockFs({
+        'resources/assets/sass/app.scss': 'body {}'
+    })
+
     let response = mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
 
     t.is(mix, response);
@@ -136,9 +148,25 @@ test('mix.version()', t => {
 
     t.is(mix, response);
     t.true(Config.versioning);
-    t.deepEqual(['some/file.js'], Config.version);
 
-    t.deepEqual(new File('some/file.js'), Config.customAssets[0]);
+    t.deepEqual(['some/file.js'], Mix.tasks[0].data.files);
+});
+
+
+test('mix.version() with a folder name', t => {
+    mockFs({
+        'path/to/file.js': 'foo',
+        'path/to/file2.js': 'foo',
+        'path/to/file3.js': 'foo'
+    });
+
+    let response = mix.version('path/to');
+
+    t.deepEqual([
+        'path/to/file.js',
+        'path/to/file2.js',
+        'path/to/file3.js'
+    ], Mix.tasks[0].data.files);
 });
 
 
@@ -206,12 +234,8 @@ test('mix.webpackConfig()', t => {
 
 test('mix.combine/scripts/styles/babel()', t => {
     t.is(mix, mix.combine([], 'public/js/combined.js'));
-    t.deepEqual({ src: [], output: new File('public/js/combined.js'), babel: false }, Config.combine[0]);
 
-    t.deepEqual(new File('public/js/combined.js'), Config.customAssets[0]);
-
-    t.is(mix, mix.styles([], 'public/js/again.js'));
-    t.deepEqual({ src: [], output: new File('public/js/again.js'), babel: false }, Config.combine[1]);
+    t.is(1, Mix.tasks.length);
 
     t.is(mix, mix.scripts([], 'public/js/combined.js'));
     t.is(mix, mix.babel([], 'public/js/combined.js'));
@@ -221,7 +245,7 @@ test('mix.combine/scripts/styles/babel()', t => {
 test('mix.minify()', t => {
     t.is(mix, mix.minify('public/js/minify.js'));
 
-    t.deepEqual(new File('public/js/minify.min.js'), Config.customAssets[0]);
+    t.is(1, Mix.tasks.length);
 });
 
 
@@ -265,11 +289,11 @@ test('mix.sourceMaps()', t => {
 test('mix.copy()', t => {
     mix.copy('this/file.js', 'this/other/location.js');
 
-    t.is(1, Config.copy.length);
+    t.is(1, Mix.tasks.length);
 
     mix.copyDirectory('this/folder', 'this/other/folder');
 
-    t.is(2, Config.copy.length);
+    t.is(2, Mix.tasks.length);
 });
 
 

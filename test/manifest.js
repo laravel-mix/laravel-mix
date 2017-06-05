@@ -6,7 +6,7 @@ import Manifest from '../src/Manifest';
 test.beforeEach(() => Mix.manifest = new Manifest());
 
 
-test('that it can get fetch the underlying manifest object', t => {
+test('that it can fetch the underlying manifest object', t => {
     Mix.manifest.add('file/path.js');
 
     t.deepEqual({ '/file/path.js': '/file/path.js' }, Mix.manifest.get());
@@ -23,14 +23,14 @@ test('that it can get fetch a single versioned path from the underlying manifest
 
 
 test('it transforms the generated stats assets to the appropriate format', t => {
-    let stats = { assetsByChunkName: { '/js/app': [ '/js/app.a218bd06338f6bc2f5ec.js', 'css/app.a77184666fc90f945bfb72e339c8dcf1.css' ] } };
+    let stats = { assetsByChunkName: { '/js/app': [ '/js/app.js', 'css/app.css' ] } };
 
-    let transformed = Mix.manifest.transform(stats);
+    Mix.manifest.transform(stats);
 
-    t.deepEqual(JSON.stringify({
-        '/js/app.js': '/js/app.a218bd06338f6bc2f5ec.js',
-        '/css/app.css': '/css/app.a77184666fc90f945bfb72e339c8dcf1.css'
-    }, null, 2), transformed);
+    t.deepEqual({
+        '/js/app.js': '/js/app.js',
+        '/css/app.css': '/css/app.css'
+    }, Mix.manifest.get());
 });
 
 

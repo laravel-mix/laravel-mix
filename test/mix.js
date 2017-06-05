@@ -3,7 +3,14 @@ import mix from '../src/index';
 import sinon from 'sinon';
 import mockFs from 'mock-fs';
 
-test('that it knows if its being executed in a production environment', t => {
+
+test.beforeEach(t => {
+    Config = require('../src/config')();
+    Mix.tasks = [];
+});
+
+
+test('that it knows if it is being executed in a production environment', t => {
     Config.production = true;
 
     t.true(Mix.inProduction());
@@ -50,6 +57,7 @@ test('that it can dispatch events using a function to determine the data', t => 
     t.true(callback.calledWith('foo'));
 });
 
+
 test('that it can see if we are using a Laravel app', t => {
     t.false(Mix.sees('laravel'));
 
@@ -69,4 +77,11 @@ test('that it detect if hot reloading should be enabled', t => {
     Config.hmr = true;
 
     t.true(Mix.shouldHotReload());
+});
+
+
+test('that it can add a task', t => {
+    Mix.addTask('footask');
+
+    t.is(1, Mix.tasks.length);
 });
