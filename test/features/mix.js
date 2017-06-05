@@ -111,6 +111,37 @@ test.cb.serial('it compiles JS and then combines the bundles files.', t => {
 });
 
 
+test.cb.serial('the kitchen sink', t => {
+    new File('test/fake-app/public/file.js').write('var foo');
+
+    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
+       .extract(['vue'])
+       .js('test/fake-app/resources/assets/js/another.js', 'js')
+       .copy('test/fake-app/public/js/app.js', 'test/fake-app/public/somewhere')
+       .scripts([
+            'test/fake-app/public/somewhere/app.js',
+            'test/fake-app/public/js/another.js'
+        ], 'test/fake-app/public/js/all.js')
+       .version([
+            'test/fake-app/public/file.js'
+        ]);
+
+    compile(t, () => {
+        t.true(File.exists('test/fake-app/public/js/all.js'));
+
+        t.deepEqual({
+            "/file.js": "/file.js?id=6535b4d330f12366c3f7",
+            "/js/all.js": "/js/all.js?id=4f9300e3abb827e70ebf",
+            "/js/another.js": "/js/another.js?id=6ca23176ce8cedc7e9af",
+            "/js/app.js": "/js/app.js?id=a425752dcbde5ea4a988",
+            "/js/manifest.js": "/js/manifest.js?id=3e7b4ac4423a5c2a8584",
+            "/js/vendor.js": "/js/vendor.js?id=abc1071b11e4e709b38a",
+            "/somewhere/app.js": "/somewhere/app.js?id=a425752dcbde5ea4a988",
+        }, readManifest());
+    });
+});
+
+
 
 function compile(t, callback) {
     let config = new WebpackConfig().build();
