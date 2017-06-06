@@ -9,22 +9,22 @@ test.beforeEach(t => {
     global.Config = require('../../src/config')();
     global.Mix = new (require('../../src/Mix'))();
 
-    fs.ensureDirSync('test/fake-app/public');
+    fs.ensureDirSync('test/fixtures/fake-app/public');
 
-    mix.setPublicPath('test/fake-app/public');
+    mix.setPublicPath('test/fixtures/fake-app/public');
 });
 
 
 test.afterEach.always(t => {
-    fs.removeSync('test/fake-app/public');
+    fs.removeSync('test/fixtures/fake-app/public');
 });
 
 
 test.cb.serial('it compiles JavaScript', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js');
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/js/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
 
         t.deepEqual({
             "/js/app.js": "/js/app.js"
@@ -34,12 +34,12 @@ test.cb.serial('it compiles JavaScript', t => {
 
 
 test.cb.serial('it compiles JavaScript and Sass', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
-       .sass('test/fake-app/resources/assets/sass/app.scss', 'css');
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+       .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/js/app.js'));
-        t.true(File.exists('test/fake-app/public/css/app.css'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
 
         t.deepEqual({
             "/js/app.js": "/js/app.js",
@@ -50,10 +50,10 @@ test.cb.serial('it compiles JavaScript and Sass', t => {
 
 
 test.cb('it compiles Sass without JS', t => {
-    mix.sass('test/fake-app/resources/assets/sass/app.scss', 'css');
+    mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/css/app.css'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
 
         t.deepEqual({
             "/css/app.css": "/css/app.css"
@@ -63,13 +63,13 @@ test.cb('it compiles Sass without JS', t => {
 
 
 test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
-       .sass('test/fake-app/resources/assets/sass/app.scss', 'css')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+       .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')
        .version();
 
     compile(t, () => {
         t.deepEqual({
-            "/js/app.js": "/js/app.js?id=786e6a43e57e664408b4",
+            "/js/app.js": "/js/app.js?id=fc355bf1c437137f3e46",
             "/css/app.css": "/css/app.css?id=2d4a1c0cca02e0a221b2"
         }, readManifest());
     });
@@ -77,11 +77,11 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
 
 
 test.cb.serial('it compiles JavaScript and copies the output to a new location.', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
-       .copy('test/fake-app/public/js/app.js', 'test/fake-app/public/somewhere');
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+       .copy('test/fixtures/fake-app/public/js/app.js', 'test/fixtures/fake-app/public/somewhere');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/somewhere/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/somewhere/app.js'));
 
         t.deepEqual({
             "/js/app.js": "/js/app.js",
@@ -92,15 +92,15 @@ test.cb.serial('it compiles JavaScript and copies the output to a new location.'
 
 
 test.cb.serial('it compiles JS and then combines the bundles files.', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
-       .js('test/fake-app/resources/assets/js/another.js', 'js')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+       .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
        .scripts([
-            'test/fake-app/public/js/app.js',
-            'test/fake-app/public/js/another.js'
-        ], 'test/fake-app/public/js/all.js');
+            'test/fixtures/fake-app/public/js/app.js',
+            'test/fixtures/fake-app/public/js/another.js'
+        ], 'test/fixtures/fake-app/public/js/all.js');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/js/all.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
 
         t.deepEqual({
             "/js/app.js": "/js/app.js",
@@ -112,11 +112,11 @@ test.cb.serial('it compiles JS and then combines the bundles files.', t => {
 
 
 test.cb.serial('it can minify a file', t => {
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
-       .minify('test/fake-app/public/js/app.js');
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+       .minify('test/fixtures/fake-app/public/js/app.js');
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/js/app.min.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.min.js'));
 
         t.deepEqual({
             "/js/app.js": "/js/app.js",
@@ -127,13 +127,13 @@ test.cb.serial('it can minify a file', t => {
 
 
 test.cb.serial('it can version an entire directory or regex of files.', t => {
-    fs.ensureDirSync('test/fake-app/public/js/folder');
+    fs.ensureDirSync('test/fixtures/fake-app/public/js/folder');
 
-    new File('test/fake-app/public/js/folder/one.js').write('var one');
-    new File('test/fake-app/public/js/folder/two.js').write('var two');
-    new File('test/fake-app/public/js/folder/three.js').write('var three');
+    new File('test/fixtures/fake-app/public/js/folder/one.js').write('var one');
+    new File('test/fixtures/fake-app/public/js/folder/two.js').write('var two');
+    new File('test/fixtures/fake-app/public/js/folder/three.js').write('var three');
 
-    mix.version('test/fake-app/public/js/folder');
+    mix.version('test/fixtures/fake-app/public/js/folder');
 
     compile(t, () => {
         t.deepEqual({
@@ -146,31 +146,31 @@ test.cb.serial('it can version an entire directory or regex of files.', t => {
 
 
 test.cb.serial('the kitchen sink', t => {
-    new File('test/fake-app/public/file.js').write('var foo');
+    new File('test/fixtures/fake-app/public/file.js').write('var foo');
 
-    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
        .extract(['vue'])
-       .js('test/fake-app/resources/assets/js/another.js', 'js')
-       .copy('test/fake-app/public/js/app.js', 'test/fake-app/public/somewhere')
+       .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
+       .copy('test/fixtures/fake-app/public/js/app.js', 'test/fixtures/fake-app/public/somewhere')
        .scripts([
-            'test/fake-app/public/somewhere/app.js',
-            'test/fake-app/public/js/another.js'
-        ], 'test/fake-app/public/js/all.js')
+            'test/fixtures/fake-app/public/somewhere/app.js',
+            'test/fixtures/fake-app/public/js/another.js'
+        ], 'test/fixtures/fake-app/public/js/all.js')
        .version([
-            'test/fake-app/public/file.js'
+            'test/fixtures/fake-app/public/file.js'
         ]);
 
     compile(t, () => {
-        t.true(File.exists('test/fake-app/public/js/all.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
 
         t.deepEqual({
             "/file.js": "/file.js?id=6535b4d330f12366c3f7",
-            "/js/all.js": "/js/all.js?id=4f9300e3abb827e70ebf",
-            "/js/another.js": "/js/another.js?id=6ca23176ce8cedc7e9af",
-            "/js/app.js": "/js/app.js?id=a425752dcbde5ea4a988",
-            "/js/manifest.js": "/js/manifest.js?id=3e7b4ac4423a5c2a8584",
+            "/js/all.js": "/js/all.js?id=c65ab2a65c68687746c0",
+            "/js/another.js": "/js/another.js?id=974c292b0356a04e4b5d",
+            "/js/app.js": "/js/app.js?id=e52143eae21fa71e6a3e",
+            "/js/manifest.js": "/js/manifest.js?id=3ca7848cf993a8d58220",
             "/js/vendor.js": "/js/vendor.js?id=abc1071b11e4e709b38a",
-            "/somewhere/app.js": "/somewhere/app.js?id=a425752dcbde5ea4a988",
+            "/somewhere/app.js": "/somewhere/app.js?id=e52143eae21fa71e6a3e",
         }, readManifest());
     });
 });
@@ -189,6 +189,6 @@ function compile(t, callback) {
 
 
 function readManifest() {
-    return JSON.parse(File.find('test/fake-app/public/mix-manifest.json').read());
+    return JSON.parse(File.find('test/fixtures/fake-app/public/mix-manifest.json').read());
 }
 
