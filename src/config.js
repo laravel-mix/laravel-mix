@@ -1,4 +1,5 @@
 let paths = new (require('./Paths'));
+let webpackMerge = require('webpack-merge');
 
 module.exports = function () {
     return {
@@ -175,9 +176,15 @@ module.exports = function () {
          * @type {Object}
          */
         babel: function () {
-            if (File.exists(Mix.paths.root('.babelrc'))) return '?cacheDirectory';
+            let options = {};
 
-            let options = {
+            tap(Mix.paths.root('.babelrc'), babelrc => {
+                if (File.exists(babelrc)) {
+                    options = JSON.parse(File.find(babelrc).read());
+                }
+            });
+
+            let defaultOptions = {
                 cacheDirectory: true,
                 presets: [
                     ['env', {
@@ -191,10 +198,10 @@ module.exports = function () {
             };
 
             if (this.react) {
-                options.presets.push('react');
+                defaultOptions.presets.push('react');
             }
 
-            return options;
+            return webpackMerge.smart(defaultOptions, options);
         },
 
         /**
