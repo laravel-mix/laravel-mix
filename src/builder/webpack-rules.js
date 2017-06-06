@@ -129,7 +129,7 @@ module.exports = function () {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            sourceMap: Mix.isUsing('sourcemaps'),
+                            sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             plugins: [
                                 require('autoprefixer')
                             ].concat(Config.postCss)
@@ -141,7 +141,8 @@ module.exports = function () {
                     loaders.push({
                         loader: 'resolve-url-loader',
                         options: {
-                            sourceMap: Mix.isUsing('sourcemaps')
+                            sourceMap: true,
+                            root: Mix.paths.root('node_modules')
                         }
                     });
                 }
