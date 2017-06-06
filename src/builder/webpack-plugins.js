@@ -103,7 +103,6 @@ module.exports = function () {
     plugins.push(new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction(),
         options: {
-            postcss: Config.postCss,
             context: __dirname,
             output: { path: './' }
         }
