@@ -70,7 +70,7 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
     compile(t, () => {
         t.deepEqual({
             "/js/app.js": "/js/app.js?id=786e6a43e57e664408b4",
-            "/css/app.css": "/css/app.css?id=b6452d8fa43c7cb57e6b"
+            "/css/app.css": "/css/app.css?id=2d4a1c0cca02e0a221b2"
         }, readManifest());
     });
 });
@@ -111,7 +111,7 @@ test.cb.serial('it compiles JS and then combines the bundles files.', t => {
 });
 
 
-test.cb.serial.only('it can minify a file', t => {
+test.cb.serial('it can minify a file', t => {
     mix.js('test/fake-app/resources/assets/js/app.js', 'js')
        .minify('test/fake-app/public/js/app.js');
 
@@ -121,6 +121,25 @@ test.cb.serial.only('it can minify a file', t => {
         t.deepEqual({
             "/js/app.js": "/js/app.js",
             "/js/app.min.js": "/js/app.min.js"
+        }, readManifest());
+    });
+});
+
+
+test.cb.serial('it can version an entire directory or regex of files.', t => {
+    fs.ensureDirSync('test/fake-app/public/js/folder');
+
+    new File('test/fake-app/public/js/folder/one.js').write('var one');
+    new File('test/fake-app/public/js/folder/two.js').write('var two');
+    new File('test/fake-app/public/js/folder/three.js').write('var three');
+
+    mix.version('test/fake-app/public/js/folder');
+
+    compile(t, () => {
+        t.deepEqual({
+            "/js/folder/one.js": "/js/folder/one.js?id=cf3b7d56547fd245a5f7",
+            "/js/folder/three.js": "/js/folder/three.js?id=b221b56c16408d6d1e13",
+            "/js/folder/two.js": "/js/folder/two.js?id=48fa74a407eee812988d"
         }, readManifest());
     });
 });
