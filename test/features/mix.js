@@ -111,6 +111,21 @@ test.cb.serial('it compiles JS and then combines the bundles files.', t => {
 });
 
 
+test.cb.serial.only('it can minify a file', t => {
+    mix.js('test/fake-app/resources/assets/js/app.js', 'js')
+       .minify('test/fake-app/public/js/app.js');
+
+    compile(t, () => {
+        t.true(File.exists('test/fake-app/public/js/app.min.js'));
+
+        t.deepEqual({
+            "/js/app.js": "/js/app.js",
+            "/js/app.min.js": "/js/app.min.js"
+        }, readManifest());
+    });
+});
+
+
 test.cb.serial('the kitchen sink', t => {
     new File('test/fake-app/public/file.js').write('var foo');
 
