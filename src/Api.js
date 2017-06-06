@@ -176,11 +176,11 @@ class Api {
      * @param {Boolean}      babel
      */
     combine(src, output, babel = false) {
-        let task = new ConcatFilesTask({
-            src,
-            output: new File(output),
-            babel
-        });
+        output = new File(output);
+
+        Verify.combine(src, output);
+
+        let task = new ConcatFilesTask({ src, output, babel });
 
         Mix.addTask(task);
 

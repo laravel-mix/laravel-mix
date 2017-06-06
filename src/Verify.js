@@ -23,7 +23,7 @@ class Verify {
 
 
     /**
-     * Verify that the calls the mix.sass() and mix.less() are valid.
+     * Verify that the calls to mix.sass() and mix.less() are valid.
      *
      * @param {string} type
      * @param {string} src
@@ -38,6 +38,20 @@ class Verify {
         assert(
             typeof output === 'string',
             `mix.${type}() is missing required parameter 2: output`
+        );
+    }
+
+
+    /**
+     * Verify that calls to mix.combine() are valid.
+     *
+     * @param {string} src
+     * @param {File}   output
+     */
+    static combine(src, output) {
+        assert(
+            output.isFile(),
+            'mix.combine() requires a full output file path as the second argument.'
         );
     }
 
