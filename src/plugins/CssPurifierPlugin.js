@@ -1,29 +1,24 @@
 let Purifier = require('purifycss-webpack');
 let glob = require('glob');
 
-/**
- * Create a new plugin instance.
- */
-function CssPurifierPlugin () {}
+class CssPurifierPlugin {
+    /**
+     * Build up the plugin.
+     */
+    static build() {
+        let bladeFiles = glob.sync(Mix.paths.root('resources/views/**/*.blade.php'));
+        let vueFiles = glob.sync(Mix.paths.root('resources/assets/js/**/*.vue'));
 
+        let paths = bladeFiles.concat(vueFiles);
 
-/**
- * Build up the plugin.
- */
-CssPurifierPlugin.build = function () {
-    let bladeFiles = glob.sync(Mix.paths.root('resources/views/**/*.blade.php'));
-    let vueFiles = glob.sync(Mix.paths.root('resources/assets/js/**/*.vue'));
+        if (Config.purifyCss.paths) {
+            paths = paths.concat(Config.purifyCss.paths);
+        }
 
-    let paths = bladeFiles.concat(vueFiles);
+        paths = Object.assign({ paths }, { minimize: Mix.inProduction() }).paths;
 
-    if (Config.purifyCss.paths) {
-        paths = paths.concat(Config.purifyCss.paths);
+        return new Purifier({ paths: paths });
     }
-
-    paths = Object.assign({ paths }, { minimize: Mix.inProduction() }).paths;
-
-    return new Purifier({ paths: paths });
-};
-
+}
 
 module.exports = CssPurifierPlugin;

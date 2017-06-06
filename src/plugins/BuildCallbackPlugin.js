@@ -1,20 +1,22 @@
-/**
- * Create a new plugin instance.
- *
- * @param {Function} callback
- */
-function BuildCallbackPlugin (callback) {
-    this.callback = callback;
-}
+class BuildCallbackPlugin {
+    /**
+     * Create a new plugin instance.
+     *
+     * @param {Function} callback
+     */
+    constructor(callback) {
+        this.callback = callback;
+    }
 
 
-/**
- * Apply the plugin.
- *
- * @param {Object} compiler
- */
-BuildCallbackPlugin.prototype.apply = function (compiler) {
-    compiler.plugin('done', this.callback);
+    /**
+     * Apply the plugin.
+     *
+     * @param {Object} compiler
+     */
+    apply(compiler) {
+        compiler.plugin('done', this.callback);
+    }
 }
 
 module.exports = BuildCallbackPlugin;
