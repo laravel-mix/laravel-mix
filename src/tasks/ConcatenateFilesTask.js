@@ -16,9 +16,9 @@ class ConcatenateFilesTask extends Task {
      * Merge the files into one.
      */
     merge() {
-        let output = this.files.merge(this.data.output, this.data.babel);
-
-        this.assets.push(output);
+        this.assets.push(
+            this.files.merge(this.data.output, this.data.babel)
+        );
     }
 
 
