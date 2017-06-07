@@ -28,12 +28,8 @@ class ConcatenateFilesTask extends Task {
 
     /**
      * Handle when a relevant source file is changed.
-     *
-     * @param {string} updatedFile
      */
     onChange(updatedFile) {
-        let destination = this.data.output;
-
         this.merge();
     }
 }
