@@ -6,9 +6,7 @@ class ConcatenateFilesTask extends Task {
      * Run the task.
      */
     run() {
-        let combine = this.data;
-
-        this.files = new FileCollection(combine.src);
+        this.files = new FileCollection(this.data.src);
 
         this.merge();
     }
