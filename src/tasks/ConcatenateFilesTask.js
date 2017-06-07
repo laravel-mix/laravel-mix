@@ -20,8 +20,6 @@ class ConcatenateFilesTask extends Task {
     merge() {
         let output = this.files.merge(this.data.output, this.data.babel);
 
-        Mix.addAsset(output);
-
         this.assets.push(output);
     }
 
