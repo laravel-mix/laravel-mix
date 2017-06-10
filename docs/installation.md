@@ -17,28 +17,27 @@ Now, from the command line, you may run `npm run watch` to watch your files for 
 
 ### Stand-Alone Project
 
-Begin by installing Laravel Mix through NPM or Yarn, and then copying the example config files to your project root.
+Begin by installing Laravel Mix through NPM or Yarn, then create a config file in your project root.
 
 ```bash
 mkdir my-app && cd my-app
 npm init -y
 npm install laravel-mix --save-dev
-cp -r node_modules/laravel-mix/setup/** ./
+touch webpack.mix.js
 ```
 
 You should now have the following directory structure:
 
 * `node_modules/`
 * `package.json`
-* `webpack.config.js`
 * `webpack.mix.js`
 
 Laravel Mix consists of two core components:
 
 * **webpack.mix.js:** This is your configuration layer on top of webpack. Most of your time will be spent here.
-* **webpack.config.js:** This is the traditional webpack configuration file. Only advanced users need to visit this file.
+* **node_modules/laravel-mix/setup/webpack.config.js:** This is the traditional webpack configuration file. Advanced users may copy this file to the project root to customize it and omit the `--config` parameter from the build scripts below.
 
-Head over to your webpack.mix.js file:
+Head over to your webpack.mix.js file and insert the following:
 
 ```js
 let mix = require('laravel-mix');
@@ -47,7 +46,7 @@ mix.js('src/app.js', 'dist')
    .sass('src/app.scss', 'dist');
 ```
 
-Take note of the source paths, and create the directory structure to match \(or, of course, change them to your preferred structure\). You're all set now. Compile everything down by running `node_modules/.bin/webpack` from the command line. You should now see:
+Create the directory structure to match \(or, of course, change the contents of webpack.mix.js and set up your preferred structure\). You're all set now. Compile everything down by running `node_modules/.bin/webpack --config node_modules/laravel-mix/setup/webpack.config.js` from the command line. You should now see:
 
 * `dist/app.css`
 * `dist/app.js`
@@ -61,9 +60,9 @@ As a tip, consider adding the following NPM scripts to your `package.json` file,
 
 ```js
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
-    "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
-    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 ```
