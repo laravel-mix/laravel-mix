@@ -76,7 +76,7 @@ class WebpackConfig {
      * Build the rules array.
      */
     buildRules() {
-        let {rules, extractPlugins } = webpackRules();
+        let { rules, extractPlugins } = webpackRules();
 
         this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(rules);
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(extractPlugins);
