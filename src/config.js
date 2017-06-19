@@ -220,6 +220,7 @@ module.exports = function () {
          */
         extractVueStyles: false,
 
+
         /**
          * Uglify-specific settings for Webpack.
          *
