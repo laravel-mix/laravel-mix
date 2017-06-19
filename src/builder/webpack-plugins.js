@@ -54,7 +54,7 @@ module.exports = function () {
         plugins.push(
             new WebpackNotifierPlugin({
                 title: 'Laravel Mix',
-                alwaysNotify: true,
+                alwaysNotify: Mix.isUsing('notificationsOnSuccess'),
                 contentImage: Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
             })
         );

@@ -121,11 +121,19 @@ module.exports = function () {
 
 
         /**
-         * Determine if notifications should be displayed for each build.
+         * Determine if error notifications should be displayed for each build.
          *
          * @type {Boolean}
          */
         notifications: true,
+
+
+        /**
+         * Determine if we should always show success notifications.
+         *
+         * @type {Boolean}
+         */
+        notificationsOnSuccess: true,
 
 
         /**
