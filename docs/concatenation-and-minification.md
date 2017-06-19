@@ -38,7 +38,7 @@ mix.minify(['this/one.js', 'and/this/one.js']);
 
 There are a few things worth noting here:
 
-1. This method will overwrite the existing file.
+1. This method will create a companion `*.min.ext` file. So minifying `app.js` will generate `app.min.js`.
 2. Once again, the minification will only take place during a production build. \(`export NODE_ENV=production`\).
 3. There is no need to call `mix.combine(['one.js', 'two.js'], 'merged.js').minify('merged.js');`Just stick with the single `mix.combine()` call. It'll take care of both.
 

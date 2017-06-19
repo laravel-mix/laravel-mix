@@ -18,7 +18,7 @@ Done. Simple, right?
 
 With this configuration in place, we may trigger webpack from the command line: `node_modules/.bin/webpack`.
 
-During development, it's unnecessary to minify the output, however, this will be performed automatically when you trigger webpack within a production environment: `export NODE_ENV=production && webpack`.
+During development, it's unnecessary to minify the output, however, this will be performed automatically when you trigger webpack within a production environment: `export NODE_ENV=production webpack`.
 
 ### Less?
 
