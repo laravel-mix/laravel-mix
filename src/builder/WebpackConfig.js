@@ -59,11 +59,13 @@ class WebpackConfig {
      * Build the output object.
      */
     buildOutput() {
+         let http = process.argv.includes('--https') ? 'https' : 'http';
+
         this.webpackConfig.output = {
-            path: path.resolve(Config.publicPath),
-            filename: Config.versioning ? '[name].js' : '[name].js',
-            chunkFilename: Config.versioning ? '[name].[chunkhash].js' : '[name].js',
-            publicPath: ''
+            path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
+            filename: '[name].js',
+            chunkFilename: '[name].js',
+            publicPath: Mix.isUsing('hmr') ? (http + '://localhost:8080/') : ''
         };
 
         return this;
