@@ -275,7 +275,7 @@ class File {
             path: this.filePath,
             absolutePath: this.absolutePath,
             pathWithoutExt: path.join(parsed.dir, `${parsed.name}`),
-            isDir: ! parsed.ext,
+            isDir: (! parsed.ext && ! parsed.name.endsWith('*')),
             isFile: !! parsed.ext,
             name: parsed.name,
             ext: parsed.ext,

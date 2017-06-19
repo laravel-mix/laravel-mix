@@ -70,6 +70,8 @@ class FileCollection {
      * @param {string|array|null} src
      */
     copyTo(destination, src = this.files) {
+        this.assets = this.assets || [];
+
         this.destination = destination;
 
         if (Array.isArray(src)) {
@@ -78,10 +80,18 @@ class FileCollection {
             return;
         }
 
-        if (src.contains('*') || src.isDirectory()) {
-            if (src.isDirectory()) src = src.append('*');
+        if (src.isDirectory()) {
+            return src.copyTo(destination.path());
+        }
 
-            return this.copyTo(destination, glob.sync(src.path()));
+        if (src.contains('*')) {
+            let files = glob.sync(src.path(), { nodir: true });
+
+            if (! files.length) {
+                console.log(`Notice: The ${src.path()} search produced no matches.`);
+            }
+
+            return this.copyTo(destination, files);
         }
 
         if (destination.isDirectory()) {
@@ -90,7 +100,7 @@ class FileCollection {
 
         src.copyTo(destination.path());
 
-        this.assets = (this.assets || []).concat(destination);
+        this.assets = this.assets.concat(destination);
 
         return destination.path();
     }
