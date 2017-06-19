@@ -25,8 +25,6 @@ module.exports = function () {
             loader: 'ts-loader',
             exclude: /node_modules/,
         });
-
-        extensions.push('.ts', '.tsx');
     }
 
 
