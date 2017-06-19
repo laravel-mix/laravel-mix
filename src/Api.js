@@ -446,6 +446,14 @@ class Api {
 
 
     /**
+     * Helper for determining a production environment.
+     */
+    inProduction() {
+        return Mix.inProduction();
+    }
+
+
+    /**
      * Generate a full output path, using a fallback
      * file name, if a directory is provided.
      *
