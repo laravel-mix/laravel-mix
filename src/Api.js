@@ -229,6 +229,12 @@ class Api {
      * @param {string|Array} src
      */
     minify(src) {
+        if (Array.isArray(src)) {
+            src.forEach(file => this.minify(file));
+
+            return this;
+        }
+
         let output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
 
         return this.combine(src, output);
