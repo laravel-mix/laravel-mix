@@ -157,7 +157,7 @@ module.exports = function () {
 
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: extractPlugin.extract({ use: loaders })
+                    use: extractPlugin.extract({ fallback: 'style-loader', use: loaders })
                 });
 
                 extractPlugins.push(extractPlugin);
