@@ -285,7 +285,6 @@ class Api {
     };
 
 
-
     /**
      * Enable automatic file versioning.
      *
@@ -344,6 +343,7 @@ class Api {
 
         return this;
     };
+
 
     /**
      * Override the default path to your project's public directory.
