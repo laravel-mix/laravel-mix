@@ -174,7 +174,7 @@ module.exports = function () {
     rules.push({
         test: /\.vue$/,
         loader: 'vue-loader',
-        exclude: /(node_modules|bower_components)/,
+        exclude: /bower_components/,
         options: {
             // extractCSS: Config.extractVueStyles,
             loaders: Config.extractVueStyles ? {
