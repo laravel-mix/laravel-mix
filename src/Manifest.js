@@ -111,9 +111,7 @@ class Manifest {
             assets.mix = without(assets.mix, 'mix.js');
         }
 
-        return [].concat.apply(
-            [], objectValues(assets)
-        );
+        return flatten(assets);
     }
 
 
