@@ -58,4 +58,4 @@ The `mix.version()` will automatically version any compiled JavaScript, Sass/Les
 mix.version(['public/js/random.js']);
 ```
 
-Now, we'll still version any relevant compiled files, but we'll also create a `public/js/random.{hash}.js` file, and update your `mix-manifest.json` file.
+Now, we'll still version any relevant compiled files, but we'll also append a query string, `public/js/random.js?{hash}`, and update your `mix-manifest.json` file.
