@@ -51,21 +51,21 @@ class CustomTasksPlugin {
      * @param {File} asset
      */
     minifyAssets(asset) {
-        let manifest = Object.keys(Mix.manifest.get());
+        let tasks = Mix.tasks.filter(task => task.constructor.name !== 'VersionFilesTask');
 
-        manifest.forEach(asset => {
-            asset = new File(path.join(Config.publicPath, asset));
+        tasks.forEach(task => {
+            task.assets.forEach(asset => {
+                try {
+                    asset.minify();
+                } catch (e) {
+                    console.log(
+                        `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
+                        `Perhaps you need to use mix.babel() instead?`
+                    );
 
-            try {
-                asset.minify();
-            } catch (e) {
-                console.log(
-                    `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
-                    `Perhaps you need to use mix.babel() instead?`
-                );
-
-                throw e;
-            }
+                    throw e;
+                }
+            });
         });
     }
 
