@@ -232,7 +232,10 @@ module.exports = function () {
             sourceMap: true,
             compress: {
                 warnings: false,
-                drop_console: true
+                drop_console: true,
+            },
+            output: {
+                comments: false
             }
         },
 
