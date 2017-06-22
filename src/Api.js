@@ -278,7 +278,8 @@ class Api {
     browserSync(config = {}) {
         Verify.dependency(
             'browser-sync-webpack-plugin',
-            'npm install browser-sync-webpack-plugin browser-sync --save-dev'
+            'npm install browser-sync-webpack-plugin browser-sync --save-dev',
+            true
         );
 
         if (typeof config === 'string') {
