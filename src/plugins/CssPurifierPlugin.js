@@ -15,9 +15,9 @@ class CssPurifierPlugin {
             paths = paths.concat(Config.purifyCss.paths);
         }
 
-        paths = Object.assign({ paths }, { minimize: Mix.inProduction() }).paths;
-
-        return new Purifier({ paths: paths });
+        return new Purifier(
+            Object.assign({}, Config.purifyCss, { paths, minimize: Mix.inProduction() })
+        );
     }
 }
 
