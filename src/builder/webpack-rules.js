@@ -128,6 +128,7 @@ module.exports = function () {
                         loader: 'postcss-loader',
                         options: {
                             sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
+                            ident: 'postcss',
                             plugins: [
                                 require('autoprefixer')
                             ].concat(Config.postCss)
