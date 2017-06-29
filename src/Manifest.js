@@ -75,10 +75,12 @@ class Manifest {
 
 
     /**
-     * Refresh the mix-manifest.js file.
+     * Refresh the mix-manifest.json file.
      */
     refresh() {
+        if (Config.createManifest) {
         File.find(this.path()).write(this.manifest);
+        }
     }
 
 
