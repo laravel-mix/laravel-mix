@@ -79,7 +79,7 @@ class Manifest {
      */
     refresh() {
         if (Config.createManifest) {
-        File.find(this.path()).write(this.manifest);
+            File.find(this.path()).write(this.manifest);
         }
     }
 
