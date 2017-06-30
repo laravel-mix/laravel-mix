@@ -111,7 +111,7 @@ class WebpackConfig {
             extensions,
 
             alias: {
-                'vue$': 'vue/dist/vue.common.js'
+                'vue$': 'vue/dist/vue.esm.js'
             }
         };
 
