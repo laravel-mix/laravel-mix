@@ -2,6 +2,7 @@ import test from 'ava';
 import mockFs from 'mock-fs';
 import mix from '../src/index';
 import Manifest from '../src/Manifest';
+import fs from 'fs-extra';
 
 test.beforeEach(() => Mix.manifest = new Manifest());
 
@@ -62,4 +63,24 @@ test('it can be refreshed', t => {
     t.deepEqual({ '/js/app.js': '/js/app.js' }, Mix.manifest.read());
 
     mockFs.restore();
+});
+
+
+test('it can refresh without creating the manifest file', t => {
+    fs.ensureDirSync('test/fixtures/fake-app/manifest');
+
+    mix.setPublicPath('test/fixtures/fake-app/manifest');
+
+    Config.createManifest = false;
+
+    // The manifest file should not exist.
+    t.false(File.exists('test/fixtures/fake-app/manifest/mix-manifest.json'));
+
+    // And after we refresh it...
+    Mix.manifest.refresh();
+
+    // The manifest file still does not exist.
+    t.false(File.exists('test/fixtures/fake-app/manifest/mix-manifest.json'));
+
+    fs.removeSync('test/fixtures/fake-app/manifest');
 });

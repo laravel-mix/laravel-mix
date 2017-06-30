@@ -213,6 +213,14 @@ module.exports = function () {
         },
 
         /**
+         * Determine if the manifest file should be created for the build.
+         *
+         * @type {Boolean}
+         */
+        createManifest: true,
+
+
+        /**
          * Determine if CSS url()s should be processed by Webpack.
          *
          * @type {Boolean}
