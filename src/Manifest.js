@@ -78,7 +78,7 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        File.find(this.path()).write(this.manifest);
+        File.find(this.path()).makeDirectories().write(this.manifest);
     }
 
 
