@@ -64,10 +64,14 @@ test('it knows the path to the file', t => {
 });
 
 
-test('it knows the relative to the file', t => {
+test('it knows the relative path to the file', t => {
     let file = new File('path/to/file.js');
 
-    t.is('path/to/file.js', file.relativePath());
+    let newFile = new File('../path/to/file.js');
+
+    t.true(['path/to/file.js', 'path\\to\\file.js'].includes(file.relativePath())); 
+
+    t.true(['../path/to/file.js', '..\\path\\to\\file.js'].includes(newFile.relativePath())); 
 });
 
 
