@@ -91,7 +91,7 @@ class File {
      * Get the relative path to the file, from the project root.
      */
     relativePath() {
-        return this.path().replace(Mix.paths.root() + path.sep, '');
+        return path.relative(Mix.paths.root(), this.path());
     }
 
 
