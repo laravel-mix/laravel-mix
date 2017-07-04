@@ -125,11 +125,12 @@ class File {
      * @param {string|null} publicPath
      */
     pathFromPublic(publicPath) {
-        publicPath = publicPath || Config.publicPath;
+        publicPath = path.normalize(publicPath || Config.publicPath);
 
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
+        let folderPath = path.join(Mix.paths.root(extra), '/');
 
-        return this.path().replace(Mix.paths.root(extra), '');
+        return this.path().replace(folderPath, '');
     }
 
 
