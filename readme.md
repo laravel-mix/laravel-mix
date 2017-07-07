@@ -1,8 +1,10 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-mix.svg" alt="Laravel Mix"></p>
 
-[![npm](https://img.shields.io/npm/v/laravel-mix.svg)](https://www.npmjs.com/package/laravel-mix)
-[![npm](https://img.shields.io/npm/dt/laravel-mix.svg)](https://www.npmjs.com/package/laravel-mix)
-[![npm](https://img.shields.io/npm/l/laravel-mix.svg)](https://www.npmjs.com/package/laravel-mix)
+<p align="center">
+<a href="https://www.npmjs.com/package/laravel-mix"><img src="https://img.shields.io/npm/v/laravel-mix.svg" alt="NPM"></a>
+<a href="https://www.npmjs.com/package/laravel-mix"><img src="https://img.shields.io/npm/dt/laravel-mix.svg" alt="NPM"></a>
+<a href="https://www.npmjs.com/package/laravel-mix"><img src="https://img.shields.io/npm/l/laravel-mix.svg" alt="NPM"></a>
+</p>
 
 ## Introduction
 
