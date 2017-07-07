@@ -1,5 +1,6 @@
 let Task = require('./Task');
 let FileCollection = require('../FileCollection');
+const path = require('path');
 
 class CopyFilesTask extends Task {
     /**
@@ -27,9 +28,7 @@ class CopyFilesTask extends Task {
         // If we're copying a src directory recursively, we have to calculate
         // the correct destination path, based on the src directory tree.
         if (! Array.isArray(this.data.from) && new File(this.data.from).isDirectory()) {
-            let srcFolder = new RegExp('^' + this.data.from);
-
-            destination = destination.append(updatedFile.replace(srcFolder, ''));
+            destination = destination.append(path.normalize(updatedFile).replace(path.normalize(this.data.from), ''));
         }
 
         console.log(`Copying ${updatedFile} to ${destination.path()}`);
