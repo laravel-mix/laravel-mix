@@ -69,7 +69,7 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
 
     compile(t, () => {
         t.deepEqual({
-            "/js/app.js": "/js/app.js?id=fc355bf1c437137f3e46",
+            "/js/app.js": "/js/app.js?id=ebed98a202af238495b0",
             "/css/app.css": "/css/app.css?id=2d4a1c0cca02e0a221b2"
         }, readManifest());
     });
@@ -165,12 +165,12 @@ test.cb.serial('the kitchen sink', t => {
 
         t.deepEqual({
             "/file.js": "/file.js?id=6535b4d330f12366c3f7",
-            "/js/all.js": "/js/all.js?id=c65ab2a65c68687746c0",
-            "/js/another.js": "/js/another.js?id=974c292b0356a04e4b5d",
-            "/js/app.js": "/js/app.js?id=e52143eae21fa71e6a3e",
-            "/js/manifest.js": "/js/manifest.js?id=3ca7848cf993a8d58220",
+            "/js/all.js": "/js/all.js?id=d7e3707ddbccac82e343",
+            "/js/another.js": "/js/another.js?id=b537db7198b3bd55d9be",
+            "/js/app.js": "/js/app.js?id=920afc44cc4b39286bfc",
+            "/js/manifest.js": "/js/manifest.js?id=362dd9e7d4cff71c6779",
             "/js/vendor.js": "/js/vendor.js?id=abc1071b11e4e709b38a",
-            "/somewhere/app.js": "/somewhere/app.js?id=e52143eae21fa71e6a3e",
+            "/somewhere/app.js": "/somewhere/app.js?id=920afc44cc4b39286bfc",
         }, readManifest());
     });
 });
