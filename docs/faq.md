@@ -26,13 +26,41 @@ It's highly recommended that you add the following NPM scripts to your `package.
 
 ### I'm using a VM, and webpack isn't picking up my file changes.
 
-If you're running `npm run dev` through a VM, you may find that file changes are not picked up by webpack. If that's the case, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
+If you're running `npm run dev` through a VM, you may find that file changes are not picked up by webpack. If that's the case, there are two ways to resolve this:
+
+1. Configure webpack to **poll** the filesystem for changes *Note: Polling the filesystem is resource-intensive and will likely shorten battery life on the go.*
+2. **Forward** file change notifications to the VM by using something like [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify). *Note, this is a [Vagrant](https://www.vagrantup.com)-only plugin.*
+
+
+To **poll** the VM's filesystem, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
 
 ```js
 "scripts": {
     "watch": "NODE_ENV=development webpack --watch --watch-poll",
   }
 ```
+
+To **forward** file change notifications to the VM, simply install [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify) on the host machine:
+
+```bash
+vagrant plugin install vagrant-fsnotify
+```
+
+Now you may [configure](https://github.com/adrienkohlbecker/vagrant-fsnotify#basic-setup) vagrant to use the plugin. In [Homestead](https://laravel.com/docs/5.4/homestead), your `Homestead.yaml` file would look something like this:
+
+```yaml
+folders:
+    -
+        map: /Users/jeffrey/Code/laravel
+        to: /home/vagrant/Code/laravel
+        options:
+            fsnotify: true
+            exclude:
+                - node_modules
+                - vendor
+```
+
+Once your vagrant machine is started, simply run `vagrant fsnotify` on the host machine to forward all file changes to the VM. You may then run `npm run watch` inside the VM and have your changes automatically picked up.
 
 If you're still having trouble, [see here for additional troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
 
