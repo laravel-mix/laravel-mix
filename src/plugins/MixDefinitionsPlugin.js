@@ -1,5 +1,6 @@
 let webpack = require('webpack');
 let dotenv = require('dotenv');
+let expand = require('dotenv-expand');
 
 /**
  * Create a new plugin instance.
@@ -7,9 +8,9 @@ let dotenv = require('dotenv');
  * @param {string} envPath
  */
 function MixDefinitionsPlugin(envPath) {
-    dotenv.config({
+    expand(dotenv.config({
         path: envPath || Mix.paths.root('.env')
-    });
+    }));
 }
 
 
