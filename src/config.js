@@ -8,7 +8,7 @@ module.exports = function () {
          *
          * @type {Booolean}
          */
-        production:  (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
+        production: (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
 
 
         /**
