@@ -176,7 +176,7 @@ class Api {
      * @param {Boolean}      babel
      */
     combine(src, output, babel = false) {
-        output = new File(output);
+        output = new File(output || '');
 
         Verify.combine(src, output);
 
