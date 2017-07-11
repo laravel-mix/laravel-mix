@@ -35,6 +35,22 @@ module.exports = function () {
     });
 
 
+    // Recognize .scss Imports.
+    rules.push({
+        test: /\.s[ac]ss$/,
+        exclude: Config.preprocessors.sass ? Config.preprocessors.sass.map(sass => sass.src.path()) : [],
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
+    });
+
+
+    // Recognize .less Imports.
+    rules.push({
+        test: /\.less$/,
+        exclude: Config.preprocessors.less ? Config.preprocessors.less.map(less => less.src.path()) : [],
+        loaders: ['style-loader', 'css-loader', 'less-loader']
+    });
+
+
     // Add support for loading HTML files.
     rules.push({
         test: /\.html$/,
