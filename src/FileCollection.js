@@ -57,8 +57,12 @@ class FileCollection {
      * @param {string} contents
      */
     babelify(contents) {
+        let babelConfig = Config.babel();
+
+        delete babelConfig.cacheDirectory;
+
         return babel.transform(
-            contents, { presets: ['env'] }
+            contents, babelConfig
         ).code;
     }
 
