@@ -100,6 +100,10 @@ class Verify {
                 'This will only take a moment.'
             );
 
+            if (File.exists('yarn.lock')) {
+                installCommand = installCommand.replace('npm install', 'yarn add');
+            }
+
             exec(installCommand);
 
             if (abortOnComplete) {
