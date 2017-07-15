@@ -42,6 +42,14 @@ class Mix {
 
 
     /**
+     * Determine if polling is used for file watching
+     */
+    isPolling() {
+        return this.isWatching() && process.argv.includes('--watch-poll');
+    }
+
+
+    /**
      * Determine if Mix sees a particular tool or framework.
      *
      * @param {string} tool

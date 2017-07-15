@@ -15,11 +15,14 @@ class Task {
 
     /**
      * Watch all relevant files for changes.
+     * 
+     * @param {boolean} usePolling
      */
-    watch() {
+    watch(usePolling = false) {
         if (this.isBeingWatched) return;
 
-        chokidar.watch(this.files.get(), { persistent: true })
+        const files = this.files.get()
+        const watcher = chokidar.watch(files, { usePolling, persistent: true})
             .on('change', this.onChange.bind(this));
 
         this.isBeingWatched = true;
