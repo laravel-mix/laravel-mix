@@ -21,7 +21,7 @@ class Task {
     watch(usePolling = false) {
         if (this.isBeingWatched) return;
 
-        const files = this.files.get()
+        const files = this.files.get();
         const watcher = chokidar.watch(files, { usePolling, persistent: true})
             .on('change', this.onChange.bind(this));
 
@@ -32,7 +32,7 @@ class Task {
                     watcher.unwatch(files);
                     watcher.add(files);
                 }
-            })
+            });
         }
 
         this.isBeingWatched = true;
