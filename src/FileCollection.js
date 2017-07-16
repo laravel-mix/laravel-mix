@@ -1,4 +1,5 @@
 let concatenate = require('concatenate');
+let babelConcat = require("babel-concat")
 let babel = require('babel-core');
 let glob = require('glob');
 
@@ -28,15 +29,40 @@ class FileCollection {
      * @param {object} wantsBabel
      */
     merge(output, wantsBabel = false) {
-        let contents = concatenate.sync(
-            this.files, output.makeDirectories().path()
-        );
+        let filePath = output.makeDirectories().path();
 
-        if (this.shouldCompileWithBabel(wantsBabel, output)) {
-            output.write(this.babelify(contents));
+        let mapPath = output.makeDirectories().path() + '.map';
+        let mapOutput = new File(mapPath);
+
+        // merge js files with babel-concat
+        if (output.extension() === '.js') {
+          let sourceMaps = false;
+          if (Config.sourcemaps) {
+            /**
+             * in development: generate both inline & .map
+             * in production: generate only .map
+             */
+            sourceMaps = Mix.inProduction() ? true : 'both'
+          }
+
+          const result = babelConcat.transformFileSync(this.files, {
+            babelrc: false,
+            sourceMaps: sourceMaps,
+            sourceType: 'script',
+          });
+
+          output.write(result.code)
+          mapOutput.write(result.map)
+
+          if (this.shouldCompileWithBabel(wantsBabel, output)) {
+              output.write(this.babelify(result.code));
+          }
+
+          return [new File(filePath), new File(mapPath)];
+        } else {
+            concatenate.sync(this.files, filePath);
+            return [new File(filePath)];
         }
-
-        return new File(output.makeDirectories().path());
     }
 
 

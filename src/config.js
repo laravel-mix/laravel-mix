@@ -193,6 +193,7 @@ module.exports = function () {
             });
 
             let defaultOptions = {
+                sourceMaps: Config.sourcemaps && (Mix.inProduction() ? true : 'both'),
                 cacheDirectory: true,
                 presets: [
                     ['env', {

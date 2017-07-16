@@ -29,6 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "autoprefixer": "^7.1.1",
+    "babel-concat": "git+https://github.com/luigi-rosso/babel-concat.git",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.5.1",
