@@ -16,7 +16,11 @@ class ConcatenateFilesTask extends Task {
      * Merge the files into one.
      */
     merge() {
-        const mergedFiles = this.files.merge(this.data.output, this.data.babel);
+        const mergedFiles = this.files.merge(
+          this.data.output,
+          this.data.babel,
+          this.data.skipSourceMaps
+        );
         if (Array.isArray(mergedFiles)) {
           this.assets.push(...mergedFiles);
         } else {

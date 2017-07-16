@@ -174,13 +174,14 @@ class Api {
      * @param {string|Array} src
      * @param {string}       output
      * @param {Boolean}      babel
+     * @param {Boolean}      skipSourceMaps
      */
-    combine(src, output, babel = false) {
+    combine(src, output, babel = false, skipSourceMaps = false) {
         output = new File(output || '');
 
         Verify.combine(src, output);
 
-        let task = new ConcatFilesTask({ src, output, babel });
+        let task = new ConcatFilesTask({ src, output, babel, skipSourceMaps });
 
         Mix.addTask(task);
 
@@ -193,9 +194,10 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      skipSourceMaps
      */
-    scripts(src, output) {
-        return this.combine(src, output);
+    scripts(src, output, skipSourceMaps) {
+        return this.combine(src, output, skipSourceMaps);
     };
 
 
@@ -204,9 +206,10 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      skipSourceMaps
      */
-    babel(src, output) {
-        return this.combine(src, output, true);
+    babel(src, output, skipSourceMaps) {
+        return this.combine(src, output, true, skipSourceMaps);
 
         return this;
     };
