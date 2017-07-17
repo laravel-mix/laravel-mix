@@ -15,18 +15,19 @@ class Task {
 
     /**
      * Watch all relevant files for changes.
-     * 
+     *
      * @param {boolean} usePolling
      */
     watch(usePolling = false) {
         if (this.isBeingWatched) return;
 
-        const files = this.files.get();
-        const watcher = chokidar.watch(files, { usePolling, persistent: true})
+        let files = this.files.get();
+        let watcher = chokidar.watch(files, { usePolling, persistent: true })
             .on('change', this.onChange.bind(this));
 
-        // workaround for issue with atomic writes (See https://github.com/paulmillr/chokidar/issues/591)
-        if (!usePolling) {
+        // Workaround for issue with atomic writes.
+        // See https://github.com/paulmillr/chokidar/issues/591
+        if (! usePolling) {
             watcher.on('raw', (event, path, {watchedPath}) => {
                 if (event === 'rename') {
                     watcher.unwatch(files);
