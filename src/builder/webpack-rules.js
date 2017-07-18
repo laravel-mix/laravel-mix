@@ -31,6 +31,7 @@ module.exports = function () {
     // CSS Compilation.
     rules.push({
         test: /\.css$/,
+        exclude: Config.preprocessors.postcss ? Config.preprocessors.postcss.map(postcss => postcss.src.path()) : [],
         loaders: ['style-loader', 'css-loader']
     });
 
@@ -162,13 +163,15 @@ module.exports = function () {
                     });
                 }
 
-                loaders.push({
-                    loader: `${type}-loader`,
-                    options: Object.assign(
-                        preprocessor.pluginOptions,
-                        { sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps') }
-                    )
-                });
+                if (type !== 'postcss') {
+                    loaders.push({
+                        loader: `${type}-loader`,
+                        options: Object.assign(
+                            preprocessor.pluginOptions,
+                            { sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps') }
+                        )
+                    });
+                }
 
                 rules.push({
                     test: preprocessor.src.path(),

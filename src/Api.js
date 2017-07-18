@@ -142,6 +142,16 @@ class Api {
 
 
     /**
+     * Register postcss compilation.
+     *
+     * @param {string} src
+     * @param {string} output
+     */
+    postcss(src, output) {
+        return this.preprocess('postcss', src, output);
+    };
+
+    /**
      * Register a generic CSS preprocessor.
      *
      * @param {string} type
