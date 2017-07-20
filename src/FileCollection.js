@@ -1,4 +1,5 @@
 let concatenate = require('concatenate');
+let babelConcat = require("babel-concat")
 let babel = require('babel-core');
 let glob = require('glob');
 
@@ -25,18 +26,40 @@ class FileCollection {
      * Merge all files in the collection into one.
      *
      * @param {object} output
-     * @param {object} wantsBabel
+     * @param {Boolean} wantsBabel
+     * @param {Boolean} skipSourceMaps
      */
-    merge(output, wantsBabel = false) {
-        let contents = concatenate.sync(
-            this.files, output.makeDirectories().path()
-        );
+    merge(output, wantsBabel = false, skipSourceMaps = false) {
+        let filePath = output.makeDirectories().path();
 
-        if (this.shouldCompileWithBabel(wantsBabel, output)) {
-            output.write(this.babelify(contents));
+        let mapPath = output.makeDirectories().path() + '.map';
+        let mapOutput = new File(mapPath);
+
+        let useBabelConcat = false;
+        if (Config.sourcemaps && !skipSourceMaps && output.extension() === '.js') {
+          useBabelConcat = true;
         }
 
-        return new File(output.makeDirectories().path());
+        // merge js files with babel-concat if sourceMaps are enabled
+        if (useBabelConcat) {
+            const result = babelConcat.transformFileSync(this.files, {
+                babelrc: false,
+                sourceMaps: Mix.inProduction() ? true : 'both',
+                sourceType: 'script',
+            });
+
+            output.write(result.code)
+            mapOutput.write(result.map)
+
+            if (this.shouldCompileWithBabel(wantsBabel, output)) {
+                output.write(this.babelify(result.code));
+            }
+
+            return [new File(filePath), new File(mapPath)];
+        } else {
+            concatenate.sync(this.files, filePath);
+            return [new File(filePath)];
+        }
     }
 
 
