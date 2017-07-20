@@ -386,10 +386,11 @@ class Api {
     };
 
     /**
-     * Disable success notifications.
+     * Disable only success notifications.
      */
     disableSuccessNotifications() {
         Config.notificationsOnSuccess = false;
+
         return this;
     };
 
