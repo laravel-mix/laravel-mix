@@ -24,10 +24,9 @@ module.exports = function () {
 
 
     // Add support for webpack 3 scope hoisting.
-    // Current disabled due to: https://github.com/webpack/webpack/issues/5132
-    // plugins.push(
-    //     new webpack.optimize.ModuleConcatenationPlugin()
-    // );
+    plugins.push(
+        new webpack.optimize.ModuleConcatenationPlugin()
+    );
 
 
     // Activate support for Mix_ .env definitions.
