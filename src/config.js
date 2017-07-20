@@ -125,15 +125,10 @@ module.exports = function () {
          *
          * @type {Boolean}
          */
-        notifications: true,
-
-
-        /**
-         * Determine if we should always show success notifications.
-         *
-         * @type {Boolean}
-         */
-        notificationsOnSuccess: true,
+        notifications: {
+            onSuccess: true,
+            onFailure: true
+        },
 
 
         /**
