@@ -112,7 +112,7 @@ class StandaloneSass {
         console.log("\n");
         console.log(output);
 
-        if (Mix.isUsing('notifications')) {
+        if (Mix.isUsing('notificationsOnSuccess')) {
             notifier.notify({
                 title: 'Laravel Mix',
                 message: 'Sass Compilation Successful',
