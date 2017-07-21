@@ -3,6 +3,7 @@ let CopyFilesTask = require('./tasks/CopyFilesTask');
 let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
 let glob = require('glob');
+let _ = require('lodash');
 
 class Api {
     /**
@@ -179,6 +180,13 @@ class Api {
         output = new File(output || '');
 
         Verify.combine(src, output);
+
+        if (typeof src === 'string' && File.find(src).isDirectory()) {
+            src = _.pull(
+                glob.sync(path.join(src, '**/*'), { nodir: true }),
+                output.relativePath()
+            );
+        }
 
         let task = new ConcatFilesTask({ src, output, babel });
 

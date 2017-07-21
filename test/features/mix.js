@@ -111,6 +111,22 @@ test.cb.serial('it compiles JS and then combines the bundles files.', t => {
 });
 
 
+test.cb.serial('it combines a folder of scripts', t => {
+    let output = 'test/fixtures/fake-app/public/all.js';
+
+    mix.scripts('test/fixtures/fake-app/resources/assets/js', output);
+
+    compile(t, () => {
+        t.true(File.exists(output));
+
+        t.is(
+            "alert('another stub');\n\nalert('stub');\n",
+            File.find(output).read()
+        );
+    });
+});
+
+
 test.cb.serial('it can minify a file', t => {
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
        .minify('test/fixtures/fake-app/public/js/app.js');
