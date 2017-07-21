@@ -17,6 +17,7 @@ Below, as an example, we'll add a custom module path for Laravel Spark.
 mix.webpackConfig({
     resolve: {
         modules: [
+            'node_modules',
             path.resolve(__dirname, 'vendor/laravel/spark/resources/assets/js')
         ]
     }
