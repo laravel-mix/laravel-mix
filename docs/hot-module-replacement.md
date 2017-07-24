@@ -12,12 +12,12 @@ Both Laravel and Laravel Mix work together to abstract away the complexities in 
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
     "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "hmr": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   }
 ```
 
-Take note of the `hot` option; this is the one you want. From the command line, run `npm run hot` to boot up a Node server and monitor your bundle for changes. Next, load your Laravel app in the browser, as you normally would. Perhaps, `http://my-app.dev`.
+Take note of the `hmr` option; this is the one you want. From the command line, run `npm run hot` to boot up a Node server and monitor your bundle for changes. Next, load your Laravel app in the browser, as you normally would. Perhaps, `http://my-app.dev`.
 
 The key to making hot reloading work within a Laravel application is ensuring that all script sources reference the Node server URL that we just booted up. This will be [http://localhost:8080](http://localhost:8080). Now you could of course manually update your HTML/Blade files, like so:
 
