@@ -147,10 +147,22 @@ class Api {
      *
      * @param {string} src
      * @param {string} output
+     * @param {array}  postCssPlugins
      */
-    postcss(src, output) {
-        return this.preprocess('postcss', src, output);
+    postCss(src, output, postCssPlugins = []) {
+        Verify.preprocessor('postCss', src, output);
+
+        src = new File(src);
+
+        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
+
+        Config.preprocessors['postCss'] = (Config.preprocessors['postCss'] || []).concat({
+            src, output, postCssPlugins
+        });
+
+        return this;
     };
+
 
     /**
      * Register a generic CSS preprocessor.

@@ -34,7 +34,8 @@ module.exports = function () {
     // CSS Compilation.
     rules.push({
         test: /\.css$/,
-        exclude: Config.preprocessors.postcss ? Config.preprocessors.postcss.map(postcss => postcss.src.path()) : [],
+
+        exclude: Config.preprocessors.postCss ? Config.preprocessors.postCss.map(postCss => postCss.src.path()) : [],
         loaders: ['style-loader', 'css-loader']
     });
 
@@ -151,7 +152,7 @@ module.exports = function () {
                             ident: 'postcss',
                             plugins: [
                                 require('autoprefixer')
-                            ].concat(Config.postCss)
+                            ].concat(preprocessor.postCssPlugins || Config.postCss)
                         }
                     },
                 ];
@@ -166,7 +167,7 @@ module.exports = function () {
                     });
                 }
 
-                if (type !== 'postcss') {
+                if (type !== 'postCss') {
                     loaders.push({
                         loader: `${type}-loader`,
                         options: Object.assign(
