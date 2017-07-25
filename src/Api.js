@@ -33,10 +33,7 @@ class Api {
     react(entry, output) {
         Config.react = true;
 
-        Verify.dependency(
-            'babel-preset-react',
-            'npm install babel-preset-react --save-dev'
-        );
+        Verify.dependency('babel-preset-react', ['babel-preset-react']);
 
         return this.js(entry, output);
     };
@@ -48,10 +45,7 @@ class Api {
     ts(entry, output) {
         Config.typeScript = true;
 
-        Verify.dependency(
-            'ts-loader',
-            'npm install ts-loader typescript --save-dev'
-        );
+        Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
 
         return this.js(entry, output);
     };
@@ -116,10 +110,7 @@ class Api {
      * @param {object} pluginOptions
      */
     less(src, output, pluginOptions) {
-        Verify.dependency(
-            'less-loader',
-            'npm install less-loader less --save-dev'
-        );
+        Verify.dependency('less-loader', ['less-loader', 'less']);
 
         return this.preprocess('less', src, output, pluginOptions);
     }
@@ -133,10 +124,7 @@ class Api {
      * @param {object} pluginOptions
      */
     stylus(src, output, pluginOptions = {}) {
-        Verify.dependency(
-            'stylus-loader',
-            'npm install stylus-loader stylus --save-dev'
-        );
+        Verify.dependency('stylus-loader', ['stylus-loader', 'stylus']);
 
         return this.preprocess('stylus', src, output, pluginOptions);
     };
@@ -308,7 +296,7 @@ class Api {
     browserSync(config = {}) {
         Verify.dependency(
             'browser-sync-webpack-plugin',
-            'npm install browser-sync-webpack-plugin browser-sync --save-dev',
+            ['browser-sync-webpack-plugin', 'browser-sync'],
             true
         );
 
@@ -472,7 +460,7 @@ class Api {
 
             Verify.dependency(
                 'purifycss-webpack',
-                'npm install purifycss-webpack purify-css --save-dev',
+                ['purifycss-webpack', 'purify-css'],
                 true // abortOnComplete
             );
         }

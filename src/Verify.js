@@ -85,26 +85,22 @@ class Verify {
     /**
      * Verify that the necessary dependency is available.
      *
-     * @param {string}  dependency
-     * @param {string}  installCommand
+     * @param {string}  name
+     * @param {array}   dependencies
      * @param {Boolean} abortOnComplete
      */
-    static dependency(dependency, installCommand, abortOnComplete = false) {
+    static dependency(name, dependencies, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
         try {
-            require.resolve(dependency);
+            require.resolve(name);
         } catch (e) {
             console.log(
                 'Additional dependencies must be installed. ' +
                 'This will only take a moment.'
             );
 
-            if (File.exists('yarn.lock')) {
-                installCommand = installCommand.replace('npm install', 'yarn add').replace('--save-dev', '--dev');
-            }
-
-            exec(installCommand);
+            installDependencies(dependencies.join(' '));
 
             if (abortOnComplete) {
                 console.log('Finished. Please run Mix again.');
@@ -114,5 +110,21 @@ class Verify {
         }
     }
 }
+
+
+/**
+ * Install the given dependencies using npm or yarn.
+ *
+ * @param {array} dependencies
+ */
+let installDependencies = dependencies => {
+    let command = `npm install ${dependencies} --save-dev`;
+
+    if (File.exists('yarn.lock')) {
+        command = `yarn add ${dependencies} --save`;
+    }
+
+    exec(comamnd);
+};
 
 module.exports = Verify;
