@@ -133,12 +133,6 @@ module.exports = function () {
     }
 
 
-    // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(
-        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
-    );
-
-
     // Handle all custom, non-webpack tasks.
     plugins.push(
         new ManifestPlugin()
@@ -148,6 +142,12 @@ module.exports = function () {
     // Handle all custom, non-webpack tasks.
     plugins.push(
         new CustomTasksPlugin()
+    );
+
+
+    // Notify the rest of our app when Webpack has finished its build.
+    plugins.push(
+        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
     );
 
     return plugins;
