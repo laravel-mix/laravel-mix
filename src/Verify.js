@@ -101,7 +101,7 @@ class Verify {
             );
 
             if (File.exists('yarn.lock')) {
-                installCommand = installCommand.replace('npm install', 'yarn add');
+                installCommand = installCommand.replace('npm install', 'yarn add').replace('--save-dev', '--dev');
             }
 
             exec(installCommand);
