@@ -124,7 +124,7 @@ let installDependencies = dependencies => {
         command = `yarn add ${dependencies} --save`;
     }
 
-    exec(comamnd);
+    exec(command);
 };
 
 module.exports = Verify;
