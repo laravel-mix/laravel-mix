@@ -152,7 +152,11 @@ module.exports = function () {
                             ident: 'postcss',
                             plugins: [
                                 require('autoprefixer')
-                            ].concat(preprocessor.postCssPlugins || Config.postCss)
+                            ].concat(
+                                preprocessor.postCssPlugins && preprocessor.postCssPlugins.length
+                                    ? preprocessor.postCssPlugins
+                                    : Config.postCss
+                            )
                         }
                     },
                 ];
