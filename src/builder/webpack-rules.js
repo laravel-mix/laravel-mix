@@ -36,7 +36,10 @@ module.exports = function () {
         test: /\.css$/,
 
         exclude: Config.preprocessors.postCss ? Config.preprocessors.postCss.map(postCss => postCss.src.path()) : [],
-        loaders: ['style-loader', 'css-loader']
+        loaders: [{
+          loader: 'style-loader',
+          options: Config.styleLoaderOptions
+        }, 'css-loader']
     });
 
 
@@ -44,7 +47,10 @@ module.exports = function () {
     rules.push({
         test: /\.s[ac]ss$/,
         exclude: Config.preprocessors.sass ? Config.preprocessors.sass.map(sass => sass.src.path()) : [],
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
+        loaders: [{
+          loader: 'style-loader',
+          options: Config.styleLoaderOptions
+        }, 'css-loader', 'sass-loader']
     });
 
 
@@ -52,7 +58,10 @@ module.exports = function () {
     rules.push({
         test: /\.less$/,
         exclude: Config.preprocessors.less ? Config.preprocessors.less.map(less => less.src.path()) : [],
-        loaders: ['style-loader', 'css-loader', 'less-loader']
+        loaders: [{
+          loader: 'style-loader',
+          options: Config.styleLoaderOptions
+        }, 'css-loader', 'less-loader']
     });
 
 
