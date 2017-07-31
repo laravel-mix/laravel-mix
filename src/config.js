@@ -6,7 +6,7 @@ module.exports = function () {
         /**
          * Determine if webpack should be triggered in a production environment.
          *
-         * @type {Booolean}
+         * @type {Boolean}
          */
         production: (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
 
