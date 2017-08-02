@@ -38,7 +38,7 @@ class StandaloneSass {
      */
     compile(watch = false) {
         this.command = spawn(
-            'node_modules/node-sass/bin/node-sass', [
+            path.resolve('./node_modules/.bin/node-sass'), [
                 this.src.path(),
                 this.output.path()
             ].concat(this.options(watch)), { shell: true }
