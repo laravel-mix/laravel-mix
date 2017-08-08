@@ -174,7 +174,7 @@ Nifty!
 Alternatively, if you'd prefer to skip the Sass/Less/Stylus compile step entirely and instead use PostCSS, you may do so via the `mix.postCss()` method.
 
 ```js
-mix.postCss('resources/assets/css/main.css', 'pubic/css', [
+mix.postCss('resources/assets/css/main.css', 'public/css', [
    require('precss')()
 ]);
 ```
