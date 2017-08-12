@@ -9,8 +9,6 @@ class RejectFilesFromManifest extends Task {
         this.files = new FileCollection(this.data.files);
 
         this.cleanManifest();
-
-        Mix.manifest.refresh();
     }
 
     /**
