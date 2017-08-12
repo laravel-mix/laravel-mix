@@ -2,6 +2,7 @@ let Verify = require('./Verify');
 let CopyFilesTask = require('./tasks/CopyFilesTask');
 let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
+let RejectFilesFromManifest = require('./tasks/RejectFilesFromManifest');
 let glob = require('glob');
 let _ = require('lodash');
 
@@ -333,6 +334,33 @@ class Api {
 
         Mix.addTask(
             new VersionFilesTask({ files })
+        );
+
+        return this;
+    }
+
+    /**
+     * Reject files from manifest output.
+     *
+     * @param {Array} files
+     */
+    reject(files = []) {
+
+        files = flatten([].concat(files).map(filePath => {
+            if (File.find(filePath).isDirectory()) {
+                filePath += (path.sep + '**/*');
+            }
+
+            if (! filePath.includes('*')) return filePath;
+
+            return glob.sync(
+                new File(filePath).forceFromPublic().relativePath(),
+                { nodir: true }
+            );
+        }));
+
+        Mix.addTask(
+            new RejectFilesFromManifest({ files: files })
         );
 
         return this;
