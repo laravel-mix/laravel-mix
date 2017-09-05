@@ -253,5 +253,24 @@ module.exports = function () {
         extractPlugins.push(vueExtractPlugin);
     }
 
+    // If we want to import a global styles file in every component,
+    // use sass resources loader
+    if (Config.extractVueStyles && Config.globalVueStyles) {
+        tap(rules[rules.length - 1].options.loaders, vueLoaders => {
+            vueLoaders.scss.push({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+            vueLoaders.sass.push({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+        });
+    }
+
     return { rules, extractPlugins };
 }

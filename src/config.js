@@ -225,6 +225,16 @@ module.exports = function () {
 
 
         /**
+        * File with global styles to be imported in every component.
+        *
+        * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
+        *
+        * @type {string}
+        */
+        globalVueStyles: '',
+
+
+        /**
          * Uglify-specific settings for Webpack.
          *
          * See: https://github.com/mishoo/UglifyJS2#compressor-options
