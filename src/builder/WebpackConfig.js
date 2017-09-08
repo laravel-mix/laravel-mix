@@ -104,16 +104,20 @@ class WebpackConfig {
      */
     buildResolving() {
         let extensions = ['*', '.js', '.jsx', '.vue'];
+        
+        let buildFile = 'vue/dist/vue.common.js';
 
         if (Config.typeScript) {
             extensions.push('.ts', '.tsx');
+            
+            buildFile = 'vue/dist/vue.esm.js';
         }
 
         this.webpackConfig.resolve = {
             extensions,
 
             alias: {
-                'vue$': 'vue/dist/vue.common.js'
+                'vue$': buildFile
             }
         };
 
