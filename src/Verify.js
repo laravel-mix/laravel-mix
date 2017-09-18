@@ -121,7 +121,7 @@ let installDependencies = dependencies => {
     let command = `npm install ${dependencies} --save-dev`;
 
     if (File.exists('yarn.lock')) {
-        command = `yarn add ${dependencies} --save`;
+        command = `yarn add ${dependencies} --dev`;
     }
 
     exec(command);
