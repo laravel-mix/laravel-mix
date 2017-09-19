@@ -49,7 +49,7 @@ If you develop your app on a HTTPS connection your hot realoading scripts and st
 
 ```js
   "scripts": {
-    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --https",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --https",
   }
 ```
 
@@ -57,7 +57,7 @@ With the above setting the `webpack-dev-server` will generate a self-signed cert
 If you want to use your own certificate use these settings:
 
 ```js
-    "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --https --key /path/to/server.key --cert /path/to/server.crt --cacert /path/to/ca.pem",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --https --key /path/to/server.key --cert /path/to/server.crt --cacert /path/to/ca.pem",
 ```
 
 Now in your HTML/Blade files you can use either
