@@ -243,7 +243,8 @@ module.exports = function () {
             },
             postcss: Config.postCss,
             preLoaders: Config.vue.preLoaders,
-            postLoaders: Config.vue.postLoaders
+            postLoaders: Config.vue.postLoaders,
+            esModule: false
         }
     });
 
