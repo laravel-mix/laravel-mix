@@ -154,7 +154,8 @@ module.exports = function () {
          */
         vue: {
             preLoaders: {},
-            postLoaders: {}
+            postLoaders: {},
+            esModule: false
         },
 
 
