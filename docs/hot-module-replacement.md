@@ -45,7 +45,7 @@ With this adjustment, Laravel will do the work for you. If you run 'npm run hot'
 
 ### Usage on HTTPS
 
-If you develop your app on a HTTPS connection your hot realoading scripts and styles must also be served via HTTPS. To achieve this add `--https` option to the `hot` option command in package.json:
+If you develop your app on a HTTPS connection your hot reloading scripts and styles must also be served via HTTPS. To achieve this add `--https` flag to the `hot` option command in package.json:
 
 ```js
   "scripts": {
