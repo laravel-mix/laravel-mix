@@ -159,6 +159,17 @@ module.exports = function () {
         },
 
 
+       /**
+       * Style Loader defaults.
+       * See: https://github.com/webpack-contrib/style-loader#options
+       *
+       * @type {Object}
+       */
+        styleLoaderOptions: {
+            insertAt: 'top'
+        },
+
+
         /**
         * Image Loader defaults.
         * See: https://github.com/thetalecrafter/img-loader#options
