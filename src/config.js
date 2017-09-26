@@ -198,7 +198,8 @@ module.exports = function () {
                             uglify: true
                         }
                     }]
-                ]
+                ],
+                plugins: ['transform-object-rest-spread']
             };
 
             if (this.react) {
