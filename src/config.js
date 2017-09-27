@@ -175,6 +175,17 @@ module.exports = function () {
 
 
         /**
+        * File Loader directory defaults.
+        *
+        * @type {Object}
+        */
+        fileLoaderDirs: {
+            images: 'images',
+            fonts: 'fonts'
+        },
+
+
+        /**
          * The default Babel configuration.
          *
          * @type {Object}

@@ -72,10 +72,10 @@ module.exports = function () {
                 options: {
                     name: path => {
                         if (! /node_modules|bower_components/.test(path)) {
-                            return 'images/[name].[ext]?[hash]';
+                            return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
                         }
 
-                        return 'images/vendor/' + path
+                        return Config.fileLoaderDirs.images + '/vendor/' + path
                             .replace(/\\/g, '/')
                             .replace(
                                 /((.*(node_modules|bower_components))|images|image|img|assets)\//g, ''
@@ -100,10 +100,10 @@ module.exports = function () {
         options: {
             name: path => {
                 if (! /node_modules|bower_components/.test(path)) {
-                    return 'fonts/[name].[ext]?[hash]';
+                    return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
                 }
 
-                return 'fonts/vendor/' + path
+                return Config.fileLoaderDirs.fonts + '/vendor/' + path
                     .replace(/\\/g, '/')
                     .replace(
                         /((.*(node_modules|bower_components))|fonts|font|assets)\//g, ''
