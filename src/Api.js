@@ -221,12 +221,12 @@ class Api {
         }
 
         src.forEach(file => {
-            src = new File(src);
+            file = new File(file);
             
-            output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
+            const tmpOutput = this._normalizeOutput(new File(output), file.nameWithoutExtension() + '.css');
     
             Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
-                src, output, pluginOptions
+                src: file, output: tmpOutput, pluginOptions
             });
     
         })
