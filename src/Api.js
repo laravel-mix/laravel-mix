@@ -214,13 +214,22 @@ class Api {
     preprocess(type, src, output, pluginOptions = {}) {
         Verify.preprocessor(type, src, output);
 
-        src = new File(src);
+        if (src.includes('*')) {
+            src = glob.sync(src, {nodir: true});
+        } else {
+            src = [src]
+        }
 
-        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
-
-        Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
-            src, output, pluginOptions
-        });
+        src.forEach(file => {
+            src = new File(src);
+            
+            output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
+    
+            Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
+                src, output, pluginOptions
+            });
+    
+        })
 
         if (type === 'fastSass') {
             Mix.addAsset(output);
