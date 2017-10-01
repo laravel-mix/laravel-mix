@@ -5,6 +5,7 @@ let VersionFilesTask = require('./tasks/VersionFilesTask');
 let webpack = require('webpack');
 let glob = require('glob');
 let _ = require('lodash');
+let webpackEntry = require('./builder/webpack-entry');
 
 class Api {
     /**
@@ -15,11 +16,61 @@ class Api {
      */
     js(entry, output) {
         Verify.js(entry, output);
-
-        entry = [].concat(entry).map(file => new File(file));
+    
         output = new File(output);
+        if (entry.includes('*')) {
+          entry = glob.sync(entry, {nodir: true});
+          entry.forEach(file => {
+            Config.js.push({
+              entry: [new File(file)],
+              output
+            });
+          })
+        } else {
+          entry = [].concat(entry).map(file => new File(file));
+          Config.js.push({entry, output});
+        }
+    
+        return this;
+      }
 
-        Config.js.push({ entry, output });
+
+    /**
+     * Register the CommonsChunkPlugin.
+     *
+     * @param {string} matchCase String or RegExp discribing what path/files to collect chunk from
+     * @param {string|Object} chunkNameOrConfig Output chunk name / CommonsChunkPlugin config object
+     * @param {boolean} manifest Should it create manifest or not
+     */
+    chunks(matchCase, chunkNameOrConfig, manifest = false) {
+        Verify.chunk(matchCase, chunkNameOrConfig);
+
+        let { entry } = webpackEntry();
+        let chunkConfig = {};
+
+
+        if(typeof chunkNameOrConfig === 'string') {
+        chunkConfig.name = chunkNameOrConfig
+        } else {
+        chunkConfig = Object.assign(chunkConfig, chunkNameOrConfig)
+        }
+        chunkConfig.chunks = Object
+        .keys(entry)
+        .filter(path => RegExp(matchCase).test(path.replace(/\\/g, '/')))
+
+        if(chunkConfig.chunks.length) {
+        Config.commons.push(chunkConfig);
+
+        if (manifest) {
+            const chunksName = chunkNameOrConfig.name || chunkNameOrConfig;
+            Config.commons.push({
+            name: chunksName + '.manifest',
+            chunks: [chunksName],
+            minChunks: Infinity
+            });
+        }
+
+        }
 
         return this;
     }

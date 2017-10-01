@@ -21,6 +21,31 @@ class Verify {
         );
     }
 
+    /**
+     * Verify that the call the mix.js() is valid.
+     *
+     * @param {*} entry
+     * @param {*} output
+     */
+    static chunk(matchCase, item) {
+        assert(
+            typeof matchCase === 'string' || matchCase instanceof RegExp,
+            'mix.chunks() is missing required parameter 1: matchCase'
+        );
+
+        if ((item && typeof item === 'object' && !Array.isArray(item) && item !== null)) { // isObject
+            assert(
+            typeof item.name === 'string',
+            'mix.chunks() : chunkNameOrConfig should implement CommonsChunkPlugin object - https://webpack.js.org/plugins/commons-chunk-plugin/'
+            );
+        } else {
+            assert(
+            typeof item === 'string',
+            'mix.chunks() is missing required parameter 2: chunkNameOrConfig'
+            );
+        }
+    }
+
 
     /**
      * Verify that the calls to mix.sass() and mix.less() are valid.
