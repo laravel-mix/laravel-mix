@@ -5,7 +5,7 @@ By default, Laravel Mix will display a system notification for each compilation.
 
 ```js
 mix.js(src, output)
-   .disableNotifications();
+   .disableNotifications(); // disableSuccessNotifications()
 ```
 
 Simple!
