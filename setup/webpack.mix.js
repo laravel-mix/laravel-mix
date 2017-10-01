@@ -18,6 +18,10 @@ mix.js('src/app.js', 'dist/')
 // mix.js(src, output);
 // mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.
 // mix.ts(src, output); <-- Requires tsconfig.json to exist in the same folder as webpack.mix.js
+// mix.chunks(src, {
+//   name: output,
+//   minChunks: 2
+// }, true)
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.standaloneSass('src', output); <-- Faster, but isolated from Webpack.
@@ -40,6 +44,10 @@ mix.js('src/app.js', 'dist/')
 // mix.webpackConfig({}); <-- Override webpack.config.js, without editing the file directly.
 // mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.
 // mix.options({
+//   fileLoaderDirs: {
+//     images: 'img',
+//     fonts: 'web-fonts'
+//   }
 //   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.
 //   processCssUrls: true, // Process/optimize relative stylesheet url()'s. Set to false, if you don't want them touched.
 //   purifyCss: false, // Remove unused CSS selectors.

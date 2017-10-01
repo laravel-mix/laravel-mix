@@ -53,6 +53,14 @@ class WebpackConfig {
             );
         }
 
+        if (Config.commons.length) {
+            Config.commons.forEach(config => {
+              this.webpackConfig.plugins.push(
+                new webpack.optimize.CommonsChunkPlugin(config)
+              );
+            })
+        }
+
         return this;
     }
 
