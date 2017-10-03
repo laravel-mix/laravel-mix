@@ -3,6 +3,8 @@ let without = require('lodash').without;
 
 let path = require('path');
 
+console.log('qweqwe');
+
 class Manifest {
     /**
      * Create a new Manifest instance.
