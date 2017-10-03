@@ -48,7 +48,6 @@ class Api {
         let { entry } = webpackEntry();
         let chunkConfig = {};
 
-
         if(typeof chunkNameOrConfig === 'string') {
         chunkConfig.name = chunkNameOrConfig
         } else {
@@ -136,7 +135,9 @@ class Api {
      * @param {object} pluginOptions
      */
     standaloneSass(src, output, pluginOptions = {}) {
-        Verify.exists(src);
+        if (!src.includes('*')) {
+            Verify.exists(src);
+        }
 
         return this.preprocess('fastSass', src, output, pluginOptions);
     };
@@ -229,12 +230,14 @@ class Api {
             Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
                 src: file, output: tmpOutput, pluginOptions
             });
+
+            if (type === 'fastSass') {
+                Mix.addAsset(tmpOutput);
+            }
     
         })
 
-        if (type === 'fastSass') {
-            Mix.addAsset(output);
-        }
+        
 
         return this;
     }

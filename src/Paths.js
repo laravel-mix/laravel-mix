@@ -5,11 +5,9 @@ class Paths {
      * Create a new Paths instance.
      */
     constructor() {
-        if (argv['$0'].includes('ava')) {
-            this.rootPath = path.resolve(__dirname, '../');
-        } else {
-            this.rootPath = path.resolve(__dirname, '../../../');
-        }
+      
+            this.rootPath = path.resolve(process.cwd());
+        
     }
 
 
