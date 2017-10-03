@@ -177,7 +177,10 @@ class File {
      * Read the file's contents.
      */
     read() {
-        return fs.readFileSync(this.path(), {
+        const path = this.path();
+        let realPath = (path.startsWith(Mix.paths.rootPath))? path : `${Mix.paths.rootPath}${path}`;
+
+        return fs.readFileSync(realPath, {
             encoding: 'utf-8'
         });
     }
