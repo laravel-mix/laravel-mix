@@ -4,6 +4,7 @@ let Dispatcher = require('./Dispatcher');
 let isFunction = require('lodash').isFunction;
 
 
+console.log('qwe')
 
 class Mix {
     /**
