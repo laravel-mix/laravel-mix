@@ -37,45 +37,16 @@ class WebpackConfig {
      * Build the entry object.
      */
     buildEntry() {
-        let { entry, extractions } = webpackEntry();
+        let { entry, chunks, extractions } = webpackEntry();
 
         this.webpackConfig.entry = entry;
 
-
-        if (Config.commons.length) {
-
-            Config.commons.forEach(chunk => {
-                chunk.config.chunks = Object
-                .keys(entry)
-                .filter(entrypath => {
-                    if(typeof chunk.matchCase === "string") {
-                        return entrypath.includes(path.normalize(chunk.matchCase));
-                    } else if(chunk.matchCase instanceof RegExp) {    
-                        return RegExp(chunk.matchCase).test(entrypath) ;
-                    } else if(Array.isArray(chunk.matchCase)) {
-                        let includes = false;
-                        chunk.matchCase.forEach(match => {
-                            if(entrypath.includes(match)) {
-                                return includes = true;
-                            }
-                        })
-                        return includes;
-                    }
-                    return false;                    
-                })
-
-
-                if(chunk.config.chunks.length) {
-                    this.webpackConfig.plugins.push(
-                        new webpack.optimize.CommonsChunkPlugin(chunk.config)
-                      );
-                }
-
-    
-            })
-        }
-
-
+        chunks.forEach(chunk => {
+            this.webpackConfig.plugins.push(
+                new webpack.optimize.CommonsChunkPlugin(chunk)
+            );
+        })
+        
         // If we're extracting any vendor libraries, then we
         // need to add the CommonChunksPlugin to strip out
         // all relevant code into its own file.

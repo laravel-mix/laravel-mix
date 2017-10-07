@@ -33,6 +33,36 @@ function addVendors() {
     return extractions;
 }
 
+// Next, we'll append chunks.
+function addChunks(entry, extractions) {
+    let chunks = []
+    if (Config.commons.length) {
+        Config.commons.forEach(chunk => {
+            chunk.config.chunks = Object
+            .keys(entry)
+            .filter(entrypath => !extractions.includes(entrypath)) // Omit vendor libs from chunks
+            .filter(entrypath => {
+                if(typeof chunk.matchCase === "string") {
+                    return entrypath.includes(path.normalize(chunk.matchCase));
+                } else if(chunk.matchCase instanceof RegExp) {    
+                    return RegExp(chunk.matchCase).test(entrypath) ;
+                } else if(Array.isArray(chunk.matchCase)) {
+                    let includes = false;
+                    chunk.matchCase.forEach(match => {
+                        if(entrypath.includes(match)) {
+                            return includes = true;
+                        }
+                    })
+                    return includes;
+                }
+                return false;                    
+            })
+            chunks.push(chunk.config);
+        });
+    }
+    return chunks;
+}
+
 
 // Finally, we'll append all Sass/Less/Stylus references,
 // and they'll neatly be extracted to their own files.
@@ -50,10 +80,13 @@ module.exports = function () {
 
     addScripts();
     let extractions = addVendors();
+    entry = entry.get();
+    let chunks = addChunks(entry, extractions);
     addStylesheets();
 
     return {
-        entry: entry.get(),
-        extractions
+        entry,
+        extractions,
+        chunks
     };
 };
