@@ -46,30 +46,15 @@ class Api {
         Verify.chunk(matchCase, chunkNameOrConfig);
 
         let { entry } = webpackEntry();
-        let chunkConfig = {};
+        let config = {};
 
         if(typeof chunkNameOrConfig === 'string') {
-        chunkConfig.name = chunkNameOrConfig
+            config.name = chunkNameOrConfig
         } else {
-        chunkConfig = Object.assign(chunkConfig, chunkNameOrConfig)
+            config = Object.assign(config, chunkNameOrConfig)
         }
-        chunkConfig.chunks = Object
-        .keys(entry)
-        .filter(path => RegExp(matchCase).test(path.replace(/\\/g, '/')))
-
-        if(chunkConfig.chunks.length) {
-        Config.commons.push(chunkConfig);
-
-        if (manifest) {
-            const chunksName = chunkNameOrConfig.name || chunkNameOrConfig;
-            Config.commons.push({
-            name: chunksName + '.manifest',
-            chunks: [chunksName],
-            minChunks: Infinity
-            });
-        }
-
-        }
+        
+        Config.commons.push({config, manifest, matchCase});
 
         return this;
     }

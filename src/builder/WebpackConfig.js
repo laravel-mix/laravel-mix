@@ -54,10 +54,58 @@ class WebpackConfig {
         }
 
         if (Config.commons.length) {
-            Config.commons.forEach(config => {
-              this.webpackConfig.plugins.push(
-                new webpack.optimize.CommonsChunkPlugin(config)
-              );
+            const isWindows = /^win/.test(process.platform);
+            if(isWindows) {
+                const isForfardSlashUsed = Config.commons.filter(chunk => {
+                    if(chunk.matchCase instanceof RegExp) {
+                        const regExpAsString = chunk.matchCase.toString();
+                        return regExpAsString.substr(1, regExpAsString.length - 2) // omit foward slashes
+                            .includes('/')
+                    }
+                    return false;
+                }).length
+                if(isForfardSlashUsed) {
+                    console.log("\nNote: On Windows systems you should use backslash '\\' in path")
+                }
+            }
+            Config.commons.forEach(chunk => {
+                chunk.config.chunks = Object
+                .keys(entry)
+                .filter(entrypath => {
+                    if(typeof chunk.matchCase === "string") {
+                        return entrypath.includes(path.normalize(chunk.matchCase));
+                    } else if(chunk.matchCase instanceof RegExp) {    
+                        return RegExp(chunk.matchCase).test(entrypath) ;
+                    } else if(Array.isArray(chunk.matchCase)) {
+                        let includes = false;
+                        chunk.matchCase.forEach(match => {
+                            if(entrypath.includes(match)) {
+                                return includes = true;
+                            }
+                        })
+                        return includes;
+                    }
+                    return false;                    
+                })
+
+
+                if(chunk.config.chunks.length) {
+                    this.webpackConfig.plugins.push(
+                        new webpack.optimize.CommonsChunkPlugin(chunk.config)
+                      );
+                    if (chunk.manifest) {
+                        this.webpackConfig.plugins.push(
+                            new webpack.optimize.CommonsChunkPlugin({
+                                name: chunk.config.name + chunk.manifest,
+                                chunks: [chunk.config.name],
+                                minChunks: Infinity
+                            })
+                          );
+                    }
+                    
+                }
+
+    
             })
         }
 

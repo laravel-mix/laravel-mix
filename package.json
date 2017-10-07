@@ -52,6 +52,7 @@
     "postcss-loader": "^2.0.5",
     "resolve-url-loader": "^2.0.2",
     "sass-loader": "^6.0.5",
+    "slash": "^1.0.0",
     "style-loader": "^0.18.1",
     "uglify-js": "^2.8.28",
     "uglifyjs-webpack-plugin": "^0.4.6",

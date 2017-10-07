@@ -22,12 +22,12 @@ function addScripts() {
 
 // Next, we'll append any requested vendor library extractions.
 function addVendors() {
-    return Config.extractions.map(entry.addExtraction.bind(entry));
+    let extractions = Config.extractions.map(entry.addExtraction.bind(entry));
 
     // If we are extracting vendor libraries, then we also need
     // to extract Webpack's manifest file to assist with caching.
     if (extractions.length) {
-        extractions.push(path.join(entry.base, 'manifest'));
+        extractions.push(path.join(entry.base, 'manifest'));        
     }
 
     return extractions;
