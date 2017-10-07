@@ -192,6 +192,13 @@ module.exports = function () {
             fonts: 'fonts'
         },
 
+        /**
+        * CommonsChunkPluign manifest default path
+        *
+        * @type {String}
+        */
+        manifestPath: '',
+
 
         /**
          * The default Babel configuration.
