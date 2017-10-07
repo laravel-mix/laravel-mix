@@ -1,5 +1,7 @@
 # Library Code Splitting
 
+## Vendors
+
 ```js
 mix.js(src, output)
    .extract(['any', 'vendor', 'library']);
@@ -28,6 +30,45 @@ Once you run webpack to compile your code, you'll find three new files. You may 
 ```
 
 In effect, we pay a small HTTP request penalty, in exchange for improved long-term caching.
+
+## Custom chunks
+
+However sometimes we want to get our reusable code into separate chunks.
+For example we have mutiple files that imports some code like 
+```js
+import {SomeUtil, AnotherUtil} from '../our-utils';
+```
+And we don't wanna store code of every util in every generated file.
+We can hadle this with CommonsChunksPluign like that
+
+```js
+mix
+    .js('resources/assets/js/client/*.js', 'assets/client')
+    .js('resources/assets/js/admin/file-one.js', 'assets/admin')
+    .js('resources/assets/js/admin/file-two.js', 'assets/admin')
+    .js('resources/assets/js/admin/file-ignored.js', 'assets/admin')
+    // Here we collect all files where output path includes - assets/client
+    .chunks('assets/client', {
+        name: 'assets/client/common',
+        minChunks: 2
+    })
+    // But here we want to collect only file-one and file-two from assets/admin
+    .chunks(/^(?!.*ignored).*\\assets\\admin/, { // Backslashes are used in output paths only for Win32
+        name: 'assets/admin/common',
+        minChunks: 2
+    })
+```
+
+###### Signature
+```
+mix.chunks(
+    matchCase: string | RegExp | Array,
+    chunkNameOrConfig: string | Object
+)
+```
+> **MatchCase** will match all of your output js files paths and collect them in a chunk.  
+> **chunkNameOrConfig** accepts output name(path) or [CommonsChunkPlugin](https://webpack.js.org/plugins/commons-chunk-plugin/) config object
+
 
 ### What's That Manifest File?
 
