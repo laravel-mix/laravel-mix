@@ -21,7 +21,7 @@ mix.js('src/app.js', 'dist/')
 // mix.chunks(src, {
 //   name: output,
 //   minChunks: 2
-// }, true)
+// })
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.standaloneSass('src', output); <-- Faster, but isolated from Webpack.
