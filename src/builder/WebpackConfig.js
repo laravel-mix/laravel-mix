@@ -41,33 +41,9 @@ class WebpackConfig {
 
         this.webpackConfig.entry = entry;
 
-        // If we're extracting any vendor libraries, then we
-        // need to add the CommonChunksPlugin to strip out
-        // all relevant code into its own file.
-        if (extractions.length) {
-            this.webpackConfig.plugins.push(
-                new webpack.optimize.CommonsChunkPlugin({
-                    names: extractions,
-                    minChunks: Infinity
-                })
-            );
-        }
 
         if (Config.commons.length) {
-            const isWindows = /^win/.test(process.platform);
-            if(isWindows) {
-                const isForfardSlashUsed = Config.commons.filter(chunk => {
-                    if(chunk.matchCase instanceof RegExp) {
-                        const regExpAsString = chunk.matchCase.toString();
-                        return regExpAsString.substr(1, regExpAsString.length - 2) // omit foward slashes
-                            .includes('/')
-                    }
-                    return false;
-                }).length
-                if(isForfardSlashUsed) {
-                    console.log("\nNote: On Windows systems you should use backslash '\\' in path")
-                }
-            }
+
             Config.commons.forEach(chunk => {
                 chunk.config.chunks = Object
                 .keys(entry)
@@ -93,20 +69,23 @@ class WebpackConfig {
                     this.webpackConfig.plugins.push(
                         new webpack.optimize.CommonsChunkPlugin(chunk.config)
                       );
-                    if (chunk.manifest) {
-                        this.webpackConfig.plugins.push(
-                            new webpack.optimize.CommonsChunkPlugin({
-                                name: chunk.config.name + chunk.manifest,
-                                chunks: [chunk.config.name],
-                                minChunks: Infinity
-                            })
-                          );
-                    }
-                    
                 }
 
     
             })
+        }
+
+
+        // If we're extracting any vendor libraries, then we
+        // need to add the CommonChunksPlugin to strip out
+        // all relevant code into its own file.
+        if (extractions.length) {
+            this.webpackConfig.plugins.push(
+                new webpack.optimize.CommonsChunkPlugin({
+                    names: extractions,
+                    minChunks: Infinity
+                })
+            );
         }
 
         return this;

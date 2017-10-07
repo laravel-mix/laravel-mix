@@ -40,10 +40,10 @@ class Api {
      *
      * @param {string} matchCase String or RegExp discribing what path/files to collect chunk from
      * @param {string|Object} chunkNameOrConfig Output chunk name / CommonsChunkPlugin config object
-     * @param {boolean} manifest Should it create manifest or not
      */
-    chunks(matchCase, chunkNameOrConfig, manifest = false) {
+    chunks(matchCase, chunkNameOrConfig) {
         Verify.chunk(matchCase, chunkNameOrConfig);
+        Verify.matchCase(matchCase);
 
         let { entry } = webpackEntry();
         let config = {};
@@ -54,7 +54,7 @@ class Api {
             config = Object.assign(config, chunkNameOrConfig)
         }
         
-        Config.commons.push({config, manifest, matchCase});
+        Config.commons.push({config, matchCase});
 
         return this;
     }
