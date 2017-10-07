@@ -79,10 +79,11 @@ module.exports = function () {
     entry = new Entry();
 
     addScripts();
+    addStylesheets();
     let extractions = addVendors();
     entry = entry.get();
     let chunks = addChunks(entry, extractions);
-    addStylesheets();
+    
 
     return {
         entry,
