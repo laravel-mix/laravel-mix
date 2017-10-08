@@ -35,7 +35,7 @@ class Verify {
 
         if ((item && typeof item === 'object' && !Array.isArray(item) && item !== null)) { // isObject
             assert(
-            typeof item.name === 'string',
+                typeof item.name === 'string' || Array.isArray(item.name) || Array.isArray(item.names),
             'mix.chunks() : chunkNameOrConfig should implement CommonsChunkPlugin object - https://webpack.js.org/plugins/commons-chunk-plugin/'
             );
         } else {
