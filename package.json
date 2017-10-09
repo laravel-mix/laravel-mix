@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
