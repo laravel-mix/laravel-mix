@@ -181,12 +181,12 @@ test.cb.serial('the kitchen sink', t => {
 
         t.deepEqual({
             "/file.js": "/file.js?id=6535b4d330f12366c3f7",
-            "/js/all.js": "/js/all.js?id=d7e3707ddbccac82e343",
-            "/js/another.js": "/js/another.js?id=b537db7198b3bd55d9be",
-            "/js/app.js": "/js/app.js?id=920afc44cc4b39286bfc",
-            "/js/manifest.js": "/js/manifest.js?id=362dd9e7d4cff71c6779",
-            "/js/vendor.js": "/js/vendor.js?id=abc1071b11e4e709b38a",
-            "/somewhere/app.js": "/somewhere/app.js?id=920afc44cc4b39286bfc",
+            "/js/all.js": "/js/all.js?id=d198d4b3b25e9d66fa37",
+            "/js/another.js": "/js/another.js?id=d403c9f3f581bbcba8ba",
+            "/js/app.js": "/js/app.js?id=8e880c67fe14b09f7d16",
+            "/js/manifest.js": "/js/manifest.js?id=cb749444552d8c6b9881",
+            "/js/vendor.js": "/js/vendor.js?id=6f0a5bfca38e0818c1bf",
+            "/somewhere/app.js": "/somewhere/app.js?id=8e880c67fe14b09f7d16",
         }, readManifest());
     });
 });
