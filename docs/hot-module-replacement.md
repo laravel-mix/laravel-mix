@@ -45,7 +45,7 @@ With this adjustment, Laravel will do the work for you. If you run 'npm run hot'
 
 ### Usage on HTTPS
 
-If you develop your app on a HTTPS connection your hot reloading scripts and styles must also be served via HTTPS. To achieve this add `--https` flag to the `hot` option command in package.json:
+If you develop your app on an HTTPS connection, your hot reloading scripts and styles must also be served via HTTPS. To achieve this, add the `--https` flag to the `hot` option command within `package.json`:
 
 ```js
   "scripts": {
@@ -53,22 +53,23 @@ If you develop your app on a HTTPS connection your hot reloading scripts and sty
   }
 ```
 
-With the above setting the `webpack-dev-server` will generate a self-signed certificate for you.
-If you want to use your own certificate use these settings:
+With the above setting, the `webpack-dev-server` will generate a self-signed certificate for you. If you wish to use your own certificate, you may use these settings:
 
 ```js
     "hot": "NODE_ENV=development webpack-dev-server --inline --hot --https --key /path/to/server.key --cert /path/to/server.crt --cacert /path/to/ca.pem",
 ```
 
-Now in your HTML/Blade files you can use either
+Now, in your HTML/Blade files you can use either:
+
 ```html
     <script src="https://localhost:8080/js/bundle.js"></script>
 ```
-or
+
+or:
+
 ```html
     <script src="{{ mix('js/bundle.js') }}"></script>
 ```
-Both options will work.
 
 
 ### Usage in SPAs
