@@ -168,7 +168,7 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
 
     let plugins = new WebpackConfig()
         .build()
-        .module.rules.find(rule => rule.test == '/Users/jeffreyway/code/laravel-mix/resources/assets/sass/sass.scss')
+        .module.rules.find(rule => rule.test.toString().includes('/resources/assets/sass/sass.scss'))
         .use.find(loader => loader.loader == 'postcss-loader')
         .options.plugins.map(plugin => plugin().postcssPlugin);
 
