@@ -69,6 +69,7 @@
     "mock-fs": "^4.3.0",
     "mock-require": "^2.0.2",
     "nyc": "^10.3.2",
+    "postcss-custom-properties": "^6.2.0",
     "sinon": "^2.3.2",
     "vue": "^2.4.4"
   },

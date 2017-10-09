@@ -156,3 +156,21 @@ test('Custom user config can be merged', t => {
 
     t.is('changed', webpackConfig.context);
 });
+
+
+test('Autoprefixer should always be applied after all other postcss plugins', t => {
+    mix.sass('resources/assets/sass/sass.scss', 'public/css')
+       .options({
+           postCss: [
+              require('postcss-custom-properties') 
+           ]
+       });
+
+    let plugins = new WebpackConfig()
+        .build()
+        .module.rules.find(rule => rule.test == '/Users/jeffreyway/code/laravel-mix/resources/assets/sass/sass.scss')
+        .use.find(loader => loader.loader == 'postcss-loader')
+        .options.plugins.map(plugin => plugin().postcssPlugin);
+
+    t.deepEqual(['postcss-custom-properties', 'autoprefixer'], plugins);
+});
