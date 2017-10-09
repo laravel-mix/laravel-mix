@@ -135,14 +135,6 @@ module.exports = function () {
             let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
 
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
-                let postCssPlugins = Config.postCss;
-
-                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
-                    postCssPlugins = preprocessor.postCssPlugins;
-                }
-
-                postCssPlugins.push(require('autoprefixer'));
-                
                 let loaders = [
                     {
                         loader: 'css-loader',
@@ -158,7 +150,17 @@ module.exports = function () {
                         options: {
                             sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident: 'postcss',
-                            plugins: postCssPlugins,
+                            plugins: (function () {
+                                let plugins = Config.postCss;
+
+                                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                plugins.push(require('autoprefixer'));
+
+                                return plugins;
+                            })()
                         }
                     },
                 ];
