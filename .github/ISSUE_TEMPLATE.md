@@ -2,7 +2,7 @@
     Before posting this issue, please perform the following steps, and confirm that the issue is still present.
 
 1. Update Laravel Mix to the latest version.
-2. Nuke your dependencies, and reinstall from scratch: `rm -rf node_modules && npm cache clear && npm install`.
+2. Nuke your dependencies, and reinstall from scratch: `rm -rf node_modules && npm cache verify && npm install`.
 3. Check your `package.json` file, and ensure that there are no old Laravel Elixir dependencies that might be interfering with Mix.
 -->
 
