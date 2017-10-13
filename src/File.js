@@ -1,6 +1,7 @@
 let md5 = require('md5');
 let path = require('path');
 let fs = require('fs-extra');
+let slash = require('slash');
 let uglify = require('uglify-js');
 let UglifyCss = require('clean-css');
 
@@ -111,7 +112,7 @@ class File {
     forceFromPublic(publicPath) {
         publicPath = publicPath || Config.publicPath;
 
-        if (! this.relativePath().startsWith(publicPath)) {
+        if (! slash(this.relativePath()).startsWith(publicPath)) {
             return new File(path.join(publicPath, this.relativePath()));
         }
 
@@ -127,8 +128,7 @@ class File {
     pathFromPublic(publicPath) {
         publicPath = publicPath || Config.publicPath;
 
-        let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
-
+        let extra = slash(this.filePath).startsWith(publicPath) ? publicPath : '';
         return this.path().replace(Mix.paths.root(extra), '');
     }
 
