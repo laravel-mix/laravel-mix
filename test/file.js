@@ -1,6 +1,7 @@
 import test from 'ava';
 import mockFs from 'mock-fs';
 import '../src/index';
+import slash from 'slash';
 
 
 test.afterEach(t => mockFs.restore());
@@ -84,18 +85,18 @@ test('it can force the file to begin from the public path for the project.', t =
 
     t.true(newFile instanceof File);
 
-    t.is('public/some/path/here.js', newFile.relativePath());
+    t.is('public/some/path/here.js', slash(newFile.relativePath()));
 });
 
 
 test('it knows the path to the file starting from the project public directory', t => {
     let file = new File('public/js/file.js');
 
-    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+    t.is('/js/file.js', slash(file.pathFromPublic(Config.publicPath)));
 
     file = new File('js/file.js');
 
-    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+    t.is('/js/file.js', slash(file.pathFromPublic(Config.publicPath)));
 });
 
 

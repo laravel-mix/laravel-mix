@@ -2,7 +2,13 @@ import test from 'ava';
 import mix from  '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
+import slash from 'slash';
 
+function transformEntryPath(entry) {
+    const result = {};
+    Object.keys(entry).forEach(key => result[slash(key)] = entry[key].map(path => slash(path)))
+    return result;
+}
 
 test.beforeEach(t => {
     Config = defaultConfig();
@@ -18,9 +24,9 @@ test('basic JS compilation config.', t => {
 
     t.deepEqual({
         '/js/app': [
-            path.resolve('resources/assets/js/app.js')
+            slash(path.resolve('resources/assets/js/app.js'))
         ]
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 
     t.deepEqual({
         path: path.resolve('public'),
@@ -38,9 +44,9 @@ test('basic JS compilation with output public directory omitted config.', t => {
 
     t.deepEqual({
         '/js/app': [
-            path.resolve('resources/assets/js/app.js')
+            slash(path.resolve('resources/assets/js/app.js'))
         ]
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -66,9 +72,9 @@ test('basic JS compilation with a specific output path config.', t => {
 
     t.deepEqual({
         '/js/output': [
-            path.resolve('resources/assets/js/app.js')
+            slash(path.resolve('resources/assets/js/app.js'))
         ]
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -79,9 +85,9 @@ test('JS compilation with vendor extraction config', t => {
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.js')],
+        '/js/app': [slash(path.resolve('resources/assets/js/app.js'))],
         '/js/libraries': ['vue']
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -99,9 +105,9 @@ test('JS compilation with vendor extraction with default config', t => {
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.js')],
+        '/js/app': [slash(path.resolve('resources/assets/js/app.js'))],
         '/js/vendor': ['vue']
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -111,8 +117,8 @@ test('React compilation', t => {
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.jsx')]
-    }, webpackConfig.entry);
+        '/js/app': [slash(path.resolve('resources/assets/js/app.jsx'))]
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -126,12 +132,12 @@ test('JS and Sass + Less + Stylus compilation config', t => {
 
     t.deepEqual({
         '/js/app': [
-            path.resolve('resources/assets/js/app.js'),
-            path.resolve('resources/assets/sass/sass.scss'),
-            path.resolve('resources/assets/less/less.less'),
-            path.resolve('resources/assets/stylus/stylus.styl'),
+            slash(path.resolve('resources/assets/js/app.js')),
+            slash(path.resolve('resources/assets/sass/sass.scss')),
+            slash(path.resolve('resources/assets/less/less.less')),
+            slash(path.resolve('resources/assets/stylus/stylus.styl')),
         ]
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -142,10 +148,10 @@ test('CSS compilation with no JS specified config.', t => {
 
     t.deepEqual({
         'mix': [
-            path.resolve(__dirname, '../src/builder', 'mock-entry.js'),
-            path.resolve('resources/assets/sass/sass.scss')
+            slash(path.resolve(__dirname, '../src/builder', 'mock-entry.js')),
+            slash(path.resolve('resources/assets/sass/sass.scss'))
         ]
-    }, webpackConfig.entry);
+    }, transformEntryPath(webpackConfig.entry));
 });
 
 
@@ -180,7 +186,7 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
 
     let plugins = new WebpackConfig()
         .build()
-        .module.rules.find(rule => rule.test.toString().includes('/resources/assets/sass/sass.scss'))
+        .module.rules.find(rule => slash(rule.test.toString()).includes('/resources/assets/sass/sass.scss'))
         .use.find(loader => loader.loader == 'postcss-loader')
         .options.plugins.map(plugin => plugin().postcssPlugin);
 

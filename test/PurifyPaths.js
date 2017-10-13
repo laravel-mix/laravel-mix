@@ -2,6 +2,7 @@ import test from 'ava';
 import index from '../src/index';
 import PurifyPaths from '../src/PurifyPaths';
 import fs from 'fs-extra';
+import slash from 'slash';
 
 test('that it builds the purify file paths properly', t => {
     let options = PurifyPaths.build({
@@ -11,8 +12,8 @@ test('that it builds the purify file paths properly', t => {
     t.deepEqual(options, { paths: ['foo.html'] });
 
     let stubs = [
-        path.resolve(__dirname, 'stubs/one.html'),
-        path.resolve(__dirname, 'stubs/two.html')
+        slash(path.resolve(__dirname, 'stubs/one.html')),
+        slash(path.resolve(__dirname, 'stubs/two.html'))
     ];
 
     new File(stubs[0]).makeDirectories().write('foo');

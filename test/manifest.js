@@ -1,5 +1,6 @@
 import test from 'ava';
 import mockFs from 'mock-fs';
+import slash from 'slash';
 import mix from '../src/index';
 import Manifest from '../src/Manifest';
 
@@ -18,7 +19,7 @@ test('that it can get fetch a single versioned path from the underlying manifest
 
     Mix.manifest.add('file/path.js');
 
-    t.is('public/file/path.js', Mix.manifest.get('file/path.js'));
+    t.is('public/file/path.js', slash(Mix.manifest.get('file/path.js')));
 });
 
 
