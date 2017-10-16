@@ -224,7 +224,12 @@ module.exports = function () {
                         }
                     }]
                 ],
-                plugins: ['transform-object-rest-spread']
+                plugins: [
+                    'transform-object-rest-spread',
+                    ["transform-runtime", {
+                        "polyfill": false
+                    }]
+                ]
             };
 
             if (this.react) {
