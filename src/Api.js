@@ -2,6 +2,7 @@ let Verify = require('./Verify');
 let CopyFilesTask = require('./tasks/CopyFilesTask');
 let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
+let webpack = require('webpack');
 let glob = require('glob');
 let _ = require('lodash');
 
@@ -444,8 +445,13 @@ class Api {
      * @param {object} config
      */
     webpackConfig(config) {
-        Config.webpackConfig = config;
-
+        if (typeof config == 'function') {
+            Config.webpackConfig = config(webpack);
+        }
+        else {
+            Config.webpackConfig = config;
+        }
+        
         return this;
     }
 
