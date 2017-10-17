@@ -358,7 +358,7 @@ class Api {
      * Enable sourcemap support.
      *
      * @param {Boolean} productionToo
-     * @param {string} type
+     * @param {string}  type
      */
     sourceMaps(productionToo = true, type = 'inline-source-map') {
         if (Mix.inProduction()) {
