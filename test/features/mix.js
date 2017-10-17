@@ -185,7 +185,7 @@ test.cb.serial('the kitchen sink', t => {
             "/js/another.js": "/js/another.js?id=d403c9f3f581bbcba8ba",
             "/js/app.js": "/js/app.js?id=8e880c67fe14b09f7d16",
             "/js/manifest.js": "/js/manifest.js?id=cb749444552d8c6b9881",
-            "/js/vendor.js": "/js/vendor.js?id=6f0a5bfca38e0818c1bf",
+            "/js/vendor.js": "/js/vendor.js?id=6cf1cdebd189feac7f99",
             "/somewhere/app.js": "/somewhere/app.js?id=8e880c67fe14b09f7d16",
         }, readManifest());
     });
