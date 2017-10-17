@@ -45,7 +45,7 @@ mix.js('src/app.js', 'dist')
    .setPublicPath('dist');
 ```
 
-Take note of the source paths, and create the directory structure to match \(or, of course, change them to your preferred structure\). You're all set now. Compile everything down by running `node_modules/.bin/webpack` from the command line. You should now see:
+By default the `app.js` and `app.scss` live inside a directory named `src`, to create these files run `mkdir src && touch src/app.js && touch src/app.js`. If you prefer to use your own structure, simply change the paths. Now you're all set. Compile everything down by running `node_modules/.bin/webpack` from the command line. You should now see:
 
 * `dist/app.css`
 * `dist/app.js`
