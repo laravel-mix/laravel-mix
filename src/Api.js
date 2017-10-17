@@ -445,12 +445,7 @@ class Api {
      * @param {object} config
      */
     webpackConfig(config) {
-        if (typeof config == 'function') {
-            Config.webpackConfig = config(webpack);
-        }
-        else {
-            Config.webpackConfig = config;
-        }
+        Config.webpackConfig = (typeof config == 'function') ? config(webpack) : config;
         
         return this;
     }
