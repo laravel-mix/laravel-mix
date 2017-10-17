@@ -223,8 +223,17 @@ test('mix.setResourceRoot()', t => {
 
 
 test('mix.webpackConfig()', t => {
+    // Test config passed as an object.
     let config = { context: 'changed' };
     let response = mix.webpackConfig(config);
+
+    t.is(mix, response);
+
+    t.deepEqual(config, Config.webpackConfig);
+
+    // Test config passed via a callback.
+    config = { context: 'changed again' };
+    response = mix.webpackConfig(webpack => config);
 
     t.is(mix, response);
 
