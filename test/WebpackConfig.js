@@ -157,6 +157,18 @@ test('Custom user config can be merged', t => {
     t.is('changed', webpackConfig.context);
 });
 
+test('Custom user config can be merged as a callback function', t => {
+    mix.webpackConfig(webpack => {
+        return {
+            context: 'changed'
+        }
+    });
+
+    let webpackConfig = new WebpackConfig().build();
+
+    t.is('changed', webpackConfig.context);
+});
+
 
 test('Autoprefixer should always be applied after all other postcss plugins', t => {
     mix.sass('resources/assets/sass/sass.scss', 'public/css')
