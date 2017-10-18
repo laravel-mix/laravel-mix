@@ -71,6 +71,10 @@ class StandaloneSass {
                 path => sassOptions.push('--include-path=' + path)
             );
         }
+        
+        if(this.pluginOptions.importer) {
+            sassOptions.push('--importer ' + this.pluginOptions.importer)
+        }
 
         if (Mix.isUsing('sourcemaps') && ! Mix.inProduction()) {
             sassOptions.push('--source-map-embed');
