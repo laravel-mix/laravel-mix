@@ -4,7 +4,7 @@ Though Laravel Mix is optimized for Laravel usage, it may be used for any type o
 
 ### Laravel Project
 
-Laravel 5.4 ships with everything you need to get started. Simply:
+Laravel ships with everything you need to get started. Simply:
 
 * Install Laravel
 * Run `npm install`
