@@ -78,7 +78,15 @@ module.exports = function () {
                         'resources/views/**/*.php',
                         'public/js/**/*.js',
                         'public/css/**/*.css'
-                    ]
+                    ],
+                    snippetOptions: {
+                       rule: {
+                           match: /(<\/body>|<\/pre>)/i,
+                           fn: function (snippet, match) {
+                               return snippet + match;
+                           }
+                       }
+                    }
                 }, Config.browserSync),
                 { reload: false }
             )

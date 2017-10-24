@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix",
-  "version": "1.4.5",
+  "version": "1.5.1",
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "autoprefixer": "^7.1.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.1.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.5.1",
     "chokidar": "^1.7.0",
     "clean-css": "^4.1.3",
@@ -55,7 +56,7 @@
     "uglify-js": "^2.8.28",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
+    "vue-template-compiler": "^2.0.0",
     "webpack": "^3.5.0",
     "webpack-chunk-hash": "^0.4.0",
     "webpack-dev-server": "^2.5.1",
@@ -68,7 +69,9 @@
     "mock-fs": "^4.3.0",
     "mock-require": "^2.0.2",
     "nyc": "^10.3.2",
-    "sinon": "^2.3.2"
+    "postcss-custom-properties": "^6.2.0",
+    "sinon": "^2.3.2",
+    "vue": "^2.5.0"
   },
   "engines": {
     "node": ">=6.0.0"

@@ -72,10 +72,10 @@ module.exports = function () {
                 options: {
                     name: path => {
                         if (! /node_modules|bower_components/.test(path)) {
-                            return 'images/[name].[ext]?[hash]';
+                            return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
                         }
 
-                        return 'images/vendor/' + path
+                        return Config.fileLoaderDirs.images + '/vendor/' + path
                             .replace(/\\/g, '/')
                             .replace(
                                 /((.*(node_modules|bower_components))|images|image|img|assets)\//g, ''
@@ -100,10 +100,10 @@ module.exports = function () {
         options: {
             name: path => {
                 if (! /node_modules|bower_components/.test(path)) {
-                    return 'fonts/[name].[ext]?[hash]';
+                    return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
                 }
 
-                return 'fonts/vendor/' + path
+                return Config.fileLoaderDirs.fonts + '/vendor/' + path
                     .replace(/\\/g, '/')
                     .replace(
                         /((.*(node_modules|bower_components))|fonts|font|assets)\//g, ''
@@ -150,13 +150,17 @@ module.exports = function () {
                         options: {
                             sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident: 'postcss',
-                            plugins: [
-                                require('autoprefixer')
-                            ].concat(
-                                preprocessor.postCssPlugins && preprocessor.postCssPlugins.length
-                                    ? preprocessor.postCssPlugins
-                                    : Config.postCss
-                            )
+                            plugins: (function () {
+                                let plugins = Config.postCss;
+
+                                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                plugins.push(require('autoprefixer'));
+
+                                return plugins;
+                            })()
                         }
                     },
                 ];
@@ -244,7 +248,7 @@ module.exports = function () {
             postcss: Config.postCss,
             preLoaders: Config.vue.preLoaders,
             postLoaders: Config.vue.postLoaders,
-            esModule: false
+            esModule: Config.vue.esModule
         }
     });
 

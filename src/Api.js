@@ -2,6 +2,7 @@ let Verify = require('./Verify');
 let CopyFilesTask = require('./tasks/CopyFilesTask');
 let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
+let webpack = require('webpack');
 let glob = require('glob');
 let _ = require('lodash');
 
@@ -186,8 +187,8 @@ class Api {
      * @param {string}       output
      * @param {Boolean}      babel
      */
-    combine(src, output, babel = false) {
-        output = new File(output || '');
+    combine(src, output = '', babel = false) {
+        output = new File(output);
 
         Verify.combine(src, output);
 
@@ -357,10 +358,9 @@ class Api {
      * Enable sourcemap support.
      *
      * @param {Boolean} productionToo
+     * @param {string}  type
      */
-    sourceMaps(productionToo = true) {
-        let type = 'inline-source-map';
-
+    sourceMaps(productionToo = true, type = 'inline-source-map') {
         if (Mix.inProduction()) {
             type = productionToo ? 'cheap-source-map' : false;
         }
@@ -445,7 +445,7 @@ class Api {
      * @param {object} strategy
      */
     webpackConfig(config, strategy = {}) {
-        Config.webpackConfig = config;
+        Config.webpackConfig = (typeof config == 'function') ? config(webpack) : config;
         Config.webpackConfigStrategy = strategy;
 
         return this;

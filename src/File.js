@@ -129,7 +129,7 @@ class File {
 
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
 
-        return this.path().replace(Mix.paths.root(extra), '').replace(/^\//, "");
+        return this.path().replace(Mix.paths.root(extra), '');
     }
 
 

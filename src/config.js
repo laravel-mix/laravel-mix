@@ -154,7 +154,8 @@ module.exports = function () {
          */
         vue: {
             preLoaders: {},
-            postLoaders: {}
+            postLoaders: {},
+            esModule: false
         },
 
 
@@ -170,6 +171,17 @@ module.exports = function () {
             mozjpeg: {},
             optipng: {},
             svgo: {},
+        },
+
+
+        /**
+        * File Loader directory defaults.
+        *
+        * @type {Object}
+        */
+        fileLoaderDirs: {
+            images: 'images',
+            fonts: 'fonts'
         },
 
 
@@ -197,7 +209,8 @@ module.exports = function () {
                             uglify: true
                         }
                     }]
-                ]
+                ],
+                plugins: ['transform-object-rest-spread']
             };
 
             if (this.react) {
