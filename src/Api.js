@@ -377,7 +377,7 @@ class Api {
      * @param {string} path
      */
     setPublicPath(path) {
-        Config.publicPath = path;
+        Config.publicPath = path.replace(/\/$/, '');
 
         return this;
     }

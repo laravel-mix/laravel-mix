@@ -210,6 +210,11 @@ test('mix.setPublicPath()', t => {
     t.is(mix, response);
 
     t.is('somewhere/else', Config.publicPath);
+
+    // It will also trim any closing slashes.
+    mix.setPublicPath('somewhere/else/');
+
+    t.is('somewhere/else', Config.publicPath);
 });
 
 
