@@ -36,6 +36,14 @@ module.exports = function () {
 
 
         /**
+         * The list of commons chunks to extract.
+         *
+         * @type {Array}
+         */
+        commons: [],
+
+
+        /**
          * A list of CSS preprocessing to be performed.
          *
          * @type {Object}
@@ -183,6 +191,13 @@ module.exports = function () {
             images: 'images',
             fonts: 'fonts'
         },
+
+        /**
+        * CommonsChunkPluign manifest default path
+        *
+        * @type {String}
+        */
+        manifestPath: '',
 
 
         /**

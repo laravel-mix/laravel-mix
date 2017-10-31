@@ -37,10 +37,16 @@ class WebpackConfig {
      * Build the entry object.
      */
     buildEntry() {
-        let { entry, extractions } = webpackEntry();
+        let { entry, chunks, extractions } = webpackEntry();
 
         this.webpackConfig.entry = entry;
 
+        chunks.forEach(chunk => {
+            this.webpackConfig.plugins.push(
+                new webpack.optimize.CommonsChunkPlugin(chunk)
+            );
+        })
+        
         // If we're extracting any vendor libraries, then we
         // need to add the CommonChunksPlugin to strip out
         // all relevant code into its own file.

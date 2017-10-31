@@ -62,6 +62,7 @@ class StandaloneSass {
         let sassOptions = [
             '--precision=8',
             '--output-style=' + (Mix.inProduction() ? 'compressed' : 'expanded'),
+            '--importer=' + path.resolve('./node_modules/node-sass-tilde-importer')
         ];
 
         if (watch) sassOptions.push('--watch');

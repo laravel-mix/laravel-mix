@@ -5,6 +5,7 @@ let VersionFilesTask = require('./tasks/VersionFilesTask');
 let webpack = require('webpack');
 let glob = require('glob');
 let _ = require('lodash');
+let webpackEntry = require('./builder/webpack-entry');
 
 class Api {
     /**
@@ -15,11 +16,45 @@ class Api {
      */
     js(entry, output) {
         Verify.js(entry, output);
-
-        entry = [].concat(entry).map(file => new File(file));
+    
         output = new File(output);
+        if (entry.includes('*')) {
+          entry = glob.sync(entry, {nodir: true});
+          entry.forEach(file => {
+            Config.js.push({
+              entry: [new File(file)],
+              output
+            });
+          })
+        } else {
+          entry = [].concat(entry).map(file => new File(file));
+          Config.js.push({entry, output});
+        }
+    
+        return this;
+      }
 
-        Config.js.push({ entry, output });
+
+    /**
+     * Register the CommonsChunkPlugin.
+     *
+     * @param {string} matchCase String or RegExp discribing what path/files to collect chunk from
+     * @param {string|Object} chunkNameOrConfig Output chunk name / CommonsChunkPlugin config object
+     */
+    chunks(matchCase, chunkNameOrConfig) {
+        Verify.chunk(matchCase, chunkNameOrConfig);
+        Verify.matchCase(matchCase);
+
+        let { entry } = webpackEntry();
+        let config = {};
+
+        if(typeof chunkNameOrConfig === 'string') {
+            config.name = chunkNameOrConfig
+        } else {
+            config = Object.assign(config, chunkNameOrConfig)
+        }
+        
+        Config.commons.push({config, matchCase});
 
         return this;
     }
@@ -85,7 +120,9 @@ class Api {
      * @param {object} pluginOptions
      */
     standaloneSass(src, output, pluginOptions = {}) {
-        Verify.exists(src);
+        if (!src.includes('*')) {
+            Verify.exists(src);
+        }
 
         return this.preprocess('fastSass', src, output, pluginOptions);
     };
@@ -164,17 +201,28 @@ class Api {
     preprocess(type, src, output, pluginOptions = {}) {
         Verify.preprocessor(type, src, output);
 
-        src = new File(src);
-
-        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
-
-        Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
-            src, output, pluginOptions
-        });
-
-        if (type === 'fastSass') {
-            Mix.addAsset(output);
+        if (src.includes('*')) {
+            src = glob.sync(src, {nodir: true});
+        } else {
+            src = [src]
         }
+
+        src.forEach(file => {
+            file = new File(file);
+            
+            const tmpOutput = this._normalizeOutput(new File(output), file.nameWithoutExtension() + '.css');
+    
+            Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
+                src: file, output: tmpOutput, pluginOptions
+            });
+
+            if (type === 'fastSass') {
+                Mix.addAsset(tmpOutput);
+            }
+    
+        })
+
+        
 
         return this;
     }

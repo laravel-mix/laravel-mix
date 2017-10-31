@@ -21,6 +21,49 @@ class Verify {
         );
     }
 
+    /**
+     * Verify that the call the mix.chunk() is valid.
+     *
+     * @param {*} matchCase
+     * @param {*} item
+     */
+    static chunk(matchCase, item) {
+        assert(
+            typeof matchCase === 'string' || matchCase instanceof RegExp,
+            'mix.chunks() is missing required parameter 1: matchCase'
+        );
+
+        if ((item && typeof item === 'object' && !Array.isArray(item) && item !== null)) { // isObject
+            assert(
+                typeof item.name === 'string' || Array.isArray(item.name) || Array.isArray(item.names),
+            'mix.chunks() : chunkNameOrConfig should implement CommonsChunkPlugin object - https://webpack.js.org/plugins/commons-chunk-plugin/'
+            );
+        } else {
+            assert(
+            typeof item === 'string',
+            'mix.chunks() is missing required parameter 2: chunkNameOrConfig'
+            );
+        }
+    }
+
+    /**
+     * Verify that the matchCase in mix.chunk() doesn't contain forward slash on Win32 systems.
+     *
+     * @param {*} matchCase
+     */
+    static matchCase(matchCase) {
+        const isWindows = /^win/.test(process.platform);
+        if(isWindows) {
+            let isForfardSlashUsed = false;
+            if(matchCase instanceof RegExp) {
+                const regExpAsString = matchCase.toString();
+                isForfardSlashUsed = regExpAsString.substr(1, regExpAsString.length - 2) // omit forward slashes
+                    .includes('/')
+            }
+            assert(!isForfardSlashUsed, "Note: mix.chunks() matchCase RegExp should not contain forward slashes as long as win32 systems using backslash '\\' in path")
+        }
+    }
+
 
     /**
      * Verify that the calls to mix.sass() and mix.less() are valid.

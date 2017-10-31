@@ -27,10 +27,40 @@ function addVendors() {
     // If we are extracting vendor libraries, then we also need
     // to extract Webpack's manifest file to assist with caching.
     if (extractions.length) {
-        extractions.push(path.join(entry.base, 'manifest'));
+        extractions.push(path.join(Config.manifestPath, 'manifest'));        
     }
 
     return extractions;
+}
+
+// Next, we'll append chunks.
+function addChunks(entry, extractions) {
+    let chunks = []
+    if (Config.commons.length) {
+        Config.commons.forEach(chunk => {
+            chunk.config.chunks = Object
+            .keys(entry)
+            .filter(entrypath => !extractions.includes(entrypath)) // Omit vendor libs from chunks
+            .filter(entrypath => {
+                if(typeof chunk.matchCase === "string") {
+                    return entrypath.includes(path.normalize(chunk.matchCase));
+                } else if(chunk.matchCase instanceof RegExp) {    
+                    return RegExp(chunk.matchCase).test(entrypath) ;
+                } else if(Array.isArray(chunk.matchCase)) {
+                    let includes = false;
+                    chunk.matchCase.forEach(match => {
+                        if(entrypath.includes(match)) {
+                            return includes = true;
+                        }
+                    })
+                    return includes;
+                }
+                return false;                    
+            })
+            chunks.push(chunk.config);
+        });
+    }
+    return chunks;
 }
 
 
@@ -49,11 +79,15 @@ module.exports = function () {
     entry = new Entry();
 
     addScripts();
-    let extractions = addVendors();
     addStylesheets();
+    let extractions = addVendors();
+    entry = entry.get();
+    let chunks = addChunks(entry, extractions);
+    
 
     return {
-        entry: entry.get(),
-        extractions
+        entry,
+        extractions,
+        chunks
     };
 };
