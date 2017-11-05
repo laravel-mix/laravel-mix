@@ -92,6 +92,12 @@ module.exports = function () {
          */
         postCss: [],
 
+        /**
+         * Determine if we should enable autoprefixer by default.
+         *
+         * @type {Boolean}
+         */
+        autoprefixer: true,
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.
