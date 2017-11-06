@@ -1,6 +1,6 @@
 {
   "name": "laravel-mix",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
@@ -48,7 +48,7 @@
     "img-loader": "^2.0.0",
     "lodash": "^4.17.4",
     "md5": "^2.2.1",
-    "node-sass": "^4.5.3",
+    "node-sass": "4.5.3",
     "postcss-loader": "^2.0.5",
     "resolve-url-loader": "^2.0.2",
     "sass-loader": "^6.0.5",
