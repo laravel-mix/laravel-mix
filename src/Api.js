@@ -39,6 +39,20 @@ class Api {
         return this.js(entry, output);
     };
 
+    /**
+     * Register support for the Preact framework.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
+     */
+    preact(entry, output) {
+        Config.preact = true;
+
+        Verify.dependency('babel-preset-preact', ['babel-preset-preact']);
+
+        return this.js(entry, output);
+    };
+
 
     /**
      * Register support for the TypeScript.

@@ -52,6 +52,14 @@ module.exports = function () {
 
 
         /**
+         * Does the project require Preact support?
+         *
+         * @type {Boolean}
+         */
+        preact: false,
+
+
+        /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}
@@ -223,8 +231,13 @@ module.exports = function () {
                 defaultOptions.presets.push('react');
             }
 
+            if (this.preact) {
+                defaultOptions.presets.push('preact');
+            }
+
             return webpackMerge.smart(defaultOptions, options);
         },
+
 
         /**
          * Determine if CSS url()s should be processed by Webpack.
