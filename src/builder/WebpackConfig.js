@@ -130,7 +130,7 @@ class WebpackConfig {
      */
     mergeCustomConfig() {
         if (Config.webpackConfig) {
-            this.webpackConfig = require('webpack-merge').smart(
+            this.webpackConfig = require('webpack-merge').smartStrategy(Config.webpackConfigStrategy)(
                 this.webpackConfig, Config.webpackConfig
             );
         }

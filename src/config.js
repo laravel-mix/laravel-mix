@@ -306,6 +306,14 @@ module.exports = function () {
 
 
         /**
+         * Custom Webpack-specific strategy to merge/override Mix's.
+         *
+         * @type {Object}
+         */
+        webpackConfigStrategy: {},
+
+
+        /**
          * Determine if Mix should ask the friendly errors plugin to
          * clear the console before outputting the results or not.
          *

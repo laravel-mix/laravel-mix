@@ -456,10 +456,12 @@ class Api {
      * Merge custom config with the provided webpack.config file.
      *
      * @param {object} config
+     * @param {object} strategy
      */
-    webpackConfig(config) {
+    webpackConfig(config, strategy = {}) {
         Config.webpackConfig = (typeof config == 'function') ? config(webpack) : config;
-        
+        Config.webpackConfigStrategy = strategy;
+
         return this;
     }
 
