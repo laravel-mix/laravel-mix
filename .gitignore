@@ -3,4 +3,6 @@ notes.md
 coverage
 .nyc_output
 .idea/
+/test/stubs
+/test/fixtures/fake-app/public
 *.log

@@ -3,6 +3,7 @@ import mix from '../../src/index';
 import webpack from 'webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import fs from 'fs-extra';
+import slash from 'slash';
 
 test.beforeEach(t => {
     // Reset state.
@@ -120,7 +121,7 @@ test.cb.serial('it combines a folder of scripts', t => {
         t.true(File.exists(output));
 
         t.is(
-            "alert('another stub');\n\nalert('stub');\n",
+            "alert('another stub');\nalert('stub');",
             File.find(output).read()
         );
     });
@@ -184,7 +185,7 @@ test.cb.serial('the kitchen sink', t => {
             "/js/all.js": "/js/all.js?id=d198d4b3b25e9d66fa37",
             "/js/another.js": "/js/another.js?id=d403c9f3f581bbcba8ba",
             "/js/app.js": "/js/app.js?id=8e880c67fe14b09f7d16",
-            "/js/manifest.js": "/js/manifest.js?id=cb749444552d8c6b9881",
+            "/js/manifest.js": "/js/manifest.js?id=86559ee38b7f5df76a9b",
             "/js/vendor.js": "/js/vendor.js?id=6cf1cdebd189feac7f99",
             "/somewhere/app.js": "/somewhere/app.js?id=8e880c67fe14b09f7d16",
         }, readManifest());
@@ -205,6 +206,9 @@ function compile(t, callback) {
 
 
 function readManifest() {
-    return JSON.parse(File.find('test/fixtures/fake-app/public/mix-manifest.json').read());
+    const escapedManifest = {};
+    const manifest = JSON.parse(File.find('test/fixtures/fake-app/public/mix-manifest.json').read());
+    Object.keys(manifest).forEach(key => escapedManifest[slash(key)] = slash(manifest[key]));
+    return escapedManifest;
 }
 

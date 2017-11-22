@@ -1,5 +1,6 @@
 let objectValues = require('lodash').values;
 let without = require('lodash').without;
+let slash = require('slash');
 
 let path = require('path');
 
@@ -121,10 +122,9 @@ class Manifest {
      * @param {string} filePath
      */
     normalizePath(filePath) {
-        filePath = filePath.replace(
-            new RegExp('^' +  Config.publicPath), ''
+        filePath = slash(filePath).replace(
+            new RegExp('^' +  slash(Config.publicPath)), ''
         ).replace(/\\/g, '/');
-
         if (! filePath.startsWith('/')) {
             filePath = '/' + filePath;
         }
