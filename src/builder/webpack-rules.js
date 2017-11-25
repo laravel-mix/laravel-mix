@@ -202,9 +202,20 @@ module.exports = function () {
     let vueExtractPlugin;
 
     if (Config.extractVueStyles) {
-        let fileName = typeof(Config.extractVueStyles) === "string" ? Config.extractVueStyles : 'vue-styles.css';
-        let filePath = fileName.replace(Config.publicPath, '').replace(/^\//, "");
-        vueExtractPlugin = extractPlugins.length ? extractPlugins[0] : new ExtractTextPlugin(filePath);
+        let fileName = Config.extractVueStyles;
+        let filePath;
+        if (typeof (fileName) === "string") {
+            filePath = fileName.replace(Config.publicPath, '').replace(/^\//, "");
+        } else if (typeof (fileName) === "function") {
+            filePath = fileName;
+        } else {
+            filePath = 'vue-styles.css';
+        }
+        vueExtractPlugin = extractPlugins.length ? 
+            extractPlugins[0] : 
+            new ExtractTextPlugin({
+                filename: filePath
+            });
     }
 
     rules.push({
