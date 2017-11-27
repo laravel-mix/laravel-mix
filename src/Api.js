@@ -5,6 +5,7 @@ let VersionFilesTask = require('./tasks/VersionFilesTask');
 let webpack = require('webpack');
 let glob = require('glob');
 let _ = require('lodash');
+let path = require('path');
 
 class Api {
     /**
@@ -388,10 +389,10 @@ class Api {
     /**
      * Override the default path to your project's public directory.
      *
-     * @param {string} path
+     * @param {string} defaultPath
      */
-    setPublicPath(path) {
-        Config.publicPath = path.replace(/\/$/, '');
+    setPublicPath(defaultPath) {
+        Config.publicPath = path.normalize(defaultPath.replace(/\/$/, ''));
 
         return this;
     }
@@ -459,7 +460,7 @@ class Api {
      */
     webpackConfig(config) {
         Config.webpackConfig = (typeof config == 'function') ? config(webpack) : config;
-        
+
         return this;
     }
 
