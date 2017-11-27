@@ -26,7 +26,7 @@ class Manifest {
             );
         }
 
-        return this.manifest;
+        return sortObjectKeys(this.manifest);
     }
 
 
