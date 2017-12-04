@@ -127,7 +127,7 @@ module.exports = function () {
 
 
         /**
-         * Does the project require React support?
+         * Determine if we should enable cache busting.
          *
          * @type {Boolean}
          */
