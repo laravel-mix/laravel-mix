@@ -27,6 +27,22 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 By default, we've enabled JavaScript ES2017 + module bundling, as well as Sass compilation.
 
+#### *Optional Step 3*: Extended visit in `webpack.mix.js`
+
+You can also add some additional config options based on the current environment that Mix is running in.
+
+```js
+if(!mix.inProduction()) {
+    // Since we aren't in production add sourcemaps to the build
+    mix.sourceMaps();
+}
+
+if(mix.isEnvironment('development')) {
+    // Staging and Testing don't need browsersync enabled.
+    mix.browserSync('my-domain.dev');
+}
+```
+
 ### Step 4: Compilation
 
 Go ahead and compile these down.
