@@ -12,6 +12,14 @@ module.exports = function () {
 
 
         /**
+         * Sets the current environment.
+         *
+         * @type {String}
+         */
+        env: process.env.NODE_ENV,
+
+
+        /**
          * The list of scripts to bundle.
          *
          * @type {Array}
