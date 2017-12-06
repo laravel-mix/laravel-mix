@@ -282,8 +282,7 @@ module.exports = function () {
             sourceMap: true,
             uglifyOptions: {
                 compress: {
-                    warnings: false,
-                    drop_console: true,
+                    warnings: false
                 },
                 output: {
                     comments: false
