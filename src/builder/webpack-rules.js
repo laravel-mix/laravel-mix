@@ -134,7 +134,10 @@ module.exports = function () {
         Config.preprocessors[type].forEach(preprocessor => {
             let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
 
-            tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+            tap(new ExtractTextPlugin({
+                filename: outputPath,
+                disable: Config.disableExtractPlugins
+            }), extractPlugin => {
                 let loaders = [
                     {
                         loader: 'css-loader',
