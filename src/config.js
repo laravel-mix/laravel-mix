@@ -226,8 +226,9 @@ module.exports = function () {
                 ],
                 plugins: [
                     'transform-object-rest-spread',
-                    ["transform-runtime", {
-                        "polyfill": false
+                    ['transform-runtime', {
+                        'polyfill': false,
+                        'helpers': false
                     }]
                 ]
             };
