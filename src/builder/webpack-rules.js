@@ -65,7 +65,7 @@ module.exports = function () {
 
     // Add support for loading images.
     rules.push({
-        test: /\.(png|jpe?g|gif)$/,
+        test:  /(\.(png|jpe?g|gif)$|im[a]?g.*\.svg$)/,
         loaders: [
             {
                 loader: 'file-loader',
@@ -95,7 +95,7 @@ module.exports = function () {
 
     // Add support for loading fonts.
     rules.push({
-        test: /\.(woff2?|ttf|eot|svg|otf)$/,
+        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
         loader: 'file-loader',
         options: {
             name: path => {
