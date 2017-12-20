@@ -61,7 +61,7 @@ class WebpackConfig {
      * Build the output object.
      */
     buildOutput() {
-         let http = process.argv.includes('--https') ? 'https' : 'http';
+        let http = process.argv.includes('--https') ? 'https' : 'http';
 
         this.webpackConfig.output = {
             path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
