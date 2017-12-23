@@ -61,12 +61,12 @@ class WebpackConfig {
      * Build the output object.
      */
     buildOutput() {
-         let http = process.argv.includes('--https') ? 'https' : 'http';
+        let http = process.argv.includes('--https') ? 'https' : 'http';
 
-         if(Mix.isUsing('hmr')) {
-             this.webpackConfig.devServer.host = Config.hmrOptions.host;
-             this.webpackConfig.devServer.port = Config.hmrOptions.port;
-         }
+        if(Mix.isUsing('hmr')) {
+            this.webpackConfig.devServer.host = Config.hmrOptions.host;
+            this.webpackConfig.devServer.port = Config.hmrOptions.port;
+        }
 
         this.webpackConfig.output = {
             path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
