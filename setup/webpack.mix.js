@@ -41,6 +41,7 @@ mix.js('src/app.js', 'dist/')
 // mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.
 // mix.options({
 //   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.
+//   globalVueStyles: file, // Variables file to be imported in every component.
 //   processCssUrls: true, // Process/optimize relative stylesheet url()'s. Set to false, if you don't want them touched.
 //   purifyCss: false, // Remove unused CSS selectors.
 //   uglify: {}, // Uglify-specific options. https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin

@@ -52,6 +52,14 @@ module.exports = function () {
 
 
         /**
+         * Does the project require Preact support?
+         *
+         * @type {Boolean}
+         */
+        preact: false,
+
+
+        /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}
@@ -102,6 +110,12 @@ module.exports = function () {
          */
         postCss: [],
 
+        /**
+         * Determine if we should enable autoprefixer by default.
+         *
+         * @type {Boolean}
+         */
+        autoprefixer: true,
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.
@@ -123,7 +137,7 @@ module.exports = function () {
 
 
         /**
-         * Does the project require React support?
+         * Determine if we should enable cache busting.
          *
          * @type {Boolean}
          */
@@ -220,15 +234,26 @@ module.exports = function () {
                         }
                     }]
                 ],
-                plugins: ['transform-object-rest-spread']
+                plugins: [
+                    'transform-object-rest-spread',
+                    ['transform-runtime', {
+                        'polyfill': false,
+                        'helpers': false
+                    }]
+                ]
             };
 
             if (this.react) {
                 defaultOptions.presets.push('react');
             }
 
+            if (this.preact) {
+                defaultOptions.presets.push('preact');
+            }
+
             return webpackMerge.smart(defaultOptions, options);
         },
+
 
         /**
          * Determine if CSS url()s should be processed by Webpack.
@@ -248,6 +273,16 @@ module.exports = function () {
 
 
         /**
+        * File with global styles to be imported in every component.
+        *
+        * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
+        *
+        * @type {string}
+        */
+        globalVueStyles: '',
+
+
+        /**
          * Uglify-specific settings for Webpack.
          *
          * See: https://github.com/mishoo/UglifyJS2#compressor-options
@@ -256,12 +291,13 @@ module.exports = function () {
          */
         uglify: {
             sourceMap: true,
-            compress: {
-                warnings: false,
-                drop_console: true,
-            },
-            output: {
-                comments: false
+            uglifyOptions: {
+                compress: {
+                    warnings: false
+                },
+                output: {
+                    comments: false
+                }
             }
         },
 

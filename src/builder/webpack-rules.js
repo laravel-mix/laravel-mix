@@ -135,14 +135,6 @@ module.exports = function () {
             let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
 
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
-                let postCssPlugins = Config.postCss;
-
-                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
-                    postCssPlugins = preprocessor.postCssPlugins;
-                }
-
-                postCssPlugins.push(require('autoprefixer'));
-                
                 let loaders = [
                     {
                         loader: 'css-loader',
@@ -158,7 +150,19 @@ module.exports = function () {
                         options: {
                             sourceMap: (type === 'sass' && Config.processCssUrls) ? true : Mix.isUsing('sourcemaps'),
                             ident: 'postcss',
-                            plugins: postCssPlugins,
+                            plugins: (function () {
+                                let plugins = Config.postCss;
+
+                                if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                if (Config.autoprefixer) {
+                                    plugins.push(require('autoprefixer'));
+                                }
+
+                                return plugins;
+                            })()
                         }
                     },
                 ];
@@ -198,7 +202,9 @@ module.exports = function () {
     let vueExtractPlugin;
 
     if (Config.extractVueStyles) {
-        vueExtractPlugin = extractPlugins.length ? extractPlugins[0] : new ExtractTextPlugin('vue-styles.css');
+        let fileName = typeof(Config.extractVueStyles) === "string" ? Config.extractVueStyles : 'vue-styles.css';
+        let filePath = fileName.replace(Config.publicPath, '').replace(/^\//, "");
+        vueExtractPlugin = extractPlugins.length ? extractPlugins[0] : new ExtractTextPlugin(filePath);
     }
 
     rules.push({
@@ -254,6 +260,25 @@ module.exports = function () {
     // Vue styles extraction too, we'll push a new one in.
     if (Config.extractVueStyles && ! extractPlugins.length) {
         extractPlugins.push(vueExtractPlugin);
+    }
+
+    // If we want to import a global styles file in every component,
+    // use sass resources loader
+    if (Config.extractVueStyles && Config.globalVueStyles) {
+        tap(rules[rules.length - 1].options.loaders, vueLoaders => {
+            vueLoaders.scss.push({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+            vueLoaders.sass.push({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: Mix.paths.root(Config.globalVueStyles)
+                }
+            });
+        });
     }
 
     return { rules, extractPlugins };

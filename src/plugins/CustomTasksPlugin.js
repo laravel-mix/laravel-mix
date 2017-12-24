@@ -47,10 +47,8 @@ class CustomTasksPlugin {
 
     /**
      * Minify the given asset file.
-     *
-     * @param {File} asset
      */
-    minifyAssets(asset) {
+    minifyAssets() {
         let tasks = Mix.tasks.filter(task => task.constructor.name !== 'VersionFilesTask');
 
         tasks.forEach(task => {
