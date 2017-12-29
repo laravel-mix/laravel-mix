@@ -213,6 +213,10 @@ module.exports = function () {
                 }
             });
 
+            if (this.babelConfig) {
+                options = webpackMerge.smart(options, this.babelConfig);
+            }
+
             let defaultOptions = {
                 cacheDirectory: true,
                 presets: [
@@ -308,6 +312,14 @@ module.exports = function () {
          * @type {Object}
          */
         webpackConfig: {},
+
+
+        /**
+         * Custom Babel configuration to be merged with Mix's defaults.
+         *
+         * @type {Object}
+         */
+        babelConfig: {},
 
 
         /**

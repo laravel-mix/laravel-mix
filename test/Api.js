@@ -246,6 +246,15 @@ test('mix.webpackConfig()', t => {
 });
 
 
+test('mix.babelConfig()', t => {
+    mix.babelConfig({
+        plugins: ['some-babel-plugin']
+    });
+
+    t.true(Config.babel().plugins.includes('some-babel-plugin'));
+});
+
+
 test('mix.combine/scripts/styles/babel()', t => {
     t.is(mix, mix.combine([], 'public/js/combined.js'));
 

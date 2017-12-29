@@ -464,6 +464,17 @@ class Api {
         return this;
     }
 
+    /**
+     * Merge custom Babel config with Mix's default.
+     *
+     * @param {object} config
+     */
+    babelConfig(config) {
+        Config.babelConfig = config;
+
+        return this;
+    }
+
 
     /* Set Mix-specific options.
      *
