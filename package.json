@@ -27,6 +27,11 @@
   ],
   "author": "Jeffrey Way",
   "license": "MIT",
+  "files": [
+    "icons",
+    "setup",
+    "src"
+  ],
   "dependencies": {
     "autoprefixer": "^7.1.1",
     "babel-core": "^6.24.1",
