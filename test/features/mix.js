@@ -127,6 +127,72 @@ test.cb.serial('it combines a folder of scripts', t => {
 });
 
 
+test.cb.serial('it combines a deep folder of scripts', t => {
+    let output = 'test/fixtures/fake-app/public/all.js';
+
+    mix.scripts('test/fixtures/fake-app/resources/assets/js', output, true);
+
+    compile(t, () => {
+        t.true(File.exists(output));
+
+        t.is(
+            "alert('another stub');\n\nalert('stub');\n\nalert('another nested stub');\n",
+            File.find(output).read()
+        );
+    });
+});
+
+
+test.cb.serial('it combines a folder of files', t => {
+    let output = 'test/fixtures/fake-app/public/all.js';
+
+    mix.combine(['test/fixtures/fake-app/resources/assets/js'], output);
+
+    compile(t, () => {
+        t.true(File.exists(output));
+
+        t.is(
+            "alert('another stub');\n\nalert('stub');\n",
+            File.find(output).read()
+        );
+    });
+});
+
+
+test.cb.serial('it combines a deep folder of files', t => {
+    let output = 'test/fixtures/fake-app/public/all.js';
+
+    mix.combine(['test/fixtures/fake-app/resources/assets/js'], output, false, true);
+
+    compile(t, () => {
+        t.true(File.exists(output));
+
+        t.is(
+            "alert('another stub');\n\nalert('stub');\n\nalert('another nested stub');\n",
+            File.find(output).read()
+        );
+    });
+});
+
+
+test.cb.serial('it combines a deep folder of files (with asterisk)', t => {
+    let output = 'test/fixtures/fake-app/public/all.js';
+
+    mix.combine('test/fixtures/fake-app/resources/assets/js/**/*', output);
+
+    compile(t, () => {
+        console.log(File.find(output).read());
+
+        t.true(File.exists(output));
+
+        t.is(
+            "alert('another stub');\n\nalert('stub');\n\nalert('another nested stub');\n",
+            File.find(output).read()
+        );
+    });
+});
+
+
 test.cb.serial('it can minify a file', t => {
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
        .minify('test/fixtures/fake-app/public/js/app.js');
