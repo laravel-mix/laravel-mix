@@ -201,20 +201,33 @@ class Api {
      * @param {string|Array} src
      * @param {string}       output
      * @param {Boolean}      babel
+     * @param {Boolean}      deep
      */
-    combine(src, output = '', babel = false) {
+    combine(src, output = '', babel = false, deep = false) {
         output = new File(output);
+        src = [].concat(src);
 
         Verify.combine(src, output);
 
-        if (typeof src === 'string' && File.find(src).isDirectory()) {
-            src = _.pull(
-                glob.sync(path.join(src, '**/*'), { nodir: true }),
-                output.relativePath()
-            );
-        }
+        let files = [];
 
-        let task = new ConcatFilesTask({ src, output, babel });
+        src.forEach(f => {
+            f = File.find(f).isDirectory() ? path.join(f, deep ? '**/*' : '*') : f;
+
+            if (_.endsWith(f, '/*')) {
+                files = files.concat(glob.sync(f, { nodir: true }));
+            } else {
+                files.push(f);
+            }
+        });
+
+        files = _.pull(files, output.relativePath());
+
+        let task = new ConcatFilesTask({
+            src: files,
+            output,
+            babel
+        });
 
         Mix.addTask(task);
 
@@ -227,9 +240,10 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      deep
      */
-    scripts(src, output) {
-        return this.combine(src, output);
+    scripts(src, output, deep = false) {
+        return this.combine(src, output, false, deep);
     };
 
 
@@ -238,11 +252,10 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      deep
      */
-    babel(src, output) {
-        return this.combine(src, output, true);
-
-        return this;
+    babel(src, output, deep = false) {
+        return this.combine(src, output, true, deep);
     };
 
 
@@ -251,9 +264,10 @@ class Api {
      *
      * @param {string|Array} src
      * @param {string}       output
+     * @param {Boolean}      deep
      */
-    styles(src, output) {
-        return this.combine(src, output);
+    styles(src, output, deep = false) {
+        return this.combine(src, output, false, deep);
     };
 
 
