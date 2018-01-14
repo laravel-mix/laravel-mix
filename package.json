@@ -11,10 +11,7 @@
     "test": "sudo nyc ava --verbose",
     "posttest": "nyc report --reporter=html"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JeffreyWay/laravel-mix.git"
-  },
+  "repository": "JeffreyWay/laravel-mix",
   "bugs": {
     "url": "https://github.com/JeffreyWay/laravel-mix/issues"
   },
