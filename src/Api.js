@@ -459,7 +459,11 @@ class Api {
      * @param {object} config
      */
     webpackConfig(config) {
-        Config.webpackConfig = (typeof config == 'function') ? config(webpack) : config;
+        config = (typeof config == 'function') ? config(webpack) : config;
+
+        Config.webpackConfig = require('webpack-merge').smart(
+            Config.webpackConfig, config
+        );
 
         return this;
     }
