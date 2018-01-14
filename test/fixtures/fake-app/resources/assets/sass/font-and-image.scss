@@ -19,7 +19,7 @@
 
 
 body {
-  // SVG files inside an img or image folder will be considered images: resolved and put into the images folder.
-  // The pattern for image recognition is im[a]?g.*\.svg$
+  // SVG files with any other name or in any other location will be considered images:
+  // resolved and put into the images folder.
   background-image:url('../img/img.svg');
 }

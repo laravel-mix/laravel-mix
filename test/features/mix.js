@@ -203,6 +203,11 @@ test.cb.serial('it resolves image- and font-urls and distinguishes between them 
         // And the referred fonts in the fonts folder
         t.true(File.exists('test/fixtures/fake-app/public/fonts/font.svg'));
         t.true(File.exists('test/fixtures/fake-app/public/fonts/awesome.svg'));
+        // And we expect the image NOT to be in the fonts folder:
+        t.false(File.exists('test/fixtures/fake-app/public/fonts/img.svg'));
+        // And the fonts NOT to be in the image folder
+        t.false(File.exists('test/fixtures/fake-app/public/images/font.svg'));
+        t.false(File.exists('test/fixtures/fake-app/public/images/awesome.svg'));
     });
 });
 

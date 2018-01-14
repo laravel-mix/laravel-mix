@@ -65,7 +65,8 @@ module.exports = function () {
 
     // Add support for loading images.
     rules.push({
-        test:  /(\.(png|jpe?g|gif)$|im[a]?g.*\.svg$)/,
+        // only include svg that doesn't have font in the path or file name by using negative lookahead
+        test:  /(\.(png|jpe?g|gif)$|^((?!font).)*\.svg$)/,
         loaders: [
             {
                 loader: 'file-loader',
