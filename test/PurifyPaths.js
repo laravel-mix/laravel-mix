@@ -11,8 +11,8 @@ test('that it builds the purify file paths properly', t => {
     t.deepEqual(options, { paths: ['foo.html'] });
 
     let stubs = [
-        path.resolve(__dirname, 'stubs/one.html'),
-        path.resolve(__dirname, 'stubs/two.html')
+        path.resolve(__dirname, 'stubs/one.html').replace(/\\/g, '/'),
+        path.resolve(__dirname, 'stubs/two.html').replace(/\\/g, '/')
     ];
 
     new File(stubs[0]).makeDirectories().write('foo');

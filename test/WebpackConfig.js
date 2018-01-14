@@ -1,4 +1,5 @@
 import test from 'ava';
+import path from 'path';
 import mix from  '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
@@ -180,7 +181,7 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
 
     let plugins = new WebpackConfig()
         .build()
-        .module.rules.find(rule => rule.test.toString().includes('/resources/assets/sass/sass.scss'))
+        .module.rules.find(rule => rule.test.toString().includes(path.normalize('/resources/assets/sass/sass.scss')))
         .use.find(loader => loader.loader == 'postcss-loader')
         .options.plugins.map(plugin => plugin().postcssPlugin);
 
