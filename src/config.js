@@ -286,6 +286,7 @@ module.exports = function () {
         uglify: {
             sourceMap: true,
             uglifyOptions: {
+                sourceMap: true,
                 compress: {
                     warnings: false
                 },
