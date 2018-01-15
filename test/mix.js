@@ -17,6 +17,13 @@ test('that it knows if it is being executed in a production environment', t => {
 });
 
 
+test('that it knows if it is being executed in the development environment', t => {
+    Config.env = 'development';
+
+    t.true(Mix.isEnvironment('development'));
+});
+
+
 test('that it can check if a certain config item is truthy', t => {
     Config.versioning = true;
 

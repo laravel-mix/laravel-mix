@@ -21,7 +21,7 @@ class Mix {
      * @param {string} tool
      */
     isUsing(tool) {
-        return !! Config[tool];
+        return !!Config[tool];
     }
 
 
@@ -30,6 +30,14 @@ class Mix {
      */
     inProduction() {
         return Config.production;
+    }
+
+
+    /**
+     * Determine if Mix is executing in a requested environment.
+     */
+    isEnvironment(env) {
+        return Config.env === env;
     }
 
 
