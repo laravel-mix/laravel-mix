@@ -42,21 +42,6 @@ However, it can be a burden to manually change this URL for production deploys. 
 
 With this adjustment, Laravel will do the work for you. If you run 'npm run hot' to enable hot reloading, the function will set the necessary `http://localhost:8080` base url. If, instead, you use `npm run dev` or `npm run production`, it'll use your domain as the base.
 
-### Changing the host
-
-If you wish to hot reload over a local network, or if port `8080` is currently in use, you can set the 'Hot Module Replacement' host and port using the following mix option:
- 
-```js
-mix.options({
-    hmrOptions: {
-        host: '10.1.1.2',
-        port: '3030'
-    }
-});
-```
-
-Important: Currently, support for the `{{ mix('js/bundle.js') }}` blade helper is pending PR.
-
 ### Usage on HTTPS
 
 If you develop your app on an HTTPS connection, your hot reloading scripts and styles must also be served via HTTPS. To achieve this, add the `--https` flag to the `hot` option command within `package.json`:
