@@ -48,7 +48,7 @@ test('it can be refreshed', t => {
     mix.setPublicPath(__dirname);
 
     mockFs({
-        [__dirname + '/js/app.js']: 'var foo;',
+        ['js/app.js']: 'var foo;',
         [Mix.manifest.path()]: '{}'
     });
 
@@ -56,7 +56,7 @@ test('it can be refreshed', t => {
     t.deepEqual({}, Mix.manifest.read());
 
     // But after we add to the manifest, and then refresh it...
-    Mix.manifest.add(__dirname + '/js/app.js').refresh();
+    Mix.manifest.add('js/app.js').refresh();
 
     // Then the manifest file should be updated on the fs.
     t.deepEqual({ '/js/app.js': '/js/app.js' }, Mix.manifest.read());
