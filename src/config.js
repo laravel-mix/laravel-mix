@@ -92,6 +92,16 @@ module.exports = function () {
 
 
         /**
+         * Hostname and port used for the hot reload module
+         *
+         * @type {Object}
+         */
+        hmrOptions: {
+            host: 'localhost',
+            port: '8080'
+        },
+
+        /**
          * PostCSS plugins to be applied to compiled CSS.
          *
          * See: https://github.com/postcss/postcss/blob/master/docs/plugins.md
