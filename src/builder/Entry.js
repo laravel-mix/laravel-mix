@@ -63,9 +63,17 @@ class Entry {
             );
         }
 
+        let getPathJoin = (vendorPath) => {
+            if (process.platform === 'win32') {
+                return vendorPath.replace(/\\/g, '\\');
+            }
+
+            return vendorPath.replace(/\\/g, '/');
+        }
+
         let vendorPath = extraction.output
             ? new File(extraction.output).pathFromPublic(Config.publicPath).replace(/\.js$/, '')
-            : path.join(this.base, 'vendor').replace(/\\/g, '/');
+            : getPathJoin(path.join(this.base, 'vendor'));
 
         this.add(vendorPath, extraction.libs);
 
