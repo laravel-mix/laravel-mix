@@ -1,5 +1,6 @@
 let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let Verify = require('../Verify');
 
 module.exports = function () {
     let rules = [];
@@ -266,6 +267,7 @@ module.exports = function () {
     // If we want to import a global styles file in every component,
     // use sass resources loader
     if (Config.extractVueStyles && Config.globalVueStyles) {
+	Verify.dependency('sass-resources-loader', ['sass-resources-loader']);
         tap(rules[rules.length - 1].options.loaders, vueLoaders => {
             vueLoaders.scss.push({
                 loader: 'sass-resources-loader',
