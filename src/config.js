@@ -266,6 +266,12 @@ module.exports = function () {
          */
         processCssUrls: true,
 
+        /**
+         * Whether or not to disable the ExtractTextPlugins used in the config.
+         *
+         * @type {Boolean}
+         */
+        disableExtractPlugins: false,
 
         /**
          * Whether to extract .vue component styles into a dedicated file.
