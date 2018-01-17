@@ -263,6 +263,10 @@ module.exports = function () {
                 defaultOptions.presets.push('preact');
             }
 
+            if (this.react) {
+              defaultOptions.presets.push('angular');
+            }
+
             return webpackMerge.smart(defaultOptions, options);
         },
 
