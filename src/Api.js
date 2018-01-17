@@ -54,26 +54,43 @@ class Api {
         return this.js(entry, output);
     };
 
-
     /**
-     * Register support for the TypeScript.
+     * Register support for the Angular framework.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
      */
-    ts(entry, output) {
-        Config.typeScript = true;
+    angular(entry, output) {
+      Config.angular = true;
 
-        Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
+      Verify.dependency('babel-preset-angular', ['babel-preset-angular']);
 
-        return this.js(entry, output);
+      return this.js(entry, output);
     };
 
+    /**
+     * Register support for TypeScript.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
+     */
+    ts(entry, output) {
+      Config.typeScript = true;
+
+      Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
+
+      return this.js(entry, output);
+    };
 
     /**
-     * Register support for the TypeScript.
+     * Register support for TypeScript.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
      */
     typeScript(entry, output) {
-        return this.ts(entry, output);
+      return this.ts(entry, output);
     }
-
 
     /**
      * Register Sass compilation.

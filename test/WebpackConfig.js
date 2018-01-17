@@ -174,7 +174,7 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
     mix.sass('resources/assets/sass/sass.scss', 'public/css')
        .options({
            postCss: [
-              require('postcss-custom-properties') 
+              require('postcss-custom-properties')
            ]
        });
 

@@ -60,6 +60,14 @@ module.exports = function () {
 
 
         /**
+         * Does the project require Angular support?
+         *
+         * @type {Boolean}
+         */
+        angular: false,
+
+
+        /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}

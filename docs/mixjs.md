@@ -118,3 +118,7 @@ mix.react('resources/assets/js/app.jsx', 'public/js/app.js');
 ```
 
 Of course, you'll still want to install React and ReactDOM through NPM, per usual, but everything else should be taken care of.
+
+### Angular Support
+
+Similar to React, Laravel Mix also comes out of the box with `mix.angular()` to reference necessary Babel plugins for Angular.
