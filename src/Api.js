@@ -40,6 +40,7 @@ class Api {
         return this.js(entry, output);
     };
 
+
     /**
      * Register support for the Preact framework.
      *
@@ -54,6 +55,7 @@ class Api {
         return this.js(entry, output);
     };
 
+
     /**
      * Register support for the Angular framework.
      *
@@ -61,12 +63,13 @@ class Api {
      * @param {string} output
      */
     angular(entry, output) {
-      Config.angular = true;
+        Config.angular = true;
 
-      Verify.dependency('babel-preset-angular', ['babel-preset-angular']);
+        Verify.dependency('babel-preset-angular', ['babel-preset-angular']);
 
-      return this.js(entry, output);
+        return this.js(entry, output);
     };
+
 
     /**
      * Register support for TypeScript.
@@ -75,12 +78,13 @@ class Api {
      * @param {string} output
      */
     ts(entry, output) {
-      Config.typeScript = true;
+        Config.typeScript = true;
 
-      Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
+        Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
 
-      return this.js(entry, output);
+        return this.js(entry, output);
     };
+
 
     /**
      * Register support for TypeScript.
@@ -89,8 +93,9 @@ class Api {
      * @param {string} output
      */
     typeScript(entry, output) {
-      return this.ts(entry, output);
+        return this.ts(entry, output);
     }
+
 
     /**
      * Register Sass compilation.
