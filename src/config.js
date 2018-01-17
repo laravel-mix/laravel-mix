@@ -263,7 +263,7 @@ module.exports = function () {
                 defaultOptions.presets.push('preact');
             }
 
-            if (this.react) {
+            if (this.angular) {
               defaultOptions.presets.push('angular');
             }
 
