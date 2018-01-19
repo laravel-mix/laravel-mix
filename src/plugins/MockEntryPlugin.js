@@ -13,7 +13,7 @@ class MockEntryPlugin {
         compiler.plugin('done', stats => {
             let temporaryOutputFile = stats.toJson()
                 .assets
-                .find(asset => asset.chunkNames.includes('mix'));
+                .find(asset => asset.name === 'mix.js');
 
             if (temporaryOutputFile) {
                 delete stats.compilation.assets[temporaryOutputFile.name];
