@@ -15,6 +15,7 @@
  */
 
 require('./helpers');
+require('dotenv').config();
 
 global.path = require('path');
 global.File = require('./File');
