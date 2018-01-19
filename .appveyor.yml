@@ -2,23 +2,31 @@
 environment:
   matrix:
     - nodejs_version: "6"
+    - nodejs_version: "7"
     - nodejs_version: "8"
     - nodejs_version: "9"
+
+cache:
+ - node_modules
+ - "%LOCALAPPDATA%\\Yarn"
 
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
-  - npm install
+  # install modules – uses yarn to avoid the following case
+  # npm 3.10.10, used in node 6 environment doesn't respect package.lock and thus installs other versions of packages
+  # than later npm releases. This causes hashes to be different and thus it causes tests to fail in the
+  # node 6 environment
+  - yarn
 
 # Post-install test scripts.
 test_script:
   # Output useful info for debugging.
   - node --version
-  - npm --version
+  - yarn --version
   # run tests
-  - npm test
+  - yarn test
 
 # Don't actually build.
 build: off
