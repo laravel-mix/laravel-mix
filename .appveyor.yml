@@ -1,4 +1,4 @@
-# Test against the latest version of this Node.js version
+# Test against all supported versions of Node.js on windows
 environment:
   matrix:
     - nodejs_version: "6"
@@ -12,7 +12,7 @@ cache:
 
 # Install scripts. (runs after repo cloning)
 install:
-  # Get the latest stable version of Node.js or io.js
+  # Get the version of Node.js
   - ps: Install-Product node $env:nodejs_version
   # install modules – uses yarn to avoid the following case
   # npm 3.10.10, used in node 6 environment doesn't respect package.lock and thus installs other versions of packages

@@ -1,9 +1,11 @@
 language: node_js
 
+# Test linux and osx
 os:
   - linux
   - osx
 
+# Test against all supported versions of Node.js
 node_js:
   - "6"
   - "7"
