@@ -15,6 +15,7 @@
  */
 
 require('./helpers');
+require('dotenv').config();
 
 global.path = require('path');
 global.File = require('./File');
@@ -47,9 +48,12 @@ if (Mix.sees('laravel')) {
 
 Mix.listen('init', () => {
     if (Mix.shouldHotReload()) {
+
+        let http = process.argv.includes('--https') ? 'https' : 'http';
+
         new File(
             path.join(Config.publicPath, 'hot')
-        ).write('hot reloading');
+        ).write(http + '://' + Config.hmrOptions.host + ':' + Config.hmrOptions.port + '/')
     }
 });
 

@@ -11,10 +11,7 @@
     "test": "nyc ava --verbose --serial",
     "posttest": "nyc report --reporter=html"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JeffreyWay/laravel-mix.git"
-  },
+  "repository": "JeffreyWay/laravel-mix",
   "bugs": {
     "url": "https://github.com/JeffreyWay/laravel-mix/issues"
   },
@@ -27,6 +24,11 @@
   ],
   "author": "Jeffrey Way",
   "license": "MIT",
+  "files": [
+    "icons",
+    "setup",
+    "src"
+  ],
   "dependencies": {
     "autoprefixer": "^7.1.1",
     "babel-core": "^6.24.1",

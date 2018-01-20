@@ -23,3 +23,13 @@ global.flatten = function (arr) {
         [], objectValues(arr)
     );
 };
+
+/**
+ * Sort object by keys
+ *
+ * @param {Object} obj
+ */
+global.sortObjectKeys = (obj) => {
+    return Object.keys(obj).sort()
+        .reduce((r, k) => (r[k] = obj[k], r), {});
+};

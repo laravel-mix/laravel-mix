@@ -63,3 +63,14 @@ test('it can be refreshed', t => {
 
     mockFs.restore();
 });
+
+test('it sorts files on the underlying manifest object', t => {
+    Mix.manifest.add('/path2.js');
+    Mix.manifest.add('/path3.js');
+    Mix.manifest.add('/path1.js');
+    Mix.manifest.add('/path4.js');
+
+    let manifest = Mix.manifest.get();
+
+    t.is(['/path1.js', '/path2.js','/path3.js','/path4.js'].join(), Object.keys(manifest).join())
+});

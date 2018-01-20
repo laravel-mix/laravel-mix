@@ -26,7 +26,7 @@ class Manifest {
             );
         }
 
-        return this.manifest;
+        return sortObjectKeys(this.manifest);
     }
 
 
@@ -123,9 +123,10 @@ class Manifest {
      * @param {string} filePath
      */
     normalizePath(filePath) {
-        filePath = filePath.replace(
-            new RegExp('^' +  Config.publicPath), ''
-        ).replace(/\\/g, '/');
+        if (Config.publicPath && filePath.startsWith(Config.publicPath)) {
+            filePath = filePath.substring(Config.publicPath.length);
+        }
+        filePath = filePath.replace(/\\/g, '/');
 
         if (! filePath.startsWith('/')) {
             filePath = '/' + filePath;
