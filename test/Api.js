@@ -295,12 +295,12 @@ test('mix.sourceMaps()', t => {
 
     // Sourcemaps should use a sensible type as the default for dev.
     t.is(mix, response);
-    t.is('inline-source-map', Config.sourcemaps);
+    t.is('eval-source-map', Config.sourcemaps);
 
     // For production builds, we should use a more performant type.
     Config.production = true;
     mix.sourceMaps();
-    t.is('cheap-source-map', Config.sourcemaps);
+    t.is('source-map', Config.sourcemaps);
 
     // But if the user specifies that sourcemaps shouldn't be built for
     // production, then we should disable it.
