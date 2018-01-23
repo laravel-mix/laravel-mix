@@ -213,7 +213,7 @@ module.exports = function () {
         test: /\.vue$/,
         loader: 'vue-loader',
         exclude: /bower_components/,
-        options: {
+        options: Object.assign({
             // extractCSS: Config.extractVueStyles,
             loaders: Config.extractVueStyles ? {
                 js: {
@@ -251,12 +251,8 @@ module.exports = function () {
                     options: Config.babel()
                 }
             },
-            postcss: Config.postCss,
-            preLoaders: Config.vue.preLoaders,
-            postLoaders: Config.vue.postLoaders,
-            esModule: Config.vue.esModule,
-            ...Config.vue.options
-        }
+            postcss: Config.postCss
+        }, Config.vue)
     });
 
     // If there were no existing extract text plugins to add our

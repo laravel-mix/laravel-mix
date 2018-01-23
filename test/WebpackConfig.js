@@ -171,6 +171,24 @@ test('Custom user config can be merged as a callback function', t => {
 });
 
 
+test('Custom vue-loader options may be specified', t => {
+    mix.options({
+        vue: {
+            camelCase: true,
+            postLoaders: { stub: 'foo' }
+        }
+    });
+
+    let vueOptions = new WebpackConfig().build()
+        .module.rules.find(rule => rule.loader === 'vue-loader').options;
+
+    t.true(vueOptions.camelCase);
+    t.deepEqual({}, vueOptions.preLoaders);
+    t.deepEqual({ stub: 'foo' }, vueOptions.postLoaders);
+    t.false(vueOptions.esModule);
+});
+
+
 test('Autoprefixer should always be applied after all other postcss plugins', t => {
     mix.sass('resources/assets/sass/sass.scss', 'public/css')
        .options({
