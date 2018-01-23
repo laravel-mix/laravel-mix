@@ -1,0 +1,1 @@
+alert('another nested stub');
