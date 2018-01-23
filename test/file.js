@@ -1,5 +1,6 @@
 import test from 'ava';
 import mockFs from 'mock-fs';
+import path from 'path';
 import '../src/index';
 
 
@@ -69,9 +70,8 @@ test('it knows the relative path to the file', t => {
 
     let newFile = new File('../path/to/file.js');
 
-    t.true(['path/to/file.js', 'path\\to\\file.js'].includes(file.relativePath())); 
-
-    t.true(['../path/to/file.js', '..\\path\\to\\file.js'].includes(newFile.relativePath())); 
+    t.is(path.normalize('path/to/file.js'), file.relativePath());
+    t.is(path.normalize('../path/to/file.js'), newFile.relativePath());
 });
 
 
@@ -84,18 +84,18 @@ test('it can force the file to begin from the public path for the project.', t =
 
     t.true(newFile instanceof File);
 
-    t.is('public/some/path/here.js', newFile.relativePath());
+    t.is(path.normalize('public/some/path/here.js'), newFile.relativePath());
 });
 
 
 test('it knows the path to the file starting from the project public directory', t => {
     let file = new File('public/js/file.js');
 
-    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Config.publicPath));
 
     file = new File('js/file.js');
 
-    t.is('/js/file.js', file.pathFromPublic(Config.publicPath));
+    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Config.publicPath));
 });
 
 

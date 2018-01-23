@@ -20,7 +20,7 @@ class Manifest {
      */
     get(file = null) {
         if (file) {
-            return path.join(
+            return path.posix.join(
                 Config.publicPath,
                 this.manifest[this.normalizePath(file)]
             );
@@ -53,8 +53,10 @@ class Manifest {
      */
     hash(file) {
         let hash = new File(path.join(Config.publicPath, file)).version();
+        
+        let filePath = this.normalizePath(file);
 
-        this.manifest[file] = file + '?id=' + hash;
+        this.manifest[filePath] = filePath + '?id=' + hash;
 
         return this;
     }

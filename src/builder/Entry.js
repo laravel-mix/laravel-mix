@@ -64,7 +64,7 @@ class Entry {
         }
 
         let vendorPath = extraction.output
-            ? new File(extraction.output).pathFromPublic(Config.publicPath).replace(/\.js$/, '')
+            ? new File(extraction.output).pathFromPublic(Config.publicPath).replace(/\.js$/, '').replace(/\\/g, '/')
             : path.join(this.base, 'vendor').replace(/\\/g, '/');
 
         this.add(vendorPath, extraction.libs);
@@ -87,7 +87,7 @@ class Entry {
      * @param {Object} output
      */
     createName(output) {
-        let name = output.pathFromPublic(Config.publicPath).replace(/\.js$/, '');
+        let name = output.pathFromPublic(Config.publicPath).replace(/\.js$/, '').replace(/\\/g, '/');
 
         this.base = path.parse(name).dir;
 

@@ -27,7 +27,7 @@ function addVendors() {
     // If we are extracting vendor libraries, then we also need
     // to extract Webpack's manifest file to assist with caching.
     if (extractions.length) {
-        extractions.push(path.join(entry.base, 'manifest'));
+        extractions.push(path.join(entry.base, 'manifest').replace(/\\/g, '/'));
     }
 
     return extractions;

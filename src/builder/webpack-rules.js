@@ -134,7 +134,7 @@ module.exports = function () {
         if (type === 'fastSass') return;
 
         Config.preprocessors[type].forEach(preprocessor => {
-            let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep);
+            let outputPath = preprocessor.output.filePath.replace(Config.publicPath + path.sep, path.sep).replace(/\\/g,'/');
 
             tap(new ExtractTextPlugin(outputPath), extractPlugin => {
                 let loaders = [
