@@ -115,7 +115,10 @@ module.exports = function () {
          *
          * @type {Boolean}
          */
-        autoprefixer: true,
+        autoprefixer: {
+            enabled: true,
+            options: {}
+        },
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.

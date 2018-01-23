@@ -159,8 +159,8 @@ module.exports = function () {
                                     plugins = preprocessor.postCssPlugins;
                                 }
 
-                                if (Config.autoprefixer) {
-                                    plugins.push(require('autoprefixer'));
+                                if (Config.autoprefixer && Config.autoprefixer.enabled) {
+                                    plugins.push(require('autoprefixer')(Config.autoprefixer.options));
                                 }
 
                                 return plugins;

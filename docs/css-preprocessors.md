@@ -139,7 +139,27 @@ With this addition to your `webpack.mix.js` file, we will no longer match `url()
 
 ### PostCSS Plugins
 
-By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As a result, you are free to use the latest CSS 3 syntax, with the understanding that we'll apply any necessary browser-prefixes automatically.
+By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As a result, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically. The default settings should be fine in most scenarios, however, if you need to tweak the underlying Autoprefixer configuration, here's how:
+
+```js
+mix.sass('resources/assets/sass/app.scss', 'public/css')
+   .options({
+        autoprefixer: {
+            options: {
+                browsers: [
+                    'last 6 versions',
+                ]
+            }
+        }
+   });
+```
+
+Additionally, if you wish to disable it entirely - or depend upon a PostCSS plugin that already includes Autoprefixer:
+
+```js
+mix.sass('resources/assets/sass/app.scss', 'public/css')
+   .options({ autoprefixer: false });
+```
 
 It's possible, however, that you'd like to apply [additional PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to your build. No problem. Simply install the desired plugin through NPM, and then reference it in your `webpack.mix.js` file, like so:
 
