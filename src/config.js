@@ -60,6 +60,14 @@ module.exports = function () {
 
 
         /**
+         * Does the project require Angular support?
+         *
+         * @type {Boolean}
+         */
+        angular: false,
+
+
+        /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}
@@ -256,6 +264,10 @@ module.exports = function () {
 
             if (this.preact) {
                 defaultOptions.presets.push('preact');
+            }
+
+            if (this.angular) {
+              defaultOptions.presets.push('angular');
             }
 
             return webpackMerge.smart(defaultOptions, options);

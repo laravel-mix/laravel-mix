@@ -55,6 +55,21 @@ test('mix.react()', t => {
 });
 
 
+test('mix.angular()', t => {
+    let response = mix.angular('resources/assets/js/app.js', 'public/js');
+
+    t.is(mix, response);
+    t.true(Config.angular);
+
+    t.deepEqual([
+        {
+          entry: [new File('resources/assets/js/app.js')],
+          output: new File('public/js')
+        }
+    ], Config.js);
+});
+
+
 test('mix.ts()', t => {
     let response = mix.ts('resources/assets/js/app.ts', 'public/js');
 
