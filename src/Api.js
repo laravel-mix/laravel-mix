@@ -15,6 +15,10 @@ class Api {
      * @param {string} output
      */
     js(entry, output) {
+        if (typeof entry === 'string' && entry.includes('*')) {
+           entry = glob.sync(entry);
+        }
+
         Verify.js(entry, output);
 
         entry = [].concat(entry).map(file => new File(file));
