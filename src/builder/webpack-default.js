@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function() {
     return {
         context: Mix.paths.root(),
 
@@ -31,7 +31,7 @@ module.exports = function () {
 
         devServer: {
             headers: {
-                "Access-Control-Allow-Origin": "*"
+                'Access-Control-Allow-Origin': '*'
             },
             contentBase: path.resolve(Config.publicPath),
             historyApiFallback: true,

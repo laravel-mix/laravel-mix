@@ -16,7 +16,6 @@ class CopyFilesTask extends Task {
         this.assets = this.files.assets;
     }
 
-
     /**
      * Handle when a relevant source file is changed.
      *
@@ -27,8 +26,15 @@ class CopyFilesTask extends Task {
 
         // If we're copying a src directory recursively, we have to calculate
         // the correct destination path, based on the src directory tree.
-        if (! Array.isArray(this.data.from) && new File(this.data.from).isDirectory()) {
-            destination = destination.append(path.normalize(updatedFile).replace(path.normalize(this.data.from), ''));
+        if (
+            !Array.isArray(this.data.from) &&
+            new File(this.data.from).isDirectory()
+        ) {
+            destination = destination.append(
+                path
+                    .normalize(updatedFile)
+                    .replace(path.normalize(this.data.from), '')
+            );
         }
 
         console.log(`Copying ${updatedFile} to ${destination.path()}`);

@@ -24,7 +24,6 @@ class CustomTasksPlugin {
         });
     }
 
-
     /**
      * Execute the task.
      *
@@ -44,12 +43,13 @@ class CustomTasksPlugin {
         });
     }
 
-
     /**
      * Minify the given asset file.
      */
     minifyAssets() {
-        let tasks = Mix.tasks.filter(task => task.constructor.name !== 'VersionFilesTask');
+        let tasks = Mix.tasks.filter(
+            task => task.constructor.name !== 'VersionFilesTask'
+        );
 
         tasks.forEach(task => {
             task.assets.forEach(asset => {
@@ -58,7 +58,7 @@ class CustomTasksPlugin {
                 } catch (e) {
                     console.log(
                         `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
-                        `Perhaps you need to use mix.babel() instead?`
+                            `Perhaps you need to use mix.babel() instead?`
                     );
 
                     throw e;
@@ -66,7 +66,6 @@ class CustomTasksPlugin {
             });
         });
     }
-
 
     /**
      * Version all files that are present in the manifest.

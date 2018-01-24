@@ -6,8 +6,12 @@ class CssPurifierPlugin {
      * Build up the plugin.
      */
     static build() {
-        let bladeFiles = glob.sync(Mix.paths.root('resources/views/**/*.blade.php'));
-        let vueFiles = glob.sync(Mix.paths.root('resources/assets/js/**/*.vue'));
+        let bladeFiles = glob.sync(
+            Mix.paths.root('resources/views/**/*.blade.php')
+        );
+        let vueFiles = glob.sync(
+            Mix.paths.root('resources/assets/js/**/*.vue')
+        );
 
         let paths = bladeFiles.concat(vueFiles);
 
@@ -16,7 +20,10 @@ class CssPurifierPlugin {
         }
 
         return new Purifier(
-            Object.assign({}, Config.purifyCss, { paths, minimize: Mix.inProduction() })
+            Object.assign({}, Config.purifyCss, {
+                paths,
+                minimize: Mix.inProduction()
+            })
         );
     }
 }

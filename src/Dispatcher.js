@@ -6,7 +6,6 @@ class Dispatcher {
         this.events = {};
     }
 
-
     /**
      * Listen for the given event.
      *
@@ -23,7 +22,6 @@ class Dispatcher {
         return this;
     }
 
-
     /**
      * Trigger all handlers for the given event.
      *
@@ -31,11 +29,10 @@ class Dispatcher {
      * @param {*} data
      */
     fire(event, data) {
-        if (! this.events[event]) return false;
+        if (!this.events[event]) return false;
 
         this.events[event].forEach(handler => handler(data));
     }
-
 
     /**
      * Fetch all registered event listeners.

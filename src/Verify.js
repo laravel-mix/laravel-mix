@@ -21,7 +21,6 @@ class Verify {
         );
     }
 
-
     /**
      * Verify that the calls to mix.sass() and mix.less() are valid.
      *
@@ -41,7 +40,6 @@ class Verify {
         );
     }
 
-
     /**
      * Verify that calls to mix.combine() are valid.
      *
@@ -55,7 +53,6 @@ class Verify {
         );
     }
 
-
     /**
      * Assert that the given file exists.
      *
@@ -68,7 +65,6 @@ class Verify {
         );
     }
 
-
     // /**
     //  * Verify that the call to mix.extract() is valid.
     //  *
@@ -80,7 +76,6 @@ class Verify {
     //         'mix.extract() requires an array as its first parameter.'
     //     );
     // }
-
 
     /**
      * Verify that the necessary dependency is available.
@@ -97,7 +92,7 @@ class Verify {
         } catch (e) {
             console.log(
                 'Additional dependencies must be installed. ' +
-                'This will only take a moment.'
+                    'This will only take a moment.'
             );
 
             installDependencies(dependencies.join(' '));
@@ -105,12 +100,11 @@ class Verify {
             if (abortOnComplete) {
                 console.log('Finished. Please run Mix again.');
 
-               process.exit();
+                process.exit();
             }
         }
     }
 }
-
 
 /**
  * Install the given dependencies using npm or yarn.

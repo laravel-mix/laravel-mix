@@ -8,30 +8,30 @@ let expand = require('dotenv-expand');
  * @param {string} envPath
  */
 function MixDefinitionsPlugin(envPath) {
-    expand(dotenv.config({
-        path: envPath || Mix.paths.root('.env')
-    }));
+    expand(
+        dotenv.config({
+            path: envPath || Mix.paths.root('.env')
+        })
+    );
 }
-
 
 /**
  * Build up the necessary definitions and add them to the DefinePlugin.
  *
  * @param {Object|null} merge
  */
-MixDefinitionsPlugin.build = function (merge = {}) {
+MixDefinitionsPlugin.build = function(merge = {}) {
     return new webpack.DefinePlugin(
         new MixDefinitionsPlugin().getDefinitions(merge)
     );
 };
-
 
 /**
  * Build all MIX_ definitions for Webpack's DefinePlugin.
  *
  * @param {object} merge
  */
-MixDefinitionsPlugin.prototype.getDefinitions = function (merge) {
+MixDefinitionsPlugin.prototype.getDefinitions = function(merge) {
     let regex = /^MIX_/i;
 
     // Filter out env vars that don't begin with MIX_.
