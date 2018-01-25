@@ -375,9 +375,15 @@ class Api {
      * @param {Boolean} productionToo
      * @param {string}  type
      */
-    sourceMaps(productionToo = true, type = 'eval-source-map') {
+    sourceMaps(productionToo = true, type) {
         if (Mix.inProduction()) {
-            type = productionToo ? 'source-map' : false;
+            type = type || 'source-map';
+        } else {
+            type = type || 'eval-source-map';
+        }
+        
+        if (!productionToo) {
+            type = false;
         }
 
         Config.sourcemaps = type;
