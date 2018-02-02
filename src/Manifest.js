@@ -14,21 +14,19 @@ class Manifest {
         this.name = name;
     }
 
-
     /**
      * Get the underlying manifest collection.
      */
     get(file = null) {
         if (file) {
-            return path.join(
+            return path.posix.join(
                 Config.publicPath,
                 this.manifest[this.normalizePath(file)]
             );
         }
 
-        return this.manifest;
+        return sortObjectKeys(this.manifest);
     }
-
 
     /**
      * Add the given path to the manifest file.
@@ -45,7 +43,6 @@ class Manifest {
         return this;
     }
 
-
     /**
      * Add a new hashed key to the manifest.
      *
@@ -54,11 +51,12 @@ class Manifest {
     hash(file) {
         let hash = new File(path.join(Config.publicPath, file)).version();
 
-        this.manifest[file] = file + '?id=' + hash;
+        let filePath = this.normalizePath(file);
+
+        this.manifest[filePath] = filePath + '?id=' + hash;
 
         return this;
     }
-
 
     /**
      * Transform the Webpack stats into the shape we need.
@@ -66,21 +64,25 @@ class Manifest {
      * @param {object} stats
      */
     transform(stats) {
-        let customAssets = Config.customAssets.map(asset => asset.pathFromPublic());
+        let customAssets = Config.customAssets.map(asset =>
+            asset.pathFromPublic()
+        );
 
-        this.flattenAssets(stats).concat(customAssets).forEach(this.add.bind(this));
+        this.flattenAssets(stats)
+            .concat(customAssets)
+            .forEach(this.add.bind(this));
 
         return this;
     }
-
 
     /**
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        File.find(this.path()).makeDirectories().write(this.manifest);
+        File.find(this.path())
+            .makeDirectories()
+            .write(this.manifest);
     }
-
 
     /**
      * Retrieve the JSON output from the manifest file.
@@ -89,14 +91,12 @@ class Manifest {
         return JSON.parse(File.find(this.path()).read());
     }
 
-
     /**
      * Get the path to the manifest file.
      */
     path() {
         return path.join(Config.publicPath, this.name);
     }
-
 
     /**
      * Flatten the generated stats assets into an array.
@@ -114,18 +114,18 @@ class Manifest {
         return flatten(assets);
     }
 
-
     /**
      * Prepare the provided path for processing.
      *
      * @param {string} filePath
      */
     normalizePath(filePath) {
-        filePath = filePath.replace(
-            new RegExp('^' +  Config.publicPath), ''
-        ).replace(/\\/g, '/');
+        if (Config.publicPath && filePath.startsWith(Config.publicPath)) {
+            filePath = filePath.substring(Config.publicPath.length);
+        }
+        filePath = filePath.replace(/\\/g, '/');
 
-        if (! filePath.startsWith('/')) {
+        if (!filePath.startsWith('/')) {
             filePath = '/' + filePath;
         }
 

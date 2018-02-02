@@ -20,7 +20,6 @@ class StandaloneSass {
         Mix.addAsset(this.output);
     }
 
-
     /**
      * Run the node-sass compiler.
      */
@@ -30,7 +29,6 @@ class StandaloneSass {
         if (this.shouldWatch) this.watch();
     }
 
-
     /**
      * Compile Sass.
      *
@@ -38,10 +36,9 @@ class StandaloneSass {
      */
     compile(watch = false) {
         this.command = spawn(
-            'node_modules/node-sass/bin/node-sass', [
-                this.src.path(),
-                this.output.path()
-            ].concat(this.options(watch)), { shell: true }
+            path.resolve('./node_modules/.bin/node-sass'),
+            [this.src.path(), this.output.path()].concat(this.options(watch)),
+            { shell: true }
         );
 
         this.whenOutputIsAvailable((output, event) => {
@@ -52,7 +49,6 @@ class StandaloneSass {
         return this;
     }
 
-
     /**
      * Fetch the node-sass options.
      *
@@ -61,24 +57,27 @@ class StandaloneSass {
     options(watch) {
         let sassOptions = [
             '--precision=8',
-            '--output-style=' + (Mix.inProduction() ? 'compressed' : 'expanded'),
+            '--output-style=' + (Mix.inProduction() ? 'compressed' : 'expanded')
         ];
 
         if (watch) sassOptions.push('--watch');
 
         if (this.pluginOptions.includePaths) {
-            this.pluginOptions.includePaths.forEach(
-                path => sassOptions.push('--include-path=' + path)
+            this.pluginOptions.includePaths.forEach(path =>
+                sassOptions.push('--include-path=' + path)
             );
         }
 
-        if (Mix.isUsing('sourcemaps') && ! Mix.inProduction()) {
+        if (this.pluginOptions.importer) {
+            sassOptions.push('--importer ' + this.pluginOptions.importer);
+        }
+
+        if (Mix.isUsing('sourcemaps') && !Mix.inProduction()) {
             sassOptions.push('--source-map-embed');
         }
 
         return sassOptions;
     }
-
 
     /**
      * Compile Sass, while registering a watcher.
@@ -86,7 +85,6 @@ class StandaloneSass {
     watch() {
         return this.compile(true);
     }
-
 
     /**
      * Register a callback for when output is available.
@@ -105,17 +103,16 @@ class StandaloneSass {
         });
     }
 
-
     /**
      * Handle successful compilation.
      *
      * @param {string} output
      */
     onSuccess(output) {
-        console.log("\n");
+        console.log('\n');
         console.log(output);
 
-        if (Mix.isUsing('notifications')) {
+        if (Config.notifications.onSuccess) {
             notifier.notify({
                 title: 'Laravel Mix',
                 message: 'Sass Compilation Successful',
@@ -124,16 +121,18 @@ class StandaloneSass {
         }
     }
 
-
     /**
      * Handle failed compilation.
      *
      * @param {string} output
      */
     onFail(output) {
-        output = output.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+        output = output.replace(
+            /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+            ''
+        );
 
-        console.log("\n");
+        console.log('\n');
         console.log('Sass Compilation Failed!');
         console.log();
         console.log(output);
@@ -147,7 +146,7 @@ class StandaloneSass {
             });
         }
 
-        if (! this.shouldWatch) process.exit();
+        if (!this.shouldWatch) process.exit();
     }
 }
 

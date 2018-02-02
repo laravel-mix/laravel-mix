@@ -16,7 +16,6 @@ class File {
         this.segments = this.parse();
     }
 
-
     /**
      * Static constructor.
      *
@@ -26,14 +25,12 @@ class File {
         return new File(file);
     }
 
-
     /**
      * Get the size of the file.
      */
     size() {
         return fs.statSync(this.path()).size;
     }
-
 
     /**
      * Determine if the given file exists.
@@ -44,7 +41,6 @@ class File {
         return fs.existsSync(file);
     }
 
-
     /**
      * Delete/Unlink the current file.
      */
@@ -54,14 +50,12 @@ class File {
         }
     }
 
-
     /**
      * Get the name of the file.
      */
     name() {
         return this.segments.file;
     }
-
 
     /**
      * Get the name of the file, minus the extension.
@@ -70,14 +64,12 @@ class File {
         return this.segments.name;
     }
 
-
     /**
      * Get the extension of the file.
      */
     extension() {
         return this.segments.ext;
     }
-
 
     /**
      * Get the absolute path to the file.
@@ -86,7 +78,6 @@ class File {
         return this.absolutePath;
     }
 
-
     /**
      * Get the relative path to the file, from the project root.
      */
@@ -94,14 +85,12 @@ class File {
         return path.relative(Mix.paths.root(), this.path());
     }
 
-
     /**
      * Get the absolute path to the file, minus the extension.
      */
     pathWithoutExtension() {
         return this.segments.pathWithoutExt;
     }
-
 
     /**
      * Force the file's relative path to begin from the public path.
@@ -111,13 +100,12 @@ class File {
     forceFromPublic(publicPath) {
         publicPath = publicPath || Config.publicPath;
 
-        if (! this.relativePath().startsWith(publicPath)) {
+        if (!this.relativePath().startsWith(publicPath)) {
             return new File(path.join(publicPath, this.relativePath()));
         }
 
         return this;
     }
-
 
     /**
      * Get the path to the file, starting at the project's public dir.
@@ -132,14 +120,12 @@ class File {
         return this.path().replace(Mix.paths.root(extra), '');
     }
 
-
     /**
      * Get the base directory of the file.
      */
     base() {
         return this.segments.base;
     }
-
 
     /**
      * Determine if the file is a directory.
@@ -148,14 +134,12 @@ class File {
         return this.segments.isDir;
     }
 
-
     /**
      * Determine if the path is a file, and not a directory.
      */
     isFile() {
         return this.segments.isFile;
     }
-
 
     /**
      * Write the given contents to the file.
@@ -172,7 +156,6 @@ class File {
         return this;
     }
 
-
     /**
      * Read the file's contents.
      */
@@ -182,14 +165,12 @@ class File {
         });
     }
 
-
     /**
      * Calculate the proper version hash for the file.
      */
     version() {
         return md5(this.read()).substr(0, 20);
     }
-
 
     /**
      * Create all nested directories.
@@ -199,7 +180,6 @@ class File {
 
         return this;
     }
-
 
     /**
      * Copy the current file to a new location.
@@ -211,7 +191,6 @@ class File {
 
         return this;
     }
-
 
     /**
      * Minify the file, if it is CSS or JS.
@@ -230,7 +209,6 @@ class File {
         return this;
     }
 
-
     /**
      * Rename the file.
      *
@@ -244,7 +222,6 @@ class File {
         return new File(to);
     }
 
-
     /**
      * It can append to the current path.
      *
@@ -254,7 +231,6 @@ class File {
         return new File(path.join(this.path(), append));
     }
 
-
     /**
      * Determine if the file path contains the given text.
      *
@@ -263,7 +239,6 @@ class File {
     contains(text) {
         return this.path().includes(text);
     }
-
 
     /**
      * Parse the file path.
@@ -275,8 +250,8 @@ class File {
             path: this.filePath,
             absolutePath: this.absolutePath,
             pathWithoutExt: path.join(parsed.dir, `${parsed.name}`),
-            isDir: (! parsed.ext && ! parsed.name.endsWith('*')),
-            isFile: !! parsed.ext,
+            isDir: !parsed.ext && !parsed.name.endsWith('*'),
+            isFile: !!parsed.ext,
             name: parsed.name,
             ext: parsed.ext,
             file: parsed.base,

@@ -1,0 +1,25 @@
+// This scss shows how mix distinguishes between font SVG and image SVG.
+
+@font-face {
+  font-family: 'MyFont';
+  // If the path to an SVG contains "font", then the SVG will be copied to the fonts directory.
+  src: url("../font.svg#font") format("svg");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AnotherFont';
+  // If you don't want to rename the font file itself, just put it into a folder with that name.
+  // The pattern for font recognition is font.*\.svg$
+  src: url("../font/awesome.svg#awesome") format("svg");
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+body {
+  // SVG files with any other name or in any other location will be considered images:
+  // resolved and put into the images folder.
+  background-image:url('../img/img.svg');
+}

@@ -18,16 +18,13 @@ class VersionFilesTask extends Task {
         });
     }
 
-
     /**
      * Handle when a relevant source file is changed.
      *
      * @param {string} updatedFile
      */
     onChange(updatedFile) {
-        Mix.manifest.hash(
-            new File(updatedFile).pathFromPublic()
-        ).refresh();
+        Mix.manifest.hash(new File(updatedFile).pathFromPublic()).refresh();
     }
 }
 

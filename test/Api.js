@@ -209,7 +209,12 @@ test('mix.setPublicPath()', t => {
 
     t.is(mix, response);
 
-    t.is('somewhere/else', Config.publicPath);
+    t.is(path.normalize('somewhere/else'), Config.publicPath);
+
+    // It will also trim any closing slashes.
+    mix.setPublicPath('somewhere/else/');
+
+    t.is(path.normalize('somewhere/else'), Config.publicPath);
 });
 
 
@@ -223,12 +228,30 @@ test('mix.setResourceRoot()', t => {
 
 
 test('mix.webpackConfig()', t => {
+    // Test config passed as an object.
     let config = { context: 'changed' };
     let response = mix.webpackConfig(config);
 
     t.is(mix, response);
 
     t.deepEqual(config, Config.webpackConfig);
+
+    // Test config passed via a callback.
+    config = { context: 'changed again' };
+    response = mix.webpackConfig(webpack => config);
+
+    t.is(mix, response);
+
+    t.deepEqual(config, Config.webpackConfig);
+});
+
+
+test('mix.babelConfig()', t => {
+    mix.babelConfig({
+        plugins: ['some-babel-plugin']
+    });
+
+    t.true(Config.babel().plugins.includes('some-babel-plugin'));
 });
 
 
@@ -272,12 +295,12 @@ test('mix.sourceMaps()', t => {
 
     // Sourcemaps should use a sensible type as the default for dev.
     t.is(mix, response);
-    t.is('cheap-module-eval-source-map', Config.sourcemaps);
+    t.is('eval-source-map', Config.sourcemaps);
 
     // For production builds, we should use a more performant type.
     Config.production = true;
     mix.sourceMaps();
-    t.is('cheap-source-map', Config.sourcemaps);
+    t.is('source-map', Config.sourcemaps);
 
     // But if the user specifies that sourcemaps shouldn't be built for
     // production, then we should disable it.

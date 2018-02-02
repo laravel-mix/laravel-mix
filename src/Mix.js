@@ -8,12 +8,11 @@ class Mix {
      * Create a new instance.
      */
     constructor() {
-        this.paths = new Paths;
-        this.manifest = new Manifest;
-        this.dispatcher = new Dispatcher;
+        this.paths = new Paths();
+        this.manifest = new Manifest();
+        this.dispatcher = new Dispatcher();
         this.tasks = [];
     }
-
 
     /**
      * Determine if the given config item is truthy.
@@ -21,9 +20,8 @@ class Mix {
      * @param {string} tool
      */
     isUsing(tool) {
-        return !! Config[tool];
+        return !!Config[tool];
     }
-
 
     /**
      * Determine if Mix is executing in a production environment.
@@ -32,14 +30,14 @@ class Mix {
         return Config.production;
     }
 
-
     /**
      * Determine if Mix should watch files for changes.
      */
     isWatching() {
-        return process.argv.includes('--watch') || process.argv.includes('--hot');
+        return (
+            process.argv.includes('--watch') || process.argv.includes('--hot')
+        );
     }
-
 
     /**
      * Determine if polling is used for file watching
@@ -47,7 +45,6 @@ class Mix {
     isPolling() {
         return this.isWatching() && process.argv.includes('--watch-poll');
     }
-
 
     /**
      * Determine if Mix sees a particular tool or framework.
@@ -62,7 +59,6 @@ class Mix {
         return false;
     }
 
-
     /**
      * Determine if Mix should activate hot reloading.
      */
@@ -71,7 +67,6 @@ class Mix {
 
         return this.isUsing('hmr');
     }
-
 
     /**
      * Add a custom file to the webpack assets collection.
@@ -82,7 +77,6 @@ class Mix {
         Config.customAssets.push(asset);
     }
 
-
     /**
      * Queue up a new task.
      *
@@ -91,7 +85,6 @@ class Mix {
     addTask(task) {
         this.tasks.push(task);
     }
-
 
     /**
      * Listen for the given event.
@@ -102,7 +95,6 @@ class Mix {
     listen(event, callback) {
         this.dispatcher.listen(event, callback);
     }
-
 
     /**
      * Dispatch the given event.

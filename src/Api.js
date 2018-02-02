@@ -2,7 +2,10 @@ let Verify = require('./Verify');
 let CopyFilesTask = require('./tasks/CopyFilesTask');
 let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let VersionFilesTask = require('./tasks/VersionFilesTask');
+let webpack = require('webpack');
 let glob = require('glob');
+let _ = require('lodash');
+let path = require('path');
 
 class Api {
     /**
@@ -12,6 +15,10 @@ class Api {
      * @param {string} output
      */
     js(entry, output) {
+        if (typeof entry === 'string' && entry.includes('*')) {
+            entry = glob.sync(entry);
+        }
+
         Verify.js(entry, output);
 
         entry = [].concat(entry).map(file => new File(file));
@@ -22,7 +29,6 @@ class Api {
         return this;
     }
 
-
     /**
      * Register support for the React framework.
      *
@@ -32,14 +38,24 @@ class Api {
     react(entry, output) {
         Config.react = true;
 
-        Verify.dependency(
-            'babel-preset-react',
-            'npm install babel-preset-react --save-dev'
-        );
+        Verify.dependency('babel-preset-react', ['babel-preset-react']);
 
         return this.js(entry, output);
-    };
+    }
 
+    /**
+     * Register support for the Preact framework.
+     *
+     * @param {string|Array} entry
+     * @param {string} output
+     */
+    preact(entry, output) {
+        Config.preact = true;
+
+        Verify.dependency('babel-preset-preact', ['babel-preset-preact']);
+
+        return this.js(entry, output);
+    }
 
     /**
      * Register support for the TypeScript.
@@ -47,14 +63,10 @@ class Api {
     ts(entry, output) {
         Config.typeScript = true;
 
-        Verify.dependency(
-            'ts-loader',
-            'npm install ts-loader typescript --save-dev'
-        );
+        Verify.dependency('ts-loader', ['ts-loader', 'typescript']);
 
         return this.js(entry, output);
-    };
-
+    }
 
     /**
      * Register support for the TypeScript.
@@ -62,7 +74,6 @@ class Api {
     typeScript(entry, output) {
         return this.ts(entry, output);
     }
-
 
     /**
      * Register Sass compilation.
@@ -72,14 +83,17 @@ class Api {
      * @param {object} pluginOptions
      */
     sass(src, output, pluginOptions = {}) {
-        pluginOptions = Object.assign({
-            precision: 8,
-            outputStyle: 'expanded'
-        }, pluginOptions, { sourceMap: true });
+        pluginOptions = Object.assign(
+            {
+                precision: 8,
+                outputStyle: 'expanded'
+            },
+            pluginOptions,
+            { sourceMap: true }
+        );
 
         return this.preprocess('sass', src, output, pluginOptions);
     }
-
 
     /**
      * Register standalone-Sass compilation that will not run through Webpack.
@@ -92,8 +106,7 @@ class Api {
         Verify.exists(src);
 
         return this.preprocess('fastSass', src, output, pluginOptions);
-    };
-
+    }
 
     /**
      * Alias for standaloneSass.
@@ -106,7 +119,6 @@ class Api {
         return this.standaloneSass(...args);
     }
 
-
     /**
      * Register Less compilation.
      *
@@ -115,14 +127,10 @@ class Api {
      * @param {object} pluginOptions
      */
     less(src, output, pluginOptions) {
-        Verify.dependency(
-            'less-loader',
-            'npm install less-loader less --save-dev'
-        );
+        Verify.dependency('less-loader', ['less-loader', 'less']);
 
         return this.preprocess('less', src, output, pluginOptions);
     }
-
 
     /**
      * Register Stylus compilation.
@@ -132,14 +140,38 @@ class Api {
      * @param {object} pluginOptions
      */
     stylus(src, output, pluginOptions = {}) {
-        Verify.dependency(
-            'stylus-loader',
-            'npm install stylus-loader stylus --save-dev'
-        );
+        Verify.dependency('stylus-loader', ['stylus-loader', 'stylus']);
 
         return this.preprocess('stylus', src, output, pluginOptions);
-    };
+    }
 
+    /**
+     * Register postcss compilation.
+     *
+     * @param {string} src
+     * @param {string} output
+     * @param {array}  postCssPlugins
+     */
+    postCss(src, output, postCssPlugins = []) {
+        Verify.preprocessor('postCss', src, output);
+
+        src = new File(src);
+
+        output = this._normalizeOutput(
+            new File(output),
+            src.nameWithoutExtension() + '.css'
+        );
+
+        Config.preprocessors['postCss'] = (
+            Config.preprocessors['postCss'] || []
+        ).concat({
+            src,
+            output,
+            postCssPlugins
+        });
+
+        return this;
+    }
 
     /**
      * Register a generic CSS preprocessor.
@@ -154,10 +186,15 @@ class Api {
 
         src = new File(src);
 
-        output = this._normalizeOutput(new File(output), src.nameWithoutExtension() + '.css');
+        output = this._normalizeOutput(
+            new File(output),
+            src.nameWithoutExtension() + '.css'
+        );
 
         Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
-            src, output, pluginOptions
+            src,
+            output,
+            pluginOptions
         });
 
         if (type === 'fastSass') {
@@ -167,7 +204,6 @@ class Api {
         return this;
     }
 
-
     /**
      * Combine a collection of files.
      *
@@ -175,18 +211,24 @@ class Api {
      * @param {string}       output
      * @param {Boolean}      babel
      */
-    combine(src, output, babel = false) {
-        output = new File(output || '');
+    combine(src, output = '', babel = false) {
+        output = new File(output);
 
         Verify.combine(src, output);
+
+        if (typeof src === 'string' && File.find(src).isDirectory()) {
+            src = _.pull(
+                glob.sync(path.join(src, '**/*'), { nodir: true }),
+                output.relativePath()
+            );
+        }
 
         let task = new ConcatFilesTask({ src, output, babel });
 
         Mix.addTask(task);
 
         return this;
-    };
-
+    }
 
     /**
      * Alias for this.Mix.combine().
@@ -196,8 +238,7 @@ class Api {
      */
     scripts(src, output) {
         return this.combine(src, output);
-    };
-
+    }
 
     /**
      * Identical to this.Mix.combine(), but includes Babel compilation.
@@ -209,8 +250,7 @@ class Api {
         return this.combine(src, output, true);
 
         return this;
-    };
-
+    }
 
     /**
      * Alias for this.Mix.combine().
@@ -220,8 +260,7 @@ class Api {
      */
     styles(src, output) {
         return this.combine(src, output);
-    };
-
+    }
 
     /**
      * Minify the provided file.
@@ -238,8 +277,7 @@ class Api {
         let output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
 
         return this.combine(src, output);
-    };
-
+    }
 
     /**
      * Copy one or more files to a new location.
@@ -249,14 +287,14 @@ class Api {
      */
     copy(from, to) {
         let task = new CopyFilesTask({
-            from, to: new File(to)
+            from,
+            to: new File(to)
         });
 
         Mix.addTask(task);
 
         return this;
-    };
-
+    }
 
     /**
      * Copy a directory to a new location. This is identical
@@ -267,8 +305,7 @@ class Api {
      */
     copyDirectory(from, to) {
         return this.copy(from, to);
-    };
-
+    }
 
     /**
      * Enable Browsersync support for the project.
@@ -278,7 +315,7 @@ class Api {
     browserSync(config = {}) {
         Verify.dependency(
             'browser-sync-webpack-plugin',
-            'npm install browser-sync-webpack-plugin browser-sync --save-dev',
+            ['browser-sync-webpack-plugin', 'browser-sync'],
             true
         );
 
@@ -289,8 +326,7 @@ class Api {
         Config.browserSync = config;
 
         return this;
-    };
-
+    }
 
     /**
      * Enable automatic file versioning.
@@ -300,25 +336,25 @@ class Api {
     version(files = []) {
         Config.versioning = true;
 
-        files = flatten([].concat(files).map(filePath => {
-            if (File.find(filePath).isDirectory()) {
-                filePath += (path.sep + '*');
-            }
+        files = flatten(
+            [].concat(files).map(filePath => {
+                if (File.find(filePath).isDirectory()) {
+                    filePath += path.sep + '**/*';
+                }
 
-            if (! filePath.includes('*')) return filePath;
+                if (!filePath.includes('*')) return filePath;
 
-            return glob.sync(
-                new File(filePath).forceFromPublic().relativePath()
-            );
-        }));
-
-        Mix.addTask(
-            new VersionFilesTask({ files })
+                return glob.sync(
+                    new File(filePath).forceFromPublic().relativePath(),
+                    { nodir: true }
+                );
+            })
         );
+
+        Mix.addTask(new VersionFilesTask({ files }));
 
         return this;
     }
-
 
     /**
      * Register vendor libs that should be extracted.
@@ -331,38 +367,34 @@ class Api {
         Config.extractions.push({ libs, output });
 
         return this;
-    };
-
+    }
 
     /**
      * Enable sourcemap support.
      *
      * @param {Boolean} productionToo
+     * @param {string}  type
      */
-    sourceMaps(productionToo = true) {
-        let type = 'cheap-module-eval-source-map';
-
+    sourceMaps(productionToo = true, type = 'eval-source-map') {
         if (Mix.inProduction()) {
-            type = productionToo ? 'cheap-source-map' : false;
+            type = productionToo ? 'source-map' : false;
         }
 
         Config.sourcemaps = type;
 
         return this;
-    };
-
+    }
 
     /**
      * Override the default path to your project's public directory.
      *
-     * @param {string} path
+     * @param {string} defaultPath
      */
-    setPublicPath(path) {
-        Config.publicPath = path;
+    setPublicPath(defaultPath) {
+        Config.publicPath = path.normalize(defaultPath.replace(/\/$/, ''));
 
         return this;
     }
-
 
     /**
      * Set a prefix for all generated asset paths.
@@ -373,8 +405,7 @@ class Api {
         Config.resourceRoot = path;
 
         return this;
-    };
-
+    }
 
     /**
      * Disable all OS notifications.
@@ -383,17 +414,19 @@ class Api {
         Config.notifications = false;
 
         return this;
-    };
+    }
 
     /**
-     * Disable only success notifications.
+     * Disable success notifications.
      */
     disableSuccessNotifications() {
-        Config.notificationsOnSuccess = false;
+        Config.notifications = {
+            onSuccess: false,
+            onFailure: true
+        };
 
         return this;
-    };
-
+    }
 
     /**
      * Register libraries to automatically "autoload" when
@@ -413,8 +446,7 @@ class Api {
         Config.autoload = aliases;
 
         return this;
-    };
-
+    }
 
     /**
      * Merge custom config with the provided webpack.config file.
@@ -422,11 +454,26 @@ class Api {
      * @param {object} config
      */
     webpackConfig(config) {
-        Config.webpackConfig = config;
+        config = typeof config == 'function' ? config(webpack) : config;
+
+        Config.webpackConfig = require('webpack-merge').smart(
+            Config.webpackConfig,
+            config
+        );
 
         return this;
     }
 
+    /**
+     * Merge custom Babel config with Mix's default.
+     *
+     * @param {object} config
+     */
+    babelConfig(config) {
+        Config.babelConfig = config;
+
+        return this;
+    }
 
     /* Set Mix-specific options.
      *
@@ -434,11 +481,13 @@ class Api {
      */
     options(options) {
         if (options.purifyCss) {
-            options.purifyCss = require('./PurifyPaths').build(options.purifyCss);
+            options.purifyCss = require('./PurifyPaths').build(
+                options.purifyCss
+            );
 
             Verify.dependency(
                 'purifycss-webpack',
-                'npm install purifycss-webpack purify-css --save-dev',
+                ['purifycss-webpack', 'purify-css'],
                 true // abortOnComplete
             );
         }
@@ -446,8 +495,7 @@ class Api {
         Config.merge(options);
 
         return this;
-    };
-
+    }
 
     /**
      * Register a Webpack build event handler.
@@ -460,14 +508,12 @@ class Api {
         return this;
     }
 
-
     /**
      * Helper for determining a production environment.
      */
     inProduction() {
         return Mix.inProduction();
     }
-
 
     /**
      * Generate a full output path, using a fallback

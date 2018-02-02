@@ -21,7 +21,6 @@ class Verify {
         );
     }
 
-
     /**
      * Verify that the calls to mix.sass() and mix.less() are valid.
      *
@@ -41,7 +40,6 @@ class Verify {
         );
     }
 
-
     /**
      * Verify that calls to mix.combine() are valid.
      *
@@ -55,7 +53,6 @@ class Verify {
         );
     }
 
-
     /**
      * Assert that the given file exists.
      *
@@ -67,7 +64,6 @@ class Verify {
             `Whoops, you are trying to compile ${file}, but that file does not exist.`
         );
     }
-
 
     // /**
     //  * Verify that the call to mix.extract() is valid.
@@ -81,38 +77,48 @@ class Verify {
     //     );
     // }
 
-
     /**
      * Verify that the necessary dependency is available.
      *
-     * @param {string}  dependency
-     * @param {string}  installCommand
+     * @param {string}  name
+     * @param {array}   dependencies
      * @param {Boolean} abortOnComplete
      */
-    static dependency(dependency, installCommand, abortOnComplete = false) {
+    static dependency(name, dependencies, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
         try {
-            require.resolve(dependency);
+            require.resolve(name);
         } catch (e) {
             console.log(
                 'Additional dependencies must be installed. ' +
-                'This will only take a moment.'
+                    'This will only take a moment.'
             );
 
-            if (File.exists('yarn.lock')) {
-                installCommand = installCommand.replace('npm install', 'yarn add');
-            }
-
-            exec(installCommand);
+            installDependencies(dependencies.join(' '));
 
             if (abortOnComplete) {
                 console.log('Finished. Please run Mix again.');
 
-               process.exit();
+                process.exit();
             }
         }
     }
 }
+
+/**
+ * Install the given dependencies using npm or yarn.
+ *
+ * @param {array} dependencies
+ */
+let installDependencies = dependencies => {
+    let command = `npm install ${dependencies} --save-dev`;
+
+    if (File.exists('yarn.lock')) {
+        command = `yarn add ${dependencies} --dev`;
+    }
+
+    exec(command);
+};
 
 module.exports = Verify;

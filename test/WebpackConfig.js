@@ -1,4 +1,5 @@
 import test from 'ava';
+import path from 'path';
 import mix from  '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
@@ -155,4 +156,52 @@ test('Custom user config can be merged', t => {
     let webpackConfig = new WebpackConfig().build();
 
     t.is('changed', webpackConfig.context);
+});
+
+test('Custom user config can be merged as a callback function', t => {
+    mix.webpackConfig(webpack => {
+        return {
+            context: 'changed'
+        }
+    });
+
+    let webpackConfig = new WebpackConfig().build();
+
+    t.is('changed', webpackConfig.context);
+});
+
+
+test('Custom vue-loader options may be specified', t => {
+    mix.options({
+        vue: {
+            camelCase: true,
+            postLoaders: { stub: 'foo' }
+        }
+    });
+
+    let vueOptions = new WebpackConfig().build()
+        .module.rules.find(rule => rule.loader === 'vue-loader').options;
+
+    t.true(vueOptions.camelCase);
+    t.deepEqual({}, vueOptions.preLoaders);
+    t.deepEqual({ stub: 'foo' }, vueOptions.postLoaders);
+    t.false(vueOptions.esModule);
+});
+
+
+test('Autoprefixer should always be applied after all other postcss plugins', t => {
+    mix.sass('resources/assets/sass/sass.scss', 'public/css')
+       .options({
+           postCss: [
+              require('postcss-custom-properties')
+           ]
+       });
+
+    let plugins = new WebpackConfig()
+        .build()
+        .module.rules.find(rule => rule.test.toString().includes(path.normalize('/resources/assets/sass/sass.scss')))
+        .use.find(loader => loader.loader == 'postcss-loader')
+        .options.plugins.map(plugin => plugin.postcssPlugin || plugin().postcssPlugin);
+
+    t.deepEqual(['postcss-custom-properties', 'autoprefixer'], plugins);
 });

@@ -1,15 +1,16 @@
-let paths = new (require('./Paths'));
+let paths = new (require('./Paths'))();
 let webpackMerge = require('webpack-merge');
 
-module.exports = function () {
+module.exports = function() {
     return {
         /**
          * Determine if webpack should be triggered in a production environment.
          *
-         * @type {Booolean}
+         * @type {Boolean}
          */
-        production: (process.env.NODE_ENV === 'production' || process.argv.includes('-p')),
-
+        production:
+            process.env.NODE_ENV === 'production' ||
+            process.argv.includes('-p'),
 
         /**
          * The list of scripts to bundle.
@@ -18,14 +19,12 @@ module.exports = function () {
          */
         js: [],
 
-
         /**
          * A list of custom assets that are being compiled outside of Webpack.
          *
          * @type {Array}
          */
         customAssets: [],
-
 
         /**
          * The list of vendor chunks to extract.
@@ -34,14 +33,12 @@ module.exports = function () {
          */
         extractions: [],
 
-
         /**
          * A list of CSS preprocessing to be performed.
          *
          * @type {Object}
          */
         preprocessors: {},
-
 
         /**
          * Does the project require React support?
@@ -50,6 +47,12 @@ module.exports = function () {
          */
         react: false,
 
+        /**
+         * Does the project require Preact support?
+         *
+         * @type {Boolean}
+         */
+        preact: false,
 
         /**
          * Does the project require TypeScript support?
@@ -58,14 +61,12 @@ module.exports = function () {
          */
         typeScript: false,
 
-
         /**
          * A list of variables that should be autoloaded by webpack.
          *
          * @type {Object}
          */
         autoload: {},
-
 
         /**
          * Does the project require BrowserSync support?
@@ -74,7 +75,6 @@ module.exports = function () {
          */
         browserSync: false,
 
-
         /**
          * Determine if we should enable hot reloading.
          *
@@ -82,6 +82,15 @@ module.exports = function () {
          */
         hmr: process.argv.includes('--hot'),
 
+        /**
+         * Hostname and port used for the hot reload module
+         *
+         * @type {Object}
+         */
+        hmrOptions: {
+            host: 'localhost',
+            port: '8080'
+        },
 
         /**
          * PostCSS plugins to be applied to compiled CSS.
@@ -92,6 +101,15 @@ module.exports = function () {
          */
         postCss: [],
 
+        /**
+         * Determine if we should enable autoprefixer by default.
+         *
+         * @type {Boolean}
+         */
+        autoprefixer: {
+            enabled: true,
+            options: {}
+        },
 
         /**
          * Determine if Mix should remove unused selectors from your CSS bundle.
@@ -103,7 +121,6 @@ module.exports = function () {
          */
         purifyCss: false,
 
-
         /**
          * The public path for the build.
          *
@@ -111,30 +128,22 @@ module.exports = function () {
          */
         publicPath: '',
 
-
         /**
-         * Does the project require React support?
+         * Determine if we should enable cache busting.
          *
          * @type {Boolean}
          */
         versioning: false,
-
 
         /**
          * Determine if error notifications should be displayed for each build.
          *
          * @type {Boolean}
          */
-        notifications: true,
-
-
-        /**
-         * Determine if we should always show success notifications.
-         *
-         * @type {Boolean}
-         */
-        notificationsOnSuccess: true,
-
+        notifications: {
+            onSuccess: true,
+            onFailure: true
+        },
 
         /**
          * Determine if sourcemaps should be created for the build.
@@ -143,14 +152,12 @@ module.exports = function () {
          */
         sourcemaps: false,
 
-
         /**
          * The resource root for the build.
          *
          * @type {String}
          */
         resourceRoot: '/',
-
 
         /**
          * vue-loader specific options.
@@ -159,31 +166,40 @@ module.exports = function () {
          */
         vue: {
             preLoaders: {},
-            postLoaders: {}
+            postLoaders: {},
+            esModule: false
         },
 
-
         /**
-        * Image Loader defaults.
-        * See: https://github.com/thetalecrafter/img-loader#options
-        *
-        * @type {Object}
-        */
+         * Image Loader defaults.
+         * See: https://github.com/thetalecrafter/img-loader#options
+         *
+         * @type {Object}
+         */
         imgLoaderOptions: {
             enabled: true,
             gifsicle: {},
             mozjpeg: {},
             optipng: {},
-            svgo: {},
+            svgo: {}
         },
 
+        /**
+         * File Loader directory defaults.
+         *
+         * @type {Object}
+         */
+        fileLoaderDirs: {
+            images: 'images',
+            fonts: 'fonts'
+        },
 
         /**
          * The default Babel configuration.
          *
          * @type {Object}
          */
-        babel: function () {
+        babel: function() {
             let options = {};
 
             tap(Mix.paths.root('.babelrc'), babelrc => {
@@ -192,21 +208,42 @@ module.exports = function () {
                 }
             });
 
+            if (this.babelConfig) {
+                options = webpackMerge.smart(options, this.babelConfig);
+            }
+
             let defaultOptions = {
                 cacheDirectory: true,
                 presets: [
-                    ['env', {
-                        'modules': false,
-                        'targets': {
-                            'browsers': ['> 2%'],
-                            uglify: true
+                    [
+                        'env',
+                        {
+                            modules: false,
+                            targets: {
+                                browsers: ['> 2%'],
+                                uglify: true
+                            }
                         }
-                    }]
+                    ]
+                ],
+                plugins: [
+                    'transform-object-rest-spread',
+                    [
+                        'transform-runtime',
+                        {
+                            polyfill: false,
+                            helpers: false
+                        }
+                    ]
                 ]
             };
 
             if (this.react) {
                 defaultOptions.presets.push('react');
+            }
+
+            if (this.preact) {
+                defaultOptions.presets.push('preact');
             }
 
             return webpackMerge.smart(defaultOptions, options);
@@ -219,7 +256,6 @@ module.exports = function () {
          */
         processCssUrls: true,
 
-
         /**
          * Whether to extract .vue component styles into a dedicated file.
          * You may provide a boolean, or a dedicated path to extract to.
@@ -228,6 +264,14 @@ module.exports = function () {
          */
         extractVueStyles: false,
 
+        /**
+         * File with global styles to be imported in every component.
+         *
+         * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
+         *
+         * @type {string}
+         */
+        globalVueStyles: '',
 
         /**
          * Uglify-specific settings for Webpack.
@@ -238,15 +282,15 @@ module.exports = function () {
          */
         uglify: {
             sourceMap: true,
-            compress: {
-                warnings: false,
-                drop_console: true,
-            },
-            output: {
-                comments: false
+            uglifyOptions: {
+                compress: {
+                    warnings: false
+                },
+                output: {
+                    comments: false
+                }
             }
         },
-
 
         /**
          * CleanCss-specific settings for Webpack.
@@ -257,7 +301,6 @@ module.exports = function () {
          */
         cleanCss: {},
 
-
         /**
          * Custom Webpack-specific configuration to merge/override Mix's.
          *
@@ -265,6 +308,12 @@ module.exports = function () {
          */
         webpackConfig: {},
 
+        /**
+         * Custom Babel configuration to be merged with Mix's defaults.
+         *
+         * @type {Object}
+         */
+        babelConfig: {},
 
         /**
          * Determine if Mix should ask the friendly errors plugin to
@@ -275,7 +324,6 @@ module.exports = function () {
          * @type {Boolean}
          */
         clearConsole: true,
-
 
         /**
          * Merge the given options with the current defaults.

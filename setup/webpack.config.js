@@ -1,4 +1,3 @@
-
 /**
  * As our first step, we'll pull in the user's webpack.mix.js
  * file. Based on what the user requests in that file,

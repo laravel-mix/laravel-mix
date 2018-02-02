@@ -9,16 +9,15 @@
  |
  */
 
-
 /**
  * We'll begin by pulling in a few globals that Mix often uses.
  */
 
 require('./helpers');
+require('dotenv').config();
 
 global.path = require('path');
 global.File = require('./File');
-
 
 /**
  * This config object is what Mix will reference, when it's time
@@ -27,7 +26,6 @@ global.File = require('./File');
 
 global.Config = require('./config')();
 global.Mix = new (require('./Mix'))();
-
 
 /**
  * If we're working in a Laravel app, we'll explicitly
@@ -38,19 +36,26 @@ if (Mix.sees('laravel')) {
     Config.publicPath = 'public';
 }
 
-
 /**
  * If the user activates hot reloading, with the --hot
  * flag, we'll record it as a file, so that Laravel
  * can detect it and update its mix() url paths.
  */
 
-if (Mix.shouldHotReload()) {
-    new File(
-        path.join(Config.publicPath, 'hot')
-    ).write('hot reloading');
-}
+Mix.listen('init', () => {
+    if (Mix.shouldHotReload()) {
+        let http = process.argv.includes('--https') ? 'https' : 'http';
 
+        new File(path.join(Config.publicPath, 'hot')).write(
+            http +
+                '://' +
+                Config.hmrOptions.host +
+                ':' +
+                Config.hmrOptions.port +
+                '/'
+        );
+    }
+});
 
 /**
  * Mix exposes a simple, fluent API for activating many common build
@@ -63,4 +68,4 @@ let api = new Api();
 
 module.exports = api;
 module.exports.mix = api; // Deprecated.
-module.exports.config = Mix.config;
+module.exports.config = Config;

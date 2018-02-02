@@ -11,7 +11,7 @@ class PurifyPaths {
             let paths = options.paths;
 
             paths.forEach(path => {
-                if (! path.includes('*')) return;
+                if (!path.includes('*')) return;
 
                 options.paths.splice(paths.indexOf(path), 1);
 
