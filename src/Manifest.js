@@ -1,5 +1,6 @@
 let objectValues = require('lodash').values;
 let without = require('lodash').without;
+let merge = require('lodash').merge;
 
 let path = require('path');
 
@@ -79,6 +80,8 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
+        this.manifest = merge(this.read(), this.manifest);
+        
         File.find(this.path())
             .makeDirectories()
             .write(this.manifest);
