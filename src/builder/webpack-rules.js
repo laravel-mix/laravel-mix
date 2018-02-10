@@ -9,24 +9,37 @@ module.exports = function() {
     let extractPlugins = [];
 
   /**
+   * Calls the customizeRule callback with that prepared rule if the user registered a callback for customization.
+   * Pushes either the original rule or the customized rule to our rules array and returns the rule.
+   *
+   * @param {string} name name of the rule
+   * @param {object} rule the webpack rule to customize
+   * @return {object} either the customized or the original rule.
+   */
+    const prepareAndPushDynamicRule = (name, rule) => {
+      // see if the user has registered a customize callback and replace the rule if so
+      rule = Mix.callCustomizeRule(name, rule, Config);
+      // Not necessary, but results in a cleaner configuration: If the user skipped the
+      // rule by returning an empty object ({}), we don't push it to the rules array.
+      if(Object.keys(rule).length > 0) {
+        // push the original or customized rule to our rules array
+        rules.push(rule);
+      }
+      // return the rule for convenience
+      return rule;
+    }
+
+  /**
    * Executes the given rule function and – if the user registered a callback for customization – calls the customizeRule callback with that prepared rule.
    * Pushes either the original rule or the customized rule to our rules array and returns the rule.
    * @param {string} name name of the rule
    * @param {object} additionalParameters some rule functions require additional parameters. See vue for example.
+   * @return {object} either the customized or the original rule.
    */
     const prepareAndPushRule = (name, additionalParameters = []) => {
         // call the rule function and let it return a prepared rule object
         let rule = Rules[name](Config, ...additionalParameters);
-        // see if the user has registered a customize callback and replace the rule if so
-        rule = Mix.callCustomizeRule(name, rule, Config);
-        // Not necessary, but results in a cleaner configuration: If the user skipped the
-        // rule by returning an empty object ({}), we don't push it to the rules array.
-        if(Object.keys(rule).length > 0) {
-          // push the original or customized rule to our rules array
-          rules.push(rule);
-        }
-        // return the rule for convenience
-        return rule;
+        return prepareAndPushDynamicRule(name, rule);
     }
 
     // Babel Compilation.
@@ -136,8 +149,8 @@ module.exports = function() {
                         })
                     });
                 }
-            // TODO prepareAndPush
-                rules.push({
+
+                prepareAndPushDynamicRule(`${type}Preprocessor`, {
                     test: preprocessor.src.path(),
                     use: extractPlugin.extract({
                         fallback: 'style-loader',

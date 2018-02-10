@@ -305,6 +305,21 @@ test.cb('it allows to skip a webpack rule completely', t => {
   })
 });
 
+test.cb('it allows to customize preprocessor rules as well', t => {
+  // Given we use a sass preprocessor
+  mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
+  // And we customize its rule
+  Mix.customizeRule.sassPreprocessor = (rule, Config) => {
+    // We expect to receive the prepared rule to be able to customize it
+    t.is(path.resolve('node_modules/extract-text-webpack-plugin/dist/loader.js'), rule.use[0].loader);
+    return rule;
+  };
+  // When we compile it
+  compile(t, () => {
+
+  })
+});
+
 function compile(t, callback) {
     let config = new WebpackConfig().build();
 
