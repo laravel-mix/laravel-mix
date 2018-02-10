@@ -309,6 +309,12 @@ module.exports = function() {
         webpackConfig: {},
 
         /**
+        * Rules used by mix
+        * @type {Object}
+        */
+        webpackRules: require('./rules'),
+
+        /**
          * Custom Babel configuration to be merged with Mix's defaults.
          *
          * @type {Object}

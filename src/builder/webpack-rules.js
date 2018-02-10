@@ -3,141 +3,49 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 let Verify = require('../Verify');
 
 module.exports = function() {
+    const {
+        jsx,
+        conditional,
+        css,
+        sass,
+        less,
+        html,
+        images,
+        fonts,
+        cursors,
+        vue,
+    } = Config.webpackRules;
     let rules = [];
     let extractPlugins = [];
 
     // Babel Compilation.
-    rules.push({
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: [
-            {
-                loader: 'babel-loader',
-                options: Config.babel()
-            }
-        ]
-    });
+    rules.push(jsx(Config));
 
     // TypeScript Compilation.
     if (Mix.isUsing('typeScript')) {
-        rules.push({
-            test: /\.tsx?$/,
-            loader: 'ts-loader',
-            exclude: /node_modules/,
-            options: {
-                appendTsSuffixTo: [/\.vue$/]
-            }
-        });
+        rules.push(conditional.typeScript(Config));
     }
 
     // CSS Compilation.
-    rules.push({
-        test: /\.css$/,
-
-        exclude: Config.preprocessors.postCss
-            ? Config.preprocessors.postCss.map(postCss => postCss.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader']
-    });
+    rules.push(css(Config));
 
     // Recognize .scss Imports.
-    rules.push({
-        test: /\.s[ac]ss$/,
-        exclude: Config.preprocessors.sass
-            ? Config.preprocessors.sass.map(sass => sass.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
-    });
+    rules.push(sass(Config));
 
     // Recognize .less Imports.
-    rules.push({
-        test: /\.less$/,
-        exclude: Config.preprocessors.less
-            ? Config.preprocessors.less.map(less => less.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader', 'less-loader']
-    });
+    rules.push(less(Config));
 
     // Add support for loading HTML files.
-    rules.push({
-        test: /\.html$/,
-        loaders: ['html-loader']
-    });
+    rules.push(html(Config));
 
     // Add support for loading images.
-    rules.push({
-        // only include svg that doesn't have font in the path or file name by using negative lookahead
-        test: /(\.(png|jpe?g|gif)$|^((?!font).)*\.svg$)/,
-        loaders: [
-            {
-                loader: 'file-loader',
-                options: {
-                    name: path => {
-                        if (!/node_modules|bower_components/.test(path)) {
-                            return (
-                                Config.fileLoaderDirs.images +
-                                '/[name].[ext]?[hash]'
-                            );
-                        }
-
-                        return (
-                            Config.fileLoaderDirs.images +
-                            '/vendor/' +
-                            path
-                                .replace(/\\/g, '/')
-                                .replace(
-                                    /((.*(node_modules|bower_components))|images|image|img|assets)\//g,
-                                    ''
-                                ) +
-                            '?[hash]'
-                        );
-                    },
-                    publicPath: Config.resourceRoot
-                }
-            },
-
-            {
-                loader: 'img-loader',
-                options: Config.imgLoaderOptions
-            }
-        ]
-    });
+    rules.push(images(Config));
 
     // Add support for loading fonts.
-    rules.push({
-        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
-        loader: 'file-loader',
-        options: {
-            name: path => {
-                if (!/node_modules|bower_components/.test(path)) {
-                    return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
-                }
-
-                return (
-                    Config.fileLoaderDirs.fonts +
-                    '/vendor/' +
-                    path
-                        .replace(/\\/g, '/')
-                        .replace(
-                            /((.*(node_modules|bower_components))|fonts|font|assets)\//g,
-                            ''
-                        ) +
-                    '?[hash]'
-                );
-            },
-            publicPath: Config.resourceRoot
-        }
-    });
+    rules.push(fonts(Config));
 
     // Add support for loading cursor files.
-    rules.push({
-        test: /\.(cur|ani)$/,
-        loader: 'file-loader',
-        options: {
-            name: '[name].[ext]?[hash]',
-            publicPath: Config.resourceRoot
-        }
-    });
+    rules.push(cursors(Config));
 
     // Here, we'll filter through all CSS preprocessors that the user has requested.
     // For each one, we'll add a new Webpack rule and then prepare the necessary
@@ -247,57 +155,7 @@ module.exports = function() {
             : new ExtractTextPlugin(filePath);
     }
 
-    rules.push({
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        exclude: /bower_components/,
-        options: Object.assign(
-            {
-                // extractCSS: Config.extractVueStyles,
-                loaders: Config.extractVueStyles
-                    ? {
-                          js: {
-                              loader: 'babel-loader',
-                              options: Config.babel()
-                          },
-
-                          scss: vueExtractPlugin.extract({
-                              use: 'css-loader!sass-loader',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          sass: vueExtractPlugin.extract({
-                              use: 'css-loader!sass-loader?indentedSyntax',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          css: vueExtractPlugin.extract({
-                              use: 'css-loader',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          stylus: vueExtractPlugin.extract({
-                              use:
-                                  'css-loader!stylus-loader?paths[]=node_modules',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          less: vueExtractPlugin.extract({
-                              use: 'css-loader!less-loader',
-                              fallback: 'vue-style-loader'
-                          })
-                      }
-                    : {
-                          js: {
-                              loader: 'babel-loader',
-                              options: Config.babel()
-                          }
-                      },
-                postcss: Config.postCss
-            },
-            Config.vue
-        )
-    });
+    rules.push(vue(Config, vueExtractPlugin));
 
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.
