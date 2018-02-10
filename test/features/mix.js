@@ -274,6 +274,7 @@ test.cb('it allows to merge webpack rules', t => {
   };
   // And we compile a sass that refers to both: svg images and svg fonts
   mix.sass('test/fixtures/fake-app/resources/assets/sass/font-and-image.scss', 'css');
+  // When we compile it
   compile(t, () => {
     // Then we expect the css to be built
     t.true(File.exists('test/fixtures/fake-app/public/css/font-and-image.css'));
@@ -287,6 +288,20 @@ test.cb('it allows to merge webpack rules', t => {
     // And the fonts NOT to be in the image folder
     t.false(File.exists('test/fixtures/fake-app/public/images/font.svg'));
     t.false(File.exists('test/fixtures/fake-app/public/images/awesome.svg'));
+  });
+});
+
+test.cb('it allows to skip a webpack rule completely', t => {
+  // Given we decide to skip the images rule completely
+  Mix.customizeRule.images = (rule, Config) => ({});
+  // And we compile a sass that refers to images
+  mix.sass('test/fixtures/fake-app/resources/assets/sass/font-and-image.scss', 'css');
+  // When we compile it
+  compile(t, () => {
+    // Then we expect the css to be built
+    t.true(File.exists('test/fixtures/fake-app/public/css/font-and-image.css'));
+    // And we expect the image NOT to be in the images folder:
+    t.false(File.exists('test/fixtures/fake-app/public/images/img.svg'));
   })
 });
 

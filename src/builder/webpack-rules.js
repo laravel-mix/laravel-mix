@@ -19,8 +19,12 @@ module.exports = function() {
         let rule = Rules[name](Config, ...additionalParameters);
         // see if the user has registered a customize callback and replace the rule if so
         rule = Mix.callCustomizeRule(name, rule, Config);
-        // push the original or customized rule to our rules array
-        rules.push(rule);
+        // Not necessary, but results in a cleaner configuration: If the user skipped the
+        // rule by returning an empty object ({}), we don't push it to the rules array.
+        if(Object.keys(rule).length > 0) {
+          // push the original or customized rule to our rules array
+          rules.push(rule);
+        }
         // return the rule for convenience
         return rule;
     }
