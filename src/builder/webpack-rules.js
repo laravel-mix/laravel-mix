@@ -1,6 +1,5 @@
 let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let Verify = require('../Verify');
 const Rules = require('../rules');
 module.exports = function () {
     // all prepared or customized rules
@@ -53,25 +52,15 @@ module.exports = function () {
     }
 
     // CSS Compilation.
-    prepareAndPushRule('css');
-
     // Recognize .scss Imports.
-    prepareAndPushRule('sass');
-
     // Recognize .less Imports.
-    prepareAndPushRule('less');
-
     // Add support for loading HTML files.
-    prepareAndPushRule('html');
-
     // Add support for loading images.
-    prepareAndPushRule('images');
-
     // Add support for loading fonts.
-    prepareAndPushRule('fonts');
-
     // Add support for loading cursor files.
-    prepareAndPushRule('cursors');
+    ['css', 'sass', 'less', 'html', 'images', 'fonts', 'cursors'].forEach((ruleName) => {
+        prepareAndPushRule(ruleName);
+    });
 
     // Here, we'll filter through all CSS preprocessors that the user has requested.
     // For each one, we'll add a new Webpack rule and then prepare the necessary
@@ -181,35 +170,13 @@ module.exports = function () {
             : new ExtractTextPlugin(filePath);
     }
 
-    prepareAndPushRule('vue', [vueExtractPlugin]);
-
-    // TODO: Should happen before prepare and push rule
-
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.
     if (Config.extractVueStyles && !extractPlugins.length) {
         extractPlugins.push(vueExtractPlugin);
     }
 
-    // If we want to import a global styles file in every component,
-    // use sass resources loader
-    if (Config.extractVueStyles && Config.globalVueStyles) {
-        Verify.dependency('sass-resources-loader', ['sass-resources-loader']);
-        tap(rules[rules.length - 1].options.loaders, vueLoaders => {
-            vueLoaders.scss.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-            vueLoaders.sass.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-        });
-    }
+    prepareAndPushRule('vue', [vueExtractPlugin]);
 
     return { rules, extractPlugins };
 };
