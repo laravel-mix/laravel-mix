@@ -1,51 +1,58 @@
 let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 let Verify = require('../Verify');
-
+const Rules = require('../rules')
 module.exports = function() {
-    const {
-        jsx,
-        conditional,
-        css,
-        sass,
-        less,
-        html,
-        images,
-        fonts,
-        cursors,
-        vue,
-    } = Config.webpackRules;
+    // all prepared or customized rules
     let rules = [];
+
     let extractPlugins = [];
 
+  /**
+   * Executes the given rule function and – if the user registered a callback for customization – calls the customizeRule callback with that prepared rule.
+   * Pushes either the original rule or the customized rule to our rules array and returns the rule.
+   * @param {string} name name of the rule
+   * @param {object} additionalParameters some rule functions require additional parameters. See vue for example.
+   */
+    const prepareAndPushRule = (name, additionalParameters = []) => {
+        // call the rule function and let it return a prepared rule object
+        let rule = Rules[name](Config, ...additionalParameters);
+        // see if the user has registered a customize callback and replace the rule if so
+        rule = Mix.callCustomizeRule(name, rule, Config);
+        // push the original or customized rule to our rules array
+        rules.push(rule);
+        // return the rule for convenience
+        return rule;
+    }
+
     // Babel Compilation.
-    rules.push(jsx(Config));
+    prepareAndPushRule('jsx');
 
     // TypeScript Compilation.
     if (Mix.isUsing('typeScript')) {
-        rules.push(conditional.typeScript(Config));
+        prepareAndPushRule('typeScript');
     }
 
     // CSS Compilation.
-    rules.push(css(Config));
+    prepareAndPushRule('css');
 
     // Recognize .scss Imports.
-    rules.push(sass(Config));
+    prepareAndPushRule('sass');
 
     // Recognize .less Imports.
-    rules.push(less(Config));
+    prepareAndPushRule('less');
 
     // Add support for loading HTML files.
-    rules.push(html(Config));
+    prepareAndPushRule('html');
 
     // Add support for loading images.
-    rules.push(images(Config));
+    prepareAndPushRule('images');
 
     // Add support for loading fonts.
-    rules.push(fonts(Config));
+    prepareAndPushRule('fonts');
 
     // Add support for loading cursor files.
-    rules.push(cursors(Config));
+    prepareAndPushRule('cursors');
 
     // Here, we'll filter through all CSS preprocessors that the user has requested.
     // For each one, we'll add a new Webpack rule and then prepare the necessary
@@ -125,7 +132,7 @@ module.exports = function() {
                         })
                     });
                 }
-
+            // TODO prepareAndPush
                 rules.push({
                     test: preprocessor.src.path(),
                     use: extractPlugin.extract({
@@ -155,7 +162,9 @@ module.exports = function() {
             : new ExtractTextPlugin(filePath);
     }
 
-    rules.push(vue(Config, vueExtractPlugin));
+    prepareAndPushRule('vue', [vueExtractPlugin]);
+
+    // TODO: Should happen before prepare and push rule
 
     // If there were no existing extract text plugins to add our
     // Vue styles extraction too, we'll push a new one in.

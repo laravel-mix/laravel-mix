@@ -1,4 +1,5 @@
 module.exports.jsx = require('./jsx');
+module.exports.typeScript = require('./typeScript');
 module.exports.css = require('./css');
 module.exports.sass = require('./sass');
 module.exports.less = require('./less');
@@ -7,4 +8,3 @@ module.exports.images = require('./images');
 module.exports.fonts = require('./fonts');
 module.exports.cursors = require('./cursors');
 module.exports.vue = require('./vue');
-module.exports.conditional = require('./conditional');
