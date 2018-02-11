@@ -80,7 +80,9 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        this.manifest = merge(this.read(), this.manifest);
+        if(File.exists(this.path())) {
+            this.manifest = merge(this.read(), this.manifest);
+        }
         
         File.find(this.path())
             .makeDirectories()
