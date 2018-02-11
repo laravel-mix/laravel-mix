@@ -232,9 +232,8 @@ module.exports = function() {
     });
 
     // Vue Compilation.
-    let vueExtractPlugin;
-
     if (Config.extractVueStyles) {
+
         let fileName =
             typeof Config.extractVueStyles === 'string'
                 ? Config.extractVueStyles
@@ -242,10 +241,11 @@ module.exports = function() {
         let filePath = fileName
             .replace(Config.publicPath, '')
             .replace(/^\//, '');
-        vueExtractPlugin = extractPlugins.length
-            ? extractPlugins[0]
-            : new ExtractTextPlugin(filePath);
+        extractPlugins.push(new ExtractTextPlugin(filePath));
     }
+
+    // either use the common extract plugin or the vue extract plugin, if extractVueStyles has been specified
+    const extractPlugin = extractPlugins[extractPlugins.length-1];
 
     rules.push({
         test: /\.vue$/,
@@ -261,28 +261,28 @@ module.exports = function() {
                               options: Config.babel()
                           },
 
-                          scss: vueExtractPlugin.extract({
+                          scss: extractPlugin.extract({
                               use: 'css-loader!sass-loader',
                               fallback: 'vue-style-loader'
                           }),
 
-                          sass: vueExtractPlugin.extract({
+                          sass: extractPlugin.extract({
                               use: 'css-loader!sass-loader?indentedSyntax',
                               fallback: 'vue-style-loader'
                           }),
 
-                          css: vueExtractPlugin.extract({
+                          css: extractPlugin.extract({
                               use: 'css-loader',
                               fallback: 'vue-style-loader'
                           }),
 
-                          stylus: vueExtractPlugin.extract({
+                          stylus: extractPlugin.extract({
                               use:
                                   'css-loader!stylus-loader?paths[]=node_modules',
                               fallback: 'vue-style-loader'
                           }),
 
-                          less: vueExtractPlugin.extract({
+                          less: extractPlugin.extract({
                               use: 'css-loader!less-loader',
                               fallback: 'vue-style-loader'
                           })
@@ -298,12 +298,6 @@ module.exports = function() {
             Config.vue
         )
     });
-
-    // If there were no existing extract text plugins to add our
-    // Vue styles extraction too, we'll push a new one in.
-    if (Config.extractVueStyles && !extractPlugins.length) {
-        extractPlugins.push(vueExtractPlugin);
-    }
 
     // If we want to import a global styles file in every component,
     // use sass resources loader
