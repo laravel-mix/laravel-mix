@@ -24,7 +24,7 @@ The key to making hot reloading work within a Laravel application is ensuring th
 ```html
 <body>
     <div id="app">...</div>
-    <script src="http://localhost:8080/js/bundle.js"></script>
+    <script src="http://localhost:8080/js/app.js"></script>
 </body>
 ```
 
@@ -36,7 +36,7 @@ However, it can be a burden to manually change this URL for production deploys. 
 <body>
     <div id="app"></div>
 
-    <script src="{{ mix('js/bundle.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 ```
 
@@ -61,13 +61,13 @@ With the above setting, the `webpack-dev-server` will generate a self-signed cer
 Now, in your HTML/Blade files you can use either:
 
 ```html
-    <script src="https://localhost:8080/js/bundle.js"></script>
+    <script src="https://localhost:8080/js/app.js"></script>
 ```
 
 or:
 
 ```html
-    <script src="{{ mix('js/bundle.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 ```
 
 
