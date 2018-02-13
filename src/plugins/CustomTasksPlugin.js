@@ -5,11 +5,11 @@ class CustomTasksPlugin {
      * @param {Object} compiler
      */
     apply(compiler) {
-        compiler.plugin('done', stats => {
-            Mix.tasks.forEach(task => this.runTask(task, stats));
+        compiler.plugin('after-emit', (compiler, next) => {
+            Mix.tasks.forEach(task => this.runTask(task, compiler));
 
             if (Mix.isUsing('versioning')) {
-                this.applyVersioning();
+                this.applyVersioning(compiler);
             }
 
             if (Mix.inProduction()) {
@@ -21,6 +21,8 @@ class CustomTasksPlugin {
             }
 
             Mix.manifest.refresh();
+
+            return next();
         });
     }
 
@@ -29,17 +31,15 @@ class CustomTasksPlugin {
      *
      * @param {Task} task
      */
-    runTask(task, stats) {
+    runTask(task, compiler) {
         task.run();
 
         task.assets.forEach(asset => {
             Mix.manifest.add(asset.pathFromPublic());
 
             // Update the Webpack assets list for better terminal output.
-            stats.compilation.assets[asset.pathFromPublic()] = {
-                size: () => asset.size(),
-                emitted: true
-            };
+            compiler.assets[asset.pathFromPublic()] = asset;
+            compiler.assets[asset.pathFromPublic()].emitted = true;
         });
     }
 
@@ -70,10 +70,21 @@ class CustomTasksPlugin {
     /**
      * Version all files that are present in the manifest.
      */
-    applyVersioning() {
+    applyVersioning(compiler) {
         let manifest = Object.keys(Mix.manifest.get());
 
-        manifest.forEach(file => Mix.manifest.hash(file));
+        manifest.forEach(file => {
+            Mix.manifest.hash(file);
+            if (file != Mix.manifest.manifest[file]) {
+                compiler.assets[file].existsAt = Mix.manifest.manifest[file];
+                if (compiler.assets[file].hasOwnProperty('absolutePath')) {
+                    compiler.assets[file].absolutePath = compiler.assets[file].absolutePath.replace(
+                        new RegExp(file + '$'),
+                        Mix.manifest.manifest[file]
+                    );
+                }
+            }
+        });
     }
 }
 

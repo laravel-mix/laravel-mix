@@ -135,6 +135,7 @@ module.exports = function() {
          */
         versioning: false,
 
+        versionInFilename: false,
         /**
          * Determine if error notifications should be displayed for each build.
          *

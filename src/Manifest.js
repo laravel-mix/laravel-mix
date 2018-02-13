@@ -49,11 +49,20 @@ class Manifest {
      * @param {string} file
      */
     hash(file) {
-        let hash = new File(path.join(Config.publicPath, file)).version();
+        let f = new File(path.join(Config.publicPath, file));
+        let hash = f.version();
 
-        let filePath = this.normalizePath(file);
+        if (Config.versionInFilename) {
+            let filePathParts = path.parse(file)
+            let newFileName = filePathParts.name + '.' + hash + filePathParts.ext
 
-        this.manifest[filePath] = filePath + '?id=' + hash;
+            f.rename(newFileName);
+
+            this.manifest[file] = path.join(filePathParts.dir, newFileName);
+        } else {
+            this.manifest[file] = file + '?id=' + hash;
+        }
+
 
         return this;
     }
