@@ -33,11 +33,13 @@ module.exports = function() {
     // CSS Compilation.
     rules.push({
         test: /\.css$/,
-
         exclude: Config.preprocessors.postCss
             ? Config.preprocessors.postCss.map(postCss => postCss.src.path())
             : [],
-        loaders: ['style-loader', 'css-loader']
+        use: ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: "css-loader"
+        })
     });
 
     // Recognize .scss Imports.
