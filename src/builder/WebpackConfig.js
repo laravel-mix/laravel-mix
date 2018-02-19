@@ -15,7 +15,6 @@ class WebpackConfig {
         this.webpackConfig = webpackDefaultConfig();
     }
 
-
     /**
      * Build the Webpack configuration object.
      */
@@ -31,7 +30,6 @@ class WebpackConfig {
 
         return this.webpackConfig;
     }
-
 
     /**
      * Build the entry object.
@@ -56,14 +54,13 @@ class WebpackConfig {
         return this;
     }
 
-
     /**
      * Build the output object.
      */
     buildOutput() {
         let http = process.argv.includes('--https') ? 'https' : 'http';
-      
-        if(Mix.isUsing('hmr')) {
+
+        if (Mix.isUsing('hmr')) {
             this.webpackConfig.devServer.host = Config.hmrOptions.host;
             this.webpackConfig.devServer.port = Config.hmrOptions.port;
         }
@@ -72,13 +69,18 @@ class WebpackConfig {
             path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
             filename: '[name].js',
             chunkFilename: '[name].js',
-            publicPath: Mix.isUsing('hmr') ? (http + '://' + Config.hmrOptions.host + ':' + Config.hmrOptions.port + '/') : ''
-
+            publicPath: Mix.isUsing('hmr')
+                ? http +
+                  '://' +
+                  Config.hmrOptions.host +
+                  ':' +
+                  Config.hmrOptions.port +
+                  '/'
+                : ''
         };
 
         return this;
     }
-
 
     /**
      * Build the rules array.
@@ -86,12 +88,15 @@ class WebpackConfig {
     buildRules() {
         let { rules, extractPlugins } = webpackRules();
 
-        this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(rules);
-        this.webpackConfig.plugins = this.webpackConfig.plugins.concat(extractPlugins);
+        this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(
+            rules
+        );
+        this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
+            extractPlugins
+        );
 
         return this;
     }
-
 
     /**
      * Build the plugins array.
@@ -104,18 +109,17 @@ class WebpackConfig {
         return this;
     }
 
-
     /**
      * Build the resolve object.
      */
     buildResolving() {
         let extensions = ['*', '.js', '.jsx', '.vue'];
-        
+
         let buildFile = 'vue/dist/vue.common.js';
 
         if (Config.typeScript) {
             extensions.push('.ts', '.tsx');
-            
+
             buildFile = 'vue/dist/vue.esm.js';
         }
 
@@ -123,13 +127,12 @@ class WebpackConfig {
             extensions,
 
             alias: {
-                'vue$': buildFile
+                vue$: buildFile
             }
         };
 
         return this;
     }
-
 
     /**
      * Merge the user's custom Webpack configuration.
@@ -137,7 +140,8 @@ class WebpackConfig {
     mergeCustomConfig() {
         if (Config.webpackConfig) {
             this.webpackConfig = require('webpack-merge').smart(
-                this.webpackConfig, Config.webpackConfig
+                this.webpackConfig,
+                Config.webpackConfig
             );
         }
     }

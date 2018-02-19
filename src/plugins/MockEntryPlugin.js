@@ -11,9 +11,9 @@ class MockEntryPlugin {
      */
     apply(compiler) {
         compiler.plugin('done', stats => {
-            let temporaryOutputFile = stats.toJson()
-                .assets
-                .find(asset => asset.name === 'mix.js');
+            let temporaryOutputFile = stats
+                .toJson()
+                .assets.find(asset => asset.name === 'mix.js');
 
             if (temporaryOutputFile) {
                 delete stats.compilation.assets[temporaryOutputFile.name];

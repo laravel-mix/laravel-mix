@@ -10,14 +10,15 @@ class FastSassPlugin {
         this.files = files;
     }
 
-
     /**
      * Apply the plugin.
      */
     apply() {
         this.files.forEach(sass => {
             new StandaloneSass(
-                sass.src, sass.output.forceFromPublic(), sass.pluginOptions
+                sass.src,
+                sass.output.forceFromPublic(),
+                sass.pluginOptions
             ).run();
         });
     }

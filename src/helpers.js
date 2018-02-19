@@ -6,22 +6,19 @@ let objectValues = require('lodash').values;
  * @param {mixed}    val
  * @param {Function} callback
  */
-global.tap = function (val, callback) {
+global.tap = function(val, callback) {
     callback(val);
 
     return val;
 };
-
 
 /**
  * Flatten the given array.
  *
  * @param {Array} arr
  */
-global.flatten = function (arr) {
-    return [].concat.apply(
-        [], objectValues(arr)
-    );
+global.flatten = function(arr) {
+    return [].concat.apply([], objectValues(arr));
 };
 
 /**
@@ -29,7 +26,8 @@ global.flatten = function (arr) {
  *
  * @param {Object} obj
  */
-global.sortObjectKeys = (obj) => {
-    return Object.keys(obj).sort()
-        .reduce((r, k) => (r[k] = obj[k], r), {});
+global.sortObjectKeys = obj => {
+    return Object.keys(obj)
+        .sort()
+        .reduce((r, k) => ((r[k] = obj[k]), r), {});
 };

@@ -11,16 +11,12 @@ class ConcatenateFilesTask extends Task {
         this.merge();
     }
 
-
     /**
      * Merge the files into one.
      */
     merge() {
-        this.assets.push(
-            this.files.merge(this.data.output, this.data.babel)
-        );
+        this.assets.push(this.files.merge(this.data.output, this.data.babel));
     }
-
 
     /**
      * Handle when a relevant source file is changed.
@@ -29,6 +25,5 @@ class ConcatenateFilesTask extends Task {
         this.merge();
     }
 }
-
 
 module.exports = ConcatenateFilesTask;

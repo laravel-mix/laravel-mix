@@ -12,7 +12,6 @@ class Paths {
         }
     }
 
-
     /**
      * Set the root path to resolve webpack.mix.js.
      *
@@ -24,16 +23,14 @@ class Paths {
         return this;
     }
 
-
     /**
      * Determine the path to the user's webpack.mix.js file.
      */
     mix() {
         return this.root(
-            (argv.env && argv.env.mixfile) ? argv.env.mixfile : 'webpack.mix'
+            argv.env && argv.env.mixfile ? argv.env.mixfile : 'webpack.mix'
         );
     }
-
 
     /**
      * Determine the project root.
