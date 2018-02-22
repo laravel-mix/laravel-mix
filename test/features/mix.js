@@ -211,6 +211,24 @@ test.cb.serial('it resolves image- and font-urls and distinguishes between them 
     });
 });
 
+test.cb('it extracts vue styles correctly', t => {
+    // Given we have a js file that imports vue
+    mix.js('test/fixtures/fake-app/resources/assets/vue/app-with-vue.js', 'js/app.js')
+        // And a scss file with some styles
+        .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css/app.css')
+        // and we want to extract vue styles
+        .options({extractVueStyles: 'css/components.css'});
+    // When we compile it
+    compile(t, () => {
+        // Then we expect the js to be built
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        // And the app.css to be built
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        // And the extracted vue styles to be in their own css
+        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
+    })
+
+});
 
 function compile(t, callback) {
     let config = new WebpackConfig().build();
