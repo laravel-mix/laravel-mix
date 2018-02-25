@@ -1,17 +1,7 @@
 language: node_js
 
-# Test linux and osx
-os:
-  - linux
-  - osx
-
-# Test against all supported versions of Node.js
 node_js:
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-
-cache:
-  directories:
-    - "node_modules"
+  - 9
+  - 8
+  - 7
+  - 6
