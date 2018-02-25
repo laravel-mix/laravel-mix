@@ -12,6 +12,7 @@ class Mix {
         this.manifest = new Manifest();
         this.dispatcher = new Dispatcher();
         this.tasks = [];
+        this.customizeRule = {};
     }
 
     /**
@@ -108,6 +109,32 @@ class Mix {
         }
 
         this.dispatcher.fire(event, data);
+    }
+
+    /**
+     * See if the user registered a customizeRule callback for this rule and call it in order to replace or merge the rule.
+     * If the user didn't provide a valid callback function, an error will be logged and the original rule will be returned.
+     * If the user's callback didn't return a rule, a warning will be logged an the original rule will be returned.
+     *
+     * @param {string} name name of the rule (e.g. images, jsx)
+     * @param {object} rule the prepared rule object
+     * @param {object} Config the global config object
+     * @return {object} customized rule if the user returned one or the original rule.
+     */
+    callCustomizeRule(name, rule, Config) {
+        if (!this.customizeRule[name]) {
+            return rule;
+        }
+        if (typeof this.customizeRule[name] !== 'function') {
+            console.error(`customizeRule.${name} is not a function. Will not be applied.`);
+            return rule;
+        }
+        const customizedRule = this.customizeRule[name](rule, Config);
+        if (!customizedRule) {
+            console.warn(`customizeRule.${name} did not merge or replace the rule. Original rule will be applied.`);
+            return rule;
+        }
+        return customizedRule;
     }
 }
 

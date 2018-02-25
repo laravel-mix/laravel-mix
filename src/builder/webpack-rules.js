@@ -1,142 +1,65 @@
 let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let Verify = require('../Verify');
-
-module.exports = function() {
+const Rules = require('../rules');
+module.exports = function () {
+    // all prepared or customized rules
     let rules = [];
+
     let extractPlugins = [];
 
+    /**
+     * Calls the customizeRule callback with that prepared rule if the user registered a callback for customization.
+     * Pushes either the original rule or the customized rule to our rules array and returns the rule.
+     *
+     * @param {string} name name of the rule
+     * @param {object} rule the webpack rule to customize
+     * @return {object} either the customized or the original rule.
+     */
+    const prepareAndPushDynamicRule = (name, rule) => {
+        // see if the user has registered a customize callback and replace the rule if so
+        rule = Mix.callCustomizeRule(name, rule, Config);
+        // Not necessary, but results in a cleaner configuration: If the user skipped the
+        // rule by returning an empty object ({}), we don't push it to the rules array.
+        if (Object.keys(rule).length > 0) {
+            // push the original or customized rule to our rules array
+            rules.push(rule);
+        }
+        // return the rule for convenience
+        return rule;
+    };
+
+    /**
+     * Executes the given rule function and – if the user registered a callback for customization – calls the
+     * customizeRule callback with that prepared rule. Pushes either the original rule or the customized
+     * rule to our rules array and returns the rule.
+     *
+     * @param {string} name name of the rule
+     * @param {object} additionalParameters some rule functions require additional parameters. See vue for example.
+     * @return {object} either the customized or the original rule.
+     */
+    const prepareAndPushRule = (name, additionalParameters = []) => {
+        // call the rule function and let it return a prepared rule object
+        let rule = Rules[name](Config, ...additionalParameters);
+        return prepareAndPushDynamicRule(name, rule);
+    };
+
     // Babel Compilation.
-    rules.push({
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: [
-            {
-                loader: 'babel-loader',
-                options: Config.babel()
-            }
-        ]
-    });
+    prepareAndPushRule('jsx');
 
     // TypeScript Compilation.
     if (Mix.isUsing('typeScript')) {
-        rules.push({
-            test: /\.tsx?$/,
-            loader: 'ts-loader',
-            exclude: /node_modules/,
-            options: {
-                appendTsSuffixTo: [/\.vue$/]
-            }
-        });
+        prepareAndPushRule('typeScript');
     }
 
     // CSS Compilation.
-    rules.push({
-        test: /\.css$/,
-
-        exclude: Config.preprocessors.postCss
-            ? Config.preprocessors.postCss.map(postCss => postCss.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader']
-    });
-
     // Recognize .scss Imports.
-    rules.push({
-        test: /\.s[ac]ss$/,
-        exclude: Config.preprocessors.sass
-            ? Config.preprocessors.sass.map(sass => sass.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
-    });
-
     // Recognize .less Imports.
-    rules.push({
-        test: /\.less$/,
-        exclude: Config.preprocessors.less
-            ? Config.preprocessors.less.map(less => less.src.path())
-            : [],
-        loaders: ['style-loader', 'css-loader', 'less-loader']
-    });
-
     // Add support for loading HTML files.
-    rules.push({
-        test: /\.html$/,
-        loaders: ['html-loader']
-    });
-
     // Add support for loading images.
-    rules.push({
-        // only include svg that doesn't have font in the path or file name by using negative lookahead
-        test: /(\.(png|jpe?g|gif)$|^((?!font).)*\.svg$)/,
-        loaders: [
-            {
-                loader: 'file-loader',
-                options: {
-                    name: path => {
-                        if (!/node_modules|bower_components/.test(path)) {
-                            return (
-                                Config.fileLoaderDirs.images +
-                                '/[name].[ext]?[hash]'
-                            );
-                        }
-
-                        return (
-                            Config.fileLoaderDirs.images +
-                            '/vendor/' +
-                            path
-                                .replace(/\\/g, '/')
-                                .replace(
-                                    /((.*(node_modules|bower_components))|images|image|img|assets)\//g,
-                                    ''
-                                ) +
-                            '?[hash]'
-                        );
-                    },
-                    publicPath: Config.resourceRoot
-                }
-            },
-
-            {
-                loader: 'img-loader',
-                options: Config.imgLoaderOptions
-            }
-        ]
-    });
-
     // Add support for loading fonts.
-    rules.push({
-        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
-        loader: 'file-loader',
-        options: {
-            name: path => {
-                if (!/node_modules|bower_components/.test(path)) {
-                    return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
-                }
-
-                return (
-                    Config.fileLoaderDirs.fonts +
-                    '/vendor/' +
-                    path
-                        .replace(/\\/g, '/')
-                        .replace(
-                            /((.*(node_modules|bower_components))|fonts|font|assets)\//g,
-                            ''
-                        ) +
-                    '?[hash]'
-                );
-            },
-            publicPath: Config.resourceRoot
-        }
-    });
-
     // Add support for loading cursor files.
-    rules.push({
-        test: /\.(cur|ani)$/,
-        loader: 'file-loader',
-        options: {
-            name: '[name].[ext]?[hash]',
-            publicPath: Config.resourceRoot
-        }
+    ['css', 'sass', 'less', 'html', 'images', 'fonts', 'cursors'].forEach((ruleName) => {
+        prepareAndPushRule(ruleName);
     });
 
     // Here, we'll filter through all CSS preprocessors that the user has requested.
@@ -169,7 +92,7 @@ module.exports = function() {
                                     ? true
                                     : Mix.isUsing('sourcemaps'),
                             ident: 'postcss',
-                            plugins: (function() {
+                            plugins: (function () {
                                 let plugins = Config.postCss;
 
                                 if (
@@ -218,7 +141,7 @@ module.exports = function() {
                     });
                 }
 
-                rules.push({
+                prepareAndPushDynamicRule(`${type}Preprocessor`, {
                     test: preprocessor.src.path(),
                     use: extractPlugin.extract({
                         fallback: 'style-loader',
@@ -247,77 +170,7 @@ module.exports = function() {
     // either use the common extract plugin or the vue extract plugin, if extractVueStyles has been specified
     const extractPlugin = extractPlugins[extractPlugins.length-1];
 
-    rules.push({
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        exclude: /bower_components/,
-        options: Object.assign(
-            {
-                // extractCSS: Config.extractVueStyles,
-                loaders: Config.extractVueStyles
-                    ? {
-                          js: {
-                              loader: 'babel-loader',
-                              options: Config.babel()
-                          },
-
-                          scss: extractPlugin.extract({
-                              use: 'css-loader!sass-loader',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          sass: extractPlugin.extract({
-                              use: 'css-loader!sass-loader?indentedSyntax',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          css: extractPlugin.extract({
-                              use: 'css-loader',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          stylus: extractPlugin.extract({
-                              use:
-                                  'css-loader!stylus-loader?paths[]=node_modules',
-                              fallback: 'vue-style-loader'
-                          }),
-
-                          less: extractPlugin.extract({
-                              use: 'css-loader!less-loader',
-                              fallback: 'vue-style-loader'
-                          })
-                      }
-                    : {
-                          js: {
-                              loader: 'babel-loader',
-                              options: Config.babel()
-                          }
-                      },
-                postcss: Config.postCss
-            },
-            Config.vue
-        )
-    });
-
-    // If we want to import a global styles file in every component,
-    // use sass resources loader
-    if (Config.extractVueStyles && Config.globalVueStyles) {
-        Verify.dependency('sass-resources-loader', ['sass-resources-loader']);
-        tap(rules[rules.length - 1].options.loaders, vueLoaders => {
-            vueLoaders.scss.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-            vueLoaders.sass.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-        });
-    }
+    prepareAndPushRule('vue', [extractPlugin]);
 
     return { rules, extractPlugins };
 };
