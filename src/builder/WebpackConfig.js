@@ -44,6 +44,9 @@ class WebpackConfig {
         Mix.dispatch('loading-entry', entry);
 
         this.webpackConfig.entry = entry.get();
+        this.webpackConfig.mode = Mix.inProduction()
+            ? "production"
+            : "development";
 
         return this;
     }
