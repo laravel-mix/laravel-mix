@@ -3,6 +3,10 @@ import index from '../src/index';
 import PurifyPaths from '../src/PurifyPaths';
 import fs from 'fs-extra';
 
+test.afterEach.always(t => {
+    fs.removeSync('test/stubs');
+});
+
 test('that it builds the purify file paths properly', t => {
     let options = PurifyPaths.build({
         paths: ['foo.html']
