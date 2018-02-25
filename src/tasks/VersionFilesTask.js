@@ -1,5 +1,4 @@
 let Task = require('./Task');
-let chokidar = require('chokidar');
 let FileCollection = require('../FileCollection');
 
 class VersionFilesTask extends Task {

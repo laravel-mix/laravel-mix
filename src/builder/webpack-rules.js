@@ -155,9 +155,8 @@ module.exports = function () {
     });
 
     // Vue Compilation.
-    let vueExtractPlugin;
-
     if (Config.extractVueStyles) {
+
         let fileName =
             typeof Config.extractVueStyles === 'string'
                 ? Config.extractVueStyles
@@ -165,18 +164,13 @@ module.exports = function () {
         let filePath = fileName
             .replace(Config.publicPath, '')
             .replace(/^\//, '');
-        vueExtractPlugin = extractPlugins.length
-            ? extractPlugins[0]
-            : new ExtractTextPlugin(filePath);
+        extractPlugins.push(new ExtractTextPlugin(filePath));
     }
 
-    // If there were no existing extract text plugins to add our
-    // Vue styles extraction too, we'll push a new one in.
-    if (Config.extractVueStyles && !extractPlugins.length) {
-        extractPlugins.push(vueExtractPlugin);
-    }
+    // either use the common extract plugin or the vue extract plugin, if extractVueStyles has been specified
+    const extractPlugin = extractPlugins[extractPlugins.length-1];
 
-    prepareAndPushRule('vue', [vueExtractPlugin]);
+    prepareAndPushRule('vue', [extractPlugin]);
 
     return { rules, extractPlugins };
 };

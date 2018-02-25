@@ -184,8 +184,8 @@ test.cb.serial('the kitchen sink', t => {
             "/js/all.js": "/js/all.js?id=d198d4b3b25e9d66fa37",
             "/js/another.js": "/js/another.js?id=d403c9f3f581bbcba8ba",
             "/js/app.js": "/js/app.js?id=8e880c67fe14b09f7d16",
-            "/js/manifest.js": "/js/manifest.js?id=cb749444552d8c6b9881",
-            "/js/vendor.js": "/js/vendor.js?id=c661c10a14f50393f6c0",
+            "/js/manifest.js": "/js/manifest.js?id=ce6566a24afe6e358977",
+            "/js/vendor.js": "/js/vendor.js?id=d69105e5f6f53447b8a7",
             "/somewhere/app.js": "/somewhere/app.js?id=8e880c67fe14b09f7d16",
         }, readManifest());
     });
@@ -318,6 +318,24 @@ test.cb('it allows to customize preprocessor rules as well', t => {
     compile(t, () => {
 
     });
+});
+
+test.cb('it extracts vue styles correctly', t => {
+    // Given we have a js file that imports vue
+    mix.js('test/fixtures/fake-app/resources/assets/vue/app-with-vue.js', 'js/app.js')
+        // And a scss file with some styles
+        .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css/app.css')
+        // and we want to extract vue styles
+        .options({extractVueStyles: 'css/components.css'});
+    // When we compile it
+    compile(t, () => {
+        // Then we expect the js to be built
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        // And the app.css to be built
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        // And the extracted vue styles to be in their own css
+        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
+    })
 });
 
 function compile(t, callback) {
