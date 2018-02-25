@@ -529,6 +529,10 @@ class Api {
 
         return output;
     }
+
+    customizeRule(name, callback) {
+        Mix.customizeRule[name] = callback;
+    }
 }
 
 module.exports = Api;

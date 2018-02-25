@@ -213,7 +213,7 @@ test.cb.serial('it resolves image- and font-urls and distinguishes between them 
 
 test.cb('it allows to replace webpack rules', t => {
     // Given we replace the images rule test expression to deny any known image suffix
-    Mix.customizeRule.images = (rule, Config) => ({
+    mix.customizeRule('images', (rule, Config) => ({
         test: /\.custom$/,
         loaders: [
             {
@@ -248,7 +248,7 @@ test.cb('it allows to replace webpack rules', t => {
                 options: Config.imgLoaderOptions
             }
         ]
-    });
+    }));
     // When we instruct mix to compile a .scss file that refers to images
     mix.sass('test/fixtures/fake-app/resources/assets/sass/font-and-image.scss', 'css');
     // When we compile it
@@ -264,14 +264,14 @@ test.cb('it allows to merge webpack rules', t => {
     // Given we change the test expressions of the fonts and image
     // in order to copy all svgs to the fonts directory, just
     // as it was before mix v2.0.0
-    Mix.customizeRule.fonts = (rule, Config) => {
+    mix.customizeRule('fonts', (rule, Config) => {
         rule.test = /\.(woff2?|ttf|eot|otf|svg)$/;
         return rule;
-    };
-    Mix.customizeRule.images = (rule, Config) => {
+    });
+    mix.customizeRule('images', (rule, Config) => {
         rule.test = /\.(png|jpe?g|gif)$/;
         return rule;
-    };
+    });
     // And we compile a sass that refers to both: svg images and svg fonts
     mix.sass('test/fixtures/fake-app/resources/assets/sass/font-and-image.scss', 'css');
     // When we compile it
@@ -293,7 +293,7 @@ test.cb('it allows to merge webpack rules', t => {
 
 test.cb('it allows to skip a webpack rule completely', t => {
     // Given we decide to skip the images rule completely
-    Mix.customizeRule.images = (rule, Config) => ({});
+    mix.customizeRule('images', (rule, Config) => ({}));
     // And we compile a sass that refers to images
     mix.sass('test/fixtures/fake-app/resources/assets/sass/font-and-image.scss', 'css');
     // When we compile it
@@ -309,11 +309,11 @@ test.cb('it allows to customize preprocessor rules as well', t => {
     // Given we use a sass preprocessor
     mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
     // And we customize its rule
-    Mix.customizeRule.sassPreprocessor = (rule, Config) => {
+    mix.customizeRule('sassPreprocessor', (rule, Config) => {
         // We expect to receive the prepared rule to be able to customize it
         t.is(path.resolve('node_modules/extract-text-webpack-plugin/dist/loader.js'), rule.use[0].loader);
         return rule;
-    };
+    });
     // When we compile it
     compile(t, () => {
 
