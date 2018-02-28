@@ -10,6 +10,12 @@ class Preact extends JavaScript {
 
         return super.js(entry, output);
     }
+
+    babelConfig() {
+        return {
+            presets: ['preact']
+        };
+    }
 }
 
 module.exports = Preact;

@@ -5,10 +5,10 @@ class React extends JavaScript {
         return ['babel-preset-react'].concat(super.dependencies());
     }
 
-    register(entry, output) {
-        Config.react = true;
-
-        return super.register(entry, output);
+    babelConfig() {
+        return {
+            presets: ['react']
+        };
     }
 }
 

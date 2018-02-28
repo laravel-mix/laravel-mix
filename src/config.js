@@ -212,41 +212,34 @@ module.exports = function() {
                 options = webpackMerge.smart(options, this.babelConfig);
             }
 
-            let defaultOptions = {
-                cacheDirectory: true,
-                presets: [
-                    [
-                        'env',
-                        {
-                            modules: false,
-                            targets: {
-                                browsers: ['> 2%'],
-                                uglify: true
+            return webpackMerge.smart(
+                {
+                    cacheDirectory: true,
+                    presets: [
+                        [
+                            'env',
+                            {
+                                modules: false,
+                                targets: {
+                                    browsers: ['> 2%'],
+                                    uglify: true
+                                }
                             }
-                        }
+                        ]
+                    ],
+                    plugins: [
+                        'transform-object-rest-spread',
+                        [
+                            'transform-runtime',
+                            {
+                                polyfill: false,
+                                helpers: false
+                            }
+                        ]
                     ]
-                ],
-                plugins: [
-                    'transform-object-rest-spread',
-                    [
-                        'transform-runtime',
-                        {
-                            polyfill: false,
-                            helpers: false
-                        }
-                    ]
-                ]
-            };
-
-            if (this.react) {
-                defaultOptions.presets.push('react');
-            }
-
-            if (this.preact) {
-                defaultOptions.presets.push('preact');
-            }
-
-            return webpackMerge.smart(defaultOptions, options);
+                },
+                options
+            );
         },
 
         /**

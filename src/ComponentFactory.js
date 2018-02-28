@@ -1,5 +1,6 @@
 let mix = require('../src/index');
 let Verify = require('../src/Verify');
+let webpackMerge = require('webpack-merge');
 
 let components = [
     'fastsass',
@@ -30,6 +31,7 @@ class ComponentFactory {
 
         Mix.listen('init', () => {
             this.installDependencies(component);
+            this.applyBabelConfig(component);
         });
 
         Mix.listen('loading-rules', rules => {
@@ -68,6 +70,15 @@ class ComponentFactory {
             .forEach(dependency =>
                 Verify.dependency(dependency, !!component.requiresReload)
             );
+    }
+
+    applyBabelConfig(component) {
+        if (!component.activated || !component.babelConfig) return;
+
+        Config.babelConfig = webpackMerge.smart(
+            Config.babelConfig,
+            component.babelConfig()
+        );
     }
 
     applyRules(rules, component) {
