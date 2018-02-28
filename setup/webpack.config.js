@@ -4,7 +4,12 @@
  * a generic config object will be constructed for us.
  */
 
-require('../src/index');
+let mix = require('../src/index');
+
+let ComponentFactory = require('../src/ComponentFactory');
+
+new ComponentFactory().installAll();
+
 require(Mix.paths.mix());
 
 /**

@@ -86,14 +86,14 @@ class WebpackConfig {
      * Build the rules array.
      */
     buildRules() {
-        let { rules, extractPlugins } = webpackRules();
-
         this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(
-            rules
+            webpackRules()
         );
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
-            extractPlugins
+            Config.extractPlugins
         );
+
+        Mix.dispatch('loading-rules', this.webpackConfig.module.rules);
 
         return this;
     }
@@ -105,6 +105,8 @@ class WebpackConfig {
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
             webpackPlugins()
         );
+
+        Mix.dispatch('loading-plugins', this.webpackConfig.plugins);
 
         return this;
     }

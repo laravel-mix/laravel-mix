@@ -1,15 +1,22 @@
 let webpack = require('webpack');
 let FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-let MockEntryPlugin = require('../plugins/MockEntryPlugin');
-let MixDefinitionsPlugin = require('../plugins/MixDefinitionsPlugin');
-let BuildCallbackPlugin = require('../plugins/BuildCallbackPlugin');
-let CustomTasksPlugin = require('../plugins/CustomTasksPlugin');
-let ManifestPlugin = require('../plugins/ManifestPlugin');
+let MixDefinitionsPlugin = require('../webpackPlugins/MixDefinitionsPlugin');
+let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
+let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
+let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
+let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let WebpackChunkHashPlugin = require('webpack-chunk-hash');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function() {
     let plugins = [];
+
+    // If the user didn't declare any JS compilation, we still need to
+    // use a temporary script to force a compile. This plugin will
+    // handle the process of deleting the compiled script.
+    if (!Config.js.length) {
+        plugins.push(new MockEntryPlugin());
+    }
 
     // Activate better error feedback in the console.
     plugins.push(
@@ -35,7 +42,7 @@ module.exports = function() {
 
     // Add automatic CSS Purification support.
     if (Mix.isUsing('purifyCss')) {
-        let CssPurifierPlugin = require('../plugins/CssPurifierPlugin');
+        let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
 
         plugins.push(CssPurifierPlugin.build());
     }
@@ -53,46 +60,6 @@ module.exports = function() {
                 )
             })
         );
-    }
-
-    // Add support for browser reloading with BrowserSync.
-    if (Mix.isUsing('browserSync')) {
-        let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-
-        plugins.push(
-            new BrowserSyncPlugin(
-                Object.assign(
-                    {
-                        host: 'localhost',
-                        port: 3000,
-                        proxy: 'app.dev',
-                        files: [
-                            'app/**/*.php',
-                            'resources/views/**/*.php',
-                            'public/js/**/*.js',
-                            'public/css/**/*.css'
-                        ],
-                        snippetOptions: {
-                            rule: {
-                                match: /(<\/body>|<\/pre>)/i,
-                                fn: function(snippet, match) {
-                                    return snippet + match;
-                                }
-                            }
-                        }
-                    },
-                    Config.browserSync
-                ),
-                { reload: false }
-            )
-        );
-    }
-
-    // If the user didn't declare any JS compilation, we still need to
-    // use a temporary script to force a compile. This plugin will
-    // handle the process of deleting the compiled script.
-    if (!Config.js.length) {
-        plugins.push(new MockEntryPlugin());
     }
 
     // Activate the appropriate Webpack versioning plugin, based on the environment.
@@ -124,14 +91,6 @@ module.exports = function() {
     // clean up and minify all of the user's JS and CSS automatically.
     if (Mix.inProduction() && Config.uglify) {
         plugins.push(new UglifyJSPlugin(Config.uglify));
-    }
-
-    if (Config.preprocessors.fastSass && Config.preprocessors.fastSass.length) {
-        plugins.push(
-            new (require('../plugins/FastSassPlugin'))(
-                Config.preprocessors.fastSass
-            )
-        );
     }
 
     // Handle all custom, non-webpack tasks.

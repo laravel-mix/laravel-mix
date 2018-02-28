@@ -1,9 +1,11 @@
 import test from 'ava';
 import mix from '../../src/index';
-import MixDefinitionsPlugin from '../../src/plugins/MixDefinitionsPlugin';
+import MixDefinitionsPlugin from '../../src/webpackPlugins/MixDefinitionsPlugin';
 
 test('it fetches the MIX_ definitions properly', t => {
-    const plugin = new MixDefinitionsPlugin(path.resolve(__dirname, 'testing.env'));
+    const plugin = new MixDefinitionsPlugin(
+        path.resolve(__dirname, 'testing.env')
+    );
     const MIX_TESTING = '"123"';
     const NODE_ENV = '"production"';
     const definitions = plugin.getDefinitions({ NODE_ENV: 'production' });

@@ -84,7 +84,7 @@ class Verify {
      * @param {array}   dependencies
      * @param {Boolean} abortOnComplete
      */
-    static dependency(name, dependencies, abortOnComplete = false) {
+    static dependency(name, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
         try {
@@ -95,7 +95,7 @@ class Verify {
                     'This will only take a moment.'
             );
 
-            installDependencies(dependencies.join(' '));
+            installDependencies(name);
 
             if (abortOnComplete) {
                 console.log('Finished. Please run Mix again.');

@@ -11,8 +11,7 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('src/app.js', 'dist/')
-   .sass('src/app.scss', 'dist/');
+mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 
 // Full API
 // mix.js(src, output);
@@ -40,6 +39,7 @@ mix.js('src/app.js', 'dist/')
 // mix.webpackConfig({}); <-- Override webpack.config.js, without editing the file directly.
 // mix.babelConfig({}); <-- Merge extra Babel configuration (plugins, etc.) with Mix's default.
 // mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.
+// mix.extend(name, handler) <-- Extend Mix's API with your own components.
 // mix.options({
 //   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.
 //   globalVueStyles: file, // Variables file to be imported in every component.
