@@ -8,8 +8,6 @@ test('mix can be extended with new functionality as a callback', t => {
 
     mix.extend('foobar', registration);
 
-    let config = new WebpackConfig().build();
-
     mix.foobar();
 
     t.true(registration.called);
@@ -25,8 +23,6 @@ test('mix can be extended with new functionality as a class', t => {
         }()
     );
 
-    let config = new WebpackConfig().build();
-
     mix.foobar('baz');
 });
 
@@ -39,26 +35,25 @@ test('dependencies can be requested for download', t => {
         'foobar',
         new class {
             dependencies() {
-                return ['some-package'];
-
-                t.pass();
+                return ['npm-package'];
             }
 
             register() {}
         }()
     );
 
-    let config = new WebpackConfig().build();
-
-    mix.foobar('baz');
+    mix.foobar();
 
     Mix.dispatch('init');
 
-    t.true(Verify.dependency.calledWith('some-package'));
+    t.true(Verify.dependency.calledWith('npm-package'));
 });
 
-test('webpack rules can be added', t => {
-    let rule = { test: /\.ext/, loaders: ['stub'] };
+test('webpack rules may be added', t => {
+    let rule = {
+        test: /\.ext/,
+        loaders: ['example-loader']
+    };
 
     mix.extend(
         'foobar',
@@ -75,10 +70,10 @@ test('webpack rules can be added', t => {
 
     let config = new WebpackConfig().build();
 
-    t.deepEqual(rule, config.module.rules.pop());
+    t.deepEqual(config.module.rules.pop(), rule);
 });
 
-test('webpack plugins can be added', t => {
+test('webpack plugins may be added', t => {
     let plugin = sinon.stub();
 
     mix.extend(
