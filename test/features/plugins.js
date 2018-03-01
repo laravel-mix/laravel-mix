@@ -2,6 +2,9 @@ import test from 'ava';
 import mix from '../../src/index';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
+import ComponentFactory from '../../src/ComponentFactory';
+
+new ComponentFactory().installAll();
 
 test('mix can be extended with new functionality as a callback', t => {
     let registration = sinon.spy();

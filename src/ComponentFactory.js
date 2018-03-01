@@ -13,9 +13,9 @@ let components = [
     'preact',
     'react',
     'typescript',
-    'autoloading'
     'autoloading',
     'versioning',
+    'extend'
 ];
 
 class ComponentFactory {

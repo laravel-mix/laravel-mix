@@ -232,26 +232,6 @@ class Api {
     }
 
     /**
-     * Extend the mix API with a new component.
-     *
-     * @param {string} name
-     * @param {*}      component
-     */
-    extend(name, component) {
-        let ComponentFactory = require('./ComponentFactory');
-
-        if (typeof component === 'function') {
-            component = {
-                register: component
-            };
-        }
-
-        component.name = () => name;
-
-        new ComponentFactory().install(component);
-    }
-
-    /**
      * Register a Webpack build event handler.
      *
      * @param {Function} callback
