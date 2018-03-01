@@ -5,7 +5,6 @@ let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
-let WebpackChunkHashPlugin = require('webpack-chunk-hash');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function() {
@@ -60,20 +59,6 @@ module.exports = function() {
                 )
             })
         );
-    }
-
-    // Activate the appropriate Webpack versioning plugin, based on the environment.
-    if (Mix.isUsing('versioning')) {
-        plugins.push(
-            new webpack[
-                Mix.inProduction()
-                    ? 'HashedModuleIdsPlugin'
-                    : 'NamedModulesPlugin'
-            ](),
-            new WebpackChunkHashPlugin()
-        );
-    } else if (Mix.isUsing('hmr')) {
-        plugins.push(new webpack.NamedModulesPlugin());
     }
 
     // Add some general Webpack loader options.
