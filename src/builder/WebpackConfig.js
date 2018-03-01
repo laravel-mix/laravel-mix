@@ -92,10 +92,6 @@ class WebpackConfig {
 
         Mix.dispatch('loading-rules', this.webpackConfig.module.rules);
 
-        this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
-            Config.extractPlugins
-        );
-
         return this;
     }
 
@@ -104,6 +100,7 @@ class WebpackConfig {
      */
     buildPlugins() {
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
+            Config.extractPlugins,
             webpackPlugins()
         );
 

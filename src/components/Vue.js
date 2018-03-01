@@ -8,6 +8,17 @@ class Vue {
     }
 
     webpackRules() {
+        let vueLoaderOptions = this.vueLoaderOptions();
+
+        return {
+            test: /\.vue$/,
+            loader: 'vue-loader',
+            exclude: /bower_components/,
+            options: vueLoaderOptions
+        };
+    }
+
+    vueLoaderOptions() {
         if (Config.extractVueStyles) {
             let fileName =
                 typeof Config.extractVueStyles === 'string'
@@ -21,35 +32,36 @@ class Vue {
             Config.extractPlugins.push(new ExtractTextPlugin(filePath));
         }
 
-        let vueLoaderOptions = this.vueLoaderOptions();
-
-        if (Config.extractVueStyles && Config.globalVueStyles) {
-            vueLoaderOptions.scss.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-
-            vueLoaderOptions.sass.push({
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: Mix.paths.root(Config.globalVueStyles)
-                }
-            });
-        }
-
-        return {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            exclude: /bower_components/,
-            options: vueLoaderOptions
-        };
-    }
-
-    vueLoaderOptions() {
         let extractPlugin =
             Config.extractPlugins[Config.extractPlugins.length - 1];
+
+        if (Config.extractVueStyles) {
+            var sassLoader = extractPlugin.extract({
+                use: 'css-loader!sass-loader?indentedSyntax',
+                fallback: 'vue-style-loader'
+            });
+
+            var scssLoader = extractPlugin.extract({
+                use: 'css-loader!sass-loader',
+                fallback: 'vue-style-loader'
+            });
+
+            if (Config.globalVueStyles) {
+                scssLoader.push({
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: Mix.paths.root(Config.globalVueStyles)
+                    }
+                });
+
+                sassLoader.push({
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: Mix.paths.root(Config.globalVueStyles)
+                    }
+                });
+            }
+        }
 
         return Object.assign(
             {
@@ -60,15 +72,9 @@ class Vue {
                               options: Config.babel()
                           },
 
-                          scss: extractPlugin.extract({
-                              use: 'css-loader!sass-loader',
-                              fallback: 'vue-style-loader'
-                          }),
+                          scss: scssLoader,
 
-                          sass: extractPlugin.extract({
-                              use: 'css-loader!sass-loader?indentedSyntax',
-                              fallback: 'vue-style-loader'
-                          }),
+                          sass: sassLoader,
 
                           css: extractPlugin.extract({
                               use: 'css-loader',
