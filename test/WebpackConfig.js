@@ -1,90 +1,100 @@
 import test from 'ava';
 import path from 'path';
-import mix from  '../src/index';
+import mix from '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
-
+import ComponentFactory from '../src/ComponentFactory';
 
 test.beforeEach(t => {
     Config = defaultConfig();
 
     Config.publicPath = 'public';
-});
 
+    new ComponentFactory().installAll();
+});
 
 test('basic JS compilation config.', t => {
     mix.js('resources/assets/js/app.js', 'public/js');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [
-            path.resolve('resources/assets/js/app.js')
-        ]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')]
+        },
+        webpackConfig.entry
+    );
 
-    t.deepEqual({
-        path: path.resolve('public'),
-        filename: '[name].js',
-        chunkFilename: '[name].js',
-        publicPath: ''
-    }, webpackConfig.output);
+    t.deepEqual(
+        {
+            path: path.resolve('public'),
+            filename: '[name].js',
+            chunkFilename: '[name].js',
+            publicPath: ''
+        },
+        webpackConfig.output
+    );
 });
-
 
 test('basic JS compilation with output public directory omitted config.', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [
-            path.resolve('resources/assets/js/app.js')
-        ]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')]
+        },
+        webpackConfig.entry
+    );
 });
 
-
 test('basic JS compilation with a different public path', t => {
-    mix.js('resources/assets/js/app.js', 'public/js')
-       .setPublicPath('public-html');
+    mix
+        .js('resources/assets/js/app.js', 'public/js')
+        .setPublicPath('public-html');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        path: path.resolve('public-html'),
-        filename: '[name].js',
-        chunkFilename: '[name].js',
-        publicPath: ''
-    }, webpackConfig.output);
+    t.deepEqual(
+        {
+            path: path.resolve('public-html'),
+            filename: '[name].js',
+            chunkFilename: '[name].js',
+            publicPath: ''
+        },
+        webpackConfig.output
+    );
 });
-
 
 test('basic JS compilation with a specific output path config.', t => {
     mix.js('resources/assets/js/app.js', 'public/js/output.js');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/output': [
-            path.resolve('resources/assets/js/app.js')
-        ]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/output': [path.resolve('resources/assets/js/app.js')]
+        },
+        webpackConfig.entry
+    );
 });
 
-
 test('JS compilation with vendor extraction config', t => {
-    mix.js('resources/assets/js/app.js', 'public/js')
-       .extract(['vue'], 'public/js/libraries.js');
+    mix
+        .js('resources/assets/js/app.js', 'public/js')
+        .extract(['vue'], 'public/js/libraries.js');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.js')],
-        '/js/libraries': ['vue']
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')],
+            '/js/libraries': ['vue']
+        },
+        webpackConfig.entry
+    );
 });
-
 
 test('vendor extraction with no output and no requested JS compilation throws an error', t => {
     mix.extract(['vue']);
@@ -92,63 +102,70 @@ test('vendor extraction with no output and no requested JS compilation throws an
     t.throws(() => new WebpackConfig().build(), Error);
 });
 
-
 test('JS compilation with vendor extraction with default config', t => {
-    mix.js('resources/assets/js/app.js', 'public/js')
-       .extract(['vue']);
+    mix.js('resources/assets/js/app.js', 'public/js').extract(['vue']);
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.js')],
-        '/js/vendor': ['vue']
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')],
+            '/js/vendor': ['vue']
+        },
+        webpackConfig.entry
+    );
 });
-
 
 test('React compilation', t => {
     mix.react('resources/assets/js/app.jsx', 'public/js');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [path.resolve('resources/assets/js/app.jsx')]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.jsx')]
+        },
+        webpackConfig.entry
+    );
 });
-
 
 test('JS and Sass + Less + Stylus compilation config', t => {
-    mix.js('resources/assets/js/app.js', 'public/js')
-       .sass('resources/assets/sass/sass.scss', 'public/css')
-       .less('resources/assets/less/less.less', 'public/css')
-       .stylus('resources/assets/stylus/stylus.styl', 'public/css')
+    mix
+        .js('resources/assets/js/app.js', 'public/js')
+        .sass('resources/assets/sass/sass.scss', 'public/css')
+        .less('resources/assets/less/less.less', 'public/css')
+        .stylus('resources/assets/stylus/stylus.styl', 'public/css');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        '/js/app': [
-            path.resolve('resources/assets/js/app.js'),
-            path.resolve('resources/assets/sass/sass.scss'),
-            path.resolve('resources/assets/less/less.less'),
-            path.resolve('resources/assets/stylus/stylus.styl'),
-        ]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            '/js/app': [
+                path.resolve('resources/assets/js/app.js'),
+                path.resolve('resources/assets/sass/sass.scss'),
+                path.resolve('resources/assets/less/less.less'),
+                path.resolve('resources/assets/stylus/stylus.styl')
+            ]
+        },
+        webpackConfig.entry
+    );
 });
-
 
 test('CSS compilation with no JS specified config.', t => {
-    mix.sass('resources/assets/sass/sass.scss', 'public/css')
+    mix.sass('resources/assets/sass/sass.scss', 'public/css');
 
     let webpackConfig = new WebpackConfig().build();
 
-    t.deepEqual({
-        'mix': [
-            path.resolve(__dirname, '../src/builder', 'mock-entry.js'),
-            path.resolve('resources/assets/sass/sass.scss')
-        ]
-    }, webpackConfig.entry);
+    t.deepEqual(
+        {
+            mix: [
+                path.resolve(__dirname, '../src/builder', 'mock-entry.js'),
+                path.resolve('resources/assets/sass/sass.scss')
+            ]
+        },
+        webpackConfig.entry
+    );
 });
-
 
 test('Custom user config can be merged', t => {
     mix.webpackConfig({ context: 'changed' });
@@ -162,14 +179,13 @@ test('Custom user config can be merged as a callback function', t => {
     mix.webpackConfig(webpack => {
         return {
             context: 'changed'
-        }
+        };
     });
 
     let webpackConfig = new WebpackConfig().build();
 
     t.is('changed', webpackConfig.context);
 });
-
 
 test('Custom vue-loader options may be specified', t => {
     mix.options({
@@ -179,7 +195,8 @@ test('Custom vue-loader options may be specified', t => {
         }
     });
 
-    let vueOptions = new WebpackConfig().build()
+    let vueOptions = new WebpackConfig()
+        .build()
         .module.rules.find(rule => rule.loader === 'vue-loader').options;
 
     t.true(vueOptions.camelCase);
@@ -188,20 +205,22 @@ test('Custom vue-loader options may be specified', t => {
     t.false(vueOptions.esModule);
 });
 
-
 test('Autoprefixer should always be applied after all other postcss plugins', t => {
-    mix.sass('resources/assets/sass/sass.scss', 'public/css')
-       .options({
-           postCss: [
-              require('postcss-custom-properties')
-           ]
-       });
+    mix.sass('resources/assets/sass/sass.scss', 'public/css').options({
+        postCss: [require('postcss-custom-properties')]
+    });
 
     let plugins = new WebpackConfig()
         .build()
-        .module.rules.find(rule => rule.test.toString().includes(path.normalize('/resources/assets/sass/sass.scss')))
+        .module.rules.find(rule =>
+            rule.test
+                .toString()
+                .includes(path.normalize('/resources/assets/sass/sass.scss'))
+        )
         .use.find(loader => loader.loader == 'postcss-loader')
-        .options.plugins.map(plugin => plugin.postcssPlugin || plugin().postcssPlugin);
+        .options.plugins.map(
+            plugin => plugin.postcssPlugin || plugin().postcssPlugin
+        );
 
     t.deepEqual(['postcss-custom-properties', 'autoprefixer'], plugins);
 });

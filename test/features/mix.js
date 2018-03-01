@@ -3,6 +3,7 @@ import mix from '../../src/index';
 import webpack from 'webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import fs from 'fs-extra';
+import ComponentFactory from '../../src/ComponentFactory';
 
 test.beforeEach(t => {
     // Reset state.
@@ -13,10 +14,7 @@ test.beforeEach(t => {
 
     mix.setPublicPath('test/fixtures/fake-app/public');
 
-    let ComponentFactory = require('../../src/ComponentFactory');
     new ComponentFactory().installAll();
-
-    Mix.dispatch('init', Mix);
 });
 
 test.afterEach.always(t => {

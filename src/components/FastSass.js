@@ -2,10 +2,8 @@ let Preprocessor = require('./Preprocessor');
 let Verify = require('../Verify');
 
 class FastSass extends Preprocessor {
-    constructor() {
-        super();
-
-        this.name = ['fastSass', 'standaloneSass'];
+    name() {
+        return ['fastSass', 'standaloneSass'];
     }
 
     register(src, output, pluginOptions = {}) {

@@ -41,20 +41,6 @@ module.exports = function() {
         preprocessors: {},
 
         /**
-         * Does the project require React support?
-         *
-         * @type {Boolean}
-         */
-        react: false,
-
-        /**
-         * Does the project require Preact support?
-         *
-         * @type {Boolean}
-         */
-        preact: false,
-
-        /**
          * Does the project require TypeScript support?
          *
          * @type {Boolean}

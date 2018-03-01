@@ -10,26 +10,20 @@ class TypeScript extends JavaScript {
     }
 
     webpackRules() {
-        let rules = [].concat(super.webpackRules());
-
-        if (Mix.isUsing('typeScript')) {
-            rules.push({
-                test: /\.tsx?$/,
-                loader: 'ts-loader',
-                exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/]
-                }
-            });
-        }
-
-        return rules;
+        return [].concat(super.webpackRules()).push({
+            test: /\.tsx?$/,
+            loader: 'ts-loader',
+            exclude: /node_modules/,
+            options: {
+                appendTsSuffixTo: [/\.vue$/]
+            }
+        });
     }
 
     register(entry, output) {
         Config.typeScript = true;
 
-        return super.js(entry, output);
+        return super.register(entry, output);
     }
 }
 

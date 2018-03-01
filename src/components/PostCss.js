@@ -2,10 +2,8 @@ let Verify = require('../Verify');
 let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {
-    constructor() {
-        super();
-
-        this.name = 'postCss';
+    name() {
+        return 'postCss';
     }
 
     register() {

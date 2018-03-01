@@ -1,6 +1,6 @@
 class Autoloading {
-    constructor() {
-        this.name = 'autoload';
+    name() {
+        return 'autoload';
     }
 
     register(libs) {

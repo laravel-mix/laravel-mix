@@ -1,6 +1,6 @@
 class Browsersync {
-    constructor() {
-        this.name = 'browserSync';
+    name() {
+        return 'browserSync';
     }
 
     dependencies() {
@@ -9,7 +9,7 @@ class Browsersync {
         return ['browser-sync-webpack-plugin', 'browser-sync'];
     }
 
-    register() {
+    register(config) {
         if (typeof config === 'string') {
             config = { proxy: config };
         }
