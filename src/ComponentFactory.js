@@ -86,29 +86,17 @@ class ComponentFactory {
     applyRules(rules, component) {
         if (!component.activated || !component.webpackRules) return;
 
-        let newRules = component.webpackRules();
-
-        if (newRules) {
-            if (Array.isArray(newRules)) {
-                rules.push(...newRules);
-            } else {
-                rules.push(newRules);
-            }
-        }
+        tap(component.webpackRules(), newRules => {
+            newRules && rules.push(...[].concat(newRules));
+        });
     }
 
     applyPlugins(plugins, component) {
         if (!component.activated || !component.webpackPlugins) return;
 
-        let newPlugins = component.webpackPlugins();
-
-        if (newPlugins) {
-            if (Array.isArray(newPlugins)) {
-                plugins.push(...newPlugins);
-            } else {
-                plugins.push(newPlugins);
-            }
-        }
+        tap(component.webpackPlugins(), newPlugins => {
+            newPlugins && plugins.push(...[].concat(newPlugins));
+        });
     }
 }
 
