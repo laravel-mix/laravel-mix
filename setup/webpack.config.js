@@ -3,7 +3,6 @@
  * file. Based on what the user requests in that file,
  * a generic config object will be constructed for us.
  */
-
 let mix = require('../src/index');
 
 let ComponentFactory = require('../src/ComponentFactory');

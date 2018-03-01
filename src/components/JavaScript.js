@@ -45,10 +45,6 @@ class JavaScript {
             }
         ].concat(this.vue.webpackRules());
     }
-
-    webpackPlugins() {
-        return this.vue.webpackPlugins();
-    }
 }
 
 module.exports = JavaScript;

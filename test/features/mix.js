@@ -4,9 +4,6 @@ import webpack from 'webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import fs from 'fs-extra';
 
-let ComponentFactory = require('../../src/ComponentFactory');
-new ComponentFactory().installAll();
-
 test.beforeEach(t => {
     // Reset state.
     global.Config = require('../../src/config')();
@@ -15,6 +12,11 @@ test.beforeEach(t => {
     fs.ensureDirSync('test/fixtures/fake-app/public');
 
     mix.setPublicPath('test/fixtures/fake-app/public');
+
+    let ComponentFactory = require('../../src/ComponentFactory');
+    new ComponentFactory().installAll();
+
+    Mix.dispatch('init', Mix);
 });
 
 test.afterEach.always(t => {
@@ -36,7 +38,7 @@ test.cb.serial('it compiles JavaScript', t => {
     });
 });
 
-test.cb.serial.only('it compiles JavaScript and Sass', t => {
+test.cb.serial('it compiles JavaScript and Sass', t => {
     mix
         .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
         .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
@@ -77,12 +79,14 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
         .version();
 
     compile(t, () => {
-        t.deepEqual(
+        let manifest = readManifest();
+
+        assertManifestIs(
             {
-                '/js/app.js': '/js/app.js?id=ebed98a202af238495b0',
-                '/css/app.css': '/css/app.css?id=2d4a1c0cca02e0a221b2'
+                '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/css/app.css': '/css/app.css\\?id=\\w{20}'
             },
-            readManifest()
+            t
         );
     });
 });
@@ -184,15 +188,13 @@ test.cb.serial('it can version an entire directory or regex of files.', t => {
     mix.version('test/fixtures/fake-app/public/js/folder');
 
     compile(t, () => {
-        t.deepEqual(
+        assertManifestIs(
             {
-                '/js/folder/one.js':
-                    '/js/folder/one.js?id=cf3b7d56547fd245a5f7',
-                '/js/folder/three.js':
-                    '/js/folder/three.js?id=b221b56c16408d6d1e13',
-                '/js/folder/two.js': '/js/folder/two.js?id=48fa74a407eee812988d'
+                '/js/folder/one.js': '/js/folder/one.js\\?id=\\w{20}',
+                '/js/folder/three.js': '/js/folder/three.js\\?id=\\w{20}',
+                '/js/folder/two.js': '/js/folder/two.js\\?id=\\w{20}'
             },
-            readManifest()
+            t
         );
     });
 });
@@ -220,17 +222,17 @@ test.cb.serial('the kitchen sink', t => {
     compile(t, () => {
         t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
 
-        t.deepEqual(
+        assertManifestIs(
             {
-                '/file.js': '/file.js?id=6535b4d330f12366c3f7',
-                '/js/all.js': '/js/all.js?id=d198d4b3b25e9d66fa37',
-                '/js/another.js': '/js/another.js?id=d403c9f3f581bbcba8ba',
-                '/js/app.js': '/js/app.js?id=8e880c67fe14b09f7d16',
-                '/js/manifest.js': '/js/manifest.js?id=ce6566a24afe6e358977',
-                '/js/vendor.js': '/js/vendor.js?id=d69105e5f6f53447b8a7',
-                '/somewhere/app.js': '/somewhere/app.js?id=8e880c67fe14b09f7d16'
+                '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
+                '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/js/another.js': '/js/another.js\\?id=\\w{20}',
+                '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+                '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
+                '/js/all.js': '/js/all.js\\?id=\\w{20}',
+                '/file.js': '/file.js\\?id=\\w{20}'
             },
-            readManifest()
+            t
         );
     });
 });
@@ -285,6 +287,7 @@ test.cb('it extracts vue styles correctly', t => {
         )
         // and we want to extract vue styles
         .options({ extractVueStyles: 'css/components.css' });
+
     // When we compile it
     compile(t, () => {
         // Then we expect the js to be built
@@ -310,4 +313,14 @@ function readManifest() {
     return JSON.parse(
         File.find('test/fixtures/fake-app/public/mix-manifest.json').read()
     );
+}
+
+function assertManifestIs(expected, t) {
+    let manifest = readManifest();
+
+    t.deepEqual(Object.keys(manifest), Object.keys(expected));
+
+    Object.keys(expected).forEach(key => {
+        t.true(new RegExp(expected[key]).test(manifest[key]));
+    });
 }

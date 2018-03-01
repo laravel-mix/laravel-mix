@@ -3,14 +3,24 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 class Vue {
     dependencies() {
         if (Config.extractVueStyles && Config.globalVueStyles) {
-            // To import a global styles file in every component, we must use sass resources loader.
-            return ['sass-resources-loader'];
+            return ['sass-resources-loader']; // Required for importing global styles into every component.
         }
-
-        return [];
     }
 
     webpackRules() {
+        if (Config.extractVueStyles) {
+            let fileName =
+                typeof Config.extractVueStyles === 'string'
+                    ? Config.extractVueStyles
+                    : 'vue-styles.css';
+
+            let filePath = fileName
+                .replace(Config.publicPath, '')
+                .replace(/^\//, '');
+
+            Config.extractPlugins.push(new ExtractTextPlugin(filePath));
+        }
+
         let vueLoaderOptions = this.vueLoaderOptions();
 
         if (Config.extractVueStyles && Config.globalVueStyles) {
@@ -35,21 +45,6 @@ class Vue {
             exclude: /bower_components/,
             options: vueLoaderOptions
         };
-    }
-
-    webpackPlugins() {
-        if (Config.extractVueStyles) {
-            let fileName =
-                typeof Config.extractVueStyles === 'string'
-                    ? Config.extractVueStyles
-                    : 'vue-styles.css';
-
-            let filePath = fileName
-                .replace(Config.publicPath, '')
-                .replace(/^\//, '');
-
-            Config.extractPlugins.push(new ExtractTextPlugin(filePath));
-        }
     }
 
     vueLoaderOptions() {

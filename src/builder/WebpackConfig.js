@@ -89,11 +89,12 @@ class WebpackConfig {
         this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(
             webpackRules()
         );
+
+        Mix.dispatch('loading-rules', this.webpackConfig.module.rules);
+
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
             Config.extractPlugins
         );
-
-        Mix.dispatch('loading-rules', this.webpackConfig.module.rules);
 
         return this;
     }
