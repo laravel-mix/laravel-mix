@@ -4,6 +4,10 @@ let webpack = require('webpack');
 let VersionFilesTask = require('../tasks/VersionFilesTask');
 
 class Versioning {
+    name() {
+        return 'version';
+    }
+
     register(files = []) {
         Config.versioning = true;
 
