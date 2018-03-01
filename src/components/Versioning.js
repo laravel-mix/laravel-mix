@@ -1,7 +1,7 @@
 let glob = require('glob');
 let path = require('path');
 let webpack = require('webpack');
-let VersionFilesTask = require('./tasks/VersionFilesTask');
+let VersionFilesTask = require('../tasks/VersionFilesTask');
 
 class Versioning {
     register(files = []) {

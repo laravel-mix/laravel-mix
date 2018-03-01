@@ -14,6 +14,8 @@ let components = [
     'react',
     'typescript',
     'autoloading'
+    'autoloading',
+    'versioning',
 ];
 
 class ComponentFactory {
