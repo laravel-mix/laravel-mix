@@ -195,6 +195,8 @@ test('Custom vue-loader options may be specified', t => {
         }
     });
 
+    Mix.dispatch('init');
+
     let vueOptions = new WebpackConfig()
         .build()
         .module.rules.find(rule => rule.loader === 'vue-loader').options;

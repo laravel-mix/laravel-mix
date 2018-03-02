@@ -291,6 +291,8 @@ test.cb('it extracts vue styles correctly', t => {
 });
 
 function compile(t, callback) {
+    Mix.dispatch('init');
+
     let config = new WebpackConfig().build();
 
     webpack(config, function(err, stats) {

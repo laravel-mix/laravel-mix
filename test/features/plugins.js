@@ -71,6 +71,8 @@ test('webpack rules may be added', t => {
 
     mix.foobar();
 
+    Mix.dispatch('init');
+
     let config = new WebpackConfig().build();
 
     t.deepEqual(config.module.rules.pop(), rule);
@@ -91,6 +93,8 @@ test('webpack plugins may be added', t => {
     );
 
     mix.foobar();
+
+    Mix.dispatch('init');
 
     let config = new WebpackConfig().build();
 
@@ -114,4 +118,25 @@ test('custom Babel config may be merged', t => {
     Mix.dispatch('init');
 
     t.is('react-next', Config.babel().presets.pop());
+});
+
+test('the fully constructed webpack config object is available for modification, if needed', t => {
+    mix.extend(
+        'extension',
+        new class {
+            register() {}
+
+            webpackConfig(config) {
+                config.stats.hash = true;
+            }
+        }()
+    );
+
+    t.false(new WebpackConfig().build().stats.hash);
+
+    mix.extension();
+
+    Mix.dispatch('init');
+
+    t.true(new WebpackConfig().build().stats.hash);
 });

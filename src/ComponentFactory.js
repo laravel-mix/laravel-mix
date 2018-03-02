@@ -32,16 +32,25 @@ class ComponentFactory {
         this.registerComponent(component);
 
         Mix.listen('init', () => {
-            this.installDependencies(component);
-            this.applyBabelConfig(component);
-        });
+            if (!component.activated) {
+                return;
+            }
 
-        Mix.listen('loading-rules', rules => {
-            this.applyRules(rules, component);
-        });
+            component.dependencies && this.installDependencies(component);
+            component.babelConfig && this.applyBabelConfig(component);
 
-        Mix.listen('loading-plugins', plugins => {
-            this.applyPlugins(plugins, component);
+            Mix.listen('loading-rules', rules => {
+                component.webpackRules && this.applyRules(rules, component);
+            });
+
+            Mix.listen('loading-plugins', plugins => {
+                component.webpackPlugins &&
+                    this.applyPlugins(plugins, component);
+            });
+
+            Mix.listen('configReady', config => {
+                component.webpackConfig && component.webpackConfig(config);
+            });
         });
     }
 
@@ -64,8 +73,6 @@ class ComponentFactory {
     }
 
     installDependencies(component) {
-        if (!component.activated || !component.dependencies) return;
-
         []
             .concat(component.dependencies())
             .filter(dependency => dependency)
@@ -75,8 +82,6 @@ class ComponentFactory {
     }
 
     applyBabelConfig(component) {
-        if (!component.activated || !component.babelConfig) return;
-
         Config.babelConfig = webpackMerge.smart(
             Config.babelConfig,
             component.babelConfig()
@@ -84,16 +89,12 @@ class ComponentFactory {
     }
 
     applyRules(rules, component) {
-        if (!component.activated || !component.webpackRules) return;
-
         tap(component.webpackRules(), newRules => {
             newRules && rules.push(...[].concat(newRules));
         });
     }
 
     applyPlugins(plugins, component) {
-        if (!component.activated || !component.webpackPlugins) return;
-
         tap(component.webpackPlugins(), newPlugins => {
             newPlugins && plugins.push(...[].concat(newPlugins));
         });
