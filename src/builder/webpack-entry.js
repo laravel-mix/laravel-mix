@@ -51,7 +51,8 @@ module.exports = function() {
     addStylesheets();
 
     return {
-        entry: entry.get(),
+        entry,
         extractions
     };
 };
+

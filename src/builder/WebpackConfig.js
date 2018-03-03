@@ -37,7 +37,9 @@ class WebpackConfig {
     buildEntry() {
         let { entry, extractions } = webpackEntry();
 
-        this.webpackConfig.entry = entry;
+        Mix.dispatch('loading-entry', entry);
+
+        this.webpackConfig.entry = entry.get();
 
         // If we're extracting any vendor libraries, then we
         // need to add the CommonChunksPlugin to strip out

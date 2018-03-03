@@ -39,6 +39,12 @@ class ComponentFactory {
             component.dependencies && this.installDependencies(component);
             component.babelConfig && this.applyBabelConfig(component);
 
+            Mix.listen('loading-entry', entry => {
+                if (component.webpackEntry) {
+                    component.webpackEntry(entry);
+                }
+            });
+
             Mix.listen('loading-rules', rules => {
                 component.webpackRules && this.applyRules(rules, component);
             });
