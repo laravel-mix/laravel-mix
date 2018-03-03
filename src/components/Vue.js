@@ -18,6 +18,10 @@ class Vue {
         };
     }
 
+    webpackPlugins() {
+        return this.extractPlugin;
+    }
+
     vueLoaderOptions() {
         if (Config.extractVueStyles) {
             let fileName =
@@ -29,19 +33,14 @@ class Vue {
                 .replace(Config.publicPath, '')
                 .replace(/^\//, '');
 
-            Config.extractPlugins.push(new ExtractTextPlugin(filePath));
-        }
+            this.extractPlugin = new ExtractTextPlugin(filePath);
 
-        let extractPlugin =
-            Config.extractPlugins[Config.extractPlugins.length - 1];
-
-        if (Config.extractVueStyles) {
-            var sassLoader = extractPlugin.extract({
+            var sassLoader = this.extractPlugin.extract({
                 use: 'css-loader!sass-loader?indentedSyntax',
                 fallback: 'vue-style-loader'
             });
 
-            var scssLoader = extractPlugin.extract({
+            var scssLoader = this.extractPlugin.extract({
                 use: 'css-loader!sass-loader',
                 fallback: 'vue-style-loader'
             });
@@ -76,18 +75,18 @@ class Vue {
 
                           sass: sassLoader,
 
-                          css: extractPlugin.extract({
+                          css: this.extractPlugin.extract({
                               use: 'css-loader',
                               fallback: 'vue-style-loader'
                           }),
 
-                          stylus: extractPlugin.extract({
+                          stylus: this.extractPlugin.extract({
                               use:
                                   'css-loader!stylus-loader?paths[]=node_modules',
                               fallback: 'vue-style-loader'
                           }),
 
-                          less: extractPlugin.extract({
+                          less: this.extractPlugin.extract({
                               use: 'css-loader!less-loader',
                               fallback: 'vue-style-loader'
                           })

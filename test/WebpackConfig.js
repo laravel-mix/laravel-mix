@@ -8,6 +8,8 @@ import ComponentFactory from '../src/ComponentFactory';
 test.beforeEach(t => {
     Config = defaultConfig();
 
+    Mix.dispatcher.events = {};
+
     Config.publicPath = 'public';
 
     new ComponentFactory().installAll();
@@ -15,6 +17,8 @@ test.beforeEach(t => {
 
 test('basic JS compilation config.', t => {
     mix.js('resources/assets/js/app.js', 'public/js');
+
+    Mix.dispatch('init');
 
     let webpackConfig = new WebpackConfig().build();
 
@@ -38,6 +42,8 @@ test('basic JS compilation config.', t => {
 
 test('basic JS compilation with output public directory omitted config.', t => {
     mix.js('resources/assets/js/app.js', 'js');
+
+    Mix.dispatch('init');
 
     let webpackConfig = new WebpackConfig().build();
 
@@ -70,6 +76,8 @@ test('basic JS compilation with a different public path', t => {
 test('basic JS compilation with a specific output path config.', t => {
     mix.js('resources/assets/js/app.js', 'public/js/output.js');
 
+    Mix.dispatch('init');
+
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual(
@@ -85,6 +93,8 @@ test('JS compilation with vendor extraction config', t => {
         .js('resources/assets/js/app.js', 'public/js')
         .extract(['vue'], 'public/js/libraries.js');
 
+    Mix.dispatch('init');
+
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual(
@@ -99,11 +109,15 @@ test('JS compilation with vendor extraction config', t => {
 test('vendor extraction with no output and no requested JS compilation throws an error', t => {
     mix.extract(['vue']);
 
+    Mix.dispatch('init');
+
     t.throws(() => new WebpackConfig().build(), Error);
 });
 
 test('JS compilation with vendor extraction with default config', t => {
     mix.js('resources/assets/js/app.js', 'public/js').extract(['vue']);
+
+    Mix.dispatch('init');
 
     let webpackConfig = new WebpackConfig().build();
 
@@ -118,6 +132,8 @@ test('JS compilation with vendor extraction with default config', t => {
 
 test('React compilation', t => {
     mix.react('resources/assets/js/app.jsx', 'public/js');
+
+    Mix.dispatch('init');
 
     let webpackConfig = new WebpackConfig().build();
 
@@ -136,14 +152,16 @@ test('JS and Sass + Less + Stylus compilation config', t => {
         .less('resources/assets/less/less.less', 'public/css')
         .stylus('resources/assets/stylus/stylus.styl', 'public/css');
 
+    Mix.dispatch('init');
+
     let webpackConfig = new WebpackConfig().build();
 
     t.deepEqual(
         {
             '/js/app': [
                 path.resolve('resources/assets/js/app.js'),
-                path.resolve('resources/assets/sass/sass.scss'),
                 path.resolve('resources/assets/less/less.less'),
+                path.resolve('resources/assets/sass/sass.scss'),
                 path.resolve('resources/assets/stylus/stylus.styl')
             ]
         },
@@ -151,8 +169,23 @@ test('JS and Sass + Less + Stylus compilation config', t => {
     );
 });
 
+test('TypeScript compilation', t => {
+    mix.ts('resources/assets/js/app.js', 'public/js');
+
+    Mix.dispatch('init');
+
+    let webpackConfig = new WebpackConfig().build();
+
+    t.true(webpackConfig.resolve.extensions.includes('.ts'));
+    t.true(webpackConfig.resolve.extensions.includes('.tsx'));
+
+    t.is('vue/dist/vue.esm.js', webpackConfig.resolve.alias['vue$']);
+});
+
 test('CSS compilation with no JS specified config.', t => {
     mix.sass('resources/assets/sass/sass.scss', 'public/css');
+
+    Mix.dispatch('init');
 
     let webpackConfig = new WebpackConfig().build();
 
@@ -188,7 +221,7 @@ test('Custom user config can be merged as a callback function', t => {
 });
 
 test('Custom vue-loader options may be specified', t => {
-    mix.options({
+    mix.js('resources/assets/js/app.js', 'public/js').options({
         vue: {
             camelCase: true,
             postLoaders: { stub: 'foo' }
@@ -211,6 +244,8 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
     mix.sass('resources/assets/sass/sass.scss', 'public/css').options({
         postCss: [require('postcss-custom-properties')]
     });
+
+    Mix.dispatch('init');
 
     let plugins = new WebpackConfig()
         .build()

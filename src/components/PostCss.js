@@ -6,7 +6,7 @@ class PostCss extends Preprocessor {
         return 'postCss';
     }
 
-    register() {
+    register(src, output, postCssPlugins = []) {
         Verify.preprocessor('postCss', src, output);
 
         src = new File(src);
@@ -16,15 +16,18 @@ class PostCss extends Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
-        Config.preprocessors['postCss'] = (
-            Config.preprocessors['postCss'] || []
-        ).concat({
+        this.details = (this.details || []).concat({
+            type: 'postCss',
             src,
             output,
             postCssPlugins
         });
+    }
 
-        return this;
+    webpackConfig(config) {
+        config.module.rules.find(
+            rule => rule.test.toString() === '/\\.css$/'
+        ).exclude = this.details.map(postCss => postCss.src.path());
     }
 }
 

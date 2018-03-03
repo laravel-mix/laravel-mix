@@ -1,6 +1,112 @@
 let Verify = require('../Verify');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Preprocessor {
+    webpackEntry(entry) {
+        this.details.forEach(detail => {
+            entry.add(entry.keys()[0], detail.src.path());
+        });
+    }
+
+    webpackRules() {
+        let rules = [];
+
+        this.details.forEach(preprocessor => {
+            let outputPath = preprocessor.output.filePath
+                .replace(Config.publicPath + path.sep, path.sep)
+                .replace(/\\/g, '/');
+
+            tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+                let loaders = [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: Config.processCssUrls,
+                            sourceMap: Mix.isUsing('sourcemaps'),
+                            importLoaders: 1
+                        }
+                    },
+
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap:
+                                preprocessor.type === 'sass' &&
+                                Config.processCssUrls
+                                    ? true
+                                    : Mix.isUsing('sourcemaps'),
+                            ident: 'postcss',
+                            plugins: (function() {
+                                let plugins = Config.postCss;
+
+                                if (
+                                    preprocessor.postCssPlugins &&
+                                    preprocessor.postCssPlugins.length
+                                ) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                if (
+                                    Config.autoprefixer &&
+                                    Config.autoprefixer.enabled
+                                ) {
+                                    plugins.push(
+                                        require('autoprefixer')(
+                                            Config.autoprefixer.options
+                                        )
+                                    );
+                                }
+
+                                return plugins;
+                            })()
+                        }
+                    }
+                ];
+
+                if (preprocessor.type === 'sass' && Config.processCssUrls) {
+                    loaders.push({
+                        loader: 'resolve-url-loader',
+                        options: {
+                            sourceMap: true,
+                            root: Mix.paths.root('node_modules')
+                        }
+                    });
+                }
+
+                if (preprocessor.type !== 'postCss') {
+                    loaders.push({
+                        loader: `${preprocessor.type}-loader`,
+                        options: Object.assign(preprocessor.pluginOptions, {
+                            sourceMap:
+                                preprocessor.type === 'sass' &&
+                                Config.processCssUrls
+                                    ? true
+                                    : Mix.isUsing('sourcemaps')
+                        })
+                    });
+                }
+
+                rules.push({
+                    test: preprocessor.src.path(),
+                    use: extractPlugin.extract({
+                        fallback: 'style-loader',
+                        use: loaders
+                    })
+                });
+
+                this.extractPlugins = (this.extractPlugins || []).concat(
+                    extractPlugin
+                );
+            });
+        });
+
+        return rules;
+    }
+
+    webpackPlugins() {
+        return this.extractPlugins;
+    }
+
     /**
      * Register a generic CSS preprocessor.
      *
@@ -19,7 +125,8 @@ class Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
-        Config.preprocessors[type] = (Config.preprocessors[type] || []).concat({
+        this.details = (this.details || []).concat({
+            type: this.constructor.name.toLowerCase(),
             src,
             output,
             pluginOptions

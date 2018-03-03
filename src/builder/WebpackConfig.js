@@ -1,7 +1,7 @@
 let webpack = require('webpack');
 
 let webpackDefaultConfig = require('./webpack-default');
-let webpackEntry = require('./webpack-entry');
+let Entry = require('./Entry');
 let webpackRules = require('./webpack-rules');
 let webpackPlugins = require('./webpack-plugins');
 
@@ -35,23 +35,15 @@ class WebpackConfig {
      * Build the entry object.
      */
     buildEntry() {
-        let { entry, extractions } = webpackEntry();
+        let entry = new Entry();
+
+        if (!Config.js.length) {
+            entry.addDefault();
+        }
 
         Mix.dispatch('loading-entry', entry);
 
         this.webpackConfig.entry = entry.get();
-
-        // If we're extracting any vendor libraries, then we
-        // need to add the CommonChunksPlugin to strip out
-        // all relevant code into its own file.
-        if (extractions.length) {
-            this.webpackConfig.plugins.push(
-                new webpack.optimize.CommonsChunkPlugin({
-                    names: extractions,
-                    minChunks: Infinity
-                })
-            );
-        }
 
         return this;
     }
@@ -102,7 +94,6 @@ class WebpackConfig {
      */
     buildPlugins() {
         this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
-            Config.extractPlugins,
             webpackPlugins()
         );
 
@@ -115,21 +106,11 @@ class WebpackConfig {
      * Build the resolve object.
      */
     buildResolving() {
-        let extensions = ['*', '.js', '.jsx', '.vue'];
-
-        let buildFile = 'vue/dist/vue.common.js';
-
-        if (Config.typeScript) {
-            extensions.push('.ts', '.tsx');
-
-            buildFile = 'vue/dist/vue.esm.js';
-        }
-
         this.webpackConfig.resolve = {
-            extensions,
+            extensions: ['*', '.js', '.jsx', '.vue'],
 
             alias: {
-                vue$: buildFile
+                vue$: 'vue/dist/vue.common.js'
             }
         };
 

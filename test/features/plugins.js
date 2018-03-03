@@ -52,6 +52,25 @@ test('dependencies can be requested for download', t => {
     t.true(Verify.dependency.calledWith('npm-package'));
 });
 
+test('webpack entry may be appended to', t => {
+    mix.extend(
+        'foobar',
+        new class {
+            register() {}
+
+            webpackEntry(entry) {
+                entry.add('foo', 'path');
+            }
+        }()
+    );
+
+    mix.foobar();
+
+    Mix.dispatch('init');
+
+    t.deepEqual(['path'], new WebpackConfig().build().entry.foo);
+});
+
 test('webpack rules may be added', t => {
     let rule = {
         test: /\.ext/,

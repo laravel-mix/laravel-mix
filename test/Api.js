@@ -89,7 +89,6 @@ test('mix.ts()', t => {
     let response = mix.ts('resources/assets/js/app.ts', 'public/js');
 
     t.is(mix, response);
-    t.true(Config.typeScript);
 
     t.deepEqual(
         [
@@ -103,87 +102,6 @@ test('mix.ts()', t => {
 
     // There's also a mix.typeScript() alias.
     t.is(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
-});
-
-test('mix.sass()', t => {
-    let response = mix.sass('resources/assets/sass/app.scss', 'public/css');
-
-    t.is(mix, response);
-
-    t.deepEqual(
-        [
-            {
-                src: new File('resources/assets/sass/app.scss'),
-                output: new File('public/css/app.css'),
-                pluginOptions: {
-                    outputStyle: 'expanded',
-                    precision: 8,
-                    sourceMap: true
-                }
-            }
-        ],
-        Config.preprocessors.sass
-    );
-});
-
-test('mix.standaloneSass/fastSass()', t => {
-    mockFs({
-        'resources/assets/sass/app.scss': 'body {}'
-    });
-
-    let response = mix.standaloneSass(
-        'resources/assets/sass/app.scss',
-        'public/css'
-    );
-
-    t.is(mix, response);
-
-    t.deepEqual(
-        [
-            {
-                src: new File('resources/assets/sass/app.scss'),
-                output: new File('public/css/app.css'),
-                pluginOptions: {}
-            }
-        ],
-        Config.preprocessors.fastSass
-    );
-
-    t.is(mix, mix.fastSass('resources/assets/sass/app.scss', 'public/css'));
-});
-
-test('mix.less()', t => {
-    let response = mix.less('resources/assets/less/app.less', 'public/css');
-
-    t.is(mix, response);
-
-    t.deepEqual(
-        [
-            {
-                src: new File('resources/assets/less/app.less'),
-                output: new File('public/css/app.css'),
-                pluginOptions: {}
-            }
-        ],
-        Config.preprocessors.less
-    );
-});
-
-test('mix.stylus()', t => {
-    let response = mix.stylus('resources/assets/stylus/app.styl', 'public/css');
-
-    t.is(mix, response);
-
-    t.deepEqual(
-        [
-            {
-                src: new File('resources/assets/stylus/app.styl'),
-                output: new File('public/css/app.css'),
-                pluginOptions: {}
-            }
-        ],
-        Config.preprocessors.stylus
-    );
 });
 
 test('mix.browserSync()', t => {
@@ -214,21 +132,6 @@ test('mix.version() with a folder name', t => {
     t.deepEqual(
         ['path/to/file.js', 'path/to/file2.js', 'path/to/file3.js'],
         Mix.tasks[0].data.files
-    );
-});
-
-test('mix.extract()', t => {
-    let response = mix.extract(['vue'], 'path/to/output');
-
-    t.is(mix, response);
-    t.deepEqual(
-        [
-            {
-                libs: ['vue'],
-                output: 'path/to/output'
-            }
-        ],
-        Config.extractions
     );
 });
 

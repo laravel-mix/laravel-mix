@@ -204,6 +204,11 @@ test.cb.serial('the kitchen sink', t => {
         .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
         .extract(['vue'])
         .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
+        .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')
+        .postCss(
+            'test/fixtures/fake-app/resources/assets/css/app.css',
+            'css/example.css'
+        )
         .copy(
             'test/fixtures/fake-app/public/js/app.js',
             'test/fixtures/fake-app/public/somewhere'
@@ -224,6 +229,8 @@ test.cb.serial('the kitchen sink', t => {
             {
                 '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
                 '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/css/app.css': '/css/app.css\\?id=\\w{20}',
+                '/css/example.css': '/css/example.css\\?id=\\w{20}',
                 '/js/another.js': '/js/another.js\\?id=\\w{20}',
                 '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
                 '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',

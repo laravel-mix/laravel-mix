@@ -20,10 +20,9 @@ class TypeScript extends JavaScript {
         });
     }
 
-    register(entry, output) {
-        Config.typeScript = true;
-
-        return super.register(entry, output);
+    webpackConfig(config) {
+        config.resolve.extensions.push('.ts', '.tsx');
+        config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js';
     }
 }
 

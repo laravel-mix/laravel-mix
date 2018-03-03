@@ -3,19 +3,20 @@ let Verify = require('../src/Verify');
 let webpackMerge = require('webpack-merge');
 
 let components = [
+    'JavaScript',
     'FastSass',
     'Less',
     'Sass',
     'Stylus',
     'PostCss',
     'Browsersync',
-    'JavaScript',
     'Preact',
     'React',
     'TypeScript',
     'Autoloading',
     'Versioning',
-    'Extend'
+    'Extend',
+    'Extract'
 ];
 
 class ComponentFactory {

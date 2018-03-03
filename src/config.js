@@ -27,27 +27,6 @@ module.exports = function() {
         customAssets: [],
 
         /**
-         * The list of vendor chunks to extract.
-         *
-         * @type {Array}
-         */
-        extractions: [],
-
-        /**
-         * A list of CSS preprocessing to be performed.
-         *
-         * @type {Object}
-         */
-        preprocessors: {},
-
-        /**
-         * Does the project require TypeScript support?
-         *
-         * @type {Boolean}
-         */
-        typeScript: false,
-
-        /**
          * A list of variables that should be autoloaded by webpack.
          *
          * @type {Object}

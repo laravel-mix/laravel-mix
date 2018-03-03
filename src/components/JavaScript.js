@@ -31,6 +31,16 @@ class JavaScript {
         Config.js.push({ entry, output });
     }
 
+    webpackEntry(entry) {
+        Config.js.forEach(js => {
+            entry.addFromOutput(
+                js.entry.map(file => file.path()),
+                js.output,
+                js.entry[0]
+            );
+        });
+    }
+
     webpackRules() {
         return [
             {
@@ -44,6 +54,10 @@ class JavaScript {
                 ]
             }
         ].concat(this.vue.webpackRules());
+    }
+
+    webpackPlugins() {
+        return this.vue.webpackPlugins();
     }
 }
 

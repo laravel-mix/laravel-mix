@@ -111,19 +111,6 @@ class Api {
     }
 
     /**
-     * Register vendor libs that should be extracted.
-     * This helps drastically with long-term caching.
-     *
-     * @param {Array}  libs
-     * @param {string} output
-     */
-    extract(libs, output) {
-        Config.extractions.push({ libs, output });
-
-        return this;
-    }
-
-    /**
      * Enable sourcemap support.
      *
      * @param {Boolean} productionToo
