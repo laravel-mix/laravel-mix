@@ -36,21 +36,6 @@ class Extract {
             );
         }
     }
-
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        // If we're extracting any vendor libraries, then we
-        // need to add the CommonChunksPlugin to strip out
-        // all relevant code into its own file.
-        if (this.extractions.length) {
-            return new webpack.optimize.CommonsChunkPlugin({
-                names: this.extractions,
-                minChunks: Infinity
-            });
-        }
-    }
 }
 
 module.exports = Extract;
