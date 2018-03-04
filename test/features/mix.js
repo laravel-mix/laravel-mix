@@ -45,7 +45,7 @@ test.cb.serial('the kitchen sink', t => {
     });
 });
 
-test.only.cb.serial('async chunk splitting works', t => {
+test.cb.serial('async chunk splitting works', t => {
     mix
         .js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash', 'core-js'])
@@ -73,7 +73,7 @@ test.only.cb.serial('async chunk splitting works', t => {
     });
 });
 
-test.only.cb.serial('multiple extractions work', t => {
+test.cb.serial('multiple extractions work', t => {
     mix
         .js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash'], "js/vendor-vue-lodash.js")
