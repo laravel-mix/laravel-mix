@@ -10,15 +10,11 @@ class Less extends Preprocessor {
     }
 
     webpackRules() {
-        let rules = super.webpackRules();
-
-        rules.push({
+        return super.webpackRules().concat({
             test: /\.less$/,
             exclude: this.details.map(less => less.src.path()),
             loaders: ['style-loader', 'css-loader', 'less-loader']
         });
-
-        return rules;
     }
 }
 

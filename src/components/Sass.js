@@ -11,15 +11,11 @@ class Sass extends Preprocessor {
     }
 
     webpackRules() {
-        let rules = super.webpackRules();
-
-        rules.push({
+        return super.webpackRules().concat({
             test: /\.s[ac]ss$/,
             exclude: this.details.map(sass => sass.src.path()),
             loaders: ['style-loader', 'css-loader', 'sass-loader']
         });
-
-        return rules;
     }
 
     pluginOptions(pluginOptions) {
