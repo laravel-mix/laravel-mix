@@ -27,6 +27,12 @@ class Extract {
      */
     webpackEntry(entry) {
         this.entry = entry
+
+        if (!Config.js.length && this.extractions.some(extraction => !extraction.output)) {
+            throw new Error(
+                'Please provide an output path as the second argument to mix.extract().'
+            );
+        }
     }
 
     webpackConfig(config) {
