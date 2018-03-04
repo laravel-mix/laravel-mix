@@ -45,6 +45,64 @@ test.cb.serial('the kitchen sink', t => {
     });
 });
 
+test.only.cb.serial('async chunk splitting works', t => {
+    mix
+        .js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
+        .extract(['vue', 'lodash', 'core-js'])
+        .options({
+            babelConfig: {
+                plugins: [
+                    'babel-plugin-syntax-dynamic-import',
+                ],
+            },
+        })
+        .version()
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+
+        assertManifestIs(
+            {
+                '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+                "/js/vendor.js": '/js/vendor.js\\?id=\\w{20}',
+                "/js/split.js": '/js/split.js\\?id=\\w{20}',
+            },
+            t
+        );
+    });
+});
+
+test.only.cb.serial('multiple extractions work', t => {
+    mix
+        .js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
+        .extract(['vue', 'lodash'], "js/vendor-vue-lodash.js")
+        .extract(['core-js'], "js/vendor-core-js.js")
+        .options({
+            babelConfig: {
+                plugins: [
+                    'babel-plugin-syntax-dynamic-import',
+                ],
+            },
+        })
+        .version()
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+
+        assertManifestIs(
+            {
+                '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+                "/js/vendor-core-js.js": '/js/vendor-core-js.js\\?id=\\w{20}',
+                "/js/vendor-vue-lodash.js": '/js/vendor-vue-lodash.js\\?id=\\w{20}',
+                "/js/split.js": '/js/split.js\\?id=\\w{20}',
+            },
+            t
+        );
+    });
+});
+
 test.cb.serial(
     'it resolves image- and font-urls and distinguishes between them even if we deal with svg',
     t => {
