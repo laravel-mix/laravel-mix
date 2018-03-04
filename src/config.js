@@ -27,15 +27,6 @@ module.exports = function() {
         customAssets: [],
 
         /**
-
-        /**
-         * Does the project require BrowserSync support?
-         *
-         * @type {Boolean}
-         */
-        browserSync: false,
-
-        /**
          * Determine if we should enable hot reloading.
          *
          * @type {Boolean}
