@@ -156,6 +156,26 @@ test.cb.serial('it combines a folder of scripts', t => {
     });
 });
 
+test.cb.serial.only('it handles library autoloading', t => {
+    mix.autoload({
+        jquery: ['$', 'window.jQuery']
+    });
+
+    compile(t, config => {
+        let providePlugin = config.plugins.find(
+            plugin => plugin.constructor.name === 'ProvidePlugin'
+        );
+
+        t.deepEqual(
+            {
+                $: 'jquery',
+                'window.jQuery': 'jquery'
+            },
+            providePlugin.definitions
+        );
+    });
+});
+
 test.cb.serial('it can minify a file', t => {
     mix
         .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
@@ -303,7 +323,7 @@ function compile(t, callback) {
     let config = new WebpackConfig().build();
 
     webpack(config, function(err, stats) {
-        callback();
+        callback(config);
 
         t.end();
     });

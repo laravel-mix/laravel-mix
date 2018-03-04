@@ -22,9 +22,6 @@ module.exports = function() {
         new FriendlyErrorsWebpackPlugin({ clearConsole: Config.clearConsole })
     );
 
-    // Activate Webpack autoloading support.
-    plugins.push(new webpack.ProvidePlugin(Config.autoload));
-
     // Add support for webpack 3 scope hoisting.
     if (Mix.inProduction()) {
         plugins.push(new webpack.optimize.ModuleConcatenationPlugin());

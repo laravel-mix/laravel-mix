@@ -134,22 +134,6 @@ test('mix.version() with a folder name', t => {
     );
 });
 
-test('mix.autoload()', t => {
-    let response = mix.autoload({
-        jquery: ['$', 'window.jQuery']
-    });
-
-    t.is(mix, response);
-
-    t.deepEqual(
-        {
-            $: 'jquery',
-            'window.jQuery': 'jquery'
-        },
-        Config.autoload
-    );
-});
-
 test('mix.disableNotifications()', t => {
     let response = mix.disableNotifications();
 

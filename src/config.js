@@ -27,11 +27,6 @@ module.exports = function() {
         customAssets: [],
 
         /**
-         * A list of variables that should be autoloaded by webpack.
-         *
-         * @type {Object}
-         */
-        autoload: {},
 
         /**
          * Does the project require BrowserSync support?

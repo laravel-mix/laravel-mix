@@ -12,15 +12,13 @@ class Autoloading {
             });
         });
 
-        Config.autoload = aliases;
-
-        return this;
+        this.aliases = aliases;
     }
 
     webpackPlugins() {
         let webpack = require('webpack');
 
-        return new webpack.ProvidePlugin(Config.autoload);
+        return new webpack.ProvidePlugin(this.aliases);
     }
 }
 
