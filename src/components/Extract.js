@@ -45,9 +45,7 @@ class Extract {
                 },
 
                 splitChunks: {
-                    cacheGroups: {
-                        ...this.createCacheGroups(),
-                    },
+                    cacheGroups: this.createCacheGroups(),
                 },
             },
         }
