@@ -10,7 +10,7 @@ class TypeScript extends JavaScript {
     }
 
     webpackRules() {
-        return [].concat(super.webpackRules()).push({
+        return [].concat(super.webpackRules(), {
             test: /\.tsx?$/,
             loader: 'ts-loader',
             exclude: /node_modules/,
