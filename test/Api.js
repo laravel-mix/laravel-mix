@@ -108,7 +108,6 @@ test('mix.browserSync()', t => {
     let response = mix.browserSync('app.dev');
 
     t.is(mix, response);
-    t.deepEqual({ proxy: 'app.dev' }, Config.browserSync);
 });
 
 test('mix.version()', t => {

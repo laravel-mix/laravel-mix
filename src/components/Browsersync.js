@@ -10,21 +10,13 @@ class Browsersync {
     }
 
     register(config) {
-        if (typeof config === 'string') {
-            config = { proxy: config };
-        }
-
-        Config.browserSync = config;
-
-        return this;
+        this.config = typeof config == 'string' ? { proxy: config } : config;
     }
 
     webpackPlugins() {
-        if (Mix.isUsing('browserSync')) {
-            let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+        let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-            return new BrowserSyncPlugin(this.config(), { reload: false });
-        }
+        return new BrowserSyncPlugin(this.config(), { reload: false });
     }
 
     config() {
@@ -48,7 +40,7 @@ class Browsersync {
                     }
                 }
             },
-            Config.browserSync
+            this.config
         );
     }
 }
