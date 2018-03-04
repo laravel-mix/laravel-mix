@@ -5,6 +5,7 @@ class Extract {
      * Create a new component instance.
      */
     constructor() {
+        this.entry = null
         this.extractions = [];
     }
 
@@ -24,17 +25,7 @@ class Extract {
      * @param {Entry} entry
      */
     webpackEntry(entry) {
-        this.extractions = this.extractions.map(
-            entry.addExtraction.bind(entry)
-        );
-
-        // If we are extracting vendor libraries, then we also need
-        // to extract Webpack's manifest file to assist with caching.
-        if (this.extractions.length) {
-            this.extractions.push(
-                path.join(entry.base, 'manifest').replace(/\\/g, '/')
-            );
-        }
+        this.entry = entry
     }
 }
 
