@@ -47,6 +47,21 @@ class Entry {
     }
 
     /**
+     * Add a vendor extraction.
+     *
+     * @param {Object} extraction
+     */
+    addExtraction(extraction) {
+        if (!Config.js.length && !extraction.output) {
+            throw new Error(
+                'Please provide an output path as the second argument to mix.extract().'
+            );
+        }
+
+        this.structure[""] = (this.structure[""] || []).concat(extraction.libs)
+    }
+
+    /**
      * Add a default entry script to the structure.
      */
     addDefault() {
