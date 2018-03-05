@@ -2,7 +2,7 @@ import test from 'ava';
 import mix from '../src/index';
 import sinon from 'sinon';
 import mockFs from 'mock-fs';
-
+import ComponentFactory from '../src/ComponentFactory';
 
 test.beforeEach(t => {
     Config = require('../src/config')();
@@ -84,4 +84,17 @@ test('that it can add a task', t => {
     Mix.addTask('footask');
 
     t.is(1, Mix.tasks.length);
+});
+
+test('that it can fetch a registered component', t => {
+    new ComponentFactory().installAll();
+
+    let component = new class { register() {} };
+
+    mix.extend('foo', component);
+
+    mix.foo();
+
+    t.truthy(Mix.components.get('foo'));
+    t.deepEqual(component, Mix.components.get('foo'));
 });

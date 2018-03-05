@@ -1,6 +1,7 @@
 let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Dispatcher = require('./Dispatcher');
+let Components = require('./Components');
 let isFunction = require('lodash').isFunction;
 
 class Mix {
@@ -12,6 +13,7 @@ class Mix {
         this.manifest = new Manifest();
         this.dispatcher = new Dispatcher();
         this.tasks = [];
+        this.components = new Components();
     }
 
     /**

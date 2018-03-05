@@ -69,6 +69,8 @@ class ComponentFactory {
                     : component.constructor.name.toLowerCase()
             )
             .forEach(name => {
+                Mix.components.record(name, component);
+
                 mix[name] = (...args) => {
                     component.register(...args);
 

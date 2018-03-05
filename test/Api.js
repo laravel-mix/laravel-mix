@@ -20,23 +20,21 @@ test('mix.js()', t => {
 
     t.is(mix, response);
 
-    t.deepEqual(
-        [
-            {
-                entry: [new File('resources/assets/js/app.js')],
-                output: new File('public/js')
-            }
-        ],
-        Config.js
-    );
+    let jsComponent = Mix.components.get('js');
+
+    t.deepEqual([
+        {
+            entry: [new File('resources/assets/js/app.js')],
+            output: new File('public/js')
+        }
+    ], jsComponent.toCompile);
 
     mix.js(
         ['resources/assets/js/one.js', 'resources/assets/js/two.js'],
         'public/js'
     );
 
-    t.deepEqual(
-        [
+    t.deepEqual([
             {
                 entry: [new File('resources/assets/js/app.js')],
                 output: new File('public/js')
@@ -48,9 +46,7 @@ test('mix.js()', t => {
                 ],
                 output: new File('public/js')
             }
-        ],
-        Config.js
-    );
+    ], jsComponent.toCompile);
 });
 
 test('mix.react()', t => {
@@ -65,7 +61,7 @@ test('mix.react()', t => {
                 output: new File('public/js')
             }
         ],
-        Config.js
+        Mix.components.get('react').toCompile
     );
 });
 
@@ -81,7 +77,7 @@ test('mix.preact()', t => {
                 output: new File('public/js')
             }
         ],
-        Config.js
+        Mix.components.get('preact').toCompile
     );
 });
 
@@ -97,7 +93,7 @@ test('mix.ts()', t => {
                 output: new File('public/js')
             }
         ],
-        Config.js
+        Mix.components.get('ts').toCompile
     );
 
     // There's also a mix.typeScript() alias.
