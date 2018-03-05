@@ -22,19 +22,23 @@ test('mix.js()', t => {
 
     let jsComponent = Mix.components.get('js');
 
-    t.deepEqual([
-        {
-            entry: [new File('resources/assets/js/app.js')],
-            output: new File('public/js')
-        }
-    ], jsComponent.toCompile);
+    t.deepEqual(
+        [
+            {
+                entry: [new File('resources/assets/js/app.js')],
+                output: new File('public/js')
+            }
+        ],
+        jsComponent.toCompile
+    );
 
     mix.js(
         ['resources/assets/js/one.js', 'resources/assets/js/two.js'],
         'public/js'
     );
 
-    t.deepEqual([
+    t.deepEqual(
+        [
             {
                 entry: [new File('resources/assets/js/app.js')],
                 output: new File('public/js')
@@ -46,7 +50,9 @@ test('mix.js()', t => {
                 ],
                 output: new File('public/js')
             }
-    ], jsComponent.toCompile);
+        ],
+        jsComponent.toCompile
+    );
 });
 
 test('mix.react()', t => {
@@ -133,8 +139,6 @@ test('mix.disableNotifications()', t => {
     let response = mix.disableNotifications();
 
     t.is(mix, response);
-
-    t.false(Config.notifications);
 });
 
 test('mix.setPublicPath()', t => {

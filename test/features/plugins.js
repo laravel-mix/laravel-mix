@@ -178,3 +178,31 @@ test('prior Mix components can be overwritten', t => {
     t.true(component.register.notCalled);
     t.true(overridingComponent.register.called);
 });
+
+test('components can be passive', t => {
+    let stub = sinon.spy();
+
+    let component = new class {
+        register() {
+            stub();
+        }
+    }();
+
+    mix.extend('example', component);
+
+    t.true(stub.notCalled);
+
+    component = new class {
+        constructor() {
+            this.passive = true;
+        }
+
+        register() {
+            stub();
+        }
+    }();
+
+    mix.extend('example', component);
+
+    t.true(stub.called);
+});

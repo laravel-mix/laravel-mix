@@ -317,6 +317,45 @@ test.cb('it extracts vue styles correctly', t => {
     });
 });
 
+test.cb('it displays OS notifications', t => {
+    compile(t, config => {
+        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
+        let plugin = config.plugins.find(
+            plugin => plugin.options && plugin.options.alwaysNotify === true
+        );
+
+        t.truthy(plugin);
+    });
+});
+
+test.cb('it disables OS notifications', t => {
+    mix.disableNotifications();
+
+    compile(t, config => {
+        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
+        let plugin = config.plugins.find(
+            plugin => plugin.options && plugin.options.alwaysNotify === true
+        );
+
+        t.falsy(plugin);
+    });
+});
+
+test.cb('it disables OS success notifications', t => {
+    mix.disableSuccessNotifications();
+
+    compile(t, config => {
+        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
+        let plugin = config.plugins.find(
+            // To disable success notifications, we only have to set the alwaysNotify
+            // option on the webpack plugin to false.
+            plugin => plugin.options && plugin.options.alwaysNotify === false
+        );
+
+        t.truthy(plugin);
+    });
+});
+
 function compile(t, callback) {
     Mix.dispatch('init');
 

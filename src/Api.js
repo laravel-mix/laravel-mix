@@ -149,27 +149,6 @@ class Api {
     }
 
     /**
-     * Disable all OS notifications.
-     */
-    disableNotifications() {
-        Config.notifications = false;
-
-        return this;
-    }
-
-    /**
-     * Disable success notifications.
-     */
-    disableSuccessNotifications() {
-        Config.notifications = {
-            onSuccess: false,
-            onFailure: true
-        };
-
-        return this;
-    }
-
-    /**
      * Merge custom config with the provided webpack.config file.
      *
      * @param {object} config
