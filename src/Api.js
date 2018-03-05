@@ -1,37 +1,8 @@
 let Verify = require('./Verify');
-let CopyFilesTask = require('./tasks/CopyFilesTask');
 let webpack = require('webpack');
 let path = require('path');
 
 class Api {
-    /**
-     * Copy one or more files to a new location.
-     *
-     * @param {string} from
-     * @param {string} to
-     */
-    copy(from, to) {
-        let task = new CopyFilesTask({
-            from,
-            to: new File(to)
-        });
-
-        Mix.addTask(task);
-
-        return this;
-    }
-
-    /**
-     * Copy a directory to a new location. This is identical
-     * to mix.copy().
-     *
-     * @param {string} from
-     * @param {string} to
-     */
-    copyDirectory(from, to) {
-        return this.copy(from, to);
-    }
-
     /**
      * Enable sourcemap support.
      *

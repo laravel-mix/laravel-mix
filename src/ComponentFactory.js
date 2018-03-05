@@ -14,6 +14,7 @@ let components = [
     'React',
     'TypeScript',
     'Combine',
+    'Copy',
     'Autoloading',
     'Versioning',
     'Extend',
