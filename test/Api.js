@@ -110,7 +110,6 @@ test('mix.version()', t => {
     let response = mix.version(['some/file.js']);
 
     t.is(mix, response);
-    t.true(Config.versioning);
 
     t.deepEqual(['some/file.js'], Mix.tasks[0].data.files);
 });

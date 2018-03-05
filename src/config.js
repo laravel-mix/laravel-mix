@@ -73,13 +73,6 @@ module.exports = function() {
         publicPath: '',
 
         /**
-         * Determine if we should enable cache busting.
-         *
-         * @type {Boolean}
-         */
-        versioning: false,
-
-        /**
          * Determine if error notifications should be displayed for each build.
          *
          * @type {Boolean}

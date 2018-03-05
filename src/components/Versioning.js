@@ -9,8 +9,6 @@ class Versioning {
     }
 
     register(files = []) {
-        Config.versioning = true;
-
         files = flatten(
             [].concat(files).map(filePath => {
                 if (File.find(filePath).isDirectory()) {
@@ -27,25 +25,19 @@ class Versioning {
         );
 
         Mix.addTask(new VersionFilesTask({ files }));
-
-        return this;
     }
 
     webpackPlugins() {
-        if (Mix.isUsing('versioning')) {
-            let WebpackChunkHashPlugin = require('webpack-chunk-hash');
+        let WebpackChunkHashPlugin = require('webpack-chunk-hash');
 
-            return [
-                new webpack[
-                    Mix.inProduction()
-                        ? 'HashedModuleIdsPlugin'
-                        : 'NamedModulesPlugin'
-                ](),
-                new WebpackChunkHashPlugin()
-            ];
-        } else if (Mix.isUsing('hmr')) {
-            return new webpack.NamedModulesPlugin();
-        }
+        return [
+            new webpack[
+                Mix.inProduction()
+                    ? 'HashedModuleIdsPlugin'
+                    : 'NamedModulesPlugin'
+            ](),
+            new WebpackChunkHashPlugin()
+        ];
     }
 }
 

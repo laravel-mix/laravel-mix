@@ -36,6 +36,10 @@ module.exports = function() {
         })
     );
 
+    if (! Mix.components.get('version') && Mix.isUsing('hmr')) {
+        plugins.push(new webpack.NamedModulesPlugin());
+    }
+
     // Add automatic CSS Purification support.
     if (Mix.isUsing('purifyCss')) {
         let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
