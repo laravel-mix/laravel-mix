@@ -13,13 +13,6 @@ module.exports = function() {
             process.argv.includes('-p'),
 
         /**
-         * The list of scripts to bundle.
-         *
-         * @type {Array}
-         */
-        js: [],
-
-        /**
          * A list of custom assets that are being compiled outside of Webpack.
          *
          * @type {Array}

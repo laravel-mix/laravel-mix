@@ -6,6 +6,7 @@ let Vue = require('./Vue');
 class JavaScript {
     constructor() {
         this.vue = new Vue();
+        this.toCompile = [];
     }
 
     name() {
@@ -28,11 +29,13 @@ class JavaScript {
         entry = [].concat(entry).map(file => new File(file));
         output = new File(output);
 
-        Config.js.push({ entry, output });
+        this.toCompile.push({ entry, output });
+
+         Mix.bundlingJavaScript = true;
     }
 
     webpackEntry(entry) {
-        Config.js.forEach(js => {
+        this.toCompile.forEach(js => {
             entry.addFromOutput(
                 js.entry.map(file => file.path()),
                 js.output,

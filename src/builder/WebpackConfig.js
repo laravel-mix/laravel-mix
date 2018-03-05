@@ -37,7 +37,7 @@ class WebpackConfig {
     buildEntry() {
         let entry = new Entry();
 
-        if (!Config.js.length) {
+        if (! Mix.bundlingJavaScript) {
             entry.addDefault();
         }
 

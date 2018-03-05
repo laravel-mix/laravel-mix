@@ -13,7 +13,7 @@ module.exports = function() {
     // If the user didn't declare any JS compilation, we still need to
     // use a temporary script to force a compile. This plugin will
     // handle the process of deleting the compiled script.
-    if (!Config.js.length) {
+    if (! Mix.bundlingJavaScript) {
         plugins.push(new MockEntryPlugin());
     }
 

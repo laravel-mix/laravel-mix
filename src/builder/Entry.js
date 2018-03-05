@@ -52,7 +52,7 @@ class Entry {
      * @param {Object} extraction
      */
     addExtraction(extraction) {
-        if (!Config.js.length && !extraction.output) {
+        if (!Mix.bundlingJavaScript && !extraction.output) {
             throw new Error(
                 'Please provide an output path as the second argument to mix.extract().'
             );

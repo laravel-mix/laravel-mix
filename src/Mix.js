@@ -13,6 +13,7 @@ class Mix {
         this.manifest = new Manifest();
         this.dispatcher = new Dispatcher();
         this.tasks = [];
+        this.bundlingJavaScript = false;
         this.components = new Components();
     }
 
