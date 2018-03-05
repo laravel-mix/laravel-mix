@@ -96,3 +96,6 @@ class Example {
         // Example:
         // return { presets: ['react'] };
 }
+
+// Usage:
+// mix.extend('example', new Example());
