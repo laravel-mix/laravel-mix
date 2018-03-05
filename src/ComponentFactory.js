@@ -89,6 +89,13 @@ class ComponentFactory {
                 if (component.passive) {
                     mix[name]();
                 }
+
+                // Components can optionally write to the Mix API directly.
+                if (component.mix) {
+                    Object.keys(component.mix()).forEach(name => {
+                        mix[name] = component.mix()[name];
+                    });
+                }
             });
     }
 

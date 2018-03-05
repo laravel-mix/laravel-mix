@@ -206,3 +206,24 @@ test('components can be passive', t => {
 
     t.true(stub.called);
 });
+
+test('components can manually hook into the mix API', t => {
+    let component = new class {
+        mix() {
+            return {
+                foo: arg => {
+                    t.is('value', arg);
+                },
+
+                baz: arg => {
+                    t.is('anotherValue', arg);
+                }
+            };
+        }
+    }();
+
+    mix.extend('example', component);
+
+    mix.foo('value');
+    mix.baz('anotherValue');
+});
