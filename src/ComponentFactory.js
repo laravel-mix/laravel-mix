@@ -13,6 +13,7 @@ let components = [
     'Preact',
     'React',
     'TypeScript',
+    'Combine',
     'Autoloading',
     'Versioning',
     'Extend',

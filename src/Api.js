@@ -1,87 +1,9 @@
 let Verify = require('./Verify');
 let CopyFilesTask = require('./tasks/CopyFilesTask');
-let ConcatFilesTask = require('./tasks/ConcatenateFilesTask');
 let webpack = require('webpack');
-let glob = require('glob');
-let _ = require('lodash');
 let path = require('path');
 
 class Api {
-    /**
-     * Combine a collection of files.
-     *
-     * @param {string|Array} src
-     * @param {string}       output
-     * @param {Boolean}      babel
-     */
-    combine(src, output = '', babel = false) {
-        output = new File(output);
-
-        Verify.combine(src, output);
-
-        if (typeof src === 'string' && File.find(src).isDirectory()) {
-            src = _.pull(
-                glob.sync(path.join(src, '**/*'), { nodir: true }),
-                output.relativePath()
-            );
-        }
-
-        let task = new ConcatFilesTask({ src, output, babel });
-
-        Mix.addTask(task);
-
-        return this;
-    }
-
-    /**
-     * Alias for this.Mix.combine().
-     *
-     * @param {string|Array} src
-     * @param {string}       output
-     */
-    scripts(src, output) {
-        return this.combine(src, output);
-    }
-
-    /**
-     * Identical to this.Mix.combine(), but includes Babel compilation.
-     *
-     * @param {string|Array} src
-     * @param {string}       output
-     */
-    babel(src, output) {
-        return this.combine(src, output, true);
-
-        return this;
-    }
-
-    /**
-     * Alias for this.Mix.combine().
-     *
-     * @param {string|Array} src
-     * @param {string}       output
-     */
-    styles(src, output) {
-        return this.combine(src, output);
-    }
-
-    /**
-     * Minify the provided file.
-     *
-     * @param {string|Array} src
-     */
-    minify(src) {
-        if (Array.isArray(src)) {
-            src.forEach(file => this.minify(file));
-
-            return this;
-        }
-
-        let output = src.replace(/\.([a-z]{2,})$/i, '.min.$1');
-
-        return this.combine(src, output);
-    }
-
     /**
      * Copy one or more files to a new location.
      *
