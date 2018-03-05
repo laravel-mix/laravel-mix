@@ -159,3 +159,22 @@ test('the fully constructed webpack config object is available for modification,
 
     t.true(new WebpackConfig().build().stats.hash);
 });
+
+test('prior Mix components can be overwritten', t => {
+    let component = {
+        register: sinon.spy()
+    };
+
+    mix.extend('foo', component);
+
+    let overridingComponent = {
+        register: sinon.spy()
+    };
+
+    mix.extend('foo', overridingComponent);
+
+    mix.foo();
+
+    t.true(component.register.notCalled);
+    t.true(overridingComponent.register.called);
+});
