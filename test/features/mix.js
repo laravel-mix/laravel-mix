@@ -156,7 +156,7 @@ test.cb.serial('it combines a folder of scripts', t => {
     });
 });
 
-test.cb.serial.only('it handles library autoloading', t => {
+test.cb.serial('it handles library autoloading', t => {
     mix.autoload({
         jquery: ['$', 'window.jQuery']
     });
