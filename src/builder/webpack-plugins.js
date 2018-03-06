@@ -40,13 +40,6 @@ module.exports = function() {
         plugins.push(new webpack.NamedModulesPlugin());
     }
 
-    // Add automatic CSS Purification support.
-    if (Mix.isUsing('purifyCss')) {
-        let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
-
-        plugins.push(CssPurifierPlugin.build());
-    }
-
     // Add some general Webpack loader options.
     plugins.push(
         new webpack.LoaderOptionsPlugin({

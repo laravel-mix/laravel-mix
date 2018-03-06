@@ -20,7 +20,8 @@ let components = [
     'Extend',
     'Extract',
     'Notifications',
-    'DisableNotifications'
+    'DisableNotifications',
+    'PurifyCss'
 ];
 
 class ComponentFactory {

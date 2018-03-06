@@ -1,10 +1,12 @@
 import test from 'ava';
 import index from '../src/index';
-import PurifyPaths from '../src/PurifyPaths';
+import PurifyCss from '../src/components/PurifyCss';
 import fs from 'fs-extra';
 
+let component = new PurifyCss();
+
 test('that it builds the purify file paths properly', t => {
-    let options = PurifyPaths.build({
+    let options = component.build({
         paths: ['foo.html']
     });
 
@@ -19,7 +21,7 @@ test('that it builds the purify file paths properly', t => {
     new File(stubs[1]).makeDirectories().write('bar');
 
     // If the user gives a regular expressions, we need to glob it.
-    options = PurifyPaths.build({
+    options = component.build({
         paths: [__dirname + '/stubs/*.html']
     });
 

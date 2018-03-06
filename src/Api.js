@@ -73,18 +73,6 @@ class Api {
      * @param {object} options
      */
     options(options) {
-        if (options.purifyCss) {
-            options.purifyCss = require('./PurifyPaths').build(
-                options.purifyCss
-            );
-
-            Verify.dependency(
-                'purifycss-webpack',
-                ['purifycss-webpack', 'purify-css'],
-                true // abortOnComplete
-            );
-        }
-
         Config.merge(options);
 
         return this;
