@@ -6,9 +6,11 @@ class PurifyCss {
     }
 
     dependencies() {
-        this.requiresReload = true;
+        if (Config.purifyCss) {
+            this.requiresReload = true;
 
-        return ['purifycss-webpack', 'purify-css'];
+            return ['purifycss-webpack', 'purify-css'];
+        }
     }
 
     boot() {
