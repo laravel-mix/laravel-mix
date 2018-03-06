@@ -107,7 +107,7 @@ test('mix.ts()', t => {
 });
 
 test('mix.browserSync()', t => {
-    let response = mix.browserSync('app.dev');
+    let response = mix.browserSync('app.test');
 
     t.is(mix, response);
 });

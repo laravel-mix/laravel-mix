@@ -54,7 +54,7 @@ npm run watch
 
 Laravel ships with a `./resources/assets/js/components/Example.vue` file. Give it a tweak, and wait for the OS notification, which signals that the compilation has completed. Great!
 
-> Tip: You may also use `mix.browserSync('myapp.dev')` to automatically reload the browser when any relevant file in your Laravel app is changed.
+> Tip: You may also use `mix.browserSync('myapp.test')` to automatically reload the browser when any relevant file in your Laravel app is changed.
 
 ### Step 5: Update Your View
 
