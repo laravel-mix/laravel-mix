@@ -15,6 +15,8 @@ class Mix {
         this.tasks = [];
         this.bundlingJavaScript = false;
         this.components = new Components();
+
+        this.listen("build", () => this.bundlingJavaScript = false);
     }
 
     /**
