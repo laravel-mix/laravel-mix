@@ -1,17 +1,15 @@
 import test from 'ava';
-import mockFs from 'mock-fs';
 import mix from '../src/index';
 import Manifest from '../src/Manifest';
+import fs from 'fs-extra';
 
-test.beforeEach(() => Mix.manifest = new Manifest());
-
+test.beforeEach(() => (Mix.manifest = new Manifest()));
 
 test('that it can fetch the underlying manifest object', t => {
     Mix.manifest.add('file/path.js');
 
     t.deepEqual({ '/file/path.js': '/file/path.js' }, Mix.manifest.get());
 });
-
 
 test('that it can get fetch a single versioned path from the underlying manifest', t => {
     Config.publicPath = 'public';
@@ -21,36 +19,40 @@ test('that it can get fetch a single versioned path from the underlying manifest
     t.is('public/file/path.js', Mix.manifest.get('file/path.js'));
 });
 
-
 test('it transforms the generated stats assets to the appropriate format', t => {
-    let stats = { assetsByChunkName: { '/js/app': [ '/js/app.js', 'css/app.css' ] } };
+    let stats = {
+        assetsByChunkName: { '/js/app': ['/js/app.js', 'css/app.css'] }
+    };
 
     Mix.manifest.transform(stats);
 
-    t.deepEqual({
-        '/js/app.js': '/js/app.js',
-        '/css/app.css': '/css/app.css'
-    }, Mix.manifest.get());
+    t.deepEqual(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/app.css': '/css/app.css'
+        },
+        Mix.manifest.get()
+    );
 });
-
 
 test('it can get the underlying manifest object', t => {
     t.deepEqual({}, Mix.manifest.get());
 });
 
-
 test('it knows the path to the underlying file', t => {
-    t.is(path.join(Config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
+    t.is(
+        path.join(Config.publicPath, 'mix-manifest.json'),
+        Mix.manifest.path()
+    );
 });
-
 
 test('it can be refreshed', t => {
     mix.setPublicPath(__dirname);
 
-    mockFs({
-        ['js/app.js']: 'var foo;',
-        [Mix.manifest.path()]: '{}'
-    });
+    new File(Mix.manifest.path()).write('{}');
+    new File(path.resolve(__dirname, 'js/app.js'))
+        .makeDirectories()
+        .write('var foo;');
 
     // The initial state of the manifest file should be an empty object.
     t.deepEqual({}, Mix.manifest.read());
@@ -61,7 +63,9 @@ test('it can be refreshed', t => {
     // Then the manifest file should be updated on the fs.
     t.deepEqual({ '/js/app.js': '/js/app.js' }, Mix.manifest.read());
 
-    mockFs.restore();
+    // Cleanup.
+    File.find(Mix.manifest.path()).delete();
+    fs.removeSync(path.resolve(__dirname, 'js'));
 });
 
 test('it sorts files on the underlying manifest object', t => {
@@ -72,5 +76,8 @@ test('it sorts files on the underlying manifest object', t => {
 
     let manifest = Mix.manifest.get();
 
-    t.is(['/path1.js', '/path2.js','/path3.js','/path4.js'].join(), Object.keys(manifest).join())
+    t.is(
+        ['/path1.js', '/path2.js', '/path3.js', '/path4.js'].join(),
+        Object.keys(manifest).join()
+    );
 });
