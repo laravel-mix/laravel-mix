@@ -41,6 +41,14 @@ class Example {
         // this.config = { proxy: arg };
     }
 
+    /**
+     * Boot the component. This method is triggered after the
+     * user's webpack.mix.js file has executed.
+     */
+    boot() {
+        // Example:
+        // if (Config.options.foo) {}
+    }
 
     /**
      * Append to the master Mix webpack entry object.
