@@ -1,3 +1,15 @@
+/**
+ * This file represents an example component interface
+ * for Mix. All new components can be "inserted" into
+ * Mix, like so:
+ *
+ * // webpack.mix.js
+ *
+ * mix.extend('foo', new Example());
+ *
+ * mix.foo();
+ */
+
 class Example {
     /**
      * The optional name to be used when called by Mix.
