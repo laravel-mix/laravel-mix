@@ -178,3 +178,72 @@ test('prior Mix components can be overwritten', t => {
     t.true(component.register.notCalled);
     t.true(overridingComponent.register.called);
 });
+
+test('components can be passive', t => {
+    let stub = sinon.spy();
+
+    let component = new class {
+        register() {
+            stub();
+        }
+    }();
+
+    mix.extend('example', component);
+
+    t.true(stub.notCalled);
+
+    component = new class {
+        constructor() {
+            this.passive = true;
+        }
+
+        register() {
+            stub();
+        }
+    }();
+
+    mix.extend('example', component);
+
+    t.true(stub.called);
+});
+
+test('components can manually hook into the mix API', t => {
+    let component = new class {
+        mix() {
+            return {
+                foo: arg => {
+                    t.is('value', arg);
+                },
+
+                baz: arg => {
+                    t.is('anotherValue', arg);
+                }
+            };
+        }
+    }();
+
+    mix.extend('example', component);
+
+    mix.foo('value');
+    mix.baz('anotherValue');
+});
+
+test('components can be booted, after the webpack.mix.js configuration file has processed', t => {
+    let stub = sinon.spy();
+
+    let component = new class {
+        boot() {
+            stub();
+        }
+    }();
+
+    mix.extend('example', component);
+
+    mix.example();
+
+    t.false(stub.called);
+
+    Mix.dispatch('init');
+
+    t.true(stub.called);
+});

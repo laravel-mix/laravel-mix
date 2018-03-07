@@ -13,10 +13,15 @@ let components = [
     'Preact',
     'React',
     'TypeScript',
+    'Combine',
+    'Copy',
     'Autoloading',
     'Versioning',
     'Extend',
-    'Extract'
+    'Extract',
+    'Notifications',
+    'DisableNotifications',
+    'PurifyCss'
 ];
 
 class ComponentFactory {
@@ -33,10 +38,11 @@ class ComponentFactory {
         this.registerComponent(component);
 
         Mix.listen('init', () => {
-            if (!component.activated) {
+            if (!component.activated && !component.passive) {
                 return;
             }
 
+            component.boot && component.boot();
             component.dependencies && this.installDependencies(component);
             component.babelConfig && this.applyBabelConfig(component);
 
@@ -72,12 +78,28 @@ class ComponentFactory {
                 mix[name] = (...args) => {
                     Mix.components.record(name, component);
 
-                    component.register(...args);
+                    component.caller = name;
+
+                    component.register && component.register(...args);
 
                     component.activated = true;
 
                     return mix;
                 };
+
+                // If we're dealing with a passive component that doesn't
+                // need to be explicitly triggered by the user, we'll
+                // call it now.
+                if (component.passive) {
+                    mix[name]();
+                }
+
+                // Components can optionally write to the Mix API directly.
+                if (component.mix) {
+                    Object.keys(component.mix()).forEach(name => {
+                        mix[name] = component.mix()[name];
+                    });
+                }
             });
     }
 

@@ -9,8 +9,9 @@ class Browsersync {
         return ['browser-sync-webpack-plugin', 'browser-sync'];
     }
 
-    register(config) {
-        this.config = typeof config == 'string' ? { proxy: config } : config;
+    register(userConfig) {
+        this.userConfig =
+            typeof userConfig == 'string' ? { proxy: userConfig } : userConfig;
     }
 
     webpackPlugins() {
@@ -40,7 +41,7 @@ class Browsersync {
                     }
                 }
             },
-            this.config
+            this.userConfig
         );
     }
 }

@@ -13,7 +13,7 @@ module.exports = function() {
     // If the user didn't declare any JS compilation, we still need to
     // use a temporary script to force a compile. This plugin will
     // handle the process of deleting the compiled script.
-    if (! Mix.bundlingJavaScript) {
+    if (!Mix.bundlingJavaScript) {
         plugins.push(new MockEntryPlugin());
     }
 
@@ -36,30 +36,8 @@ module.exports = function() {
         })
     );
 
-    if (! Mix.components.get('version') && Mix.isUsing('hmr')) {
+    if (!Mix.components.get('version') && Mix.isUsing('hmr')) {
         plugins.push(new webpack.NamedModulesPlugin());
-    }
-
-    // Add automatic CSS Purification support.
-    if (Mix.isUsing('purifyCss')) {
-        let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
-
-        plugins.push(CssPurifierPlugin.build());
-    }
-
-    // Activate OS notifications for each compile.
-    if (Mix.isUsing('notifications')) {
-        let WebpackNotifierPlugin = require('webpack-notifier');
-
-        plugins.push(
-            new WebpackNotifierPlugin({
-                title: 'Laravel Mix',
-                alwaysNotify: Config.notifications.onSuccess,
-                contentImage: Mix.paths.root(
-                    'node_modules/laravel-mix/icons/laravel.png'
-                )
-            })
-        );
     }
 
     // Add some general Webpack loader options.

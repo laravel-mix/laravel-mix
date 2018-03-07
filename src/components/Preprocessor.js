@@ -4,6 +4,8 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 class Preprocessor {
     webpackEntry(entry) {
         this.details.forEach(detail => {
+            if (detail.type === 'fastsass') return;
+
             entry.add(entry.keys()[0], detail.src.path());
         });
     }
@@ -12,6 +14,8 @@ class Preprocessor {
         let rules = [];
 
         this.details.forEach(preprocessor => {
+            if (preprocessor.type === 'fastsass') return;
+
             let outputPath = preprocessor.output.filePath
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');

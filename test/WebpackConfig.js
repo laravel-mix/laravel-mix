@@ -8,7 +8,7 @@ import ComponentFactory from '../src/ComponentFactory';
 test.beforeEach(t => {
     Config = defaultConfig();
 
-    Mix.dispatcher.events = {};
+    global.Mix = new (require('../src/Mix'))();
 
     Config.publicPath = 'public';
 
@@ -106,7 +106,7 @@ test('JS compilation with vendor extraction config', t => {
     );
 });
 
-test.serial('vendor extraction with no output and no requested JS compilation throws an error', t => {
+test('vendor extraction with no output and no requested JS compilation throws an error', t => {
     mix.extract(['vue']);
 
     Mix.dispatch('init');
@@ -182,7 +182,7 @@ test('TypeScript compilation', t => {
     t.is('vue/dist/vue.esm.js', webpackConfig.resolve.alias['vue$']);
 });
 
-test.serial('CSS compilation with no JS specified config.', t => {
+test('CSS compilation with no JS specified config.', t => {
     mix.sass('resources/assets/sass/sass.scss', 'public/css');
 
     Mix.dispatch('init');
