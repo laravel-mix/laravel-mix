@@ -15,7 +15,9 @@ class FastSass extends Preprocessor {
     webpackPlugins() {
         let FastSassPlugin = require('../webpackPlugins/FastSassPlugin');
 
-        return super.webpackPlugins().concat(new FastSassPlugin(this.details));
+        return (super.webpackPlugins() || []).concat(
+            new FastSassPlugin(this.details)
+        );
     }
 }
 
