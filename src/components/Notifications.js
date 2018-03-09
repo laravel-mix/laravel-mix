@@ -1,8 +1,6 @@
-class Notifications {
-    constructor() {
-        this.passive = true;
-    }
+let AutomaticComponent = require('./AutomaticComponent');
 
+class Notifications extends AutomaticComponent {
     webpackPlugins() {
         if (Mix.isUsing('notifications')) {
             let WebpackNotifierPlugin = require('webpack-notifier');

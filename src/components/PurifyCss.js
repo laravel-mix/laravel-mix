@@ -1,10 +1,7 @@
+let AutomaticComponent = require('./AutomaticComponent');
 let glob = require('glob');
 
-class PurifyCss {
-    constructor() {
-        this.passive = true;
-    }
-
+class PurifyCss extends AutomaticComponent {
     dependencies() {
         if (Config.purifyCss) {
             this.requiresReload = true;
