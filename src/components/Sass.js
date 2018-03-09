@@ -10,14 +10,6 @@ class Sass extends Preprocessor {
         );
     }
 
-    webpackRules() {
-        return super.webpackRules().concat({
-            test: /\.s[ac]ss$/,
-            exclude: this.details.map(sass => sass.src.path()),
-            loaders: ['style-loader', 'css-loader', 'sass-loader']
-        });
-    }
-
     pluginOptions(pluginOptions) {
         return Object.assign(
             {

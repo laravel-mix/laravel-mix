@@ -9,6 +9,7 @@ let components = [
     'Sass',
     'Stylus',
     'PostCss',
+    'Css',
     'Browsersync',
     'Preact',
     'React',

@@ -261,3 +261,45 @@ test('Autoprefixer should always be applied after all other postcss plugins', t 
 
     t.deepEqual(['postcss-custom-properties', 'autoprefixer'], plugins);
 });
+
+test('Generic Sass rules are applied', t => {
+    mix.js('resources/assets/js/app.js', 'js');
+
+    Mix.dispatch('init');
+
+    let config = new WebpackConfig().build();
+
+    t.truthy(
+        config.module.rules.find(rule => {
+            return rule.test.toString() === '/\\.s[ac]ss$/';
+        })
+    );
+});
+
+test('Generic Less rules are applied', t => {
+    mix.js('resources/assets/js/app.js', 'js');
+
+    Mix.dispatch('init');
+
+    let config = new WebpackConfig().build();
+
+    t.truthy(
+        config.module.rules.find(rule => {
+            return rule.test.toString() === '/\\.less$/';
+        })
+    );
+});
+
+test('Generic CSS rules are applied', t => {
+    mix.js('resources/assets/js/app.js', 'js');
+
+    Mix.dispatch('init');
+
+    let config = new WebpackConfig().build();
+
+    t.truthy(
+        config.module.rules.find(rule => {
+            return rule.test.toString() === '/\\.css$/';
+        })
+    );
+});

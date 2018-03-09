@@ -1,12 +1,6 @@
 module.exports = function() {
     let rules = [];
 
-    // CSS Compilation.
-    rules.push({
-        test: /\.css$/,
-        loaders: ['style-loader', 'css-loader']
-    });
-
     // Add support for loading HTML files.
     rules.push({
         test: /\.html$/,
