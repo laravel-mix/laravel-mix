@@ -16,7 +16,7 @@ let components = [
     'TypeScript',
     'Combine',
     'Copy',
-    'Autoloading',
+    'Autoload',
     'Versioning',
     'Extend',
     'Extract',

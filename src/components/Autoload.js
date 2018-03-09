@@ -1,8 +1,4 @@
-class Autoloading {
-    name() {
-        return 'autoload';
-    }
-
+class Autoload {
     register(libs) {
         let aliases = {};
 
@@ -22,4 +18,4 @@ class Autoloading {
     }
 }
 
-module.exports = Autoloading;
+module.exports = Autoload;
