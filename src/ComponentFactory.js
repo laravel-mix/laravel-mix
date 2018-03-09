@@ -17,7 +17,7 @@ let components = [
     'Combine',
     'Copy',
     'Autoload',
-    'Versioning',
+    'Version',
     'Extend',
     'Extract',
     'Notifications',

@@ -3,11 +3,7 @@ let path = require('path');
 let webpack = require('webpack');
 let VersionFilesTask = require('../tasks/VersionFilesTask');
 
-class Versioning {
-    name() {
-        return 'version';
-    }
-
+class Version {
     register(files = []) {
         files = flatten(
             [].concat(files).map(filePath => {
@@ -41,4 +37,4 @@ class Versioning {
     }
 }
 
-module.exports = Versioning;
+module.exports = Version;
