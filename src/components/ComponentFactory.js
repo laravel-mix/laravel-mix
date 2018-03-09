@@ -1,5 +1,5 @@
-let mix = require('../src/index');
-let Verify = require('../src/Verify');
+let mix = require('../index');
+let Verify = require('../Verify');
 let webpackMerge = require('webpack-merge');
 
 let components = [
@@ -28,7 +28,7 @@ let components = [
 class ComponentFactory {
     installAll() {
         components
-            .map(name => require('../src/components/' + name))
+            .map(name => require(`./${name}`))
             .forEach(this.install.bind(this));
     }
 

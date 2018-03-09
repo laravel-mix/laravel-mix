@@ -1,4 +1,4 @@
-let ComponentFactory = require('../ComponentFactory');
+let ComponentFactory = require('./ComponentFactory');
 
 class Extend {
     register(name, component) {

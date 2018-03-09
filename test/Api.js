@@ -2,7 +2,7 @@ import test from 'ava';
 import path from 'path';
 import mix from '../src/index';
 import mockFs from 'mock-fs';
-import ComponentFactory from '../src/ComponentFactory';
+import ComponentFactory from '../src/components/ComponentFactory';
 
 test.beforeEach(t => {
     Config = require('../src/config')();

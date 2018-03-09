@@ -2,7 +2,7 @@ import test from 'ava';
 import mix from '../../src/index';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
-import ComponentFactory from '../../src/ComponentFactory';
+import ComponentFactory from '../../src/components/ComponentFactory';
 
 new ComponentFactory().installAll();
 

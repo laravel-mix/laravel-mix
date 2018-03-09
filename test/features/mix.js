@@ -3,7 +3,7 @@ import mix from '../../src/index';
 import webpack from 'webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import fs from 'fs-extra';
-import ComponentFactory from '../../src/ComponentFactory';
+import ComponentFactory from '../../src/components/ComponentFactory';
 
 test.beforeEach(t => {
     // Reset state.

@@ -3,7 +3,7 @@ import path from 'path';
 import mix from '../src/index';
 import WebpackConfig from '../src/builder/WebpackConfig';
 import defaultConfig from '../src/config';
-import ComponentFactory from '../src/ComponentFactory';
+import ComponentFactory from '../src/components/ComponentFactory';
 
 test.beforeEach(t => {
     Config = defaultConfig();
