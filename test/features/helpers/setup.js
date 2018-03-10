@@ -49,7 +49,7 @@ global.readManifest = () => {
 global.assertManifestIs = (expected, t) => {
     let manifest = readManifest();
 
-    t.deepEqual(Object.keys(manifest), Object.keys(expected));
+    t.deepEqual(Object.keys(manifest).sort(), Object.keys(expected).sort());
 
     Object.keys(expected).forEach(key => {
         t.true(new RegExp(expected[key]).test(manifest[key]));
