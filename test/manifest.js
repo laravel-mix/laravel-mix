@@ -21,7 +21,10 @@ test('that it can get fetch a single versioned path from the underlying manifest
 
 test('it transforms the generated stats assets to the appropriate format', t => {
     let stats = {
-        assetsByChunkName: { '/js/app': ['/js/app.js', 'css/app.css'] }
+        assets: [
+            { name: '/js/app.js', chunkNames: []},
+            { name: '/css/app.css', chunkNames: []},
+        ],
     };
 
     Mix.manifest.transform(stats);
