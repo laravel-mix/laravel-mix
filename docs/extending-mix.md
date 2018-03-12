@@ -29,7 +29,7 @@ mix.extend('foo', new class {
 
     webpackRules() {}
 
-    webpackPlugins {}
+    webpackPlugins() {}
 
     // ...
 });
