@@ -115,6 +115,7 @@ class Example {
     babelConfig() {
         // Example:
         // return { presets: ['react'] };
+    }
 }
 
 // Usage:
