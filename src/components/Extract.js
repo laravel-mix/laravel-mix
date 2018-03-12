@@ -28,7 +28,11 @@ class Extract {
     webpackEntry(entry) {
         this.entry = entry
 
-        this.extractions.forEach(extraction => this.entry.addExtraction(extraction))
+        this.extractions.forEach(extraction => {
+            extraction.output = this.extractionPath(extraction.output)
+
+            this.entry.addExtraction(extraction)
+        })
     }
 
     webpackConfig(config) {
@@ -69,7 +73,7 @@ class Extract {
 
         return {
             test: pattern,
-            name: this.extractionPath(extraction.output),
+            name: extraction.output,
             chunks: "all",
             enforce: true,
         }
