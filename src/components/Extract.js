@@ -69,15 +69,15 @@ class Extract {
 
         return {
             test: pattern,
-            name: this.extractionPath(extraction),
+            name: this.extractionPath(extraction.output),
             chunks: "all",
             enforce: true,
         }
     }
 
-    extractionPath(extraction) {
-        if (extraction.output) {
-            return new File(extraction.output)
+    extractionPath(outputPath) {
+        if (outputPath) {
+            return new File(outputPath)
                 .pathFromPublic(Config.publicPath)
                 .replace(/\.js$/, '')
                 .replace(/\\/g, '/')
