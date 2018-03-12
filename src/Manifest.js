@@ -104,14 +104,17 @@ class Manifest {
      * @param {Object} stats
      */
     flattenAssets(stats) {
-        let assets = Object.assign({}, stats.assetsByChunkName);
+        let assets = stats.assets
 
-        // If there's a temporary mix.js chunk, we can safely remove it.
-        if (assets.mix) {
-            assets.mix = without(assets.mix, 'mix.js');
-        }
+        assets = assets.filter(asset => {
+            return ! (
+                asset.name === "mix.js" && asset.chunkNames.includes("mix")
+            )
+        })
 
-        return flatten(assets);
+        assets = assets.map(asset => asset.name)
+
+        return assets
     }
 
     /**
