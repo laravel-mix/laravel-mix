@@ -7,8 +7,8 @@ test.serial('JS compilation with vendor extraction config', t => {
 
     t.deepEqual(
         {
-            '': ['vue'],
             '/js/app': [path.resolve('resources/assets/js/app.js')],
+            '/js/libraries': ['vue'],
         },
         buildConfig().entry
     );
@@ -30,8 +30,8 @@ test.serial('JS compilation with vendor extraction with default config', t => {
 
     t.deepEqual(
         {
-            '': ['vue'],
             '/js/app': [path.resolve('resources/assets/js/app.js')],
+            '/js/vendor': ['vue'],
         },
         buildConfig().entry
     );
