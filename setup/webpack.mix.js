@@ -16,7 +16,9 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 // Full API
 // mix.js(src, output);
 // mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.
-// mix.ts(src, output); <-- Requires tsconfig.json to exist in the same folder as webpack.mix.js
+// mix.preact(src, output); <-- Identical to mix.js(), but registers Preact compilation.
+// mix.coffee(src, output); <-- Identical to mix.js(), but registers CoffeeScript compilation.
+// mix.ts(src, output); <-- TypeScript support. Requires tsconfig.json to exist in the same folder as webpack.mix.js
 // mix.extract(vendorLibs);
 // mix.sass(src, output);
 // mix.standaloneSass('src', output); <-- Faster, but isolated from Webpack.
