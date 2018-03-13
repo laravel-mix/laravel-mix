@@ -123,22 +123,6 @@ mix.autoload({
 });
 ```
 
-### How might I manually add CoffeeScript compilation?
-
-Very easily! Most of the time, you only need to research the necessary steps for adding X to webpack, and then reference those instructions within the `mix.webpackConfig()` method of your `webpack.mix.js` file. The object you provide to this method will be merged with Mix's default config.
-
-Here's how you might add CoffeeScript support.
-
-```js
-// npm install coffee-loader coffee-script
-
-mix.js('resources/assets/js/app.coffee', 'public/js').webpackConfig({
-  module: {
-    rules: [{ test: /\.coffee$/, loader: 'coffee-loader' }]
-  }
-});
-```
-
 ### Why am I seeing a "Vue packages version mismatch" error?
 
 If, upon updating your dependencies, your compile fails with the message:

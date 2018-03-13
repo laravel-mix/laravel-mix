@@ -13,6 +13,7 @@ let components = [
     'Browsersync',
     'Preact',
     'React',
+    'Coffee',
     'TypeScript',
     'Combine',
     'Copy',
