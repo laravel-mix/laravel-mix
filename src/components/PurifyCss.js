@@ -2,6 +2,9 @@ let AutomaticComponent = require('./AutomaticComponent');
 let glob = require('glob');
 
 class PurifyCss extends AutomaticComponent {
+    /**
+     * Required dependencies for the component.
+     */
     dependencies() {
         if (Config.purifyCss) {
             this.requiresReload = true;
@@ -10,12 +13,18 @@ class PurifyCss extends AutomaticComponent {
         }
     }
 
+    /**
+     * Boot the component.
+     */
     boot() {
         if (Config.purifyCss) {
             Config.purifyCss = this.build(Config.purifyCss);
         }
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         if (Config.purifyCss) {
             let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
@@ -24,6 +33,11 @@ class PurifyCss extends AutomaticComponent {
         }
     }
 
+    /**
+     * Build the CSSPurifier plugin options.
+     *
+     * @param {Object} options
+     */
     build(options) {
         if (typeof options === 'object' && options.paths) {
             let paths = options.paths;

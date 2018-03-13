@@ -1,25 +1,42 @@
 class Browsersync {
+    /**
+     * The API name for the component.
+     */
     name() {
         return 'browserSync';
     }
 
+    /**
+     * Required dependencies for the component.
+     */
     dependencies() {
         this.requiresReload = true;
 
         return ['browser-sync-webpack-plugin', 'browser-sync'];
     }
 
+    /**
+     * Register the component.
+     *
+     * @param {Object} userConfig
+     */
     register(userConfig) {
         this.userConfig =
             typeof userConfig == 'string' ? { proxy: userConfig } : userConfig;
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
         return new BrowserSyncPlugin(this.config(), { reload: false });
     }
 
+    /**
+     * Build the BrowserSync configuration.
+     */
     config() {
         return Object.assign(
             {

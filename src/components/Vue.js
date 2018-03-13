@@ -1,12 +1,18 @@
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Vue {
+    /**
+     * Required dependencies for the component.
+     */
     dependencies() {
         if (Config.extractVueStyles && Config.globalVueStyles) {
             return ['sass-resources-loader']; // Required for importing global styles into every component.
         }
     }
 
+    /**
+     * webpack rules to be appended to the master config.
+     */
     webpackRules() {
         let vueLoaderOptions = this.vueLoaderOptions();
 
@@ -18,10 +24,16 @@ class Vue {
         };
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         return this.extractPlugin;
     }
 
+    /**
+     * vue-loader-specific options.
+     */
     vueLoaderOptions() {
         if (Config.extractVueStyles) {
             let fileName =

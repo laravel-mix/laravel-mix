@@ -27,12 +27,20 @@ let components = [
 ];
 
 class ComponentFactory {
+    /**
+     * Install all default components.
+     */
     installAll() {
         components
             .map(name => require(`./${name}`))
             .forEach(this.install.bind(this));
     }
 
+    /**
+     * Install a component.
+     *
+     * @param {Component} Component
+     */
     install(Component) {
         let component =
             typeof Component === 'function' ? new Component() : Component;
@@ -69,6 +77,11 @@ class ComponentFactory {
         });
     }
 
+    /**
+     * Register the component.
+     *
+     * @param {Object} component
+     */
     registerComponent(component) {
         []
             .concat(
@@ -105,6 +118,11 @@ class ComponentFactory {
             });
     }
 
+    /**
+     * Install the component's dependencies.
+     *
+     * @param {Object} component
+     */
     installDependencies(component) {
         []
             .concat(component.dependencies())
@@ -114,6 +132,12 @@ class ComponentFactory {
             );
     }
 
+    /**
+     *
+     * Apply the Babel configuration for the component.
+     *
+     * @param {Object} component
+     */
     applyBabelConfig(component) {
         Config.babelConfig = webpackMerge.smart(
             Config.babelConfig,
@@ -121,12 +145,24 @@ class ComponentFactory {
         );
     }
 
+    /**
+     *
+     * Apply the webpack rules for the component.
+     *
+     * @param {Object} component
+     */
     applyRules(rules, component) {
         tap(component.webpackRules(), newRules => {
             newRules && rules.push(...[].concat(newRules));
         });
     }
 
+    /**
+     *
+     * Apply the webpack plugins for the component.
+     *
+     * @param {Object} component
+     */
     applyPlugins(plugins, component) {
         tap(component.webpackPlugins(), newPlugins => {
             newPlugins && plugins.push(...[].concat(newPlugins));

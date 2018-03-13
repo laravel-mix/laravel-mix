@@ -4,10 +4,21 @@ let _ = require('lodash');
 let glob = require('glob');
 
 class Combine {
+    /**
+     * The API name for the component.
+     */
     name() {
         return ['combine', 'scripts', 'babel', 'styles', 'minify'];
     }
 
+    /**
+     *
+     * Register the component.
+     *
+     * @param {*} src
+     * @param {string} output
+     * @param {Boolean} babel
+     */
     register(src, output = '', babel = false) {
         if (this.caller === 'babel') {
             babel = true;

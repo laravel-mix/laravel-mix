@@ -1,4 +1,10 @@
 class Autoload {
+    /**
+     * Register the component.
+     *
+     * @param  {Object} libs
+     * @return {void}
+     */
     register(libs) {
         let aliases = {};
 
@@ -11,6 +17,9 @@ class Autoload {
         this.aliases = aliases;
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         let webpack = require('webpack');
 

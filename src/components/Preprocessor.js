@@ -2,6 +2,11 @@ let Verify = require('../Verify');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Preprocessor {
+    /**
+     * Assets to append to the webpack entry.
+     *
+     * @param {Entry} entry
+     */
     webpackEntry(entry) {
         this.details.forEach(detail => {
             if (detail.type === 'fastsass') return;
@@ -10,6 +15,9 @@ class Preprocessor {
         });
     }
 
+    /**
+     * webpack rules to be appended to the master config.
+     */
     webpackRules() {
         let rules = [];
 
@@ -107,6 +115,9 @@ class Preprocessor {
         return rules;
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         return this.extractPlugins;
     }

@@ -2,10 +2,20 @@ let Verify = require('../Verify');
 let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {
+    /**
+     * The API name for the component.
+     */
     name() {
         return 'postCss';
     }
 
+    /**
+     * Register the component.
+     *
+     * @param {*} src
+     * @param {string} output
+     * @param {Array} postCssPlugins
+     */
     register(src, output, postCssPlugins = []) {
         Verify.preprocessor('postCss', src, output);
 
@@ -24,6 +34,11 @@ class PostCss extends Preprocessor {
         });
     }
 
+    /**
+     * Override the generated webpack configuration.
+     *
+     * @param {Object} config
+     */
     webpackConfig(config) {
         config.module.rules.find(
             rule => rule.test.toString() === '/\\.css$/'

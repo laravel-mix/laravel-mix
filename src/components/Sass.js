@@ -1,6 +1,13 @@
 let Preprocessor = require('./Preprocessor');
 
 class Sass extends Preprocessor {
+    /**
+     * Register the component.
+     *
+     * @param {*} src
+     * @param {string} output
+     * @param {Object} pluginOptions
+     */
     register(src, output, pluginOptions = {}) {
         return this.preprocess(
             'sass',
@@ -10,6 +17,12 @@ class Sass extends Preprocessor {
         );
     }
 
+    /**
+     * Build the plugin options for sass-loader.
+     *
+     * @param {Object} pluginOptions
+     * @returns {Object}
+     */
     pluginOptions(pluginOptions) {
         return Object.assign(
             {

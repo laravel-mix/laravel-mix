@@ -9,16 +9,28 @@ class JavaScript {
         this.toCompile = [];
     }
 
+    /**
+     * The API name for the component.
+     */
     name() {
         let name = this.constructor.name.toLowerCase();
 
         return name === 'javascript' ? ['js', 'vue'] : name;
     }
 
+    /**
+     * Required dependencies for the component.
+     */
     dependencies() {
         return this.vue.dependencies();
     }
 
+    /**
+     * Register the component.
+     *
+     * @param {*} entry
+     * @param {string} output
+     */
     register(entry, output) {
         if (typeof entry === 'string' && entry.includes('*')) {
             entry = glob.sync(entry);
@@ -31,9 +43,14 @@ class JavaScript {
 
         this.toCompile.push({ entry, output });
 
-         Mix.bundlingJavaScript = true;
+        Mix.bundlingJavaScript = true;
     }
 
+    /**
+     * Assets to append to the webpack entry.
+     *
+     * @param {Entry} entry
+     */
     webpackEntry(entry) {
         this.toCompile.forEach(js => {
             entry.addFromOutput(
@@ -44,6 +61,9 @@ class JavaScript {
         });
     }
 
+    /**
+     * webpack rules to be appended to the master config.
+     */
     webpackRules() {
         return [
             {
@@ -59,6 +79,9 @@ class JavaScript {
         ].concat(this.vue.webpackRules());
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         return this.vue.webpackPlugins();
     }

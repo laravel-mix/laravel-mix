@@ -4,6 +4,11 @@ let webpack = require('webpack');
 let VersionFilesTask = require('../tasks/VersionFilesTask');
 
 class Version {
+    /**
+     * Register the component.
+     *
+     * @param {Array} files
+     */
     register(files = []) {
         files = flatten(
             [].concat(files).map(filePath => {
@@ -23,6 +28,9 @@ class Version {
         Mix.addTask(new VersionFilesTask({ files }));
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         let WebpackChunkHashPlugin = require('webpack-chunk-hash');
 

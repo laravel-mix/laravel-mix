@@ -1,6 +1,9 @@
 let AutomaticComponent = require('./AutomaticComponent');
 
 class Css extends AutomaticComponent {
+    /**
+     * webpack rules to be appended to the master config.
+     */
     webpackRules() {
         return [
             {
@@ -22,6 +25,11 @@ class Css extends AutomaticComponent {
         ];
     }
 
+    /**
+     * Paths to be excluded from the loader.
+     *
+     * @param {string} preprocessor
+     */
     excludePathsFor(preprocessor) {
         let exclusions = Mix.components.get(preprocessor);
 

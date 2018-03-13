@@ -1,14 +1,28 @@
 let webpack = require('webpack');
 
 class Extract {
+    /**
+     * Create a new component instance.
+     */
     constructor() {
         this.extractions = [];
     }
 
+    /**
+     * Register the component.
+     *
+     * @param {*} libs
+     * @param {string} output
+     */
     register(libs, output) {
         this.extractions.push({ libs, output });
     }
 
+    /**
+     * Assets to append to the webpack entry.
+     *
+     * @param {Entry} entry
+     */
     webpackEntry(entry) {
         this.extractions = this.extractions.map(
             entry.addExtraction.bind(entry)
@@ -23,6 +37,9 @@ class Extract {
         }
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
         // If we're extracting any vendor libraries, then we
         // need to add the CommonChunksPlugin to strip out
