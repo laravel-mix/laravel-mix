@@ -1,8 +1,7 @@
 {
   "name": "laravel-mix",
-  "version": "2.0.0",
-  "description":
-    "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
+  "version": "2.1.0",
+  "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
   "main": "src/index.js",
   "scripts": {
     "webpack": "NODE_ENV=development webpack --progress --hide-modules",
@@ -17,10 +16,19 @@
     "url": "https://github.com/JeffreyWay/laravel-mix/issues"
   },
   "homepage": "https://github.com/JeffreyWay/laravel-mix#readme",
-  "keywords": ["laravel", "webpack", "laravel elixir", "laravel mix"],
+  "keywords": [
+    "laravel",
+    "webpack",
+    "laravel elixir",
+    "laravel mix"
+  ],
   "author": "Jeffrey Way",
   "license": "MIT",
-  "files": ["icons", "setup", "src"],
+  "files": [
+    "icons",
+    "setup",
+    "src"
+  ],
   "dependencies": {
     "autoprefixer": "^7.2.6",
     "babel-core": "^6.24.1",
