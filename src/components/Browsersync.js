@@ -25,7 +25,7 @@ class Browsersync {
             {
                 host: 'localhost',
                 port: 3000,
-                proxy: 'app.dev',
+                proxy: 'app.test',
                 files: [
                     'app/**/*.php',
                     'resources/views/**/*.php',

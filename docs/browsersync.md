@@ -1,19 +1,19 @@
 # BrowserSync
 
 ```js
-mix.browserSync('my-site.dev');
+mix.browserSync('my-site.test');
 ```
 
 BrowserSync will automatically monitor your files for changes, and insert your changes into the browser - all without requiring a manual refresh. You may enable support by calling the `mix.browserSync()` method, like so:
 
 ```js
-mix.browserSync('my-domain.dev');
+mix.browserSync('my-domain.test');
 
 // Or:
 
 // https://browsersync.io/docs/options/
 mix.browserSync({
-    proxy: 'my-domain.dev'
+    proxy: 'my-domain.test'
 })
 ```
 
