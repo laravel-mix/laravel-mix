@@ -23,7 +23,7 @@ test.serial(
             {
                 'vendor': ['vue'],
                 'mix': [
-                    "/Users/jordanpittman/Code/Projects/laravel-mix/src/builder/mock-entry.js",
+                    path.resolve(__dirname, '../../src/builder/mock-entry.js'),
                 ],
             },
             buildConfig().entry
