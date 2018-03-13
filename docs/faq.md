@@ -6,7 +6,7 @@ No. It has a few optimizations for Laravel, but it can be used for any project.
 
 ### My code isn't being minified.
 
-Minification will only be performed, when your `NODE_ENV` is set to *production*. Not only will this speed up your compilation time, but it's also unnecessary during development. Here's an example of running webpack for production.
+Minification will only be performed, when your `NODE_ENV` is set to _production_. Not only will this speed up your compilation time, but it's also unnecessary during development. Here's an example of running webpack for production.
 
 ```bash
 export NODE_ENV=production && webpack --progress --hide-modules
@@ -23,14 +23,12 @@ It's highly recommended that you add the following NPM scripts to your `package.
   },
 ```
 
-
 ### I'm using a VM, and webpack isn't picking up my file changes.
 
 If you're running `npm run dev` through a VM, you may find that file changes are not picked up by webpack. If that's the case, there are two ways to resolve this:
 
-1. Configure webpack to **poll** the filesystem for changes *Note: Polling the filesystem is resource-intensive and will likely shorten battery life on the go.*
-2. **Forward** file change notifications to the VM by using something like [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify). *Note, this is a [Vagrant](https://www.vagrantup.com)-only plugin.*
-
+1. Configure webpack to **poll** the filesystem for changes _Note: Polling the filesystem is resource-intensive and will likely shorten battery life on the go._
+2. **Forward** file change notifications to the VM by using something like [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify). _Note, this is a [Vagrant](https://www.vagrantup.com)-only plugin._
 
 To **poll** the VM's filesystem, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
 
@@ -70,7 +68,7 @@ Let's imagine that you have a relative path to an asset that doesn't exist in yo
 
 ```css
 body {
-    background: url('../img/example.jpg');
+  background: url('../img/example.jpg');
 }
 ```
 
@@ -95,7 +93,6 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
 ```
 
 This is particularly useful for legacy projects where your folder structure is already exactly as you desire.
-
 
 ### My mix-manifest.json file shouldn't be in the project root.
 
@@ -123,7 +120,7 @@ While Laravel Mix automatically loads jQuery for you (exactly as the example abo
 mix.autoload({
   jquery: ['$', 'window.jQuery', 'jQuery'], // more than one
   moment: 'moment' // only one
-})
+});
 ```
 
 ### How might I manually add CoffeeScript compilation?
@@ -135,12 +132,32 @@ Here's how you might add CoffeeScript support.
 ```js
 // npm install coffee-loader coffee-script
 
-mix.js('resources/assets/js/app.coffee', 'public/js')
-   .webpackConfig({
-        module: {
-            rules: [
-                { test: /\.coffee$/, loader: 'coffee-loader' }
-            ]
-        }
-   });
+mix.js('resources/assets/js/app.coffee', 'public/js').webpackConfig({
+  module: {
+    rules: [{ test: /\.coffee$/, loader: 'coffee-loader' }]
+  }
+});
+```
 
+### Why am I seeing a "Vue packages version mismatch" error?
+
+If, upon updating your dependencies, your compile fails with the message:
+
+```
+Module build failed: Error:
+
+Vue packages version mismatch:
+
+* vue@2.5.13
+* vue-template-compiler@2.5.15
+```
+
+This means your `vue` and `vue-template-compiler` dependencies are out of sync. Per Vue's instructions, the version number for both of these dependencies must be identical. Update as needed to fix the problem:
+
+```
+npm update vue
+
+// or
+
+npm install vue@2.5.15
+```
