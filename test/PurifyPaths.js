@@ -5,6 +5,10 @@ import fs from 'fs-extra';
 
 let component = new PurifyCss();
 
+test.afterEach.always(t => {
+    fs.removeSync('test/stubs');
+});
+
 test('that it builds the purify file paths properly', t => {
     let options = component.build({
         paths: ['foo.html']
