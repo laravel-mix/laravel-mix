@@ -11,48 +11,36 @@ class Vue {
     }
 
     /**
-     * webpack rules to be appended to the master config.
+     * Override the generated webpack configuration.
+     *
+     * @param {Object} webpackConfig
      */
-    webpackRules() {
-        let vueLoaderOptions = this.vueLoaderOptions();
+    webpackConfig(config) {
+        let { vueLoaderOptions, extractPlugin } = this.vueLoaderOptions();
 
-        return {
+        config.module.rules.push({
             test: /\.vue$/,
             loader: 'vue-loader',
             exclude: /bower_components/,
             options: vueLoaderOptions
-        };
-    }
+        });
 
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        return this.extractPlugin;
+        config.plugins.push(extractPlugin);
     }
 
     /**
      * vue-loader-specific options.
      */
     vueLoaderOptions() {
+        let extractPlugin = this.extractPlugin();
+
         if (Config.extractVueStyles) {
-            let fileName =
-                typeof Config.extractVueStyles === 'string'
-                    ? Config.extractVueStyles
-                    : 'vue-styles.css';
-
-            let filePath = fileName
-                .replace(Config.publicPath, '')
-                .replace(/^\//, '');
-
-            this.extractPlugin = new ExtractTextPlugin(filePath);
-
-            var sassLoader = this.extractPlugin.extract({
+            var sassLoader = extractPlugin.extract({
                 use: 'css-loader!sass-loader?indentedSyntax',
                 fallback: 'vue-style-loader'
             });
 
-            var scssLoader = this.extractPlugin.extract({
+            var scssLoader = extractPlugin.extract({
                 use: 'css-loader!sass-loader',
                 fallback: 'vue-style-loader'
             });
@@ -74,7 +62,7 @@ class Vue {
             }
         }
 
-        return Object.assign(
+        let vueLoaderOptions = Object.assign(
             {
                 loaders: Config.extractVueStyles
                     ? {
@@ -87,18 +75,18 @@ class Vue {
 
                           sass: sassLoader,
 
-                          css: this.extractPlugin.extract({
+                          css: extractPlugin.extract({
                               use: 'css-loader',
                               fallback: 'vue-style-loader'
                           }),
 
-                          stylus: this.extractPlugin.extract({
+                          stylus: extractPlugin.extract({
                               use:
                                   'css-loader!stylus-loader?paths[]=node_modules',
                               fallback: 'vue-style-loader'
                           }),
 
-                          less: this.extractPlugin.extract({
+                          less: extractPlugin.extract({
                               use: 'css-loader!less-loader',
                               fallback: 'vue-style-loader'
                           })
@@ -113,6 +101,37 @@ class Vue {
             },
             Config.vue
         );
+
+        return { vueLoaderOptions, extractPlugin };
+    }
+
+    extractPlugin() {
+        if (typeof Config.extractVueStyles === 'string') {
+            return new ExtractTextPlugin(this.extractFilePath());
+        }
+
+        let preprocessorName = Object.keys(Mix.components.all())
+            .reverse()
+            .find(componentName => {
+                return ['sass', 'less', 'stylus', 'postCss'].includes(
+                    componentName
+                );
+            });
+
+        if (!preprocessorName) {
+            return new ExtractTextPlugin(this.extractFilePath());
+        }
+
+        return Mix.components.get(preprocessorName).extractPlugins.slice(-1)[0];
+    }
+
+    extractFilePath() {
+        let fileName =
+            typeof Config.extractVueStyles === 'string'
+                ? Config.extractVueStyles
+                : 'vue-styles.css';
+
+        return fileName.replace(Config.publicPath, '').replace(/^\//, '');
     }
 }
 

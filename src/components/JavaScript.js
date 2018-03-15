@@ -76,14 +76,16 @@ class JavaScript {
                     }
                 ]
             }
-        ].concat(this.vue.webpackRules());
+        ];
     }
 
     /**
-     * webpack plugins to be appended to the master config.
+     * Override the generated webpack configuration.
+     *
+     * @param {Object} webpackConfig
      */
-    webpackPlugins() {
-        return this.vue.webpackPlugins();
+    webpackConfig(webpackConfig) {
+        this.vue.webpackConfig(webpackConfig);
     }
 }
 

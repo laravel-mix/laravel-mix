@@ -34,25 +34,6 @@ test.cb.serial('it compiles JavaScript and Sass', t => {
     });
 });
 
-test.cb.serial('it extracts vue styles correctly', t => {
-    mix
-        .js(
-            'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
-            'js/app.js'
-        )
-        .sass(
-            'test/fixtures/fake-app/resources/assets/sass/app.scss',
-            'css/app.css'
-        )
-        .options({ extractVueStyles: 'css/components.css' });
-
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
-        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
-    });
-});
-
 test.serial('basic JS compilation config.', t => {
     mix.js('resources/assets/js/app.js', 'js');
 

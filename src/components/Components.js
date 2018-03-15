@@ -24,6 +24,13 @@ class Components {
     get(name) {
         return this.components[name];
     }
+
+    /**
+     * Retrieve all components.
+     */
+    all() {
+        return this.components;
+    }
 }
 
 module.exports = Components;
