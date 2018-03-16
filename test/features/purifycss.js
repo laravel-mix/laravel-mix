@@ -52,7 +52,9 @@ test.cb.serial('it purifies CSS with JS compilation', t => {
 });
 
 let createPurifyStubs = () => {
-    new File('test/fixtures/fake-app/resources/assets/less/app.less').write(`
+    new File(
+        'test/fixtures/fake-app/resources/assets/less/app.less'
+    ).makeDirectories().write(`
         .shouldStay {
             color: green;
         }
