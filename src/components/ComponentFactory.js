@@ -52,8 +52,8 @@ class ComponentFactory {
                 return;
             }
 
-            component.boot && component.boot();
             component.dependencies && this.installDependencies(component);
+            component.boot && component.boot();
             component.babelConfig && this.applyBabelConfig(component);
 
             Mix.listen('loading-entry', entry => {
