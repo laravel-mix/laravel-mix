@@ -57,6 +57,8 @@ Laravel Mix is mildly opinionated, and ships with compilation support for `.vue`
 
 Single file components are one of Vue's neatest features. One file to declare the template, script, and styling for a component? Yes, please! Let's try it out.
 
+As per `vue-loader` v14 release, `CommonJS` or `require()` support is removed. Users are recommended to use ESM for future release of `vue-loader`.
+
 ##### ./resources/assets/js/app.js
 
 ```js
