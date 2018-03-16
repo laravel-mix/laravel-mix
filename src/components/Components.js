@@ -26,6 +26,13 @@ class Components {
     }
 
     /**
+     * Determine if the given component name has been registered.
+     */
+    has(name) {
+        return this.components.hasOwnProperty(name);
+    }
+
+    /**
      * Retrieve all components.
      */
     all() {
