@@ -69,6 +69,8 @@
   },
   "devDependencies": {
     "ava": "^0.19.1",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.2.3",
     "less": "^3.0.1",
     "less-loader": "^4.1.0",
     "mock-fs": "^4.3.0",
