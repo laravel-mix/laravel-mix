@@ -81,7 +81,7 @@
     "purifycss-webpack": "^0.7.0",
     "sass-resources-loader": "^1.3.3",
     "sinon": "^2.4.1",
-    "vue": "^2.5.13",
+    "vue": "^2.5.16",
     "vue-style-loader": "^4.0.2"
   },
   "engines": {
