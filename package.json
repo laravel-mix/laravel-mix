@@ -59,7 +59,7 @@
     "uglify-js": "^2.8.29",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "vue-loader": "^14.2.1",
-    "vue-template-compiler": "^2.5.13",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^3.11.0",
     "webpack-chunk-hash": "^0.4.0",
     "webpack-dev-server": "^2.11.1",
