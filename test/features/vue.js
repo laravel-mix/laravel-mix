@@ -15,7 +15,6 @@ test.serial('Custom vue-loader options may be specified', t => {
     t.true(vueOptions.camelCase);
     t.deepEqual({}, vueOptions.preLoaders);
     t.deepEqual({ stub: 'foo' }, vueOptions.postLoaders);
-    t.false(vueOptions.esModule);
 });
 
 test.cb.serial(
