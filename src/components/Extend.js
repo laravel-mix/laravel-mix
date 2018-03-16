@@ -8,13 +8,23 @@ class Extend {
      * @param {Component} component
      */
     register(name, component) {
-        if (typeof component === 'function') {
-            component = { webpackConfig: component };
+        if (typeof component !== 'function') {
+            component.name = () => name;
+
+            return new ComponentFactory().install(component);
         }
 
-        component.name = () => name;
+        new ComponentFactory().install({
+            name: () => name,
 
-        new ComponentFactory().install(component);
+            register(...args) {
+                this.args = args;
+            },
+
+            webpackConfig(config) {
+                component.call(this, config, ...this.args);
+            }
+        });
     }
 }
 

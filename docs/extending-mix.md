@@ -8,55 +8,59 @@ The very component-based system that Mix uses behind the scenes to build its API
 // webpack.mix.js;
 let mix = require('laravel-mix');
 
-mix.extend('foo', function(val) {
-    console.log('mix.foo() was called with ' + val);
+mix.extend('foo', function(webpackConfig, ...args) {
+    console.log(webpackConfig); // the compiled webpack configuration object.
+    console.log(args); // the values passed to mix.foo(); - ['some-value']
 });
 
 mix.js('src', 'output').foo('some-value');
 ```
 
-In the example above, we can see that `mix.extend()` accepts two parameters: the name that should be used when triggering your component, and a callback function or class that registers and organizes the necessary webpack logic.
+In the example above, we can see that `mix.extend()` accepts two parameters: the name that should be used when triggering your component, and a callback function or class that registers and organizes the necessary webpack logic. Behind the scenes, Mix will trigger this callback function once the underlying webpack configuration object has been constructed. This will give you a chance to insert or override any settings that are necessary.
 
 While a simple callback function may be useful for quick extensions, in most scenarios, you'll likely want to build a full component class, like so:
 
 ```js
-mix.extend('foo', new class {
-    register(val) {
-        console.log('mix.foo() was called with ' + val);
-    }
+mix.extend(
+    'foo',
+    new class {
+        register(val) {
+            console.log('mix.foo() was called with ' + val);
+        }
 
-    dependencies() {}
+        dependencies() {}
 
-    webpackRules() {}
+        webpackRules() {}
 
-    webpackPlugins() {}
+        webpackPlugins() {}
 
-    // ...
-});
+        // ...
+    }()
+);
 ```
 
 When extending Mix, you'll typically want to trigger a handful of instructions:
 
-1. Install _these_ dependencies.
-2. Add this rule/loader to webpack.
-3. Include this webpack plugin.
-4. Override this part of the webpack configuration entirely.
-5. Add this config to Babel.
-6. etc.
+1.  Install _these_ dependencies.
+2.  Add this rule/loader to webpack.
+3.  Include this webpack plugin.
+4.  Override this part of the webpack configuration entirely.
+5.  Add this config to Babel.
+6.  etc.
 
 Any of these operations are a cinch with Mix's component system.
 
 ### The Component Interface
 
-* **name**: What should be used as the method name, when calling the component. (Defaults to the class name.)
-* **dependencies**: List all npm dependencies that should be installed by Mix.
-* **register**: When your component is called, all user parameters will instantly be passed to this method.
-* **boot**: Boot the component. This method is triggered after the user's webpack.mix.js file has fully loaded.
-* **webpackEntry**: Append to the master Mix webpack entry object.
-* **webpackRules**: Rules to be merged with the master webpack loaders.
-* **webpackPlugins**: Plugins to be merged with the master webpack config.
-* **webpackConfig**: Override the generated webpack configuration.
-* **babelConfig**: Extra Babel config that should be merged with Mix's defaults.
+*   **name**: What should be used as the method name, when calling the component. (Defaults to the class name.)
+*   **dependencies**: List all npm dependencies that should be installed by Mix.
+*   **register**: When your component is called, all user parameters will instantly be passed to this method.
+*   **boot**: Boot the component. This method is triggered after the user's webpack.mix.js file has fully loaded.
+*   **webpackEntry**: Append to the master Mix webpack entry object.
+*   **webpackRules**: Rules to be merged with the master webpack loaders.
+*   **webpackPlugins**: Plugins to be merged with the master webpack config.
+*   **webpackConfig**: Override the generated webpack configuration.
+*   **babelConfig**: Extra Babel config that should be merged with Mix's defaults.
 
 Here's an example/dummy component that will give you a better idea of how you'll construct your own components. For more examples, [refer to the very
 components that Mix uses behind the scenes](https://github.com/JeffreyWay/laravel-mix/tree/master/src/components).
