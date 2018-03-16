@@ -98,7 +98,11 @@ class Verify {
             installDependencies(name);
 
             if (abortOnComplete) {
-                console.log('Finished. Please run Mix again.');
+                console.log(
+                    typeof abortOnComplete === 'string'
+                        ? abortOnComplete
+                        : 'Finished. Please run Mix again.'
+                );
 
                 process.exit();
             }
