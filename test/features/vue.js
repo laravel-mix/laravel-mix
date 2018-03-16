@@ -122,3 +122,13 @@ test.cb.serial('it extracts vue styles to a dedicated file', t => {
         );
     });
 });
+
+test.serial('it does also add the vue webpack rules with typescript component', t => {
+    mix.ts('resources/assets/js/app.js', 'public/js');
+
+    t.truthy(
+        buildConfig().module.rules.find(
+            rule => rule.test.toString() === '/\\.vue$/'
+        )
+    );
+});
