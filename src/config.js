@@ -103,8 +103,7 @@ module.exports = function() {
          */
         vue: {
             preLoaders: {},
-            postLoaders: {},
-            esModule: false
+            postLoaders: {}
         },
 
         /**
