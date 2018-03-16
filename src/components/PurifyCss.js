@@ -14,22 +14,17 @@ class PurifyCss extends AutomaticComponent {
     }
 
     /**
-     * Boot the component.
+     * Override the generated webpack configuration.
+     *
+     * @param {Object} config
      */
-    boot() {
+    webpackConfig(config) {
         if (Config.purifyCss) {
             Config.purifyCss = this.build(Config.purifyCss);
-        }
-    }
 
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        if (Config.purifyCss) {
             let CssPurifierPlugin = require('../webpackPlugins/CssPurifierPlugin');
 
-            return CssPurifierPlugin.build();
+            config.plugins.push(CssPurifierPlugin.build());
         }
     }
 
