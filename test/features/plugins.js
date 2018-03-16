@@ -13,7 +13,11 @@ test('mix can be extended with new functionality as a callback', t => {
 
     mix.foobar();
 
-    t.true(registration.called);
+    Mix.dispatch('init');
+
+    let config = new WebpackConfig().build();
+
+    t.true(registration.calledWith(config));
 });
 
 test('mix can be extended with new functionality as a class', t => {

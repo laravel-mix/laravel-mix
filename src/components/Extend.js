@@ -9,7 +9,7 @@ class Extend {
      */
     register(name, component) {
         if (typeof component === 'function') {
-            component = { register: component };
+            component = { webpackConfig: component };
         }
 
         component.name = () => name;
