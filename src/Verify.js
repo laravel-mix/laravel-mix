@@ -88,7 +88,7 @@ class Verify {
         if (argv['$0'].includes('ava')) return;
 
         try {
-            require.resolve(name);
+            require.resolve(name.replace(/@.+$/, ''));
         } catch (e) {
             console.log(
                 'Additional dependencies must be installed. ' +

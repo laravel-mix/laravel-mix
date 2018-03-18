@@ -12,7 +12,7 @@ class Browsersync {
     dependencies() {
         this.requiresReload = true;
 
-        return ['browser-sync-webpack-plugin', 'browser-sync'];
+        return ['browser-sync-webpack-plugin@2.0.1', 'browser-sync'];
     }
 
     /**
