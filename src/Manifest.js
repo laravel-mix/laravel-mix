@@ -120,7 +120,7 @@ class Manifest {
      * @param {string} filePath
      */
     normalizePath(filePath) {
-        if (Config.publicPath && filePath.startsWith(Config.publicPath)) {
+        if (Config.publicPath && filePath.startsWith(Config.publicPath) && Config.publicPath.startsWith !== '.') {
             filePath = filePath.substring(Config.publicPath.length);
         }
         filePath = filePath.replace(/\\/g, '/');
