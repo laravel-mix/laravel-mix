@@ -36,7 +36,7 @@ test('mix can be extended with new functionality as a class', t => {
 test('dependencies can be requested for download', t => {
     let Verify = require('../../src/Verify');
 
-    Verify.dependency = sinon.spy();
+    Verify.dependencies = sinon.spy();
 
     mix.extend(
         'foobar',
@@ -53,7 +53,7 @@ test('dependencies can be requested for download', t => {
 
     Mix.dispatch('init');
 
-    t.true(Verify.dependency.calledWith('npm-package'));
+    t.true(Verify.dependencies.calledWith(['npm-package']));
 });
 
 test('webpack entry may be appended to', t => {
