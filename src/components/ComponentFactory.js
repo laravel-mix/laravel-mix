@@ -127,9 +127,9 @@ class ComponentFactory {
         []
             .concat(component.dependencies())
             .filter(dependency => dependency)
-            .forEach(dependency =>
-                Verify.dependency(dependency, component.requiresReload)
-            );
+            .tap(dependencies => {
+                Verify.dependencies(dependencies, !!component.requiresReload);
+            });
     }
 
     /**

@@ -78,6 +78,45 @@ class Verify {
     // }
 
     /**
+     * Verify that the necessary dependencies are available.
+     *
+     * @param {Array}  list
+     * @param {Boolean} abortOnComplete
+     */
+    static dependencies(list, abortOnComplete = false) {
+        if (argv['$0'].includes('ava')) return;
+
+        let requiresInstallation = false;
+
+        list.forEach(dependency => {
+            try {
+                require.resolve(dependency.replace(/@.+$/, ''));
+            } catch (e) {
+                if (!requiresInstallation) {
+                    requiresInstallation = true;
+
+                    console.log(
+                        'Additional dependencies must be installed. ' +
+                            'This will only take a moment.'
+                    );
+                }
+
+                installDependencies(dependency);
+            }
+        });
+
+        if (requiresInstallation && abortOnComplete) {
+            console.log(
+                typeof abortOnComplete === 'string'
+                    ? abortOnComplete
+                    : 'Finished. Please run Mix again.'
+            );
+
+            process.exit();
+        }
+    }
+
+    /**
      * Verify that the necessary dependency is available.
      *
      * @param {string}  name

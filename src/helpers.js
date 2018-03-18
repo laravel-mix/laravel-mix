@@ -13,6 +13,18 @@ global.tap = function(val, callback) {
 };
 
 /**
+ * Add tap to arrays.
+ *
+ * @param {mixed}    val
+ * @param {Function} callback
+ */
+Array.prototype.tap = function(callback) {
+    callback(this);
+
+    return this;
+};
+
+/**
  * Flatten the given array.
  *
  * @param {Array} arr
