@@ -96,11 +96,9 @@ class Verify {
                     return true;
                 }
             })
-            .tap(dependencies => {
-                if (dependencies.length) {
-                    installDependencies(dependencies, abortOnComplete);
-                }
-            });
+            .tap(dependencies =>
+                installDependencies(dependencies, abortOnComplete)
+            );
     }
 
     /**

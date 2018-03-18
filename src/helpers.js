@@ -19,7 +19,9 @@ global.tap = function(val, callback) {
  * @param {Function} callback
  */
 Array.prototype.tap = function(callback) {
-    callback(this);
+    if (this.length) {
+        callback(this);
+    }
 
     return this;
 };
