@@ -98,22 +98,7 @@ class Verify {
             })
             .tap(dependencies => {
                 if (dependencies.length) {
-                    console.log(
-                        'Additional dependencies must be installed. ' +
-                            'This will only take a moment.'
-                    );
-
-                    installDependencies(dependencies.join(' '));
-
-                    if (abortOnComplete) {
-                        console.log(
-                            typeof abortOnComplete === 'string'
-                                ? abortOnComplete
-                                : 'Finished. Please run Mix again.'
-                        );
-
-                        process.exit();
-                    }
+                    installDependencies(dependencies, abortOnComplete);
                 }
             });
     }
@@ -131,22 +116,7 @@ class Verify {
         try {
             require.resolve(name.replace(/@.+$/, ''));
         } catch (e) {
-            console.log(
-                'Additional dependencies must be installed. ' +
-                    'This will only take a moment.'
-            );
-
-            installDependencies(name);
-
-            if (abortOnComplete) {
-                console.log(
-                    typeof abortOnComplete === 'string'
-                        ? abortOnComplete
-                        : 'Finished. Please run Mix again.'
-                );
-
-                process.exit();
-            }
+            installDependencies(name, abortOnComplete);
         }
     }
 }
@@ -156,7 +126,16 @@ class Verify {
  *
  * @param {array} dependencies
  */
-let installDependencies = dependencies => {
+let installDependencies = (dependencies, abortOnComplete = false) => {
+    console.log(
+        'Additional dependencies must be installed. ' +
+            'This will only take a moment.'
+    );
+
+    if (Array.isArray(dependencies)) {
+        dependencies = dependencies.join(' ');
+    }
+
     let command = `npm install ${dependencies} --save-dev`;
 
     if (File.exists('yarn.lock')) {
@@ -164,6 +143,18 @@ let installDependencies = dependencies => {
     }
 
     exec(command);
+
+    if (abortOnComplete) abort(abortOnComplete);
+};
+
+let abort = message => {
+    console.log(
+        typeof message === 'string'
+            ? message
+            : 'Finished. Please run Mix again.'
+    );
+
+    process.exit();
 };
 
 module.exports = Verify;
