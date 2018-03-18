@@ -86,34 +86,36 @@ class Verify {
     static dependencies(list, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
-        let requiresInstallation = false;
+        list
+            .filter(dependency => {
+                try {
+                    require.resolve(dependency.replace(/@.+$/, ''));
 
-        list.forEach(dependency => {
-            try {
-                require.resolve(dependency.replace(/@.+$/, ''));
-            } catch (e) {
-                if (!requiresInstallation) {
-                    requiresInstallation = true;
-
+                    return false;
+                } catch (e) {
+                    return true;
+                }
+            })
+            .tap(dependencies => {
+                if (dependencies.length) {
                     console.log(
                         'Additional dependencies must be installed. ' +
                             'This will only take a moment.'
                     );
+
+                    installDependencies(dependencies.join(' '));
+
+                    if (abortOnComplete) {
+                        console.log(
+                            typeof abortOnComplete === 'string'
+                                ? abortOnComplete
+                                : 'Finished. Please run Mix again.'
+                        );
+
+                        process.exit();
+                    }
                 }
-
-                installDependencies(dependency);
-            }
-        });
-
-        if (requiresInstallation && abortOnComplete) {
-            console.log(
-                typeof abortOnComplete === 'string'
-                    ? abortOnComplete
-                    : 'Finished. Please run Mix again.'
-            );
-
-            process.exit();
-        }
+            });
     }
 
     /**
