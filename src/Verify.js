@@ -65,18 +65,6 @@ class Verify {
         );
     }
 
-    // /**
-    //  * Verify that the call to mix.extract() is valid.
-    //  *
-    //  * @param {Array} libs
-    //  */
-    // static extract(libs) {
-    //     assert(
-    //         libs && Array.isArray(libs),
-    //         'mix.extract() requires an array as its first parameter.'
-    //     );
-    // }
-
     /**
      * Verify that the necessary dependencies are available.
      *
