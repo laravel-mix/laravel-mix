@@ -87,14 +87,10 @@ class Verify {
         if (argv['$0'].includes('ava')) return;
 
         list
-            .filter(dependency => {
+            .reject(dependency => {
                 try {
-                    require.resolve(dependency.replace(/@.+$/, ''));
-
-                    return false;
-                } catch (e) {
-                    return true;
-                }
+                    return require.resolve(dependency.replace(/@.+$/, ''));
+                } catch (e) {}
             })
             .tap(dependencies =>
                 installDependencies(dependencies, abortOnComplete)

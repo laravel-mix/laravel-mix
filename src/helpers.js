@@ -13,6 +13,16 @@ global.tap = function(val, callback) {
 };
 
 /**
+ * Reject items from an array.
+ *
+ * @param {mixed}    val
+ * @param {Function} callback
+ */
+Array.prototype.reject = function(callback) {
+    return this.filter(item => !callback(item));
+};
+
+/**
  * Add tap to arrays.
  *
  * @param {mixed}    val
