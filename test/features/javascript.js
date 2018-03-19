@@ -51,7 +51,7 @@ test.serial('basic JS compilation config.', t => {
             path: path.resolve('test/fixtures/fake-app/public'),
             filename: '[name].js',
             chunkFilename: '[name].js',
-            publicPath: ''
+            publicPath: '/'
         },
         webpackConfig.output
     );
@@ -81,7 +81,7 @@ test.serial('basic JS compilation with a different public path', t => {
             path: path.resolve('public-html'),
             filename: '[name].js',
             chunkFilename: '[name].js',
-            publicPath: ''
+            publicPath: '/'
         },
         buildConfig().output
     );
