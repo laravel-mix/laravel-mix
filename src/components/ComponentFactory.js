@@ -4,6 +4,10 @@ let webpackMerge = require('webpack-merge');
 
 let components = [
     'JavaScript',
+    'Preact',
+    'React',
+    'Coffee',
+    'TypeScript',
     'FastSass',
     'Less',
     'Sass',
@@ -11,10 +15,6 @@ let components = [
     'PostCss',
     'Css',
     'Browsersync',
-    'Preact',
-    'React',
-    'Coffee',
-    'TypeScript',
     'Combine',
     'Copy',
     'Autoload',
