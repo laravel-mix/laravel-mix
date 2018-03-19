@@ -5,7 +5,7 @@ class Stylus extends Preprocessor {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['stylus-loader', 'stylus'];
+        return ['stylus', 'stylus-loader'];
     }
 
     /**
