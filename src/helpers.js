@@ -13,14 +13,32 @@ global.tap = function(val, callback) {
 };
 
 /**
+ * Add tap to arrays.
+ *
+ * @param {mixed}    val
+ * @param {Function} callback
+ */
+Object.defineProperty(Array.prototype, 'tap', {
+    value: function(callback) {
+        if (this.length) {
+            callback(this);
+        }
+        return this;
+    }
+});
+
+/**
  * Reject items from an array.
  *
  * @param {mixed}    val
  * @param {Function} callback
  */
-global.reject = function(items, callback) {
-    return items.filter(item => !callback(item));
-};
+
+Object.defineProperty(Array.prototype, 'reject', {
+    value: function(callback) {
+        return this.filter(item => !callback(item));
+    }
+});
 
 /**
  * Flatten the given array.
