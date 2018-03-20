@@ -124,11 +124,12 @@ class ComponentFactory {
      * @param {Object} component
      */
     installDependencies(component) {
-        let dependencies = []
+        []
             .concat(component.dependencies())
-            .filter(dependency => dependency);
-
-        Verify.dependencies(dependencies, component.requiresReload);
+            .filter(dependency => dependency)
+            .tap(dependencies => {
+                Verify.dependencies(dependencies, component.requiresReload);
+            });
     }
 
     /**
