@@ -70,7 +70,7 @@ class WebpackConfig {
                   ':' +
                   Config.hmrOptions.port +
                   '/'
-                : ''
+                : '/'
         };
 
         return this;
