@@ -74,15 +74,14 @@ class Verify {
     static dependencies(list, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
-        list
-            .reject(dependency => {
-                try {
-                    return require.resolve(dependency.replace(/@.+$/, ''));
-                } catch (e) {}
-            })
-            .tap(dependencies =>
-                installDependencies(dependencies, abortOnComplete)
-            );
+        let dependencies = reject(list, () => {
+            try {
+                return require.resolve(dependency.replace(/@.+$/, ''));
+            } catch (e) {}
+        });
+
+        dependencies.length &&
+            installDependencies(dependencies, abortOnComplete);
     }
 
     /**
