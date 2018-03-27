@@ -43,7 +43,6 @@ module.exports = function() {
     // Add some general Webpack loader options.
     plugins.push(
         new webpack.LoaderOptionsPlugin({
-            minimize: true,
             options: {
                 context: __dirname,
                 output: { path: './' }
