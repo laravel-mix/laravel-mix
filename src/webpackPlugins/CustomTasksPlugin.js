@@ -11,11 +11,7 @@ class CustomTasksPlugin {
             if (Mix.components.get('version')) {
                 this.applyVersioning();
             }
-
-            if (Mix.inProduction()) {
-                this.minifyAssets();
-            }
-
+            this.minifyAssets();
             if (Mix.isWatching()) {
                 Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
             }
