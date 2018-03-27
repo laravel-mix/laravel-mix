@@ -43,19 +43,13 @@ module.exports = function() {
     // Add some general Webpack loader options.
     plugins.push(
         new webpack.LoaderOptionsPlugin({
-            minimize: Mix.inProduction(),
+            minimize: true,
             options: {
                 context: __dirname,
                 output: { path: './' }
             }
         })
     );
-
-    // If we're in production environment, with Uglification turned on, we'll
-    // clean up and minify all of the user's JS and CSS automatically.
-    if (Mix.inProduction() && Config.uglify) {
-        plugins.push(new UglifyJSPlugin(Config.uglify));
-    }
 
     // Handle all custom, non-webpack tasks.
     plugins.push(new ManifestPlugin());
