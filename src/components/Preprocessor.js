@@ -35,7 +35,8 @@ class Preprocessor {
                         options: {
                             url: Config.processCssUrls,
                             sourceMap: Mix.isUsing('sourcemaps'),
-                            importLoaders: 1
+                            importLoaders: 1,
+                            minimize: false
                         }
                     },
 

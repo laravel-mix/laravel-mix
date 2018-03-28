@@ -159,7 +159,7 @@ module.exports = function() {
                                 modules: false,
                                 targets: {
                                     browsers: ['> 2%'],
-                                    uglify: true
+                                    uglify: false
                                 }
                             }
                         ]
