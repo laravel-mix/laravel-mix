@@ -77,7 +77,7 @@ class Verify {
         list
             .reject(dependency => {
                 try {
-                    return require.resolve(dependency.replace(/@.+$/, ''));
+                    return require.resolve(dependency.replace(/(?!^@)@.+$/, ''));
                 } catch (e) {}
             })
             .tap(dependencies => {
@@ -96,7 +96,7 @@ class Verify {
         if (argv['$0'].includes('ava')) return;
 
         try {
-            require.resolve(name.replace(/@.+$/, ''));
+            require.resolve(name.replace(/(?!^@)@.+$/, ''));
         } catch (e) {
             installDependencies(name, abortOnComplete);
         }
