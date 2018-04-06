@@ -11,6 +11,7 @@ class Notifications extends AutomaticComponent {
             return new WebpackNotifierPlugin({
                 title: 'Laravel Mix',
                 alwaysNotify: Config.notifications.onSuccess,
+                hint: process.platform === 'linux' ? 'int:transient:1' : undefined,
                 contentImage: Mix.paths.root(
                     'node_modules/laravel-mix/icons/laravel.png'
                 )
