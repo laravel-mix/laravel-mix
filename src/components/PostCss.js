@@ -1,4 +1,4 @@
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {
@@ -17,7 +17,7 @@ class PostCss extends Preprocessor {
      * @param {Array} postCssPlugins
      */
     register(src, output, postCssPlugins = []) {
-        Verify.preprocessor('postCss', src, output);
+        Assert.preprocessor('postCss', src, output);
 
         src = new File(src);
 

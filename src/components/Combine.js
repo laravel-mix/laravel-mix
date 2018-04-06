@@ -1,5 +1,5 @@
 let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 let _ = require('lodash');
 let glob = require('glob');
 
@@ -36,7 +36,7 @@ class Combine {
 
         output = new File(output);
 
-        Verify.combine(src, output);
+        Assert.combine(src, output);
 
         if (typeof src === 'string' && File.find(src).isDirectory()) {
             src = _.pull(

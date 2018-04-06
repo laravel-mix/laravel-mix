@@ -1,5 +1,5 @@
 let Preprocessor = require('./Preprocessor');
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 
 class FastSass extends Preprocessor {
     /**
@@ -17,7 +17,7 @@ class FastSass extends Preprocessor {
      * @param {Object} pluginOptions
      */
     register(src, output, pluginOptions = {}) {
-        Verify.exists(src);
+        Assert.exists(src);
 
         return this.preprocess('fastSass', src, output, pluginOptions);
     }

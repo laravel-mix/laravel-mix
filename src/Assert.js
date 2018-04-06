@@ -2,9 +2,9 @@ let assert = require('assert');
 let exec = require('child_process').execSync;
 let argv = require('yargs').argv;
 
-class Verify {
+class Assert {
     /**
-     * Verify that the call the mix.js() is valid.
+     * Assert that the call the mix.js() is valid.
      *
      * @param {*} entry
      * @param {*} output
@@ -22,7 +22,7 @@ class Verify {
     }
 
     /**
-     * Verify that the calls to mix.sass() and mix.less() are valid.
+     * Assert that the calls to mix.sass() and mix.less() are valid.
      *
      * @param {string} type
      * @param {string} src
@@ -41,7 +41,7 @@ class Verify {
     }
 
     /**
-     * Verify that calls to mix.combine() are valid.
+     * Assert that calls to mix.combine() are valid.
      *
      * @param {string} src
      * @param {File}   output
@@ -66,18 +66,21 @@ class Verify {
     }
 
     /**
-     * Verify that the necessary dependencies are available.
+     * Assert that the necessary dependencies are available.
      *
      * @param {Array}  list
      * @param {Boolean} abortOnComplete
      */
     static dependencies(list, abortOnComplete = false) {
+        // Assert.dependencies(['...'])
         if (argv['$0'].includes('ava')) return;
 
         list
             .reject(dependency => {
                 try {
-                    return require.resolve(dependency.replace(/(?!^@)@.+$/, ''));
+                    return require.resolve(
+                        dependency.replace(/(?!^@)@.+$/, '')
+                    );
                 } catch (e) {}
             })
             .tap(dependencies => {
@@ -86,7 +89,7 @@ class Verify {
     }
 
     /**
-     * Verify that the necessary dependency is available.
+     * Assert that the necessary dependency is available.
      *
      * @param {string}  name
      * @param {array}   dependencies
@@ -139,4 +142,4 @@ let abort = message => {
     process.exit();
 };
 
-module.exports = Verify;
+module.exports = Assert;

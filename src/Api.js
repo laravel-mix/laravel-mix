@@ -1,4 +1,4 @@
-let Verify = require('./Verify');
+let Assert = require('./Assert');
 let webpack = require('webpack');
 let path = require('path');
 

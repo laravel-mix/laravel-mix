@@ -1,5 +1,5 @@
 let glob = require('glob');
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let Vue = require('./Vue');
 
@@ -36,7 +36,7 @@ class JavaScript {
             entry = glob.sync(entry);
         }
 
-        Verify.js(entry, output);
+        Assert.js(entry, output);
 
         entry = [].concat(entry).map(file => new File(file));
         output = new File(output);

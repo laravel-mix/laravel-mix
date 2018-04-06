@@ -1,4 +1,4 @@
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Preprocessor {
@@ -131,7 +131,7 @@ class Preprocessor {
      * @param {object} pluginOptions
      */
     preprocess(type, src, output, pluginOptions = {}) {
-        Verify.preprocessor(type, src, output);
+        Assert.preprocessor(type, src, output);
 
         src = new File(src);
 

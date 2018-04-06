@@ -1,5 +1,5 @@
 let mix = require('../index');
-let Verify = require('../Verify');
+let Assert = require('../Assert');
 let webpackMerge = require('webpack-merge');
 
 let components = [
@@ -128,7 +128,7 @@ class ComponentFactory {
             .concat(component.dependencies())
             .filter(dependency => dependency)
             .tap(dependencies => {
-                Verify.dependencies(dependencies, component.requiresReload);
+                Assert.dependencies(dependencies, component.requiresReload);
             });
     }
 
