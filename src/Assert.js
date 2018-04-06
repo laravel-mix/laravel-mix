@@ -1,5 +1,5 @@
 let assert = require('assert');
-let exec = require('child_process').execSync;
+let Dependencies = require('./Dependencies');
 let argv = require('yargs').argv;
 
 class Assert {
@@ -71,75 +71,11 @@ class Assert {
      * @param {Array}  list
      * @param {Boolean} abortOnComplete
      */
-    static dependencies(list, abortOnComplete = false) {
-        // Assert.dependencies(['...'])
+    static dependencies(dependencies, abortOnComplete = false) {
         if (argv['$0'].includes('ava')) return;
 
-        list
-            .reject(dependency => {
-                try {
-                    return require.resolve(
-                        dependency.replace(/(?!^@)@.+$/, '')
-                    );
-                } catch (e) {}
-            })
-            .tap(dependencies => {
-                installDependencies(dependencies, abortOnComplete);
-            });
-    }
-
-    /**
-     * Assert that the necessary dependency is available.
-     *
-     * @param {string}  name
-     * @param {array}   dependencies
-     * @param {Boolean} abortOnComplete
-     */
-    static dependency(name, abortOnComplete = false) {
-        if (argv['$0'].includes('ava')) return;
-
-        try {
-            require.resolve(name.replace(/(?!^@)@.+$/, ''));
-        } catch (e) {
-            installDependencies(name, abortOnComplete);
-        }
+        new Dependencies(dependencies).install(abortOnComplete);
     }
 }
-
-/**
- * Install the given dependencies using npm or yarn.
- *
- * @param {array} dependencies
- */
-let installDependencies = (dependencies, abortOnComplete = false) => {
-    console.log(
-        'Additional dependencies must be installed. ' +
-            'This will only take a moment.'
-    );
-
-    if (Array.isArray(dependencies)) {
-        dependencies = dependencies.join(' ');
-    }
-
-    let command = `npm install ${dependencies} --save-dev`;
-
-    if (File.exists('yarn.lock')) {
-        command = `yarn add ${dependencies} --dev`;
-    }
-
-    exec(command);
-
-    if (abortOnComplete) abort(abortOnComplete);
-};
-
-let abort = message => {
-    console.log(
-        typeof message === 'string'
-            ? message
-            : 'Finished. Please run Mix again.'
-    );
-
-    process.exit();
-};
 
 module.exports = Assert;
