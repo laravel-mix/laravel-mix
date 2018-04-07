@@ -29,7 +29,7 @@ class Dependencies {
                 'This will only take a moment.'
         );
 
-        execSync(command);
+        exec(command);
 
         if (abortOnComplete) {
             console.log(
