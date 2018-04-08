@@ -197,7 +197,9 @@ class File {
      */
     minify() {
         if (this.extension() === '.js') {
-            this.write(uglify.minify(this.path(), Config.uglify).code);
+            this.write(
+                uglify.minify(this.path(), Config.uglify.uglifyOptions).code
+            );
         }
 
         if (this.extension() === '.css') {
