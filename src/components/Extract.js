@@ -1,12 +1,11 @@
-let webpack = require('webpack');
-let webpackMerge = require('webpack-merge')
+let webpackMerge = require('webpack-merge');
 
 class Extract {
     /**
      * Create a new component instance.
      */
     constructor() {
-        this.entry = null
+        this.entry = null;
         this.extractions = [];
     }
 
@@ -26,19 +25,19 @@ class Extract {
      * @param {Entry} entry
      */
     webpackEntry(entry) {
-        this.entry = entry
+        this.entry = entry;
 
         this.extractions.forEach(extraction => {
-            extraction.output = this.extractionPath(extraction.output)
+            extraction.output = this.extractionPath(extraction.output);
 
-            this.entry.addExtraction(extraction)
-        })
+            this.entry.addExtraction(extraction);
+        });
     }
 
     webpackConfig(config) {
         const newConfig = webpackMerge.smart(config, this.config());
 
-        config.optimization = newConfig.optimization
+        config.optimization = newConfig.optimization;
     }
 
     config() {
@@ -47,36 +46,38 @@ class Extract {
                 // If we are extracting vendor libraries, then we also need
                 // to extract Webpack's manifest file to assist with caching.
                 runtimeChunk: {
-                    name: path.join(this.entry.base, 'manifest').replace(/\\/g, '/'),
+                    name: path
+                        .join(this.entry.base, 'manifest')
+                        .replace(/\\/g, '/')
                 },
 
                 splitChunks: {
-                    cacheGroups: this.createCacheGroups(),
-                },
-            },
-        }
+                    cacheGroups: this.createCacheGroups()
+                }
+            }
+        };
     }
 
     createCacheGroups() {
-        const groups = {}
+        const groups = {};
 
         for (const [index, extraction] of this.extractions.entries()) {
-            groups[`vendor${index}`] = this.createCacheGroup(extraction)
+            groups[`vendor${index}`] = this.createCacheGroup(extraction);
         }
 
-        return groups
+        return groups;
     }
 
     createCacheGroup(extraction) {
-        const libsPattern = extraction.libs.join("|")
-        const pattern = new RegExp(`node_modules[\\\\/](${libsPattern})`, "i")
+        const libsPattern = extraction.libs.join('|');
+        const pattern = new RegExp(`node_modules[\\\\/](${libsPattern})`, 'i');
 
         return {
             test: pattern,
             name: extraction.output,
-            chunks: "all",
-            enforce: true,
-        }
+            chunks: 'all',
+            enforce: true
+        };
     }
 
     extractionPath(outputPath) {
@@ -84,7 +85,7 @@ class Extract {
             return new File(outputPath)
                 .pathFromPublic(Config.publicPath)
                 .replace(/\.js$/, '')
-                .replace(/\\/g, '/')
+                .replace(/\\/g, '/');
         }
 
         return path.join(this.entry.base, 'vendor').replace(/\\/g, '/');

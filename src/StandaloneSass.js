@@ -1,4 +1,3 @@
-let File = require('./File');
 let path = require('path');
 let spawn = require('child_process').spawn;
 let notifier = require('node-notifier');

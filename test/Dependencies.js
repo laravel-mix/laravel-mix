@@ -4,6 +4,7 @@ import process from 'child_process';
 import sinon from 'sinon';
 import Dependencies from '../src/Dependencies';
 import File from '../src/File';
+import fs from 'fs';
 
 test.beforeEach(() => {
     console.log = () => {};
@@ -34,9 +35,14 @@ test('it installs multiple dependencies', t => {
 test('it installs a single dependency with Yarn', t => {
     sinon.stub(File, 'exists').returns(true);
 
+    let lockFilePath  = './yarn.lock';
+    fs.openSync(lockFilePath, 'w');
+
     new Dependencies(['browser-sync']).install();
 
     t.true(process.execSync.calledWith('yarn add browser-sync --dev'));
+
+    fs.unlink(lockFilePath);
 });
 
 

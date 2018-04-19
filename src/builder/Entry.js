@@ -52,7 +52,9 @@ class Entry {
      * @param {Object} extraction
      */
     addExtraction(extraction) {
-        this.structure[extraction.output] = (this.structure[extraction.output] || []).concat(extraction.libs)
+        this.structure[extraction.output] = (
+            this.structure[extraction.output] || []
+        ).concat(extraction.libs);
     }
 
     /**
