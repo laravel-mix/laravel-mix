@@ -58,7 +58,7 @@
     "style-loader": "^0.20.2",
     "uglify-js": "^2.8.29",
     "uglifyjs-webpack-plugin": "^1.2.2",
-    "vue-loader": "^15.0.0-rc.2",
+    "vue-loader": "^15.0.1",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.5.0",
     "webpack-chunk-hash": "^0.6.0",
