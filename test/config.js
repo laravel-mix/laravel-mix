@@ -23,6 +23,7 @@ test('that it intelligently builds the Babel config', t => {
 
     // Then it should smartly merge the user's .babelrc with Mix's.
     t.deepEqual([
+        'syntax-dynamic-import',
         'transform-object-rest-spread', 
         ['transform-runtime', {
             helpers: false,

@@ -165,6 +165,7 @@ module.exports = function() {
                         ]
                     ],
                     plugins: [
+                        'syntax-dynamic-import',
                         'transform-object-rest-spread',
                         [
                             'transform-runtime',
