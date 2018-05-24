@@ -1,3 +1,4 @@
+let os = require("os");
 let md5 = require('md5');
 let path = require('path');
 let fs = require('fs-extra');
@@ -150,6 +151,8 @@ class File {
         if (typeof body === 'object') {
             body = JSON.stringify(body, null, 4);
         }
+        
+        body = body + os.EOL;
 
         fs.writeFileSync(this.absolutePath, body);
 
