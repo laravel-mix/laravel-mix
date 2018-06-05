@@ -10,7 +10,7 @@ class Autoload {
 
         Object.keys(libs).forEach(library => {
             [].concat(libs[library]).forEach(alias => {
-                aliases[alias] = library;
+                aliases[alias] = library.includes('.') ? library.split('.') : library;
             });
         });
 
