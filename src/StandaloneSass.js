@@ -72,7 +72,7 @@ class StandaloneSass {
             sassOptions.push('--importer ' + this.pluginOptions.importer);
         }
 
-        if (Mix.isUsing('sourcemaps') && !Mix.inProduction()) {
+        if (Mix.isUsing('sourcemaps') && Mix.inDevelopment()) {
             sassOptions.push('--source-map-embed');
         }
 
