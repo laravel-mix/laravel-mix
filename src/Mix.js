@@ -34,6 +34,13 @@ class Mix {
     }
 
     /**
+     * Determine if Mix is executing in a development environment.
+     */
+    inDevelopment() {
+        return Config.development;
+    }
+
+    /**
      * Determine if Mix should watch files for changes.
      */
     isWatching() {

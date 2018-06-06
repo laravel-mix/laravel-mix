@@ -95,6 +95,13 @@ class Api {
     inProduction() {
         return Mix.inProduction();
     }
+
+    /**
+     * Helper for determining a development environment.
+     */
+    inDevelopment() {
+        return Mix.inDevelopment();
+    }
 }
 
 module.exports = Api;
