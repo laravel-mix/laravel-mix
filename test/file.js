@@ -1,11 +1,15 @@
 import test from 'ava';
-import mockFs from 'mock-fs';
 import path from 'path';
+import fs from 'fs-extra';
 import '../src/index';
 
+let stubsDir = path.resolve(__dirname, 'stubs');
 
-test.afterEach(t => mockFs.restore());
+test.before(t => fs.ensureDirSync(stubsDir));
 
+test.afterEach(t => {
+    fs.emptyDirSync(stubsDir);
+});
 
 test('it knows the file name', t => {
     let file = new File('path/to/file.js');
@@ -13,13 +17,11 @@ test('it knows the file name', t => {
     t.is('file.js', file.name());
 });
 
-
 test('it has a static constructor', t => {
     let file = File.find('path/to/file.js');
 
     t.true(file instanceof File);
 });
-
 
 test('it knows the file name without the extension', t => {
     let file = new File('path/to/file.js');
@@ -27,43 +29,37 @@ test('it knows the file name without the extension', t => {
     t.is('file', file.nameWithoutExtension());
 });
 
-
 test('it knows the extension of the file', t => {
     let file = new File('path/to/file.js');
 
     t.is('.js', file.extension());
 });
 
-
 test('it knows if a file exists', t => {
-    t.false(File.exists('path/to/some/file.js'));
+    let file = path.resolve(stubsDir, 'file.js');
 
-    mockFs({
-        'path/to/some/file.js': 'foobar'
-    });
+    t.false(File.exists(file));
 
-    t.true(File.exists('path/to/some/file.js'));
+    new File(file).write('foobar');
+
+    t.true(File.exists(file));
 });
 
-
 test('it knows the size of a file', t => {
-    let file = 'path/to/some/file.js';
+    let file = path.resolve(stubsDir, 'file.js');
 
-    // Assume this file exists...
-    mockFs({ [file]: '123456' });
+    new File(file).write('123456'); // plus newline equals size of 7.
 
     t.true(File.exists(file));
 
-    t.is(6, new File(file).size());
+    t.is(7, new File(file).size());
 });
-
 
 test('it knows the path to the file', t => {
-    let file = new File('path/to/file.js');
+    let file = path.resolve(stubsDir, 'file.js');
 
-    t.is(path.resolve('path/to/file.js'), file.path());
+    t.is(file, new File(file).path());
 });
-
 
 test('it knows the relative path to the file', t => {
     let file = new File('path/to/file.js');
@@ -73,7 +69,6 @@ test('it knows the relative path to the file', t => {
     t.is(path.normalize('path/to/file.js'), file.relativePath());
     t.is(path.normalize('../path/to/file.js'), newFile.relativePath());
 });
-
 
 test('it can force the file to begin from the public path for the project.', t => {
     Config.publicPath = 'public';
@@ -87,7 +82,6 @@ test('it can force the file to begin from the public path for the project.', t =
     t.is(path.normalize('public/some/path/here.js'), newFile.relativePath());
 });
 
-
 test('it knows the path to the file starting from the project public directory', t => {
     let file = new File('public/js/file.js');
 
@@ -98,13 +92,11 @@ test('it knows the path to the file starting from the project public directory',
     t.is(path.normalize('/js/file.js'), file.pathFromPublic(Config.publicPath));
 });
 
-
 test('it knows the full path to the file without the extension', t => {
     let file = new File('path/to/file.js');
 
     t.is(path.resolve('path/to/file'), file.pathWithoutExtension());
 });
-
 
 test('it knows the base directory path for the file', t => {
     let file = new File('path/to/file.js');
@@ -112,90 +104,86 @@ test('it knows the base directory path for the file', t => {
     t.is(path.resolve('path/to'), file.base());
 });
 
-
 test('it knows if the current file path is a directory', t => {
     t.true(new File('path/to').isDirectory());
     t.false(new File('path/to/file.js').isDirectory());
 });
-
 
 test('it knows if the current file path is a file', t => {
     t.false(new File('path/to').isFile());
     t.true(new File('path/to/file.js').isFile());
 });
 
-
 test('it can read and write to a file', t => {
-    mockFs({
-        'path/to/some/file.js': 'foobar'
-    });
+    let filePath = path.resolve(stubsDir, 'file.js');
 
-    let file = new File('path/to/some/file.js');
+    let file = new File(filePath);
 
-    t.is('foobar', file.read());
+    file.write('foobar');
+
+    t.is('foobar\n', new File(filePath).read());
 
     file.write('changed');
 });
 
-
 test('it can calculate a unique versioned hash for the file', t => {
-    mockFs({
-        'path/to/some/file.js': 'foobar'
-    });
+    let filePath = path.resolve(stubsDir, 'file.js');
 
-    let file = new File('path/to/some/file.js');
+    let file = new File(filePath);
+
+    file.write('foobar');
 
     t.true(file.version().length === 20);
 });
 
-
 test('it can minify JS files.', t => {
-    mockFs({
-        'path/to/some/file.js': `
+    let filePath = path.resolve(stubsDir, 'file.js');
+
+    let file = new File(filePath);
+
+    file.write(`
             var one = 'one';
             var two = 'two';
-        `
-    });
+    `);
 
-    let file = new File('path/to/some/file.js');
-
-    t.is('var one="one",two="two";', file.minify().read());
+    t.is('var one="one",two="two";\n', file.minify().read());
 });
 
-
 test('it can minify CSS files.', t => {
-    mockFs({
-        'path/to/file.css': `
+    let filePath = path.resolve(stubsDir, 'file.css');
+
+    let file = new File(filePath);
+
+    file.write(`
             body {
                 color: red;
             }
-        `
-    });
+        `);
 
-    let file = new File('path/to/file.css').minify();
+    file.minify();
 
-    t.is('body{color:red}', file.read());
+    t.is('body{color:red}\n', file.read());
 });
-
 
 test('it can copy a file to a new location', t => {
-    mockFs({
-        'path/to/file.css': '.foo {}'
-    });
+    let filePath = path.resolve(stubsDir, 'file.css');
+    let file = new File(filePath);
 
-    let file = new File('path/to/file.css').copyTo('path/to/new.css');
+    file.write('.foo {}');
 
-    t.true(File.exists('path/to/new.css'));
-    t.is('.foo {}', new File('path/to/new.css').read());
+    let copiedPath = path.resolve(stubsDir, 'new.css');
+
+    file.copyTo(copiedPath);
+
+    t.true(File.exists(copiedPath));
+    t.is('.foo {}\n', new File(copiedPath).read());
 });
-
 
 test('it knows if its path contains a set of chars', t => {
     let file = new File('some/path/**');
 
     t.true(file.contains('*'));
 });
-
 
 test('it can append to the current file path', t => {
     let file = new File('some/path');
