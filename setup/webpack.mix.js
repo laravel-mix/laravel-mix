@@ -49,4 +49,5 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 //   purifyCss: false, // Remove unused CSS selectors.
 //   uglify: {}, // Uglify-specific options. https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
 //   postCss: [] // Post-CSS options: https://github.com/postcss/postcss/blob/master/docs/plugins.md
+//   mergeManifest: false // Merge the contents of the mix-manifest.json instead of rewriting the contents.
 // });
