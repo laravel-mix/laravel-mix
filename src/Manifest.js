@@ -79,6 +79,10 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
+        if (Config.mergeManifest) {
+            this.manifest = Object.assign(this.read(), this.manifest);
+        }
+
         File.find(this.path())
             .makeDirectories()
             .write(this.manifest);

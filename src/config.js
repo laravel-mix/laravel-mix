@@ -268,6 +268,13 @@ module.exports = function() {
                     return objValue.concat(srcValue);
                 }
             });
-        }
+        },
+
+      /**
+        * Merge the contents of the mix-manifest.json instead of rewriting the contents.
+        *
+        * @type {boolean}
+        */
+        mergeManifest: false,
     };
 };
