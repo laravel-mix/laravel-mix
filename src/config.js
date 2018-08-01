@@ -1,5 +1,6 @@
 let paths = new (require('./Paths'))();
 let webpackMerge = require('webpack-merge');
+let json5 = require('json5');
 
 module.exports = function() {
     return {
@@ -141,7 +142,7 @@ module.exports = function() {
 
             tap(Mix.paths.root('.babelrc'), babelrc => {
                 if (File.exists(babelrc)) {
-                    options = JSON.parse(File.find(babelrc).read());
+                    options = json5.parse(File.find(babelrc).read());
                 }
             });
 
