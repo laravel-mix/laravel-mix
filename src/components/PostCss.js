@@ -30,7 +30,7 @@ class PostCss extends Preprocessor {
             type: 'postCss',
             src,
             output,
-            postCssPlugins
+            postCssPlugins: [].concat(postCssPlugins)
         });
     }
 
