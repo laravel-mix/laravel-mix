@@ -2,6 +2,13 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Vue {
     /**
+     * Create a new Vue instance.
+     */
+    constructor() {
+        this.requiresNewCssExtract = false;
+    }
+
+    /**
      * Required dependencies for the component.
      */
     dependencies() {
@@ -25,7 +32,9 @@ class Vue {
             options: vueLoaderOptions
         });
 
-        config.plugins.push(extractPlugin);
+        if (this.requiresNewCssExtract) {
+            config.plugins.push(extractPlugin);
+        }
     }
 
     /**
@@ -119,6 +128,8 @@ class Vue {
             });
 
         if (!preprocessorName) {
+            this.requiresNewCssExtract = true;
+
             return new ExtractTextPlugin(this.extractFilePath());
         }
 
