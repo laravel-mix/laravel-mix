@@ -116,6 +116,8 @@ class Vue {
 
     extractPlugin() {
         if (typeof Config.extractVueStyles === 'string') {
+            this.requiresNewCssExtract = true;
+
             return new ExtractTextPlugin(this.extractFilePath());
         }
 
