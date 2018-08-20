@@ -14,7 +14,7 @@ If you've ever been confused about how to get started with module bundling and a
 
 ## Documentation
 
-You may review the initial documentation [here](https://laravel-mix.com./docs/2.1/basic-example).
+You may review the initial documentation [here](https://laravel-mix.com/docs/2.1/basic-example).
 
 ## License
 
