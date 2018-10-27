@@ -52,7 +52,8 @@ Mix.listen('init', () => {
                 Config.hmrOptions.host +
                 ':' +
                 Config.hmrOptions.port +
-                '/'
+                '/',
+            false
         );
     }
 });

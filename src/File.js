@@ -146,13 +146,14 @@ class File {
      * Write the given contents to the file.
      *
      * @param {string} body
+     * @param {boolean} withEol
      */
-    write(body) {
+    write(body, withEol = true) {
         if (typeof body === 'object') {
             body = JSON.stringify(body, null, 4);
         }
-        
-        body = body + os.EOL;
+
+        if(withEol) body = body + os.EOL;
 
         fs.writeFileSync(this.absolutePath, body);
 
