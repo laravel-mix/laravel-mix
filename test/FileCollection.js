@@ -33,7 +33,7 @@ test('that it can merge multiple files into one.', t => {
     new FileCollection(files).merge(output);
 
     t.true(File.exists(output.path()));
-    t.is(eol.auto('class Foo {}\n\nclass Bar {}\n'), output.read());
+    t.is('class Foo {}\n\nclass Bar {}\n', eol.lf(output.read()));
 });
 
 test('that it can merge JS files and apply Babel compilation.', t => {

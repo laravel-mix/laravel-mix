@@ -55,7 +55,7 @@ test('it knows the size of a file', t => {
     t.true(File.exists(file));
 
     let expected = 7;
-    if (process.platform.win32) {
+    if (process.platform === 'win32') {
         expected = 8; // plus windows newline which is carriage return + linefeed
     }
 
