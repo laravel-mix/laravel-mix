@@ -158,9 +158,9 @@ module.exports = function() {
                             {
                                 modules: false,
                                 targets: {
-                                    browsers: ['> 2%'],
-                                    uglify: true
-                                }
+                                    browsers: ['> 2%']
+                                },
+                                forceAllTransforms: true
                             }
                         ]
                     ],
