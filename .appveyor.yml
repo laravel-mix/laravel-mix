@@ -19,15 +19,18 @@ install:
   # npm 3.10.10, used in node 6 environment doesn't respect package.lock and thus installs other versions of packages
   # than later npm releases. This causes hashes to be different and thus it causes tests to fail in the
   # node 6 environment
-  - yarn
+  #- yarn
+  - npm install --global npm@latest
+  - npm ci
 
 # Post-install test scripts.
 test_script:
   # Output useful info for debugging.
   - node --version
-  - yarn --version
+  - npm --version
   # run tests
-  - yarn test
+  #- yarn test
+  - npm test
 
 # Don't actually build.
 build: off
