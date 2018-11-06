@@ -169,8 +169,7 @@ module.exports = function() {
                         [
                             '@babel/plugin-transform-runtime',
                             {
-                                helpers: false,
-                                // regenerator: true //TODO: check if we really want this ~Jon
+                                helpers: false
                             }
                         ]
                     ]
@@ -211,7 +210,6 @@ module.exports = function() {
          * @type {Object}
          */
         uglify: {
-            // TODO: Why is sourceMap true by default when this.sourcemaps == false
             sourceMap: true,
             uglifyOptions: {
                 sourceMap: true
