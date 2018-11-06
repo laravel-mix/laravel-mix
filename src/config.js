@@ -154,7 +154,7 @@ module.exports = function() {
                     cacheDirectory: true,
                     presets: [
                         [
-                            'env',
+                            '@babel/preset-env',
                             {
                                 modules: false,
                                 targets: {
@@ -165,12 +165,12 @@ module.exports = function() {
                         ]
                     ],
                     plugins: [
-                        'transform-object-rest-spread',
+                        '@babel/plugin-proposal-object-rest-spread',
                         [
-                            'transform-runtime',
+                            '@babel/plugin-transform-runtime',
                             {
-                                polyfill: false,
-                                helpers: false
+                                helpers: false,
+                                // regenerator: true //TODO: check if we really want this ~Jon
                             }
                         ]
                     ]
@@ -211,14 +211,10 @@ module.exports = function() {
          * @type {Object}
          */
         uglify: {
+            // TODO: Why is sourceMap true by default when this.sourcemaps == false
             sourceMap: true,
             uglifyOptions: {
-                compress: {
-                    warnings: false
-                },
-                output: {
-                    comments: false
-                }
+                sourceMap: true
             }
         },
 

@@ -1,5 +1,5 @@
 let concatenate = require('concatenate');
-let babel = require('babel-core');
+let babel = require('@babel/core');
 let glob = require('glob');
 
 class FileCollection {
