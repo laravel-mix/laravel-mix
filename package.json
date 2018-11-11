@@ -62,7 +62,7 @@
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0",
     "webpack-chunk-hash": "^0.4.0",
-    "webpack-dev-server": "^2.11.1",
+    "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.0",
     "webpack-notifier": "^1.5.1",
     "yargs": "^8.0.2"
