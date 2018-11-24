@@ -256,6 +256,13 @@ module.exports = function() {
         clearConsole: true,
 
         /**
+         * Timeout value for OS system notifications
+         *
+         * @type {Integer String}
+         */
+	notifierTimeout: '1',
+
+        /**
          * Merge the given options with the current defaults.
          *
          * @param {object} options
