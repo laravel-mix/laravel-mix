@@ -5,7 +5,7 @@ mix.sass('src', 'output', pluginOptions);
 mix.standaloneSass('src', 'output', pluginOptions); // Isolated from Webpack build.
 mix.less('src', 'output', pluginOptions);
 mix.stylus('src', 'output', pluginOptions);
-mix.postCss('src', 'output', [ require('precss')() ])
+mix.postCss('src', 'output', [require('precss')()]);
 ```
 
 A single method call allows you to compile your Sass, Less, or Stylus files, while applying automatic CSS3 prefixing.
@@ -18,7 +18,7 @@ Should you need to compile more than one root file, you may call `mix.sass()` (o
 
 ```js
 mix.sass('src/app.scss', 'dist/') // creates 'dist/app.css'
-   .sass('src/forum.scss', 'dist/'); // creates 'dist/forum.css'
+    .sass('src/forum.scss', 'dist/'); // creates 'dist/forum.css'
 ```
 
 ### Example
@@ -48,7 +48,7 @@ Compile this down as usual \(`npm run webpack`\), and you'll find a `./public/cs
 
 ```css
 .app {
-  background: grey;
+    background: grey;
 }
 ```
 
@@ -56,8 +56,8 @@ Compile this down as usual \(`npm run webpack`\), and you'll find a `./public/cs
 
 Behind the scenes, Laravel Mix of course defers to Node-Sass, Less, and Stylus to compile your Sass and Less files, respectively. From time to time, you may need to override the default options that we pass to them. You may provide these as the third argument to `mix.sass()`, `mix.less()`, and `mix.stylus()`.
 
-- **Node-Sass Options:** https://github.com/sass/node-sass#options
-- **Less Options:** https://github.com/webpack-contrib/less-loader#options
+-   **Node-Sass Options:** https://github.com/sass/node-sass#options
+-   **Less Options:** https://github.com/webpack-contrib/less-loader#options
 
 ```js
 mix.sass('src', 'destination', { outputStyle: 'nested' });
@@ -69,9 +69,7 @@ If using Stylus, you may wish to install extra plugins, such as [Rupture](https:
 
 ```js
 mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
-    use: [
-        require('rupture')()
-    ]
+    use: [require('rupture')()]
 });
 ```
 
@@ -79,20 +77,12 @@ Should you wish to take it further, and automatically import plugins globally, y
 
 ```js
 mix.stylus('resources/assets/stylus/app.styl', 'public/css', {
-    use: [
-        require('rupture')(),
-        require('nib')(),
-        require('jeet')()
-    ],
-    import: [
-        '~nib/index.styl',
-        '~jeet/jeet.styl'
-    ]
+    use: [require('rupture')(), require('nib')(), require('jeet')()],
+    import: ['~nib/index.styl', '~jeet/jeet.styl']
 });
 ```
 
 That's all there is to it!
-
 
 ### CSS `url()` Rewriting
 
@@ -114,24 +104,23 @@ Notice that relative URL? By default, Laravel Mix and webpack will find `thing.p
 
 ```css
 .example {
-  background: url(/images/thing.png?d41d8cd98f00b204e9800998ecf8427e);
+    background: url(/images/thing.png?d41d8cd98f00b204e9800998ecf8427e);
 }
 ```
 
 This, again, is a very cool feature of webpack's. However, it does have a tendency to confuse those who don't understand how webpack and the css-loader plugin works. It's possible that your folder structure is already just how you want it, and you'd prefer that Mix not modify those `url()`s. If that's the case, we do offer an override:
 
 ```js
-mix.sass('src/app.scss', 'dist/')
-   .options({
-      processCssUrls: false
-   });
+mix.sass('src/app.scss', 'dist/').options({
+    processCssUrls: false
+});
 ```
 
 With this addition to your `webpack.mix.js` file, we will no longer match `url()`s or copy assets to your public directory. As such, the compiled CSS will remain exactly as you typed it:
 
 ```css
 .example {
-  background: url("../images/thing.png");
+    background: url('../images/thing.png');
 }
 ```
 
@@ -142,34 +131,29 @@ With this addition to your `webpack.mix.js` file, we will no longer match `url()
 By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As a result, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically. The default settings should be fine in most scenarios, however, if you need to tweak the underlying Autoprefixer configuration, here's how:
 
 ```js
-mix.sass('resources/assets/sass/app.scss', 'public/css')
-   .options({
-        autoprefixer: {
-            options: {
-                browsers: [
-                    'last 6 versions',
-                ]
-            }
+mix.sass('resources/assets/sass/app.scss', 'public/css').options({
+    autoprefixer: {
+        options: {
+            browsers: ['last 6 versions']
         }
-   });
+    }
+});
 ```
 
 Additionally, if you wish to disable it entirely - or depend upon a PostCSS plugin that already includes Autoprefixer:
 
 ```js
-mix.sass('resources/assets/sass/app.scss', 'public/css')
-   .options({ autoprefixer: false });
+mix.sass('resources/assets/sass/app.scss', 'public/css').options({
+    autoprefixer: false
+});
 ```
 
 It's possible, however, that you'd like to apply [additional PostCSS plugins](https://github.com/postcss/postcss/blob/master/docs/plugins.md) to your build. No problem. Simply install the desired plugin through NPM, and then reference it in your `webpack.mix.js` file, like so:
 
 ```js
-mix.sass('resources/assets/sass/app.scss', 'public/css')
-   .options({
-       postCss: [
-            require("postcss-custom-properties")
-       ]
-   });
+mix.sass('resources/assets/sass/app.scss', 'public/css').options({
+    postCss: [require('postcss-custom-properties')]
+});
 ```
 
 Done! You may now use and compile custom CSS properties (if that's your thing). For example, if `resources/assets/sass/app.scss` contains...
@@ -188,7 +172,7 @@ Done! You may now use and compile custom CSS properties (if that's your thing). 
 
 ```css
 .example {
-  color: red;
+    color: red;
 }
 ```
 
@@ -200,7 +184,7 @@ Alternatively, if you'd prefer to skip the Sass/Less/Stylus compile step entirel
 
 ```js
 mix.postCss('resources/assets/css/main.css', 'public/css', [
-   require('precss')()
+    require('precss')()
 ]);
 ```
 
@@ -214,4 +198,4 @@ If you do not wish Mix and Webpack to process your Sass in any way, you may inst
 mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
 ```
 
-> **Note:** If you are using standaloneSass while watching for file changes with `npm run watch` then you will need to prefix imported files with underscores in order to flag them as partials (e.g. _header.scss, _alert.scss). Failing to do this will result in Sass compilation errors and/or extraneous CSS files.
+> **Note:** If you are using standaloneSass while watching for file changes with `npm run watch` then you will need to prefix imported files with underscores in order to flag them as partials (e.g. \_header.scss, \_alert.scss). Failing to do this will result in Sass compilation errors and/or extraneous CSS files.

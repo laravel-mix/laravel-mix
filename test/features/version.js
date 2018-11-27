@@ -25,8 +25,7 @@ test.cb.serial('it can version an entire directory or regex of files.', t => {
 });
 
 test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
-    mix
-        .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
         .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')
         .version();
 

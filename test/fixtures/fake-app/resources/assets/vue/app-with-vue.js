@@ -3,6 +3,6 @@ import Basic from './Basic.vue';
 
 new Vue({
     components: {
-        Basic,
+        Basic
     }
 }).$mount('#app');

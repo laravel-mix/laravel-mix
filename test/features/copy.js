@@ -13,12 +13,10 @@ test.serial('mix.copy()', t => {
 test.cb.serial(
     'it compiles JavaScript and copies the output to a new location.',
     t => {
-        mix
-            .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
-            .copy(
-                'test/fixtures/fake-app/public/js/app.js',
-                'test/fixtures/fake-app/public/somewhere'
-            );
+        mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').copy(
+            'test/fixtures/fake-app/public/js/app.js',
+            'test/fixtures/fake-app/public/somewhere'
+        );
 
         compile(t, () => {
             t.true(

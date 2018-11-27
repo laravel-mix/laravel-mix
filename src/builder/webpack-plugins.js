@@ -7,7 +7,7 @@ let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = function () {
+module.exports = function() {
     let plugins = [];
 
     // If the user didn't declare any JS compilation, we still need to
@@ -32,9 +32,9 @@ module.exports = function () {
     // Activate support for Mix_ .env definitions.
     plugins.push(
         MixDefinitionsPlugin.build({
-            NODE_ENV: Mix.inProduction() ?
-                'production' :
-                process.env.NODE_ENV || 'development'
+            NODE_ENV: Mix.inProduction()
+                ? 'production'
+                : process.env.NODE_ENV || 'development'
         })
     );
 

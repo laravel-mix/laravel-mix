@@ -61,17 +61,15 @@ With the above setting, the `webpack-dev-server` will generate a self-signed cer
 Now, in your HTML/Blade files you can use either:
 
 ```html
-    <script src="https://localhost:8080/js/bundle.js"></script>
+<script src="https://localhost:8080/js/bundle.js"></script>
 ```
 
 or:
 
 ```html
-    <script src="{{ mix('js/bundle.js') }}"></script>
+<script src="{{ mix('js/bundle.js') }}"></script>
 ```
-
 
 ### Usage in SPAs
 
 Laravel Mix includes the popular `vue-loader` package, which means, for SPAs, there's nothing for you to do. It'll all work seamlessly out of the box!
-

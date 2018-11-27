@@ -46,7 +46,9 @@ class PurifyCss extends AutomaticComponent {
                     options.paths = paths.concat(glob.sync(path));
                 });
             }
-            options.minimize = options.hasOwnProperty('minimize') ? options.minimize : Mix.inProduction();
+            options.minimize = options.hasOwnProperty('minimize')
+                ? options.minimize
+                : Mix.inProduction();
         }
 
         return options;

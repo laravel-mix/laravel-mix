@@ -45,15 +45,12 @@ if (Mix.sees('laravel')) {
 Mix.listen('init', () => {
     if (Mix.shouldHotReload()) {
         let http = process.argv.includes('--https') ? 'https' : 'http';
-        let port = process.argv.includes('--port') ? process.argv[process.argv.indexOf('--port') + 1] : Config.hmrOptions.port;
+        let port = process.argv.includes('--port')
+            ? process.argv[process.argv.indexOf('--port') + 1]
+            : Config.hmrOptions.port;
 
         new File(path.join(Config.publicPath, 'hot')).write(
-            http +
-                '://' +
-                Config.hmrOptions.host +
-                ':' +
-                port +
-                '/'
+            http + '://' + Config.hmrOptions.host + ':' + port + '/'
         );
     }
 });

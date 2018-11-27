@@ -1,9 +1,10 @@
 import mix from './helpers/setup';
 
 test.serial('JS compilation with vendor extraction config', t => {
-    mix
-        .js('resources/assets/js/app.js', 'js')
-        .extract(['vue'], 'js/libraries.js');
+    mix.js('resources/assets/js/app.js', 'js').extract(
+        ['vue'],
+        'js/libraries.js'
+    );
 
     t.deepEqual(
         {

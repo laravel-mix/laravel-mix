@@ -48,14 +48,13 @@ Now you may [configure](https://github.com/adrienkohlbecker/vagrant-fsnotify#bas
 
 ```yaml
 folders:
-    -
-        map: /Users/jeffrey/Code/laravel
-        to: /home/vagrant/Code/laravel
-        options:
-            fsnotify: true
-            exclude:
-                - node_modules
-                - vendor
+    - map: /Users/jeffrey/Code/laravel
+      to: /home/vagrant/Code/laravel
+      options:
+          fsnotify: true
+          exclude:
+              - node_modules
+              - vendor
 ```
 
 Once your vagrant machine is started, simply run `vagrant fsnotify` on the host machine to forward all file changes to the VM. You may then run `npm run watch` inside the VM and have your changes automatically picked up.
@@ -68,7 +67,7 @@ Let's imagine that you have a relative path to an asset that doesn't exist in yo
 
 ```css
 body {
-  background: url('../img/example.jpg');
+    background: url('../img/example.jpg');
 }
 ```
 
@@ -104,8 +103,8 @@ Through its `ProvidePlugin` plugin, webpack allows you to automatically load mod
 
 ```js
 new webpack.ProvidePlugin({
-  $: 'jquery',
-  jQuery: 'jquery'
+    $: 'jquery',
+    jQuery: 'jquery'
 });
 
 // in a module
@@ -118,8 +117,8 @@ While Laravel Mix automatically loads jQuery for you (exactly as the example abo
 
 ```js
 mix.autoload({
-  jquery: ['$', 'window.jQuery', 'jQuery'], // more than one
-  moment: 'moment' // only one
+    jquery: ['$', 'window.jQuery', 'jQuery'], // more than one
+    moment: 'moment' // only one
 });
 ```
 

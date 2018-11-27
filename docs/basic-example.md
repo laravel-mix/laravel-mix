@@ -7,8 +7,7 @@ Have a look at a basic `webpack.mix.js` file. Let's imagine that we only desire 
 ```js
 let mix = require('laravel-mix');
 
-mix.sass('src/app.sass', 'dist')
-   .js('src/app.js', 'dist');
+mix.sass('src/app.sass', 'dist').js('src/app.js', 'dist');
 ```
 
 Done. Simple, right?
@@ -25,4 +24,3 @@ During development, it's unnecessary to minify the output, however, this will be
 But what if you prefer Less compilation instead? No problem. Just swap `mix.sass()` with `mix.less()`, and you're done!
 
 You'll find that most common webpack tasks become a cinch with Laravel Mix.
-

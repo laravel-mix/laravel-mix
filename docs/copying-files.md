@@ -14,4 +14,3 @@ mix.copy('node_modules/vendor/acme.txt', 'public/js/acme.txt');
 ```
 
 Upon compilation, the "acme" file will be copied to `public/js/acme.txt`, accordingly. A common use case for this is when you wish to move a set of fonts, installed through NPM, to your public directory.
-

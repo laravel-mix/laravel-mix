@@ -3,17 +3,17 @@
 </template>
 
 <script>
-    module.exports = {
-        data() {
-            return {
-                message: 'Hello World',
-            }
-        }
+module.exports = {
+    data() {
+        return {
+            message: 'Hello World'
+        };
     }
+};
 </script>
 
 <style lang="scss">
-    .hello {
-        color: blue;
-    }
+.hello {
+    color: blue;
+}
 </style>

@@ -3,8 +3,7 @@ import mix from './helpers/setup';
 test.cb.serial('the kitchen sink', t => {
     new File('test/fixtures/fake-app/public/file.js').write('var foo');
 
-    mix
-        .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
         .extract(['vue'])
         .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
         .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')

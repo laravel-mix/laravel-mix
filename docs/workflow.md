@@ -21,8 +21,10 @@ Think of this file as your home base for all front-end configuration.
 ```js
 let mix = require('laravel-mix');
 
-mix.js('resources/assets/js/app.js', 'public/js')
-    .sass('resources/assets/sass/app.scss', 'public/css');
+mix.js('resources/assets/js/app.js', 'public/js').sass(
+    'resources/assets/sass/app.scss',
+    'public/css'
+);
 ```
 
 By default, we've enabled JavaScript ES2017 + module bundling, as well as Sass compilation.
@@ -43,8 +45,8 @@ npm run dev
 
 Once that finishes, you should now see:
 
-* `./public/js/app.js`
-* `./public/css/app.css`
+-   `./public/js/app.js`
+-   `./public/css/app.css`
 
 Excellent! Next, let's get to work. To watch your JavaScript for changes, run:
 
@@ -64,15 +66,13 @@ Again, Laravel ships with a welcome page. We can use this for our demo. Update i
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
         <title>Laravel</title>
 
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}" />
     </head>
     <body>
-        <div id="app">
-            <example></example>
-        </div>
+        <div id="app"><example></example></div>
 
         <script src="{{ mix('js/app.js') }}"></script>
     </body>
