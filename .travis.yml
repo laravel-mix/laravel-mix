@@ -7,8 +7,6 @@ os:
 
 # Test against all supported versions of Node.js
 node_js:
-    - '6'
-    - '7'
     - '8'
     - '9'
     - '10'

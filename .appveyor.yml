@@ -1,8 +1,6 @@
 # Test against all supported versions of Node.js on windows
 environment:
     matrix:
-        - nodejs_version: '6'
-        - nodejs_version: '7'
         - nodejs_version: '8'
         - nodejs_version: '9'
         - nodejs_version: '10'
