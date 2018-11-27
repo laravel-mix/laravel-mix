@@ -212,7 +212,13 @@ module.exports = function() {
         uglify: {
             sourceMap: true,
             uglifyOptions: {
-                sourceMap: true
+                sourceMap: true,
+                compress: {
+                    warnings: false
+                },
+                output: {
+                    comments: false
+                }
             }
         },
 
