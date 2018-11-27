@@ -41,9 +41,12 @@ test('that it sets the minimize value properly', t => {
         paths: ['foo.html'],
         minimize: true
     });
+
     t.true(options.minimize);
+
     options = component.build({
-        paths: ['foo.html'],
+        paths: ['foo.html']
     });
+
     t.is(options.minimize, Mix.inProduction());
 });
