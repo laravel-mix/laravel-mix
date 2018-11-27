@@ -28,19 +28,17 @@ test.cb.serial('the kitchen sink', t => {
     compile(t, () => {
         t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
 
-        assertManifestIs(
+        t.deepEqual(
             {
-                '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
-                '/js/app.js': '/js/app.js\\?id=\\w{20}',
-                '/css/app.css': '/css/app.css\\?id=\\w{20}',
-                '/css/example.css': '/css/example.css\\?id=\\w{20}',
-                '/js/another.js': '/js/another.js\\?id=\\w{20}',
-                '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
-                '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
-                '/js/all.js': '/js/all.js\\?id=\\w{20}',
-                '/file.js': '/file.js\\?id=\\w{20}'
+                '/file.js': '/file.js?id=6535b4d330f12366c3f7',
+                '/js/all.js': '/js/all.js?id=d198d4b3b25e9d66fa37',
+                '/js/another.js': '/js/another.js?id=d403c9f3f581bbcba8ba',
+                '/js/app.js': '/js/app.js?id=8e880c67fe14b09f7d16',
+                '/js/manifest.js': '/js/manifest.js?id=ce6566a24afe6e358977',
+                '/js/vendor.js': '/js/vendor.js?id=d69105e5f6f53447b8a7',
+                '/somewhere/app.js': '/somewhere/app.js?id=8e880c67fe14b09f7d16'
             },
-            t
+            readManifest()
         );
     });
 });
