@@ -14,7 +14,7 @@ test('that it builds the purify file paths properly', t => {
         paths: ['foo.html']
     });
 
-    t.deepEqual(options, { paths: ['foo.html'] });
+    t.deepEqual(options.paths, ['foo.html']);
 
     let stubs = [
         path.resolve(__dirname, 'stubs/one.html').replace(/\\/g, '/'),
@@ -30,8 +30,20 @@ test('that it builds the purify file paths properly', t => {
     });
 
     // So let's make sure that updates the paths array properly...
-    t.deepEqual(options, { paths: stubs });
+    t.deepEqual(options.paths, stubs);
 
     // Clean up.
     fs.remove(__dirname + '/stubs');
+});
+
+test('that it sets the minimize value properly', t => {
+    let options = component.build({
+        paths: ['foo.html'],
+        minimize: true
+    });
+    t.true(options.minimize);
+    options = component.build({
+        paths: ['foo.html'],
+    });
+    t.is(options.minimize, Mix.inProduction());
 });

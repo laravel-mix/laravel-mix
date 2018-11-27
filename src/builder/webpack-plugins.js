@@ -7,7 +7,7 @@ let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = function() {
+module.exports = function () {
     let plugins = [];
 
     // If the user didn't declare any JS compilation, we still need to
@@ -19,7 +19,9 @@ module.exports = function() {
 
     // Activate better error feedback in the console.
     plugins.push(
-        new FriendlyErrorsWebpackPlugin({ clearConsole: Config.clearConsole })
+        new FriendlyErrorsWebpackPlugin({
+            clearConsole: Config.clearConsole
+        })
     );
 
     // Add support for webpack 3 scope hoisting.
@@ -30,9 +32,9 @@ module.exports = function() {
     // Activate support for Mix_ .env definitions.
     plugins.push(
         MixDefinitionsPlugin.build({
-            NODE_ENV: Mix.inProduction()
-                ? 'production'
-                : process.env.NODE_ENV || 'development'
+            NODE_ENV: Mix.inProduction() ?
+                'production' :
+                process.env.NODE_ENV || 'development'
         })
     );
 
@@ -43,10 +45,12 @@ module.exports = function() {
     // Add some general Webpack loader options.
     plugins.push(
         new webpack.LoaderOptionsPlugin({
-            minimize: Mix.inProduction(),
+            minimize: Mix.isUsing('purifyCss') ? false : Mix.inProduction(),
             options: {
                 context: __dirname,
-                output: { path: './' }
+                output: {
+                    path: './'
+                }
             }
         })
     );

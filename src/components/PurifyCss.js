@@ -34,16 +34,19 @@ class PurifyCss extends AutomaticComponent {
      * @param {Object} options
      */
     build(options) {
-        if (typeof options === 'object' && options.paths) {
-            let paths = options.paths;
+        if (typeof options === 'object') {
+            if (options.paths) {
+                let paths = options.paths;
 
-            paths.forEach(path => {
-                if (!path.includes('*')) return;
+                paths.forEach(path => {
+                    if (!path.includes('*')) return;
 
-                options.paths.splice(paths.indexOf(path), 1);
+                    options.paths.splice(paths.indexOf(path), 1);
 
-                options.paths = paths.concat(glob.sync(path));
-            });
+                    options.paths = paths.concat(glob.sync(path));
+                });
+            }
+            options.minimize = options.hasOwnProperty('minimize') ? options.minimize : Mix.inProduction();
         }
 
         return options;
