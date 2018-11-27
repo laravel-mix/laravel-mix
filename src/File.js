@@ -163,9 +163,7 @@ class File {
      * Read the file's contents.
      */
     read() {
-        return fs.readFileSync(this.path(), {
-            encoding: 'utf-8'
-        });
+        return fs.readFileSync(this.path(), 'utf8');
     }
 
     /**
@@ -201,7 +199,7 @@ class File {
     minify() {
         if (this.extension() === '.js') {
             this.write(
-                uglify.minify(this.path(), Config.uglify.uglifyOptions).code
+                uglify.minify(this.read(), Config.uglify.uglifyOptions).code
             );
         }
 

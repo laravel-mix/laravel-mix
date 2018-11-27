@@ -3,6 +3,7 @@ import mix from '../src/index';
 import sinon from 'sinon';
 import FileCollection from '../src/FileCollection';
 import fs from 'fs-extra';
+import eol from 'eol';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 
@@ -32,7 +33,7 @@ test('that it can merge multiple files into one.', t => {
     new FileCollection(files).merge(output);
 
     t.true(File.exists(output.path()));
-    t.is('class Foo {}\n\nclass Bar {}\n', output.read());
+    t.is('class Foo {}\n\nclass Bar {}\n', eol.lf(output.read()));
 });
 
 test('that it can merge JS files and apply Babel compilation.', t => {
@@ -53,5 +54,5 @@ test('that it can merge JS files and apply Babel compilation.', t => {
     collection.merge(output, useBabel);
 
     t.true(File.exists(output.path()));
-    t.is('fake minified output\n', output.read());
+    t.is(eol.auto('fake minified output\n'), output.read());
 });

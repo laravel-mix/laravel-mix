@@ -23,19 +23,18 @@ test('that it intelligently builds the Babel config', t => {
     // Then it should smartly merge the user's .babelrc with Mix's.
     t.deepEqual(
         [
-            'transform-object-rest-spread',
+            '@babel/plugin-proposal-object-rest-spread',
             [
-                'transform-runtime',
+                '@babel/plugin-transform-runtime',
                 {
-                    helpers: false,
-                    polyfill: false
+                    helpers: false
                 }
             ],
             'arbitrary-plugin'
         ],
         options.plugins
     );
-    t.is('env', options.presets[0][0]);
+    t.is('@babel/preset-env', options.presets[0][0]);
 
     // Clean up.
     File.find('.babelrc').delete();

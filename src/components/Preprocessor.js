@@ -35,7 +35,7 @@ class Preprocessor {
                         options: {
                             url: Config.processCssUrls,
                             sourceMap: Mix.isUsing('sourcemaps'),
-                            importLoaders: 1
+                            importLoaders: 2
                         }
                     },
 
@@ -80,6 +80,7 @@ class Preprocessor {
                         loader: 'resolve-url-loader',
                         options: {
                             sourceMap: true,
+                            engine: 'rework',
                             root: Mix.paths.root('node_modules')
                         }
                     });
