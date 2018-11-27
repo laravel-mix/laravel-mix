@@ -5,6 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "webpack": "NODE_ENV=development webpack --progress --hide-modules",
+        "precommit": "pretty-quick --staged",
         "dev": "NODE_ENV=development webpack --watch --progress --hide-modules",
         "hmr": "NODE_ENV=development webpack-dev-server --inline --hot",
         "production": "NODE_ENV=production webpack --progress --hide-modules",
