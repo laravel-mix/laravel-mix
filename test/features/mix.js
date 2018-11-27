@@ -30,16 +30,15 @@ test.cb.serial('the kitchen sink', t => {
 
         assertManifestIs(
             {
-                '/js/vendor.js': '/js/vendor.js?id=ff8afbea128fd1834d3a',
-                '/js/app.js': '/js/app.js?id=923f57b295c06628d87d',
-                '/css/app.css': '/css/app.css?id=2d4a1c0cca02e0a221b2',
-                '/css/example.css': '/css/example.css?id=b406ac87d7af027cfc27',
-                '/js/another.js': '/js/another.js?id=d403c9f3f581bbcba8ba',
-                '/js/manifest.js': '/js/manifest.js?id=7c0a19fb1a3afbe0a6cb',
-                '/somewhere/app.js':
-                    '/somewhere/app.js?id=923f57b295c06628d87d',
-                '/js/all.js': '/js/all.js?id=0d9f8b7df5830cc6ec5a',
-                '/file.js': '/file.js?id=2b319ddc541b0d2f5d70'
+                '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
+                '/js/app.js': '/js/app.js\\?id=\\w{20}',
+                '/css/app.css': '/css/app.css\\?id=\\w{20}',
+                '/css/example.css': '/css/example.css\\?id=\\w{20}',
+                '/js/another.js': '/js/another.js\\?id=\\w{20}',
+                '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+                '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
+                '/js/all.js': '/js/all.js\\?id=\\w{20}',
+                '/file.js': '/file.js\\?id=\\w{20}'
             },
             t
         );
