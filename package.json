@@ -31,11 +31,12 @@
         "src"
     ],
     "dependencies": {
-        "autoprefixer": "^7.2.6",
         "@babel/core": "^7.1.2",
         "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
         "@babel/plugin-transform-runtime": "^7.1.0",
         "@babel/preset-env": "^7.1.0",
+        "@babel/runtime": "^7.1.5",
+        "autoprefixer": "^7.2.6",
         "babel-loader": "^8.0.4",
         "chokidar": "^2.0.3",
         "clean-css": "^4.1.3",
