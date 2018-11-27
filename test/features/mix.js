@@ -28,17 +28,20 @@ test.cb.serial('the kitchen sink', t => {
     compile(t, () => {
         t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
 
-        t.deepEqual(
+        assertManifestIs(
             {
-                '/file.js': '/file.js?id=6535b4d330f12366c3f7',
-                '/js/all.js': '/js/all.js?id=d198d4b3b25e9d66fa37',
+                '/js/vendor.js': '/js/vendor.js?id=ff8afbea128fd1834d3a',
+                '/js/app.js': '/js/app.js?id=923f57b295c06628d87d',
+                '/css/app.css': '/css/app.css?id=2d4a1c0cca02e0a221b2',
+                '/css/example.css': '/css/example.css?id=b406ac87d7af027cfc27',
                 '/js/another.js': '/js/another.js?id=d403c9f3f581bbcba8ba',
-                '/js/app.js': '/js/app.js?id=8e880c67fe14b09f7d16',
-                '/js/manifest.js': '/js/manifest.js?id=ce6566a24afe6e358977',
-                '/js/vendor.js': '/js/vendor.js?id=d69105e5f6f53447b8a7',
-                '/somewhere/app.js': '/somewhere/app.js?id=8e880c67fe14b09f7d16'
+                '/js/manifest.js': '/js/manifest.js?id=7c0a19fb1a3afbe0a6cb',
+                '/somewhere/app.js':
+                    '/somewhere/app.js?id=923f57b295c06628d87d',
+                '/js/all.js': '/js/all.js?id=0d9f8b7df5830cc6ec5a',
+                '/file.js': '/file.js?id=2b319ddc541b0d2f5d70'
             },
-            readManifest()
+            t
         );
     });
 });

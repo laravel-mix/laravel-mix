@@ -18,7 +18,11 @@ test.afterEach.always(() => {
 test('it installs a single dependency', t => {
     new Dependencies(['browser-sync']).install();
 
-    t.true(process.execSync.calledWith('npm install browser-sync --save-dev'));
+    t.true(
+        process.execSync.calledWith(
+            'npm install browser-sync --save-dev --production=false'
+        )
+    );
 });
 
 test('it installs multiple dependencies', t => {
@@ -26,7 +30,7 @@ test('it installs multiple dependencies', t => {
 
     t.true(
         process.execSync.calledWith(
-            'npm install browser-sync browser-sync-webpack-plugin --save-dev'
+            'npm install browser-sync browser-sync-webpack-plugin --save-dev --production=false'
         )
     );
 });
@@ -36,7 +40,9 @@ test('it installs a single dependency with Yarn', t => {
 
     new Dependencies(['browser-sync']).install();
 
-    t.true(process.execSync.calledWith('yarn add browser-sync --dev'));
+    t.true(
+        process.execSync.calledWith(
+            'yarn add browser-sync --dev --production=false'
+        )
+    );
 });
-
-
