@@ -1,4 +1,4 @@
-let process = require('child_process');
+let exec = require('child_process').execSync;
 let File = require('../src/File');
 
 class Dependencies {
@@ -29,7 +29,7 @@ class Dependencies {
                 'This will only take a moment.'
         );
 
-        process.execSync(command);
+        exec(command);
 
         if (abortOnComplete) {
             console.log(
