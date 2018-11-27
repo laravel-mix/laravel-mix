@@ -1,7 +1,7 @@
 # Quick webpack Configuration
 
 ```js
- mix.webpackConfig({} || cb);
+mix.webpackConfig({} || cb);
 ```
 
 While, of course, you're free to edit the provided `webpack.config.js` file, in certain settings, it's easier to modify or override the default settings directly from your `webpack.mix.js` file. This is particularly true for Laravel apps, where, by default, the `webpack.config.js` isn't available in the project root.
@@ -34,8 +34,8 @@ mix.webpackConfig(webpack => {
         plugins: [
             new webpack.ProvidePlugin({
                 $: 'jquery',
-                jQuery: 'jquery', 
-                'window.jQuery': 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery'
             })
         ]
     };

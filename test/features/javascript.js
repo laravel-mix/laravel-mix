@@ -16,9 +16,10 @@ test.cb.serial('it compiles JavaScript', t => {
 });
 
 test.cb.serial('it compiles JavaScript and Sass', t => {
-    mix
-        .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
-        .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+        'css'
+    );
 
     compile(t, () => {
         t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
@@ -72,9 +73,9 @@ test.serial(
 );
 
 test.serial('basic JS compilation with a different public path', t => {
-    mix
-        .js('resources/assets/js/app.js', 'public/js')
-        .setPublicPath('public-html');
+    mix.js('resources/assets/js/app.js', 'public/js').setPublicPath(
+        'public-html'
+    );
 
     t.deepEqual(
         {

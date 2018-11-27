@@ -3,13 +3,14 @@ import mix from './helpers/setup';
 test.cb.serial('it purifies CSS', t => {
     createPurifyStubs();
 
-    mix
-        .less('test/fixtures/fake-app/resources/assets/less/app.less', 'css')
-        .options({
-            purifyCss: {
-                paths: ['test/fixtures/fake-app/resources/views/stub.blade.php']
-            }
-        });
+    mix.less(
+        'test/fixtures/fake-app/resources/assets/less/app.less',
+        'css'
+    ).options({
+        purifyCss: {
+            paths: ['test/fixtures/fake-app/resources/views/stub.blade.php']
+        }
+    });
 
     compile(t, () => {
         let expected = `.shouldStay {
@@ -28,8 +29,7 @@ test.cb.serial('it purifies CSS', t => {
 test.cb.serial('it purifies CSS with JS compilation', t => {
     createPurifyStubs();
 
-    mix
-        .js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
         .less('test/fixtures/fake-app/resources/assets/less/app.less', 'css')
         .options({
             purifyCss: {

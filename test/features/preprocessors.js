@@ -16,8 +16,7 @@ test.cb.serial('it compiles Sass without JS', t => {
 });
 
 test.serial('JS and Sass + Less + Stylus compilation config', t => {
-    mix
-        .js('resources/assets/js/app.js', 'js')
+    mix.js('resources/assets/js/app.js', 'js')
         .sass('resources/assets/sass/sass.scss', 'css')
         .less('resources/assets/less/less.less', 'css')
         .stylus('resources/assets/stylus/stylus.styl', 'css');

@@ -5,8 +5,10 @@ jQuery UI is a toolkit for rendering common components, such as datepickers, dra
 ## Build Your `webpack.mix.js` Configuration
 
 ```js
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.js('resources/assets/js/app.js', 'public/js').sass(
+    'resources/assets/sass/app.scss',
+    'public/css'
+);
 ```
 
 ## Install `jquery-ui`

@@ -21,11 +21,10 @@ test.serial('Custom vue-loader options may be specified', t => {
 test.cb.serial(
     'it prepends vue styles to your sass/less/stylus compiled file',
     t => {
-        mix
-            .js(
-                'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
-                'js/app.js'
-            )
+        mix.js(
+            'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+            'js/app.js'
+        )
             .sass(
                 'test/fixtures/fake-app/resources/assets/sass/app.scss',
                 'css/app.css'
@@ -57,12 +56,10 @@ body {
 test.cb.serial(
     'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
     t => {
-        mix
-            .js(
-                'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
-                'js/app.js'
-            )
-            .options({ extractVueStyles: true });
+        mix.js(
+            'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+            'js/app.js'
+        ).options({ extractVueStyles: true });
 
         compile(t, () => {
             t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
@@ -83,11 +80,10 @@ test.cb.serial(
 );
 
 test.cb.serial('it extracts vue styles to a dedicated file', t => {
-    mix
-        .js(
-            'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
-            'js/app.js'
-        )
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+        'js/app.js'
+    )
         .sass(
             'test/fixtures/fake-app/resources/assets/sass/app.scss',
             'css/app.css'
@@ -123,12 +119,15 @@ test.cb.serial('it extracts vue styles to a dedicated file', t => {
     });
 });
 
-test.serial('it does also add the vue webpack rules with typescript component', t => {
-    mix.ts('resources/assets/js/app.js', 'public/js');
+test.serial(
+    'it does also add the vue webpack rules with typescript component',
+    t => {
+        mix.ts('resources/assets/js/app.js', 'public/js');
 
-    t.truthy(
-        buildConfig().module.rules.find(
-            rule => rule.test.toString() === '/\\.vue$/'
-        )
-    );
-});
+        t.truthy(
+            buildConfig().module.rules.find(
+                rule => rule.test.toString() === '/\\.vue$/'
+            )
+        );
+    }
+);

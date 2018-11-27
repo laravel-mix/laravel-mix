@@ -35,7 +35,7 @@ class TypeScript extends JavaScript {
      * @param {Object} config
      */
     webpackConfig(config) {
-        super.webpackConfig(config)
+        super.webpackConfig(config);
 
         config.resolve.extensions.push('.ts', '.tsx');
         config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js';

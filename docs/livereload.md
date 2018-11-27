@@ -16,9 +16,7 @@ Add the following lines to the bottom of your webpack.mix.js:
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 mix.webpackConfig({
-    plugins: [
-        new LiveReloadPlugin()
-    ]
+    plugins: [new LiveReloadPlugin()]
 });
 ```
 
