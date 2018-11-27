@@ -1,6 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import fs from 'fs-extra';
+import eol from 'eol';
 import '../src/index';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
@@ -52,7 +53,12 @@ test('it knows the size of a file', t => {
 
     t.true(File.exists(file));
 
-    t.is(7, new File(file).size());
+    let expected = 7;
+    if (process.platform === 'win32') {
+        expected = 8; // plus windows newline which is carriage return + linefeed
+    }
+
+    t.is(expected, new File(file).size());
 });
 
 test('it knows the path to the file', t => {
@@ -121,7 +127,7 @@ test('it can read and write to a file', t => {
 
     file.write('foobar');
 
-    t.is('foobar\n', new File(filePath).read());
+    t.is(eol.auto('foobar\n'), new File(filePath).read());
 
     file.write('changed');
 });
@@ -146,7 +152,7 @@ test('it can minify JS files.', t => {
             var two = 'two';
     `);
 
-    t.is('var one="one",two="two";\n', file.minify().read());
+    t.is(eol.auto('var one="one",two="two";\n'), file.minify().read());
 });
 
 test('it can minify CSS files.', t => {
@@ -162,7 +168,7 @@ test('it can minify CSS files.', t => {
 
     file.minify();
 
-    t.is('body{color:red}\n', file.read());
+    t.is(eol.auto('body{color:red}\n'), file.read());
 });
 
 test('it can copy a file to a new location', t => {
@@ -176,7 +182,7 @@ test('it can copy a file to a new location', t => {
     file.copyTo(copiedPath);
 
     t.true(File.exists(copiedPath));
-    t.is('.foo {}\n', new File(copiedPath).read());
+    t.is(eol.auto('.foo {}\n'), new File(copiedPath).read());
 });
 
 test('it knows if its path contains a set of chars', t => {

@@ -154,22 +154,21 @@ module.exports = function() {
                     cacheDirectory: true,
                     presets: [
                         [
-                            'env',
+                            '@babel/preset-env',
                             {
                                 modules: false,
                                 targets: {
-                                    browsers: ['> 2%'],
-                                    uglify: true
-                                }
+                                    browsers: ['> 2%']
+                                },
+                                forceAllTransforms: true
                             }
                         ]
                     ],
                     plugins: [
-                        'transform-object-rest-spread',
+                        '@babel/plugin-proposal-object-rest-spread',
                         [
-                            'transform-runtime',
+                            '@babel/plugin-transform-runtime',
                             {
-                                polyfill: false,
                                 helpers: false
                             }
                         ]
@@ -213,12 +212,7 @@ module.exports = function() {
         uglify: {
             sourceMap: true,
             uglifyOptions: {
-                compress: {
-                    warnings: false
-                },
-                output: {
-                    comments: false
-                }
+                sourceMap: true
             }
         },
 
