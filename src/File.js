@@ -199,7 +199,7 @@ class File {
     minify() {
         if (this.extension() === '.js') {
             this.write(
-                uglify.minify(this.read(), Config.uglify.uglifyOptions).code
+                uglify.minify(this.path(), Config.uglify.uglifyOptions).code
             );
         }
 
