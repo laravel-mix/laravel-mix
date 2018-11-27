@@ -46,10 +46,10 @@ class Dependencies {
         dependencies = [].concat(dependencies).join(' ');
 
         if (File.exists('yarn.lock')) {
-            return `yarn add ${dependencies} --dev`;
+            return `yarn add ${dependencies} --dev --production=false`;
         }
 
-        return `npm install ${dependencies} --save-dev`;
+        return `npm install ${dependencies} --save-dev --production=false`;
     }
 }
 
