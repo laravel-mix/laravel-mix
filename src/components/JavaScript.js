@@ -1,6 +1,5 @@
 let glob = require('glob');
 let Assert = require('../Assert');
-let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let Vue = require('./Vue');
 
 class JavaScript {

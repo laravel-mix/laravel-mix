@@ -1,4 +1,3 @@
-let paths = new (require('./Paths'))();
 let webpackMerge = require('webpack-merge');
 
 module.exports = function() {
