@@ -24,10 +24,14 @@ class Preprocessor {
         this.details.forEach(preprocessor => {
             if (preprocessor.type === 'fastsass') return;
 
+            let outputPath = preprocessor.output.filePath
+                .replace(Config.publicPath + path.sep, path.sep)
+                .replace(/\\/g, '/');
+
             tap(
                 new MiniCssExtractPlugin({
-                    filename: `${preprocessor.output.segments.path}`,
-                    chunkFilename: `${preprocessor.output.segments.path}`
+                    filename: outputPath,
+                    chunkFilename: outputPath
                 }),
                 extractPlugin => {
                     let loaders = [
