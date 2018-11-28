@@ -24,11 +24,6 @@ module.exports = function() {
         })
     );
 
-    // Add support for webpack 3 scope hoisting.
-    if (Mix.inProduction()) {
-        plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
-    }
-
     // Activate support for Mix_ .env definitions.
     plugins.push(
         MixDefinitionsPlugin.build({
@@ -37,10 +32,6 @@ module.exports = function() {
                 : process.env.NODE_ENV || 'development'
         })
     );
-
-    if (!Mix.components.get('version') && Mix.isUsing('hmr')) {
-        plugins.push(new webpack.NamedModulesPlugin());
-    }
 
     // Add some general Webpack loader options.
     plugins.push(

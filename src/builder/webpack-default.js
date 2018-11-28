@@ -2,6 +2,8 @@ module.exports = function() {
     return {
         context: Mix.paths.root(),
 
+        mode: Mix.inProduction() ? 'production' : 'development',
+
         entry: {},
 
         output: {},
