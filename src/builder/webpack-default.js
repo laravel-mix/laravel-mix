@@ -42,7 +42,7 @@ module.exports = function() {
                       new OptimizeCSSAssetsPlugin({})
                   ]
               }
-            : false,
+            : {},
 
         devtool: Config.sourcemaps,
 
