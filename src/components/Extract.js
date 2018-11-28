@@ -1,10 +1,11 @@
-let webpack = require('webpack');
+let webpackMerge = require('webpack-merge');
 
 class Extract {
     /**
      * Create a new component instance.
      */
     constructor() {
+        this.entry = null;
         this.extractions = [];
     }
 
@@ -24,32 +25,70 @@ class Extract {
      * @param {Entry} entry
      */
     webpackEntry(entry) {
-        this.extractions = this.extractions.map(
-            entry.addExtraction.bind(entry)
-        );
+        this.entry = entry;
 
-        // If we are extracting vendor libraries, then we also need
-        // to extract Webpack's manifest file to assist with caching.
-        if (this.extractions.length) {
-            this.extractions.push(
-                path.join(entry.base, 'manifest').replace(/\\/g, '/')
-            );
-        }
+        this.extractions.forEach(extraction => {
+            extraction.output = this.extractionPath(extraction.output);
+
+            this.entry.addExtraction(extraction);
+        });
     }
 
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        // If we're extracting any vendor libraries, then we
-        // need to add the CommonChunksPlugin to strip out
-        // all relevant code into its own file.
-        if (this.extractions.length) {
-            return new webpack.optimize.CommonsChunkPlugin({
-                names: this.extractions,
-                minChunks: Infinity
-            });
+    webpackConfig(config) {
+        const newConfig = webpackMerge.smart(config, this.config());
+
+        config.optimization = newConfig.optimization;
+    }
+
+    config() {
+        return {
+            optimization: {
+                // If we are extracting vendor libraries, then we also need
+                // to extract Webpack's manifest file to assist with caching.
+                runtimeChunk: {
+                    name: path
+                        .join(this.entry.base, 'manifest')
+                        .replace(/\\/g, '/')
+                },
+
+                splitChunks: {
+                    cacheGroups: this.createCacheGroups()
+                }
+            }
+        };
+    }
+
+    createCacheGroups() {
+        const groups = {};
+
+        for (const [index, extraction] of this.extractions.entries()) {
+            groups[`vendor${index}`] = this.createCacheGroup(extraction);
         }
+
+        return groups;
+    }
+
+    createCacheGroup(extraction) {
+        const libsPattern = extraction.libs.join('|');
+        const pattern = new RegExp(`node_modules[\\\\/](${libsPattern})`, 'i');
+
+        return {
+            test: pattern,
+            name: extraction.output,
+            chunks: 'all',
+            enforce: true
+        };
+    }
+
+    extractionPath(outputPath) {
+        if (outputPath) {
+            return new File(outputPath)
+                .pathFromPublic(Config.publicPath)
+                .replace(/\.js$/, '')
+                .replace(/\\/g, '/');
+        }
+
+        return path.join(this.entry.base, 'vendor').replace(/\\/g, '/');
     }
 }
 
