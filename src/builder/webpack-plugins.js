@@ -5,7 +5,6 @@ let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
-let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function() {
     let plugins = [];
@@ -45,12 +44,6 @@ module.exports = function() {
             }
         })
     );
-
-    // If we're in production environment, with Uglification turned on, we'll
-    // clean up and minify all of the user's JS and CSS automatically.
-    if (Mix.inProduction() && Config.uglify) {
-        plugins.push(new UglifyJSPlugin(Config.uglify));
-    }
 
     // Handle all custom, non-webpack tasks.
     plugins.push(new ManifestPlugin());

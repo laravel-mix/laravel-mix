@@ -2,7 +2,7 @@ let os = require('os');
 let md5 = require('md5');
 let path = require('path');
 let fs = require('fs-extra');
-let uglify = require('uglify-js');
+let Terser = require('terser');
 let UglifyCss = require('clean-css');
 
 class File {
@@ -199,7 +199,7 @@ class File {
     minify() {
         if (this.extension() === '.js') {
             this.write(
-                uglify.minify(this.path(), Config.uglify.uglifyOptions).code
+                Terser.minify(this.read(), Config.terser.terserOptions).code
             );
         }
 

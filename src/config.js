@@ -202,16 +202,15 @@ module.exports = function() {
         globalVueStyles: '',
 
         /**
-         * Uglify-specific settings for Webpack.
+         * Terser-specific settings for Webpack.
          *
-         * See: https://github.com/mishoo/UglifyJS2#compressor-options
+         * See: https://github.com/webpack-contrib/terser-webpack-plugin#options
          *
          * @type {Object}
          */
-        uglify: {
+        terser: {
             sourceMap: true,
-            uglifyOptions: {
-                sourceMap: true,
+            terserOptions: {
                 compress: {
                     warnings: false
                 },

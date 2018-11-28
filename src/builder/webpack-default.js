@@ -1,3 +1,5 @@
+let TerserPlugin = require('terser-webpack-plugin');
+
 module.exports = function() {
     return {
         context: Mix.paths.root(),
@@ -31,6 +33,12 @@ module.exports = function() {
         performance: {
             hints: false
         },
+
+        optimization: Mix.inProduction()
+            ? {
+                  minimizer: [new TerserPlugin(Config.terser)]
+              }
+            : false,
 
         devtool: Config.sourcemaps,
 
