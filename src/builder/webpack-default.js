@@ -1,4 +1,5 @@
 let TerserPlugin = require('terser-webpack-plugin');
+let OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = function() {
     return {
@@ -36,7 +37,10 @@ module.exports = function() {
 
         optimization: Mix.inProduction()
             ? {
-                  minimizer: [new TerserPlugin(Config.terser)]
+                  minimizer: [
+                      new TerserPlugin(Config.terser),
+                      new OptimizeCSSAssetsPlugin({})
+                  ]
               }
             : false,
 
