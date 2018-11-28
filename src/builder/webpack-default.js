@@ -18,11 +18,14 @@ module.exports = function() {
             timings: false,
             children: false,
             errorDetails: false,
+            entrypoints: false,
+            performance: Mix.inProduction(),
             chunks: false,
             modules: false,
             reasons: false,
             source: false,
-            publicPath: false
+            publicPath: false,
+            builtAt: false
         },
 
         performance: {
