@@ -96,17 +96,6 @@ module.exports = function() {
         resourceRoot: '/',
 
         /**
-         * vue-loader specific options.
-         *
-         * @type {Object}
-         */
-        vue: {
-            preLoaders: {},
-            postLoaders: {},
-            esModule: false
-        },
-
-        /**
          * Image Loader defaults.
          * See: https://github.com/thetalecrafter/img-loader#options
          *

@@ -25,8 +25,8 @@ test.cb.serial('it compiles React and a preprocessor properly', t => {
     compile(t, config => {
         assertManifestIs(
             {
-                '/js/app.js': '/js/app.js',
-                '/css/app.css': '/css/app.css'
+                '/css/app.css': '/css/app.css',
+                '/js/app.js': '/js/app.js'
             },
             t
         );

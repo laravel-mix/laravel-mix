@@ -1,23 +1,5 @@
 import mix from './helpers/setup';
 
-test.serial('Custom vue-loader options may be specified', t => {
-    mix.js('resources/assets/js/app.js', 'public/js').options({
-        vue: {
-            camelCase: true,
-            postLoaders: { stub: 'foo' }
-        }
-    });
-
-    let vueOptions = buildConfig().module.rules.find(
-        rule => rule.loader === 'vue-loader'
-    ).options;
-
-    t.true(vueOptions.camelCase);
-    t.deepEqual({}, vueOptions.preLoaders);
-    t.deepEqual({ stub: 'foo' }, vueOptions.postLoaders);
-    t.false(vueOptions.esModule);
-});
-
 test.cb.serial(
     'it prepends vue styles to your sass/less/stylus compiled file',
     t => {
@@ -39,6 +21,7 @@ test.cb.serial(
 .hello {
   color: blue;
 }
+
 body {
   color: red;
 }
@@ -63,17 +46,22 @@ test.cb.serial(
 
         compile(t, () => {
             t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-            t.true(File.exists('test/fixtures/fake-app/public/vue-styles.css'));
+            t.true(
+                File.exists('test/fixtures/fake-app/public/css/vue-styles.css')
+            );
 
             let expected = `
 .hello {
   color: blue;
 }
+
 `;
 
             t.is(
                 expected,
-                File.find('test/fixtures/fake-app/public/vue-styles.css').read()
+                File.find(
+                    'test/fixtures/fake-app/public/css/vue-styles.css'
+                ).read()
             );
         });
     }
@@ -110,6 +98,7 @@ test.cb.serial('it extracts vue styles to a dedicated file', t => {
 .hello {
   color: blue;
 }
+
 `;
 
         t.is(

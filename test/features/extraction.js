@@ -16,13 +16,19 @@ test.serial('JS compilation with vendor extraction config', t => {
 });
 
 test.serial(
-    'vendor extraction with no output and no requested JS compilation throws an error',
+    'vendor extraction with no requested JS compilation will still extract vendor libraries',
     t => {
         mix.extract(['vue']);
 
-        Mix.dispatch('init');
-
-        t.throws(() => new WebpackConfig().build(), Error);
+        t.deepEqual(
+            {
+                mix: [
+                    path.resolve(__dirname, '../../src/builder/mock-entry.js')
+                ],
+                '/vendor': ['vue']
+            },
+            buildConfig().entry
+        );
     }
 );
 

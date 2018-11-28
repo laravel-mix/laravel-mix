@@ -34,8 +34,8 @@ test.cb.serial('it compiles JavaScript and Sass with versioning', t => {
 
         assertManifestIs(
             {
-                '/js/app.js': '/js/app.js\\?id=\\w{20}',
-                '/css/app.css': '/css/app.css\\?id=\\w{20}'
+                '/css/app.css': '/css/app.css\\?id=\\w{20}',
+                '/js/app.js': '/js/app.js\\?id=\\w{20}'
             },
             t
         );
