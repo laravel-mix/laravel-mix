@@ -18,13 +18,6 @@ class JavaScript {
     }
 
     /**
-     * Required dependencies for the component.
-     */
-    dependencies() {
-        return this.vue.dependencies();
-    }
-
-    /**
      * Register the component.
      *
      * @param {*} entry
