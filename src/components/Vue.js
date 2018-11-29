@@ -19,7 +19,7 @@ class Vue {
             return {
                 test: /\.css$/,
                 use: this.extractPlugin.extract({
-                    fallback: 'vue-style-loader',
+                    fallback: 'style-loader',
                     use: ['css-loader']
                 })
             };
