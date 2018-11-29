@@ -17,6 +17,10 @@ class JavaScript {
         return name === 'javascript' ? ['js', 'vue'] : name;
     }
 
+    boot() {
+        this.vue.boot();
+    }
+
     /**
      * Register the component.
      *
@@ -57,7 +61,9 @@ class JavaScript {
      * webpack rules to be appended to the master config.
      */
     webpackRules() {
-        return [
+        let vueRules = this.vue.webpackRules();
+
+        return [].concat(vueRules).concat([
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
@@ -68,7 +74,7 @@ class JavaScript {
                     }
                 ]
             }
-        ];
+        ]);
     }
 
     /**
