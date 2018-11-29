@@ -1,5 +1,5 @@
 let Assert = require('../Assert');
-let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Preprocessor {
     /**
@@ -28,92 +28,88 @@ class Preprocessor {
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
 
-            tap(
-                new MiniCssExtractPlugin({
-                    filename: outputPath,
-                    chunkFilename: outputPath
-                }),
-                extractPlugin => {
-                    let loaders = [
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                url: Config.processCssUrls,
-                                sourceMap: Mix.isUsing('sourcemaps'),
-                                importLoaders: 1
-                            }
-                        },
-
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                sourceMap:
-                                    preprocessor.type === 'sass' &&
-                                    Config.processCssUrls
-                                        ? true
-                                        : Mix.isUsing('sourcemaps'),
-                                ident: 'postcss',
-                                plugins: (function() {
-                                    let plugins = Config.postCss;
-
-                                    if (
-                                        preprocessor.postCssPlugins &&
-                                        preprocessor.postCssPlugins.length
-                                    ) {
-                                        plugins = preprocessor.postCssPlugins;
-                                    }
-
-                                    if (
-                                        Config.autoprefixer &&
-                                        Config.autoprefixer.enabled
-                                    ) {
-                                        plugins.push(
-                                            require('autoprefixer')(
-                                                Config.autoprefixer.options
-                                            )
-                                        );
-                                    }
-
-                                    return plugins;
-                                })()
-                            }
+            tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+                let loaders = [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: Config.processCssUrls,
+                            sourceMap: Mix.isUsing('sourcemaps'),
+                            importLoaders: 1
                         }
-                    ];
+                    },
 
-                    // if (preprocessor.type === 'sass' && Config.processCssUrls) {
-                    //     loaders.push({
-                    //         loader: 'resolve-url-loader',
-                    //         options: {
-                    //             sourceMap: true,
-                    //             root: Mix.paths.root('node_modules')
-                    //         }
-                    //     });
-                    // }
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap:
+                                preprocessor.type === 'sass' &&
+                                Config.processCssUrls
+                                    ? true
+                                    : Mix.isUsing('sourcemaps'),
+                            ident: 'postcss',
+                            plugins: (function() {
+                                let plugins = Config.postCss;
 
-                    if (preprocessor.type !== 'postCss') {
-                        loaders.push({
-                            loader: `${preprocessor.type}-loader`,
-                            options: Object.assign(preprocessor.pluginOptions, {
-                                sourceMap:
-                                    preprocessor.type === 'sass' &&
-                                    Config.processCssUrls
-                                        ? true
-                                        : Mix.isUsing('sourcemaps')
-                            })
-                        });
+                                if (
+                                    preprocessor.postCssPlugins &&
+                                    preprocessor.postCssPlugins.length
+                                ) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
+
+                                if (
+                                    Config.autoprefixer &&
+                                    Config.autoprefixer.enabled
+                                ) {
+                                    plugins.push(
+                                        require('autoprefixer')(
+                                            Config.autoprefixer.options
+                                        )
+                                    );
+                                }
+
+                                return plugins;
+                            })()
+                        }
                     }
+                ];
 
-                    rules.push({
-                        test: preprocessor.src.path(),
-                        use: loaders
+                // if (preprocessor.type === 'sass' && Config.processCssUrls) {
+                //     loaders.push({
+                //         loader: 'resolve-url-loader',
+                //         options: {
+                //             sourceMap: true,
+                //             root: Mix.paths.root('node_modules')
+                //         }
+                //     });
+                // }
+
+                if (preprocessor.type !== 'postCss') {
+                    loaders.push({
+                        loader: `${preprocessor.type}-loader`,
+                        options: Object.assign(preprocessor.pluginOptions, {
+                            sourceMap:
+                                preprocessor.type === 'sass' &&
+                                Config.processCssUrls
+                                    ? true
+                                    : Mix.isUsing('sourcemaps')
+                        })
                     });
-
-                    this.extractPlugins = (this.extractPlugins || []).concat(
-                        extractPlugin
-                    );
                 }
-            );
+
+                rules.push({
+                    test: preprocessor.src.path(),
+                    use: extractPlugin.extract({
+                        fallback: 'style-loader',
+                        use: loaders
+                    })
+                });
+
+                this.extractPlugins = (this.extractPlugins || []).concat(
+                    extractPlugin
+                );
+            });
         });
 
         return rules;
