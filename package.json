@@ -91,6 +91,8 @@
         "purifycss-webpack": "^0.7.0",
         "sass-resources-loader": "^2.0.0",
         "sinon": "^7.1.1",
+        "stylus": "^0.54.5",
+        "stylus-loader": "^3.0.2",
         "vue": "^2.5.13",
         "vue-style-loader": "^4.0.2"
     },

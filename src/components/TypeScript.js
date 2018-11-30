@@ -12,7 +12,7 @@ class TypeScript extends JavaScript {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['ts-loader', 'typescript'].concat(super.dependencies());
+        return ['ts-loader', 'typescript'].concat();
     }
 
     /**

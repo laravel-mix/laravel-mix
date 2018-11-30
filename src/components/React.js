@@ -5,7 +5,7 @@ class React extends JavaScript {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['@babel/preset-react'].concat(super.dependencies());
+        return ['@babel/preset-react'];
     }
 
     /**
