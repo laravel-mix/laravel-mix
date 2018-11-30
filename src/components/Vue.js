@@ -3,6 +3,15 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Vue {
     /**
+     * Required dependencies for the component.
+     */
+    dependencies() {
+        if (Config.extractVueStyles && Config.globalVueStyles) {
+            return ['sass-resources-loader']; // Required for importing global styles into every component.
+        }
+    }
+
+    /**
      * Override the generated webpack configuration.
      *
      * @param {Object} webpackConfig
