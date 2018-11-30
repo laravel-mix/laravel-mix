@@ -11,8 +11,6 @@ class Css extends AutomaticComponent {
                 loaders: ['style-loader', 'css-loader']
             },
 
-            // We're not doing test: /\.s[ca]ss/ for a reason, related to Vue SFP's.
-            // Don't merge.
             {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
@@ -22,7 +20,11 @@ class Css extends AutomaticComponent {
             {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: ['style-loader', 'css-loader', 'sass-loader']
+                loaders: [
+                    'style-loader',
+                    'css-loader',
+                    { loader: 'sass-loader', options: { indentedSyntax: true } }
+                ]
             },
 
             {
