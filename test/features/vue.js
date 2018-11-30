@@ -2,7 +2,7 @@ import mix from './helpers/setup';
 
 test.cb.serial('it prepends vue styles to your sass compiled file', t => {
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .sass(
@@ -33,7 +33,7 @@ body {
 
 test.cb.serial('it prepends vue styles to your less compiled file', t => {
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .less(
@@ -66,7 +66,7 @@ test.cb.serial(
     'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
     t => {
         mix.js(
-            'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+            'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
             'js/app.js'
         ).options({ extractVueStyles: true });
 
@@ -136,6 +136,8 @@ test.cb.serial('it extracts vue Stylus styles to a dedicated file', t => {
     });
 });
 
+// test.serial('Vue extraction with Sass', t => {});
+
 test.serial(
     'it does also add the vue webpack rules with typescript component',
     t => {
@@ -149,9 +151,9 @@ test.serial(
     }
 );
 
-test.cb.serial('it extracts vue Sass styles to a dedicated file', t => {
+test.cb.serial('it extracts vue .scss styles to a dedicated file', t => {
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue.js',
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .sass(
@@ -178,6 +180,45 @@ test.cb.serial('it extracts vue Sass styles to a dedicated file', t => {
         expected = `
 .hello {
   color: blue;
+}
+`;
+
+        t.is(
+            expected,
+            File.find('test/fixtures/fake-app/public/css/components.css').read()
+        );
+    });
+});
+
+test.cb.serial('it extracts vue .sass styles to a dedicated file', t => {
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-indented-sass.js',
+        'js/app.js'
+    )
+        .sass(
+            'test/fixtures/fake-app/resources/assets/sass/app.scss',
+            'css/app.css'
+        )
+        .options({ extractVueStyles: 'css/components.css' });
+
+    compile(t, config => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
+
+        let expected = `body {
+  color: red;
+}
+`;
+
+        t.is(
+            expected,
+            File.find('test/fixtures/fake-app/public/css/app.css').read()
+        );
+
+        expected = `
+.hello {
+  color: black;
 }
 `;
 

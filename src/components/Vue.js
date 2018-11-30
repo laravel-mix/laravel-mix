@@ -36,7 +36,25 @@ class Vue {
 
         // SASS
         this.updateCssLoader(
-            's[ac]ss',
+            'sass',
+            [
+                'css-loader',
+                {
+                    loader: 'sass-loader',
+                    options: Config.globalVueStyles
+                        ? {
+                              resources: Mix.paths.root(Config.globalVueStyles),
+                              indentedSyntax: true
+                          }
+                        : { indentedSyntax: true }
+                }
+            ],
+            webpackConfig
+        );
+
+        // SCSS
+        this.updateCssLoader(
+            'scss',
             [
                 'css-loader',
                 {
@@ -61,9 +79,9 @@ class Vue {
     updateCssLoader(loader, loaders, webpackConfig) {
         let extractPlugin = this.extractPlugin();
 
-        let rule = webpackConfig.module.rules.find(
-            rule => rule.test.toString() === `/\\.${loader}$/`
-        );
+        let rule = webpackConfig.module.rules.find(rule => {
+            return rule.test instanceof RegExp && rule.test.test('.' + loader);
+        });
 
         rule.loaders = extractPlugin.extract({
             fallback: 'style-loader',
