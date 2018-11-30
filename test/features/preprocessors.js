@@ -39,7 +39,7 @@ test.serial('Generic Sass rules are applied', t => {
 
     t.truthy(
         buildConfig().module.rules.find(rule => {
-            return rule.test.toString() === '/\\.s[ac]ss$/';
+            return rule.test.toString() === '/\\.scss$/';
         })
     );
 });
