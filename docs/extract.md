@@ -1,7 +1,7 @@
 # Library Code Splitting
 
 ```js
-mix.js(src, output).extract(['any', 'vendor', 'library']);
+mix.js(src, output).extract();
 ```
 
 Bundling all JavaScript into a single files does come with a potential downside: each time you change a minor detail in your application code, you must bust the cache for all users. That means all of your vendor libraries must be re-downloaded and cached. Yikes - not ideal!
@@ -13,12 +13,15 @@ One solution is to isolate, or extract, your vendor libraries into their own fil
 -   **Manifest \(webpack Runtime\)**: `manifest.js`
 
 ```js
+mix.extract();
+
+// Or:
 mix.extract(['vue', 'jquery']);
 ```
 
-The `extract` method expects an array of vendor libraries that you wish to extract from your main bundle file. With this adjustment, the source code for both Vue and jQuery will be located in `vendor.js`, rather than `app.js`. Should you, in the future, need to make a small change to your application JavaScript, it will not affect the larger vendor libraries. Those will remain cached, long-term. Nifty!
+If you don't provide an array of npm libraries to the `extract` method, Mix will extract all imported libraries from the node_modules directory. This is a useful default, and is likely what you want. However, if you need to be explicit, pass an array and only those vendor lobraries will be extracted.
 
-Once you run webpack to compile your code, you'll find three new files. You may reference these at the bottom of your HTML, per usual.
+Once you run webpack to compile your code, you'll find three new files. You may reference these at the bottom of your HTML.
 
 ```html
 <script src="/js/manifest.js"></script>
@@ -26,7 +29,7 @@ Once you run webpack to compile your code, you'll find three new files. You may 
 <script src="/js/app.js"></script>
 ```
 
-In effect, we pay a small HTTP request penalty, in exchange for improved long-term caching.
+In effect, we pay a small HTTP request penalty, in exchange for improved long-term caching of vendor code that very rarely will change.
 
 ### What's That Manifest File?
 

@@ -10,12 +10,32 @@ class Extract {
     }
 
     /**
+     * The name of the component.
+     *
+     * mix.extract() or mix.extractVendor()
+     */
+    name() {
+        return ['extract', 'extractVendors'];
+    }
+
+    /**
      * Register the component.
      *
      * @param {*} libs
      * @param {string} output
      */
-    register(libs, output) {
+    register(libs = [], output) {
+        // If the user provides an output path as the first argument, they probably
+        // want to extract all node_module libraries to the specified file.
+        if (
+            arguments.length === 1 &&
+            typeof libs === 'string' &&
+            libs.endsWith('.js')
+        ) {
+            output = libs;
+            libs = [];
+        }
+
         this.extractions.push({ libs, output });
     }
 
@@ -30,7 +50,9 @@ class Extract {
         this.extractions.forEach(extraction => {
             extraction.output = this.extractionPath(extraction.output);
 
-            this.entry.addExtraction(extraction);
+            if (extraction.libs.length) {
+                this.entry.addExtraction(extraction);
+            }
         });
     }
 
@@ -51,21 +73,30 @@ class Extract {
                         .replace(/\\/g, '/')
                 },
 
-                splitChunks: {
-                    cacheGroups: this.createCacheGroups()
-                }
+                splitChunks: this.createSplitChunks()
             }
         };
     }
 
-    createCacheGroups() {
-        const groups = {};
+    createSplitChunks() {
+        let config = { cacheGroups: {} };
 
         for (const [index, extraction] of this.extractions.entries()) {
-            groups[`vendor${index}`] = this.createCacheGroup(extraction);
+            if (extraction.libs.length) {
+                config.cacheGroups[`vendor${index}`] = this.createCacheGroup(
+                    extraction
+                );
+            }
         }
 
-        return groups;
+        // If the use didn't specify any libraries to extract,
+        // they likely want to extract all vendor libraries.
+        if (Object.keys(config.cacheGroups).length === 0) {
+            config.chunks = 'all';
+            config.name = this.extractions[0].output;
+        }
+
+        return config;
     }
 
     createCacheGroup(extraction) {
