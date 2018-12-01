@@ -19,7 +19,7 @@ mix.extract();
 mix.extract(['vue', 'jquery']);
 ```
 
-If you don't provide an array of npm libraries to the `extract` method, Mix will extract all imported libraries from the node_modules directory. This is a useful default, and is likely what you want. However, if you need to be explicit, pass an array and only those vendor lobraries will be extracted.
+If you don't provide an array of npm libraries to the `extract` method, Mix will extract all imported libraries from the node_modules directory. This is a useful default, and is likely what you want. However, if you need to be explicit, pass an array and only those vendor libraries will be extracted.
 
 Once you run webpack to compile your code, you'll find three new files. You may reference these at the bottom of your HTML.
 
