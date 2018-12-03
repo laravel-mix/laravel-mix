@@ -24,9 +24,7 @@ class Vue {
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
 
-        if (Config.extractVueStyles) {
-            this.updateCssLoaders(webpackConfig);
-        }
+        this.updateCssLoaders(webpackConfig);
     }
 
     /**
@@ -40,21 +38,7 @@ class Vue {
                 { loader: 'css-loader', options: { importLoaders: 1 } },
                 {
                     loader: 'postcss-loader',
-                    options: (() => {
-                        let postCssOptions = { ident: 'postcss' };
-
-                        if (Mix.components.get('postCss')) {
-                            postCssOptions.plugins = Mix.components.get(
-                                'postCss'
-                            ).details[0].postCssPlugins;
-                        } else if (
-                            !File.exists(Mix.paths.root('postcss.config.js'))
-                        ) {
-                            postCssOptions.plugins = [];
-                        }
-
-                        return postCssOptions;
-                    })()
+                    options: this.postCssOptions()
                 }
             ],
             webpackConfig
@@ -116,12 +100,18 @@ class Vue {
             return rule.test instanceof RegExp && rule.test.test('.' + loader);
         });
 
-        rule.loaders = extractPlugin.extract({
-            fallback: 'style-loader',
-            use: loaders
-        });
+        if (Config.extractVueStyles) {
+            rule.loaders = extractPlugin.extract({
+                fallback: 'style-loader',
+                use: loaders
+            });
 
-        this.addExtractPluginToConfig(extractPlugin, webpackConfig);
+            this.addExtractPluginToConfig(extractPlugin, webpackConfig);
+        } else {
+            loaders.unshift('style-loader');
+
+            rule.loaders = loaders;
+        }
     }
 
     /**
@@ -132,13 +122,38 @@ class Vue {
 
         webpackConfig.module.rules.push({
             test: /\.styl(us)?$/,
-            loaders: extractPlugin.extract({
-                fallback: 'style-loader',
-                use: ['css-loader', 'stylus-loader']
-            })
+            loaders: Config.extractVueStyles
+                ? extractPlugin.extract({
+                      fallback: 'style-loader',
+                      use: ['css-loader', 'stylus-loader']
+                  })
+                : ['style-loader', 'css-loader', 'stylus-loader']
         });
 
-        this.addExtractPluginToConfig(extractPlugin, webpackConfig);
+        if (Config.extractVueStyles) {
+            this.addExtractPluginToConfig(extractPlugin, webpackConfig);
+        }
+    }
+
+    /**
+     * Fetch the appropriate postcss plugins for the compile.
+     */
+    postCssOptions() {
+        let postCssOptions = { ident: 'postcss' };
+
+        // 1. If there's a mix.postCss() call in webpack.mix.js, we'll use the plugins from that call.
+        // 2. If the user has a postcss.config.js file, postcss-loader will automatically read from that.
+        // 3. Otherwise, we'll set plugins to an empty array to avoid the compile breaking.
+
+        if (Mix.components.get('postCss')) {
+            postCssOptions.plugins = Mix.components.get(
+                'postCss'
+            ).details[0].postCssPlugins;
+        } else if (!File.exists(Mix.paths.root('postcss.config.js'))) {
+            postCssOptions.plugins = [];
+        }
+
+        return postCssOptions;
     }
 
     /**
