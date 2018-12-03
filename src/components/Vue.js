@@ -33,8 +33,32 @@ class Vue {
      * Update all preprocessor loaders to support CSS extraction.
      */
     updateCssLoaders(webpackConfig) {
-        // Basic CSS
-        this.updateCssLoader('css', ['css-loader'], webpackConfig);
+        // Basic CSS and PostCSS
+        this.updateCssLoader(
+            'css',
+            [
+                { loader: 'css-loader', options: { importLoaders: 1 } },
+                {
+                    loader: 'postcss-loader',
+                    options: (() => {
+                        let postCssOptions = { ident: 'postcss' };
+
+                        if (Mix.components.get('postCss')) {
+                            postCssOptions.plugins = Mix.components.get(
+                                'postCss'
+                            ).details[0].postCssPlugins;
+                        } else if (
+                            !File.exists(Mix.paths.root('postcss.config.js'))
+                        ) {
+                            postCssOptions.plugins = [];
+                        }
+
+                        return postCssOptions;
+                    })()
+                }
+            ],
+            webpackConfig
+        );
 
         // LESS
         this.updateCssLoader(

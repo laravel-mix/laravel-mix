@@ -229,6 +229,31 @@ test.cb.serial('it extracts vue .sass styles to a dedicated file', t => {
     });
 });
 
+test.cb.serial('it extracts vue PostCSS styles to a dedicated file', t => {
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-postcss.js',
+        'js/app.js'
+    ).options({ extractVueStyles: 'css/components.css' });
+
+    compile(t, config => {
+        // In this example, postcss-loader is reading from postcss.config.js.
+        let expected = `
+:root {
+    --color: white;
+}
+.hello {
+    color: white;
+    color: var(--color);
+}
+`;
+
+        t.is(
+            expected,
+            File.find('test/fixtures/fake-app/public/css/components.css').read()
+        );
+    });
+});
+
 test.cb.serial('it extracts vue Less styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-less.js',
