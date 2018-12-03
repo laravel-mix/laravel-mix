@@ -94,13 +94,13 @@ class Vue {
      * Update a single CSS loader.
      */
     updateCssLoader(loader, loaders, webpackConfig) {
-        let extractPlugin = this.extractPlugin();
-
         let rule = webpackConfig.module.rules.find(rule => {
             return rule.test instanceof RegExp && rule.test.test('.' + loader);
         });
 
         if (Config.extractVueStyles) {
+            let extractPlugin = this.extractPlugin();
+
             rule.loaders = extractPlugin.extract({
                 fallback: 'style-loader',
                 use: loaders
