@@ -85,6 +85,7 @@
         "pretty-quick": "^1.8.0",
         "purify-css": "^1.2.6",
         "purifycss-webpack": "^0.7.0",
+        "resolve-url-loader": "^2.3.1",
         "sass-loader": "^7.1.0",
         "sass-resources-loader": "^2.0.0",
         "sinon": "^7.1.1",
