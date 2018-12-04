@@ -2,6 +2,13 @@ let Preprocessor = require('./Preprocessor');
 
 class Sass extends Preprocessor {
     /**
+     * Required dependencies for the component.
+     */
+    dependencies() {
+        return ['node-sass@4.*', 'sass-loader@7.*'];
+    }
+
+    /**
      * Register the component.
      *
      * @param {*} src
