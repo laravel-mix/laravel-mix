@@ -7,7 +7,7 @@ class Vue {
      */
     dependencies() {
         if (Config.extractVueStyles && Config.globalVueStyles) {
-            return ['sass-resources-loader']; // Required for importing global styles into every component.
+            return ['sass-resources-loader'];
         }
     }
 
@@ -29,6 +29,8 @@ class Vue {
 
     /**
      * Update all preprocessor loaders to support CSS extraction.
+     *
+     * @param {Object} webpackConfig
      */
     updateCssLoaders(webpackConfig) {
         // Basic CSS and PostCSS
@@ -92,6 +94,10 @@ class Vue {
 
     /**
      * Update a single CSS loader.
+     *
+     * @param {string} loader
+     * @param {Array}  loaders
+     * @param {Object} webpackConfig
      */
     updateCssLoader(loader, loaders, webpackConfig) {
         let rule = webpackConfig.module.rules.find(rule => {
@@ -116,6 +122,8 @@ class Vue {
 
     /**
      * Add Stylus loader support.
+     *
+     * @param {Object} webpackConfig
      */
     addStylusLoader(webpackConfig) {
         let extractPlugin = this.extractPlugin();
@@ -139,25 +147,26 @@ class Vue {
      * Fetch the appropriate postcss plugins for the compile.
      */
     postCssOptions() {
-        let postCssOptions = {};
-
-        // 1. If there's a mix.postCss() call in webpack.mix.js, we'll use the plugins from that call.
-        // 2. If the user has a postcss.config.js file, postcss-loader will automatically read from that.
-        // 3. Otherwise, we'll set plugins to an empty array to avoid the compile breaking.
-
         if (Mix.components.get('postCss')) {
-            postCssOptions.plugins = Mix.components.get(
-                'postCss'
-            ).details[0].postCssPlugins;
-        } else if (!File.exists(Mix.paths.root('postcss.config.js'))) {
-            postCssOptions.plugins = [];
+            return {
+                plugins: Mix.components.get('postCss').details[0].postCssPlugins
+            };
         }
 
-        return postCssOptions;
+        // If the user has a postcss.config.js file in their project root,
+        // postcss-loader will automatically read and fetch the plugins.
+        if (File.exists(Mix.paths.root('postcss.config.js'))) {
+            return {};
+        }
+
+        return { plugins: [] };
     }
 
     /**
      * Add an extract text plugin to the webpack config plugins array.
+     *
+     * @param {Object} extractPlugin
+     * @param {Object} webpackConfig
      */
     addExtractPluginToConfig(extractPlugin, webpackConfig) {
         if (extractPlugin.isNew) {
