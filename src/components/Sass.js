@@ -5,7 +5,13 @@ class Sass extends Preprocessor {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['node-sass@4.*', 'sass-loader@7.*'];
+        let dependencies = ['node-sass@4.*', 'sass-loader@7.*'];
+
+        if (Config.processCssUrls) {
+            dependencies.push('resolve-url-loader@2.3.1');
+        }
+
+        return dependencies;
     }
 
     /**

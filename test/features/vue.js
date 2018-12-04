@@ -22,6 +22,7 @@ test.cb.serial('it prepends vue styles to your sass compiled file', t => {
 body {
   color: red;
 }
+
 `;
 
         t.is(
@@ -136,8 +137,6 @@ test.cb.serial('it extracts vue Stylus styles to a dedicated file', t => {
     });
 });
 
-// test.serial('Vue extraction with Sass', t => {});
-
 test.serial(
     'it does also add the vue webpack rules with typescript component',
     t => {
@@ -170,6 +169,7 @@ test.cb.serial('it extracts vue .scss styles to a dedicated file', t => {
         let expected = `body {
   color: red;
 }
+
 `;
 
         t.is(
@@ -209,6 +209,7 @@ test.cb.serial('it extracts vue .sass styles to a dedicated file', t => {
         let expected = `body {
   color: red;
 }
+
 `;
 
         t.is(

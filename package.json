@@ -54,7 +54,6 @@
         "md5": "^2.2.1",
         "optimize-css-assets-webpack-plugin": "^5.0.1",
         "postcss-loader": "^3.0.0",
-        "resolve-url-loader": "^3.0.0",
         "style-loader": "^0.23.1",
         "terser": "^3.10.12",
         "terser-webpack-plugin": "^1.1.0",

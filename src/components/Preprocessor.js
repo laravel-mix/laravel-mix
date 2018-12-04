@@ -75,15 +75,15 @@ class Preprocessor {
                     }
                 ];
 
-                // if (preprocessor.type === 'sass' && Config.processCssUrls) {
-                //     loaders.push({
-                //         loader: 'resolve-url-loader',
-                //         options: {
-                //             sourceMap: true,
-                //             root: Mix.paths.root('node_modules')
-                //         }
-                //     });
-                // }
+                if (preprocessor.type === 'sass' && Config.processCssUrls) {
+                    loaders.push({
+                        loader: 'resolve-url-loader',
+                        options: {
+                            sourceMap: true,
+                            root: Mix.paths.root('node_modules')
+                        }
+                    });
+                }
 
                 if (preprocessor.type !== 'postCss') {
                     loaders.push({
