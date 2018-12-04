@@ -139,7 +139,7 @@ class Vue {
      * Fetch the appropriate postcss plugins for the compile.
      */
     postCssOptions() {
-        let postCssOptions = { ident: 'postcss' };
+        let postCssOptions = {};
 
         // 1. If there's a mix.postCss() call in webpack.mix.js, we'll use the plugins from that call.
         // 2. If the user has a postcss.config.js file, postcss-loader will automatically read from that.
