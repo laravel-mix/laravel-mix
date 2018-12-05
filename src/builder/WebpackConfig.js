@@ -107,7 +107,7 @@ class WebpackConfig {
      */
     buildResolving() {
         this.webpackConfig.resolve = {
-            extensions: ['*', '.js', '.jsx', '.vue'],
+            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json', '.vue'],
 
             alias: {
                 vue$: 'vue/dist/vue.common.js'
