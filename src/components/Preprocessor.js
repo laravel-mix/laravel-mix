@@ -100,7 +100,7 @@ class Preprocessor {
 
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: extractPlugin.extract({
+                    use: Mix.isUsing('hmr') ? ['style-loader', ...loaders] : extractPlugin.extract({
                         fallback: 'style-loader',
                         use: loaders
                     })
