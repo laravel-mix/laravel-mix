@@ -1,4 +1,4 @@
-let webpackMerge = require('webpack-merge');
+let merge = require('deepmerge');
 
 class BabelConfig {
     /**
@@ -8,11 +8,11 @@ class BabelConfig {
      * @param {String} babelRcPath
      */
     static generate(mixBabelConfig, babelRcPath) {
-        return webpackMerge.smart(
+        return merge.all([
             new BabelConfig().fetchBabelRc(babelRcPath),
             mixBabelConfig,
             BabelConfig.default()
-        );
+        ]);
     }
 
     /**
