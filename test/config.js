@@ -10,32 +10,3 @@ test('that it can merge config', t => {
     t.is('bar', Config.foo);
     t.true(Config.versioning);
 });
-
-test('that it intelligently builds the Babel config', t => {
-    // Given the user has a custom .babelrc file...
-    new File('.babelrc').write({
-        plugins: ['arbitrary-plugin']
-    });
-
-    // And we construct the Babel config for Mix...
-    let options = Config.babel();
-
-    // Then it should smartly merge the user's .babelrc with Mix's.
-    t.deepEqual(
-        [
-            '@babel/plugin-proposal-object-rest-spread',
-            [
-                '@babel/plugin-transform-runtime',
-                {
-                    helpers: false
-                }
-            ],
-            'arbitrary-plugin'
-        ],
-        options.plugins
-    );
-    t.is('@babel/preset-env', options.presets[0][0]);
-
-    // Clean up.
-    File.find('.babelrc').delete();
-});

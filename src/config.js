@@ -1,5 +1,3 @@
-let webpackMerge = require('webpack-merge');
-
 module.exports = function() {
     return {
         /**
@@ -122,47 +120,14 @@ module.exports = function() {
         /**
          * The default Babel configuration.
          *
-         * @type {Object}
+         * @type {String} babelRcPath
          */
-        babel: function() {
-            let options = {};
+        babel: function(babelRcPath) {
+            babelRcPath = babelRcPath || Mix.paths.root('.babelrc');
 
-            tap(Mix.paths.root('.babelrc'), babelrc => {
-                if (File.exists(babelrc)) {
-                    options = JSON.parse(File.find(babelrc).read());
-                }
-            });
-
-            if (this.babelConfig) {
-                options = webpackMerge.smart(options, this.babelConfig);
-            }
-
-            return webpackMerge.smart(
-                {
-                    cacheDirectory: true,
-                    presets: [
-                        [
-                            '@babel/preset-env',
-                            {
-                                modules: false,
-                                targets: {
-                                    browsers: ['> 2%']
-                                },
-                                forceAllTransforms: true
-                            }
-                        ]
-                    ],
-                    plugins: [
-                        '@babel/plugin-proposal-object-rest-spread',
-                        [
-                            '@babel/plugin-transform-runtime',
-                            {
-                                helpers: false
-                            }
-                        ]
-                    ]
-                },
-                options
+            return require('./BabelConfig').generate(
+                this.babelConfig,
+                babelRcPath
             );
         },
 

@@ -140,7 +140,7 @@ test('custom Babel config may be merged', t => {
 
     Mix.dispatch('init');
 
-    t.is('react-next', Config.babel().presets.pop());
+    t.true(Config.babel().presets.includes('react-next'));
 });
 
 test('the fully constructed webpack config object is available for modification, if needed', t => {
