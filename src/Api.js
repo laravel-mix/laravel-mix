@@ -5,12 +5,19 @@ class Api {
     /**
      * Enable sourcemap support.
      *
-     * @param {Boolean} productionToo
-     * @param {string}  type
+     * @param {Boolean} generateForProduction
+     * @param {string}  devType
+     * @param {string}  prodType
      */
-    sourceMaps(productionToo = true, type = 'eval-source-map') {
+    sourceMaps(
+        generateForProduction = true,
+        devType = 'eval-source-map',
+        productionType = 'source-map'
+    ) {
+        let type = devType;
+
         if (Mix.inProduction()) {
-            type = productionToo ? 'source-map' : false;
+            type = generateForProduction ? productionType : false;
         }
 
         Config.sourcemaps = type;

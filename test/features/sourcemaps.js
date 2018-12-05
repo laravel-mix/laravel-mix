@@ -18,4 +18,8 @@ test.serial('mix.sourceMaps()', t => {
     // production, then we should disable it.
     mix.sourceMaps(false);
     t.false(Config.sourcemaps);
+
+    // Finally, you can override the sourcemap type for production mode.
+    mix.sourceMaps(true, 'eval-source-map', 'hidden-source-map');
+    t.is('hidden-source-map', Config.sourcemaps);
 });
