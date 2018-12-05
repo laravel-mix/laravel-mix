@@ -1,9 +1,8 @@
 let webpack = require('webpack');
-
-let webpackDefaultConfig = require('./webpack-default');
 let Entry = require('./Entry');
 let webpackRules = require('./webpack-rules');
 let webpackPlugins = require('./webpack-plugins');
+let webpackDefaultConfig = require('./webpack-default');
 
 process.noDeprecation = true;
 
@@ -64,12 +63,9 @@ class WebpackConfig {
             filename: '[name].js',
             chunkFilename: '[name].js',
             publicPath: Mix.isUsing('hmr')
-                ? http +
-                  '://' +
-                  Config.hmrOptions.host +
-                  ':' +
-                  Config.hmrOptions.port +
-                  '/'
+                ? `${http}://${Config.hmrOptions.host}:${
+                      Config.hmrOptions.port
+                  }/`
                 : '/'
         };
 
