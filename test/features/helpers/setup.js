@@ -23,9 +23,7 @@ test.afterEach.always(t => {
 });
 
 global.compile = (t, callback) => {
-    Mix.dispatch('init');
-
-    let config = new WebpackConfig().build();
+    let config = buildConfig();
 
     webpack(config, function(err, stats) {
         callback(config);
