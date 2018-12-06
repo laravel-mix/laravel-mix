@@ -8,11 +8,17 @@ class BabelConfig {
      * @param {String} babelRcPath
      */
     static generate(mixBabelConfig, babelRcPath) {
-        return merge.all([
-            new BabelConfig().fetchBabelRc(babelRcPath),
-            mixBabelConfig,
-            BabelConfig.default()
-        ]);
+        return merge.all(
+            [
+                BabelConfig.default(),
+                new BabelConfig().fetchBabelRc(babelRcPath),
+                mixBabelConfig
+            ],
+            {
+                arrayMerge: (destinationArray, sourceArray, options) =>
+                    sourceArray
+            }
+        );
     }
 
     /**

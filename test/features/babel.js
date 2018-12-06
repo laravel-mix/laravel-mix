@@ -45,3 +45,24 @@ test.serial('Babel reads the project .babelrc file', t => {
     // Cleanup.
     File.find(__dirname + '/.testbabelrc').delete();
 });
+
+test.serial(
+    'Values from duplicate keys in the .babelrc file override the defaults entirely.',
+    t => {
+        // Setup a test .babelrc file.
+        let babelRcPath = __dirname + '/.testbabelrc';
+
+        new File(babelRcPath).write(
+            '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage"}] ] }'
+        );
+
+        let babelConfig = Config.babel(babelRcPath);
+
+        t.is(1, babelConfig.presets.length);
+
+        t.deepEqual({ useBuiltIns: 'usage' }, babelConfig.presets[0][1]);
+
+        // Cleanup.
+        File.find(babelRcPath).delete();
+    }
+);
