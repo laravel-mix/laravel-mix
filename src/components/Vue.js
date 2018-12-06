@@ -63,9 +63,17 @@ class Vue {
                     options: Config.globalVueStyles
                         ? {
                               resources: Mix.paths.root(Config.globalVueStyles),
-                              indentedSyntax: true
+                              indentedSyntax: true,
+                              precision: 8,
+                              outputStyle: 'expanded',
+                              implementation: require('sass')
                           }
-                        : { indentedSyntax: true }
+                        : {
+                              indentedSyntax: true,
+                              precision: 8,
+                              outputStyle: 'expanded',
+                              implementation: require('sass')
+                          }
                 }
             ],
             webpackConfig
@@ -80,9 +88,12 @@ class Vue {
                     loader: 'sass-loader',
                     options: Config.globalVueStyles
                         ? {
-                              resources: Mix.paths.root(Config.globalVueStyles)
+                              resources: Mix.paths.root(Config.globalVueStyles),
+                              implementation: require('sass')
                           }
-                        : {}
+                        : {
+                              implementation: require('sass')
+                          }
                 }
             ],
             webpackConfig
