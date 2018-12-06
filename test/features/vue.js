@@ -15,14 +15,14 @@ test.cb.serial('it prepends vue styles to your sass compiled file', t => {
         t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
         t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
 
-        let expected = `
-.hello {
-  color: blue;
-}
-body {
+        let expected = `body {
   color: red;
 }
 
+
+.hello {
+  color: blue;
+}
 `;
 
         t.is(
