@@ -54,13 +54,16 @@ Compile this down as usual \(`npm run webpack`\), and you'll find a `./public/cs
 
 ### Plugin Options
 
-Behind the scenes, Laravel Mix of course defers to Node-Sass, Less, and Stylus to compile your Sass and Less files, respectively. From time to time, you may need to override the default options that we pass to them. You may provide these as the third argument to `mix.sass()`, `mix.less()`, and `mix.stylus()`.
+Behind the scenes, Laravel Mix of course defers to Sass (Dart implementation), Less, and Stylus to compile your Sass and Less files, respectively. From time to time, you may need to override the default options that we pass to them. You may provide these as the third argument to `mix.sass()`, `mix.less()`, and `mix.stylus()`.
 
 -   **Node-Sass Options:** https://github.com/sass/node-sass#options
 -   **Less Options:** https://github.com/webpack-contrib/less-loader#options
 
 ```js
-mix.sass('src', 'destination', { outputStyle: 'nested' });
+mix.sass('src', 'destination', {
+    outputStyle: 'nested',
+    implementation: require('node-sass') // Switch from Dart to node-sass implementation
+});
 ```
 
 #### Stylus Plugins

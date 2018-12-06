@@ -5,7 +5,7 @@ class Sass extends Preprocessor {
      * Required dependencies for the component.
      */
     dependencies() {
-        let dependencies = ['node-sass@4.*', 'sass-loader@7.*'];
+        let dependencies = ['sass', 'sass-loader@7.*'];
 
         if (Config.processCssUrls) {
             dependencies.push('resolve-url-loader@2.3.1');
@@ -40,7 +40,8 @@ class Sass extends Preprocessor {
         return Object.assign(
             {
                 precision: 8,
-                outputStyle: 'expanded'
+                outputStyle: 'expanded',
+                implementation: require('sass')
             },
             pluginOptions,
             { sourceMap: true }
