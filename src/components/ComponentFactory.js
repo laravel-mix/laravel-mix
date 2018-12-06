@@ -8,7 +8,6 @@ let components = [
     'React',
     'Coffee',
     'TypeScript',
-    'FastSass',
     'Less',
     'Sass',
     'Stylus',

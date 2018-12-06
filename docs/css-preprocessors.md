@@ -2,7 +2,6 @@
 
 ```js
 mix.sass('src', 'output', pluginOptions);
-mix.standaloneSass('src', 'output', pluginOptions); // Isolated from Webpack build.
 mix.less('src', 'output', pluginOptions);
 mix.stylus('src', 'output', pluginOptions);
 mix.postCss('src', 'output', [require('precss')()]);
@@ -192,13 +191,3 @@ mix.postCss('resources/assets/css/main.css', 'public/css', [
 ```
 
 Notice that the third argument is an array of [postcss plugins](https://github.com/postcss/postcss#plugins) that should be applied to your build.
-
-### Standalone Sass Builds
-
-If you do not wish Mix and Webpack to process your Sass in any way, you may instead use `mix.standaloneSass()`, which will improve the build time of your app drastically. Just remember: if you choose this route, Webpack won't touch your CSS. It won't rewrite URLs, copy assets (via file-loader), or apply automatic image optimization or CSS purification. If those features are unnecessary for your application, definitely use this option instead of `mix.sass()`.
-
-```js
-mix.standaloneSass('resources/assets/sass/app.scss', 'public/css');
-```
-
-> **Note:** If you are using standaloneSass while watching for file changes with `npm run watch` then you will need to prefix imported files with underscores in order to flag them as partials (e.g. \_header.scss, \_alert.scss). Failing to do this will result in Sass compilation errors and/or extraneous CSS files.
