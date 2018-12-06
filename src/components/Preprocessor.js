@@ -84,13 +84,7 @@ class Preprocessor {
                 if (preprocessor.type !== 'postCss') {
                     loaders.push({
                         loader: `${preprocessor.type}-loader`,
-                        options: Object.assign(preprocessor.pluginOptions, {
-                            sourceMap:
-                                preprocessor.type === 'sass' &&
-                                Config.processCssUrls
-                                    ? true
-                                    : Mix.isUsing('sourcemaps')
-                        })
+                        options: this.loaderOptions(preprocessor)
                     });
                 }
 
@@ -118,6 +112,26 @@ class Preprocessor {
      */
     webpackPlugins() {
         return this.extractPlugins;
+    }
+
+    /**
+     * Prepare the preprocessor plugin options.
+     *
+     * @param {Object} preprocessor
+     */
+    loaderOptions(preprocessor) {
+        tap(preprocessor.pluginOptions.implementation, implementation => {
+            if (typeof implementation === 'function') {
+                preprocessor.pluginOptions.implementation = implementation();
+            }
+        });
+
+        return Object.assign(preprocessor.pluginOptions, {
+            sourceMap:
+                preprocessor.type === 'sass' && Config.processCssUrls
+                    ? true
+                    : Mix.isUsing('sourcemaps')
+        });
     }
 
     /**
