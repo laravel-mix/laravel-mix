@@ -1,5 +1,6 @@
 let childProcess = require('child_process');
 let File = require('../src/File');
+let argv = require('yargs').argv;
 
 class Dependencies {
     /**
@@ -77,7 +78,9 @@ class Dependencies {
                 : 'Finished. Please run Mix again.'
         );
 
-        process.exit();
+        if (!argv['$0'].includes('ava')) {
+            process.exit();
+        }
     }
 }
 
