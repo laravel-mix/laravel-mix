@@ -64,13 +64,7 @@ class Manifest {
      * @param {object} stats
      */
     transform(stats) {
-        let customAssets = Config.customAssets.map(asset =>
-            asset.pathFromPublic()
-        );
-
-        this.flattenAssets(stats)
-            .concat(customAssets)
-            .forEach(this.add.bind(this));
+        this.flattenAssets(stats).forEach(this.add.bind(this));
 
         return this;
     }

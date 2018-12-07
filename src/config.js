@@ -10,13 +10,6 @@ module.exports = function() {
             process.argv.includes('-p'),
 
         /**
-         * A list of custom assets that are being compiled outside of Webpack.
-         *
-         * @type {Array}
-         */
-        customAssets: [],
-
-        /**
          * Determine if we should enable hot reloading.
          *
          * @type {Boolean}

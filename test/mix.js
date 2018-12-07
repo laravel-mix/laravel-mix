@@ -26,12 +26,6 @@ test('that it knows if it should watch files for changes', t => {
     t.true(Mix.isWatching());
 });
 
-test('that it can add a custom file to the webpack asset list', t => {
-    Mix.addAsset('foo');
-
-    t.is('foo', Config.customAssets[0]);
-});
-
 test('that it can dispatch events', t => {
     let callback = sinon.spy();
 

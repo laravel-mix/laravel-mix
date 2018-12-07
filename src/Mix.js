@@ -72,15 +72,6 @@ class Mix {
     }
 
     /**
-     * Add a custom file to the webpack assets collection.
-     *
-     * @param {string} asset
-     */
-    addAsset(asset) {
-        Config.customAssets.push(asset);
-    }
-
-    /**
      * Queue up a new task.
      *
      * @param {Task} task
