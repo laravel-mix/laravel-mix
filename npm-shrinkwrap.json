@@ -1187,41 +1187,6 @@
             "integrity": "sha512-ZwTHAlC9akprWDinwEPD4kOuwaYZlyMwVJIANsKNC3QVp0AHB04m7RnB4eqeWfgmxw8MGTzS9uMaw93Z3QcZbw==",
             "dev": true
         },
-        "@types/anymatch": {
-            "version": "1.3.0",
-            "resolved": "https://registry.npmjs.org/@types/anymatch/-/anymatch-1.3.0.tgz",
-            "integrity": "sha512-7WcbyctkE8GTzogDb0ulRAEw7v8oIS54ft9mQTU7PfM0hp5e+8kpa+HeQ7IQrFbKtJXBKcZ4bh+Em9dTw5L6AQ=="
-        },
-        "@types/node": {
-            "version": "10.12.10",
-            "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.10.tgz",
-            "integrity": "sha512-8xZEYckCbUVgK8Eg7lf5Iy4COKJ5uXlnIOnePN0WUwSQggy9tolM+tDJf7wMOnT/JT/W9xDYIaYggt3mRV2O5w=="
-        },
-        "@types/tapable": {
-            "version": "1.0.4",
-            "resolved": "https://registry.npmjs.org/@types/tapable/-/tapable-1.0.4.tgz",
-            "integrity": "sha512-78AdXtlhpCHT0K3EytMpn4JNxaf5tbqbLcbIRoQIHzpTIyjpxLQKRoxU55ujBXAtg3Nl2h/XWvfDa9dsMOd0pQ=="
-        },
-        "@types/uglify-js": {
-            "version": "3.0.4",
-            "resolved": "https://registry.npmjs.org/@types/uglify-js/-/uglify-js-3.0.4.tgz",
-            "integrity": "sha512-SudIN9TRJ+v8g5pTG8RRCqfqTMNqgWCKKd3vtynhGzkIIjxaicNAMuY5TRadJ6tzDu3Dotf3ngaMILtmOdmWEQ==",
-            "requires": {
-                "source-map": "^0.6.1"
-            }
-        },
-        "@types/webpack": {
-            "version": "4.4.19",
-            "resolved": "https://registry.npmjs.org/@types/webpack/-/webpack-4.4.19.tgz",
-            "integrity": "sha512-vO/PuQ9iF9Gy8spN8RUUjt5reu9Z+Tb7iWxeAopCmXaIZaIsOgtY5U6UE2ELlcRUBO1HbNWhy+lQE9G92IJcmQ==",
-            "requires": {
-                "@types/anymatch": "*",
-                "@types/node": "*",
-                "@types/tapable": "*",
-                "@types/uglify-js": "*",
-                "source-map": "^0.6.0"
-            }
-        },
         "@vue/component-compiler-utils": {
             "version": "2.3.0",
             "resolved": "https://registry.npmjs.org/@vue/component-compiler-utils/-/component-compiler-utils-2.3.0.tgz",
@@ -2823,7 +2788,7 @@
         },
         "browserify-rsa": {
             "version": "4.0.1",
-            "resolved": "http://registry.npmjs.org/browserify-rsa/-/browserify-rsa-4.0.1.tgz",
+            "resolved": "https://registry.npmjs.org/browserify-rsa/-/browserify-rsa-4.0.1.tgz",
             "integrity": "sha1-IeCr+vbyApzy+vsTNWenAdQTVSQ=",
             "requires": {
                 "bn.js": "^4.1.0",
@@ -2870,7 +2835,7 @@
         },
         "buffer": {
             "version": "4.9.1",
-            "resolved": "http://registry.npmjs.org/buffer/-/buffer-4.9.1.tgz",
+            "resolved": "https://registry.npmjs.org/buffer/-/buffer-4.9.1.tgz",
             "integrity": "sha1-bRu2AbB6TvztlwlBMgkwJ8lbwpg=",
             "requires": {
                 "base64-js": "^1.0.2",
@@ -4496,7 +4461,7 @@
         },
         "events": {
             "version": "1.1.1",
-            "resolved": "http://registry.npmjs.org/events/-/events-1.1.1.tgz",
+            "resolved": "https://registry.npmjs.org/events/-/events-1.1.1.tgz",
             "integrity": "sha1-nr23Y1rQmccNzEwqH1AEKI6L2SQ="
         },
         "eventsource": {
@@ -11647,7 +11612,7 @@
         },
         "stream-browserify": {
             "version": "2.0.1",
-            "resolved": "http://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz",
+            "resolved": "https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz",
             "integrity": "sha1-ZiZu5fm9uZQKTkUUyvtDu3Hlyds=",
             "requires": {
                 "inherits": "~2.0.1",
@@ -12691,14 +12656,6 @@
                         "ajv-keywords": "^3.1.0"
                     }
                 }
-            }
-        },
-        "webpack-chunk-hash": {
-            "version": "0.6.0",
-            "resolved": "https://registry.npmjs.org/webpack-chunk-hash/-/webpack-chunk-hash-0.6.0.tgz",
-            "integrity": "sha512-FsOg1RpW2nf3nYpGTy/Qs59RZ7gYG+sI4VrCE8TIBQYh/Kogi04xD39Pj9zUEeUcNx9HeTVPGSO3mtmpLeX9eQ==",
-            "requires": {
-                "@types/webpack": "^3.0.0 || ^4.0.0"
             }
         },
         "webpack-cli": {

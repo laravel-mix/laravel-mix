@@ -32,16 +32,9 @@ class Version {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        let WebpackChunkHashPlugin = require('webpack-chunk-hash');
-
-        return [
-            new webpack[
-                Mix.inProduction()
-                    ? 'HashedModuleIdsPlugin'
-                    : 'NamedModulesPlugin'
-            ](),
-            new WebpackChunkHashPlugin()
-        ];
+        if (Mix.inProduction()) {
+            return [new webpack.HashedModuleIdsPlugin()];
+        }
     }
 }
 
