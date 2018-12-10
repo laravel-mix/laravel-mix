@@ -10,13 +10,6 @@ module.exports = function() {
             process.argv.includes('-p'),
 
         /**
-         * A list of custom assets that are being compiled outside of Webpack.
-         *
-         * @type {Array}
-         */
-        customAssets: [],
-
-        /**
          * Determine if we should enable hot reloading.
          *
          * @type {Boolean}
@@ -132,22 +125,26 @@ module.exports = function() {
         },
 
         /**
-         * Determine if CSS url()s should be processed by Webpack.
+         * Determine if CSS relative url()s should be calculated by Sass Webpack,
+         * using resolve-url-loader. Disabling this can improve performance
+         * greatly.
          *
          * @type {Boolean}
          */
         processCssUrls: true,
 
         /**
-         * Whether to extract .vue component styles into a dedicated file.
+         * Should we extract .vue component styles into a dedicated file?
          * You may provide a boolean, or a dedicated path to extract to.
+         *
+         * Ex: extractVueStyles: '/css/vue.css'
          *
          * @type {Boolean|string}
          */
         extractVueStyles: false,
 
         /**
-         * File with global styles to be imported in every component.
+         * A file path with global styles that shuold be imported into every Vue component.
          *
          * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
          *
