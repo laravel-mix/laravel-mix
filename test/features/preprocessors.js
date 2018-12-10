@@ -98,3 +98,35 @@ test.serial(
         seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
     }
 );
+
+test.cb.serial('cssnano minifier options may be specified', t => {
+    Config.production = true;
+
+    let file = new File(
+        'test/fixtures/fake-app/resources/assets/sass/minifier-example.scss'
+    );
+
+    file.write(`
+        .test {
+            font-family: 'Font Awesome 5 Free';
+        }
+    `);
+
+    mix.sass(file.relativePath(), 'css');
+
+    mix.options({
+        cssNano: { minifyFontValues: false }
+    });
+
+    compile(t, () => {
+        t.is(
+            '.test{font-family:"Font Awesome 5 Free"}',
+            File.find(
+                'test/fixtures/fake-app/public/css/minifier-example.css'
+            ).read()
+        );
+
+        // Clean up.
+        file.delete();
+    });
+});

@@ -39,7 +39,11 @@ module.exports = function() {
             ? {
                   minimizer: [
                       new TerserPlugin(Config.terser),
-                      new OptimizeCSSAssetsPlugin({})
+                      new OptimizeCSSAssetsPlugin({
+                          cssProcessorPluginOptions: {
+                              preset: ['default', Config.cssNano]
+                          }
+                      })
                   ]
               }
             : {},

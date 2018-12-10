@@ -172,6 +172,15 @@ module.exports = function() {
         },
 
         /**
+         * cssnano-specific settings for Webpack.
+         *
+         * See: https://cssnano.co/optimisations/
+         *
+         * @type {Object}
+         */
+        cssNano: {},
+
+        /**
          * CleanCss-specific settings for Webpack.
          *
          * See: https://github.com/jakubpawlowicz/clean-css#constructor-options
