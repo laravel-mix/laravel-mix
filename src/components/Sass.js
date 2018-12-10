@@ -22,13 +22,15 @@ class Sass extends Preprocessor {
      * @param {*} src
      * @param {string} output
      * @param {Object} pluginOptions
+     * @param {Array}  postCssPlugins
      */
-    register(src, output, pluginOptions = {}) {
+    register(src, output, pluginOptions = {}, postCssPlugins = []) {
         return this.preprocess(
             'sass',
             src,
             output,
-            this.pluginOptions(pluginOptions)
+            this.pluginOptions(pluginOptions),
+            postCssPlugins
         );
     }
 

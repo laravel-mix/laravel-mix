@@ -63,3 +63,38 @@ test.serial('Generic CSS rules are applied', t => {
         })
     );
 });
+
+test.serial(
+    'Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.',
+    t => {
+        mix.sass(
+            'test/fixtures/fake-app/resources/assets/sass/app.scss',
+            'css',
+            {},
+            [{ postcssPlugin: 'postcss-plugin-stub' }]
+        );
+
+        mix.sass(
+            'test/fixtures/fake-app/resources/assets/sass/app2.scss',
+            'css',
+            {},
+            [{ postcssPlugin: 'second-postcss-plugin-stub' }]
+        );
+
+        let seePostCssPluginFor = (file, pluginName) => {
+            t.true(
+                buildConfig()
+                    .module.rules.find(rule =>
+                        rule.test.toString().includes(file)
+                    )
+                    .use.find(loader => loader.loader === 'postcss-loader')
+                    .options.plugins.find(
+                        plugin => plugin.postcssPlugin === pluginName
+                    ) !== undefined
+            );
+        };
+
+        seePostCssPluginFor('app.scss', 'postcss-plugin-stub');
+        seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
+    }
+);

@@ -141,8 +141,9 @@ class Preprocessor {
      * @param {string} src
      * @param {string} output
      * @param {object} pluginOptions
+     * @param {Array} postCssPlugins
      */
-    preprocess(type, src, output, pluginOptions = {}) {
+    preprocess(type, src, output, pluginOptions = {}, postCssPlugins = []) {
         Assert.preprocessor(type, src, output);
 
         src = new File(src);
@@ -156,7 +157,8 @@ class Preprocessor {
             type: this.constructor.name.toLowerCase(),
             src,
             output,
-            pluginOptions
+            pluginOptions,
+            postCssPlugins
         });
 
         return this;

@@ -14,8 +14,9 @@ class Stylus extends Preprocessor {
      * @param {*} src
      * @param {string} output
      * @param {Object} pluginOptions
+     * @param {Array}  postCssPlugins
      */
-    register(src, output, pluginOptions = {}) {
+    register(src, output, pluginOptions = {}, postCssPlugins = []) {
         pluginOptions = Object.assign(
             {
                 preferPathResolver: 'webpack'
@@ -23,7 +24,13 @@ class Stylus extends Preprocessor {
             pluginOptions
         );
 
-        return this.preprocess('stylus', src, output, pluginOptions);
+        return this.preprocess(
+            'stylus',
+            src,
+            output,
+            pluginOptions,
+            postCssPlugins
+        );
     }
 }
 
