@@ -111,16 +111,23 @@ class Vue {
      * @param {Object} options
      */
     sassLoaders(options = {}) {
+        let defaultOptions = {
+            precision: 8,
+            outputStyle: 'expanded'
+        };
+
+        try {
+            require.resolve('sass');
+
+            defaultOptions.implementation = require('sass');
+        } catch (e) {}
+
         return tap(
             [
                 'css-loader',
                 {
                     loader: 'sass-loader',
-                    options: Object.assign(options, {
-                        precision: 8,
-                        outputStyle: 'expanded',
-                        implementation: require('sass')
-                    })
+                    options: Object.assign(options, defaultOptions)
                 }
             ],
             loaders => {
