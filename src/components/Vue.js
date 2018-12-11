@@ -170,7 +170,7 @@ class Vue {
             return {};
         }
 
-        return { plugins: [] };
+        return { plugins: Config.postCss };
     }
 
     /**
