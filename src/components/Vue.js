@@ -53,51 +53,8 @@ class Vue {
             webpackConfig
         );
 
-        // SASS
-        this.updateCssLoader(
-            'sass',
-            [
-                'css-loader',
-                {
-                    loader: 'sass-loader',
-                    options: Config.globalVueStyles
-                        ? {
-                              resources: Mix.paths.root(Config.globalVueStyles),
-                              indentedSyntax: true,
-                              precision: 8,
-                              outputStyle: 'expanded',
-                              implementation: require('sass')
-                          }
-                        : {
-                              indentedSyntax: true,
-                              precision: 8,
-                              outputStyle: 'expanded',
-                              implementation: require('sass')
-                          }
-                }
-            ],
-            webpackConfig
-        );
-
-        // SCSS
-        this.updateCssLoader(
-            'scss',
-            [
-                'css-loader',
-                {
-                    loader: 'sass-loader',
-                    options: Config.globalVueStyles
-                        ? {
-                              resources: Mix.paths.root(Config.globalVueStyles),
-                              implementation: require('sass')
-                          }
-                        : {
-                              implementation: require('sass')
-                          }
-                }
-            ],
-            webpackConfig
-        );
+        // SASS and SCSS
+        this.updateSassLoader(webpackConfig);
 
         // STYLUS
         this.addStylusLoader(webpackConfig);
@@ -129,6 +86,54 @@ class Vue {
 
             rule.loaders = loaders;
         }
+    }
+
+    /**
+     * Update the Sass loader rules.
+     *
+     * @param {Object} webpackConfig
+     */
+    updateSassLoader(webpackConfig) {
+        // Handle .scss files.
+        this.updateCssLoader('scss', this.sassLoaders(), webpackConfig);
+
+        // Handle .sass files.
+        this.updateCssLoader(
+            'sass',
+            this.sassLoaders({ indentedSyntax: true }),
+            webpackConfig
+        );
+    }
+
+    /**
+     * Build the necessary Sass loaders.
+     *
+     * @param {Object} options
+     */
+    sassLoaders(options = {}) {
+        return tap(
+            [
+                'css-loader',
+                {
+                    loader: 'sass-loader',
+                    options: Object.assign(options, {
+                        precision: 8,
+                        outputStyle: 'expanded',
+                        implementation: require('sass')
+                    })
+                }
+            ],
+            loaders => {
+                if (Config.globalVueStyles) {
+                    loaders.push({
+                        loader: 'sass-resources-loader',
+                        options: {
+                            resources: Mix.paths.root(Config.globalVueStyles)
+                        }
+                    });
+                }
+            }
+        );
     }
 
     /**
