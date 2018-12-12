@@ -15,6 +15,15 @@ test.serial('JS compilation with vendor extraction config', t => {
     );
 });
 
+test.cb.serial('vendor extraction manifest in same path as output', t => {
+    mix.js('resources/assets/js/app.js', 'js').extract(['vue'], 'libraries.js');
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/libraries.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/manifest.js'));
+    });
+});
+
 test.serial(
     'vendor extraction with no requested JS compilation will still extract vendor libraries',
     t => {
