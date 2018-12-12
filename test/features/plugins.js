@@ -1,5 +1,5 @@
 import test from 'ava';
-import mix from '../../src/index';
+import mix from './helpers/setup';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
 import ComponentFactory from '../../src/components/ComponentFactory';
@@ -128,19 +128,23 @@ test('custom Babel config may be merged', t => {
     mix.extend(
         'reactNext',
         new class {
-            register() {}
-
             babelConfig() {
-                return { presets: ['react-next'] };
+                return {
+                    plugins: ['@babel/plugin-proposal-unicode-property-regex']
+                };
             }
         }()
     );
 
-    mix['reactNext']();
+    mix.reactNext();
 
-    Mix.dispatch('init');
+    buildConfig();
 
-    t.true(Config.babel().presets.includes('react-next'));
+    t.true(
+        Config.babel().plugins.find(plugin =>
+            plugin.includes('@babel/plugin-proposal-unicode-property-regex')
+        ) !== undefined
+    );
 });
 
 test('the fully constructed webpack config object is available for modification, if needed', t => {

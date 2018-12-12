@@ -1,4 +1,4 @@
-let merge = require('deepmerge');
+let merge = require('babel-merge');
 
 class BabelConfig {
     /**

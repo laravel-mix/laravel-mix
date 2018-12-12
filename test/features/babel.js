@@ -4,28 +4,24 @@ test.serial(
     'mix.babelConfig() can be used to merge custom Babel options.',
     t => {
         mix.babelConfig({
-            plugins: ['some-babel-plugin']
+            plugins: ['@babel/plugin-proposal-unicode-property-regex']
         });
 
-        t.true(Config.babel().plugins.includes('some-babel-plugin'));
+        t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
     }
 );
 
 test.serial(
     'Default Babel plugins includes plugin-proposal-object-rest-spread',
     t => {
-        t.true(
-            Config.babel().plugins.includes(
-                '@babel/plugin-proposal-object-rest-spread'
-            )
-        );
+        t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
     }
 );
 
 test.serial('Default Babel presets includes env', t => {
     t.true(
         Config.babel().presets.find(preset => {
-            return preset.includes('@babel/preset-env');
+            return preset.find(p => p.includes('@babel/preset-env'));
         }) !== undefined
     );
 });
@@ -37,9 +33,9 @@ test.serial('Babel reads the project .babelrc file', t => {
     );
 
     t.true(
-        Config.babel(__dirname + '/.testbabelrc').plugins.includes(
-            '@babel/plugin-syntax-dynamic-import'
-        )
+        Config.babel(__dirname + '/.testbabelrc').plugins.find(plugin =>
+            plugin.includes('@babel/plugin-syntax-dynamic-import')
+        ) !== undefined
     );
 
     // Cleanup.
@@ -66,3 +62,35 @@ test.serial(
         File.find(babelRcPath).delete();
     }
 );
+
+test.serial(
+    'Babel config from Mix extensions is merged with the defaults',
+    t => {
+        mix.extend(
+            'extensionWithBabelConfig',
+            new class {
+                babelConfig() {
+                    return {
+                        plugins: [
+                            '@babel/plugin-proposal-unicode-property-regex'
+                        ]
+                    };
+                }
+            }()
+        );
+
+        mix.extensionWithBabelConfig();
+
+        buildConfig();
+
+        t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
+        t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    }
+);
+
+let seeBabelPlugin = name => {
+    return (
+        Config.babel().plugins.find(plugin => plugin.includes(name)) !==
+        undefined
+    );
+};

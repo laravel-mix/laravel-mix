@@ -51,5 +51,8 @@ test.serial('it sets the babel config correctly', t => {
 
     buildConfig();
 
-    t.true(Config.babel().presets.includes('@babel/preset-react'));
+    t.true(
+        Config.babel().presets.find(p => p.includes('@babel/preset-react')) !==
+            undefined
+    );
 });
