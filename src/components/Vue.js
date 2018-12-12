@@ -1,5 +1,6 @@
 let { VueLoaderPlugin } = require('vue-loader');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let { without } = require('lodash');
 
 class Vue {
     /**
@@ -34,115 +35,67 @@ class Vue {
      */
     updateCssLoaders(webpackConfig) {
         // Basic CSS and PostCSS
-        this.updateCssLoader(
-            'css',
-            [
-                { loader: 'css-loader', options: { importLoaders: 1 } },
-                {
-                    loader: 'postcss-loader',
-                    options: this.postCssOptions()
-                }
-            ],
-            webpackConfig
-        );
+        this.updateCssLoader('css', webpackConfig, rule => {
+            rule.loaders.find(
+                loader => loader.loader === 'postcss-loader'
+            ).options = this.postCssOptions();
+        });
 
         // LESS
-        this.updateCssLoader(
-            'less',
-            ['css-loader', 'less-loader'],
-            webpackConfig
-        );
+        this.updateCssLoader('less', webpackConfig);
 
-        // SASS and SCSS
-        this.updateSassLoader(webpackConfig);
+        // SASS
+        let sassCallback = rule => {
+            if (Mix.seesNpmPackage('sass')) {
+                rule.loaders.find(
+                    loader => loader.loader === 'sass-loader'
+                ).options.implementation = require('sass');
+            }
+
+            if (Config.globalVueStyles) {
+                rule.loaders.push({
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: Mix.paths.root(Config.globalVueStyles)
+                    }
+                });
+            }
+        };
+
+        // SCSS
+        this.updateCssLoader('scss', webpackConfig, sassCallback);
+
+        // SASS
+        this.updateCssLoader('sass', webpackConfig, sassCallback);
 
         // STYLUS
-        this.updateCssLoader(
-            'styl',
-            ['css-loader', 'stylus-loader'],
-            webpackConfig
-        );
+        this.updateCssLoader('styl', webpackConfig);
     }
 
     /**
      * Update a single CSS loader.
      *
      * @param {string} loader
-     * @param {Array}  loaders
      * @param {Object} webpackConfig
+     * @param {Function} callback
      */
-    updateCssLoader(loader, loaders, webpackConfig) {
+    updateCssLoader(loader, webpackConfig, callback) {
         let rule = webpackConfig.module.rules.find(rule => {
             return rule.test instanceof RegExp && rule.test.test('.' + loader);
         });
+
+        callback && callback(rule);
 
         if (Config.extractVueStyles) {
             let extractPlugin = this.extractPlugin();
 
             rule.loaders = extractPlugin.extract({
                 fallback: 'style-loader',
-                use: loaders
+                use: without(rule.loaders, 'style-loader')
             });
 
             this.addExtractPluginToConfig(extractPlugin, webpackConfig);
-        } else {
-            loaders.unshift('style-loader');
-
-            rule.loaders = loaders;
         }
-    }
-
-    /**
-     * Update the Sass loader rules.
-     *
-     * @param {Object} webpackConfig
-     */
-    updateSassLoader(webpackConfig) {
-        // Handle .scss files.
-        this.updateCssLoader('scss', this.sassLoaders(), webpackConfig);
-
-        // Handle .sass files.
-        this.updateCssLoader(
-            'sass',
-            this.sassLoaders({ indentedSyntax: true }),
-            webpackConfig
-        );
-    }
-
-    /**
-     * Build the necessary Sass loaders.
-     *
-     * @param {Object} options
-     */
-    sassLoaders(options = {}) {
-        let defaultOptions = {
-            precision: 8,
-            outputStyle: 'expanded'
-        };
-
-        if (Mix.seesNpmPackage('sass')) {
-            defaultOptions.implementation = require('sass');
-        }
-
-        return tap(
-            [
-                'css-loader',
-                {
-                    loader: 'sass-loader',
-                    options: Object.assign(options, defaultOptions)
-                }
-            ],
-            loaders => {
-                if (Config.globalVueStyles) {
-                    loaders.push({
-                        loader: 'sass-resources-loader',
-                        options: {
-                            resources: Mix.paths.root(Config.globalVueStyles)
-                        }
-                    });
-                }
-            }
-        );
     }
 
     /**

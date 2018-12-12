@@ -8,13 +8,30 @@ class Css extends AutomaticComponent {
         return [
             {
                 test: /\.css$/,
-                loaders: ['style-loader', 'css-loader']
+                loaders: [
+                    'style-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    {
+                        loader: 'postcss-loader',
+                        options: { plugins: Config.postCss }
+                    }
+                ]
             },
 
             {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: ['style-loader', 'css-loader', 'sass-loader']
+                loaders: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            precision: 8,
+                            outputStyle: 'expanded'
+                        }
+                    }
+                ]
             },
 
             {
@@ -23,7 +40,14 @@ class Css extends AutomaticComponent {
                 loaders: [
                     'style-loader',
                     'css-loader',
-                    { loader: 'sass-loader', options: { indentedSyntax: true } }
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            precision: 8,
+                            outputStyle: 'expanded',
+                            indentedSyntax: true
+                        }
+                    }
                 ]
             },
 
