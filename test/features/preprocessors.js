@@ -92,7 +92,7 @@ test.serial('Generic CSS rules are applied', t => {
     );
 });
 
-test.serial.only('Generic Stylus rules are applied', t => {
+test.serial('Generic Stylus rules are applied', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     t.truthy(
