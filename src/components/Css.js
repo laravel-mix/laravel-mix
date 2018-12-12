@@ -31,6 +31,12 @@ class Css extends AutomaticComponent {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
                 loaders: ['style-loader', 'css-loader', 'less-loader']
+            },
+
+            {
+                test: /\.styl(us)?$/,
+                exclude: this.excludePathsFor('stylus'),
+                loaders: ['style-loader', 'css-loader', 'stylus-loader']
             }
         ];
     }

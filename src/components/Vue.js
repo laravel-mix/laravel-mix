@@ -57,7 +57,11 @@ class Vue {
         this.updateSassLoader(webpackConfig);
 
         // STYLUS
-        this.addStylusLoader(webpackConfig);
+        this.updateCssLoader(
+            'styl',
+            ['css-loader', 'stylus-loader'],
+            webpackConfig
+        );
     }
 
     /**
@@ -139,29 +143,6 @@ class Vue {
                 }
             }
         );
-    }
-
-    /**
-     * Add Stylus loader support.
-     *
-     * @param {Object} webpackConfig
-     */
-    addStylusLoader(webpackConfig) {
-        let extractPlugin = this.extractPlugin();
-
-        webpackConfig.module.rules.push({
-            test: /\.styl(us)?$/,
-            loaders: Config.extractVueStyles
-                ? extractPlugin.extract({
-                      fallback: 'style-loader',
-                      use: ['css-loader', 'stylus-loader']
-                  })
-                : ['style-loader', 'css-loader', 'stylus-loader']
-        });
-
-        if (Config.extractVueStyles) {
-            this.addExtractPluginToConfig(extractPlugin, webpackConfig);
-        }
     }
 
     /**

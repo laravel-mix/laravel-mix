@@ -92,6 +92,16 @@ test.serial('Generic CSS rules are applied', t => {
     );
 });
 
+test.serial.only('Generic Stylus rules are applied', t => {
+    mix.js('resources/assets/js/app.js', 'js');
+
+    t.truthy(
+        buildConfig().module.rules.find(rule => {
+            return rule.test.toString() === '/\\.styl(us)?$/';
+        })
+    );
+});
+
 test.serial(
     'Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.',
     t => {
