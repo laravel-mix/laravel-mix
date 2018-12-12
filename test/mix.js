@@ -83,3 +83,9 @@ test('that it can fetch a registered component', t => {
     t.truthy(Mix.components.get('foo'));
     t.deepEqual(component, Mix.components.get('foo'));
 });
+
+test('that it can check for an installed npm package', t => {
+    t.false(Mix.seesNpmPackage('does-not-exist'));
+
+    t.true(Mix.seesNpmPackage('webpack'));
+});

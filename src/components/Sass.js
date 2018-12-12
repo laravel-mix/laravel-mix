@@ -7,21 +7,17 @@ class Sass extends Preprocessor {
     dependencies() {
         this.requiresReload = true;
 
-        let dependencies = ['sass-loader@7.*'];
-
-        try {
-            require.resolve('node-sass');
-
-            dependencies.push('node-sass');
-        } catch (e) {
-            dependencies.push('sass');
-        }
-
-        if (Config.processCssUrls) {
-            dependencies.push('resolve-url-loader@2.3.1');
-        }
-
-        return dependencies;
+        return tap(
+            [
+                'sass-loader@7.*',
+                Mix.seesNpmPackage('node-sass') ? 'node-sass' : 'sass'
+            ],
+            dependencies => {
+                if (Config.processCssUrls) {
+                    dependencies.push('resolve-url-loader@2.3.1');
+                }
+            }
+        );
     }
 
     /**

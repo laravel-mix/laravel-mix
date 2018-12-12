@@ -1,4 +1,32 @@
 import mix from './helpers/setup';
+import SassComponent from '../../src/components/Sass';
+
+test.serial('mix.sass() requires the sass dependency by default.', t => {
+    Mix.seesNpmPackage = npmPackage => {
+        if (npmPackage === 'node-sass') return false;
+    };
+
+    let component = new SassComponent();
+
+    t.true(component.dependencies().includes('sass'));
+    t.false(component.dependencies().includes('node-sass'));
+});
+
+test.serial(
+    'mix.sass() requires node-sass dependency if the user has installed it.',
+    t => {
+        let component = new SassComponent();
+
+        Mix.seesNpmPackage = npmPackage => {
+            if (npmPackage === 'node-sass') return true;
+        };
+
+        component.dependencies();
+
+        t.true(component.dependencies().includes('node-sass'));
+        t.false(component.dependencies().includes('sass'));
+    }
+);
 
 test.cb.serial('it compiles Sass without JS', t => {
     mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');

@@ -116,11 +116,9 @@ class Vue {
             outputStyle: 'expanded'
         };
 
-        try {
-            require.resolve('sass');
-
+        if (Mix.seesNpmPackage('sass')) {
             defaultOptions.implementation = require('sass');
-        } catch (e) {}
+        }
 
         return tap(
             [

@@ -63,6 +63,21 @@ class Mix {
     }
 
     /**
+     * Determine if the given npm package is installed.
+     *
+     * @param {string} npmPackage
+     */
+    seesNpmPackage(npmPackage) {
+        try {
+            require.resolve(npmPackage);
+
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
      * Determine if Mix should activate hot reloading.
      */
     shouldHotReload() {
