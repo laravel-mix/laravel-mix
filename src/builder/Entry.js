@@ -104,7 +104,7 @@ class Entry {
      */
     normalizePath(output, fallback) {
         // All output paths need to start at the project's public dir.
-        if (!output.pathFromPublic().startsWith('/' + Config.publicPath)) {
+        if (!output.pathFromPublic().startsWith(path.sep + Config.publicPath)) {
             output = new File(
                 path.join(Config.publicPath, output.pathFromPublic())
             );
