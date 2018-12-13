@@ -40,10 +40,6 @@ class BabelConfig {
                 [
                     '@babel/preset-env',
                     {
-                        modules: false,
-                        targets: {
-                            browsers: ['> 2%']
-                        },
                         forceAllTransforms: true
                     }
                 ]
