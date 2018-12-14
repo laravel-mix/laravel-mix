@@ -65,9 +65,8 @@ class Entry {
         // on Windows, as a drive letter will be incorrectly prepended to
         // (e.g. '/dist/vendor' -> 'C:\dist\vendor').
         // let startsWithSlash = ['\\', '/'].indexOf(outputPath[0]) >= 0;
-        // outputPath = startsWithSlash ? outputPath.substr(1) : outputPath;
-
-        outputPath = outputPath.replace(new RegExp('^' + path.sep), '');
+        let startsWithSlash = outputPath.startsWith(path.sep);
+        outputPath = startsWithSlash ? outputPath.substr(1) : outputPath;
 
         let vendorPath = outputPath
             ? new File(outputPath)
