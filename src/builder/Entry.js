@@ -59,6 +59,7 @@ class Entry {
         }
 
         let outputPath = extraction.output;
+
         // If the extraction output path begins with a slash (forward or backward)
         // then the path from the public directory determined below will be wrong
         // on Windows, as a drive letter will be incorrectly prepended to
@@ -72,8 +73,6 @@ class Entry {
                   .replace(/\.js$/, '')
                   .replace(/\\/g, '/')
             : path.join(this.base, 'vendor').replace(/\\/g, '/');
-        // Add the leading slash back, if needed.
-        //vendorPath = toPrepend + vendorPath;
 
         this.add(vendorPath, extraction.libs);
 
