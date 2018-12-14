@@ -142,7 +142,9 @@ test('custom Babel config may be merged', t => {
 
     t.true(
         Config.babel().plugins.find(plugin =>
-            plugin.includes('@babel/plugin-proposal-unicode-property-regex')
+            plugin.includes(
+                path.normalize('@babel/plugin-proposal-unicode-property-regex')
+            )
         ) !== undefined
     );
 });

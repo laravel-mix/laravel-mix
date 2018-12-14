@@ -21,7 +21,9 @@ test.serial(
 test.serial('Default Babel presets includes env', t => {
     t.true(
         Config.babel().presets.find(preset => {
-            return preset.find(p => p.includes('@babel/preset-env'));
+            return preset.find(p =>
+                p.includes(path.normalize('@babel/preset-env'))
+            );
         }) !== undefined
     );
 });
@@ -34,7 +36,9 @@ test.serial('Babel reads the project .babelrc file', t => {
 
     t.true(
         Config.babel(__dirname + '/.testbabelrc').plugins.find(plugin =>
-            plugin.includes('@babel/plugin-syntax-dynamic-import')
+            plugin.includes(
+                path.normalize('@babel/plugin-syntax-dynamic-import')
+            )
         ) !== undefined
     );
 
@@ -90,7 +94,8 @@ test.serial(
 
 let seeBabelPlugin = name => {
     return (
-        Config.babel().plugins.find(plugin => plugin.includes(name)) !==
-        undefined
+        Config.babel().plugins.find(plugin =>
+            plugin.includes(path.normalize(name))
+        ) !== undefined
     );
 };
