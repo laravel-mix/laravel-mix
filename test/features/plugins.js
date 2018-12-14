@@ -124,7 +124,7 @@ test('webpack plugins may be added', t => {
     t.is(plugin, config.plugins.pop());
 });
 
-test.only('custom Babel config may be merged', t => {
+test('custom Babel config may be merged', t => {
     mix.extend(
         'reactNext',
         new class {
