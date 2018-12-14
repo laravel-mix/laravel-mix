@@ -89,7 +89,7 @@ class Extract {
             }
         }
 
-        // If the use didn't specify any libraries to extract,
+        // If the user didn't specify any libraries to extract,
         // they likely want to extract all vendor libraries.
         if (Object.keys(config.cacheGroups).length === 0) {
             config.chunks = 'all';
