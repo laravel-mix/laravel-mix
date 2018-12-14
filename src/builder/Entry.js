@@ -114,10 +114,10 @@ class Entry {
      */
     normalizePath(output, fallback) {
         // All output paths need to start at the project's public dir.
-        let path = output.pathFromPublic();
+        let pathFromPublicDir = output.pathFromPublic();
         if (
-            !path.startsWith('/' + Config.publicPath) &&
-            !path.startsWith('\\' + Config.publicPath)
+            !pathFromPublicDir.startsWith('/' + Config.publicPath) &&
+            !pathFromPublicDir.startsWith('\\' + Config.publicPath)
         ) {
             output = new File(
                 path.join(Config.publicPath, output.pathFromPublic())
