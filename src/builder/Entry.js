@@ -58,12 +58,22 @@ class Entry {
             );
         }
 
-        let vendorPath = extraction.output
-            ? new File(extraction.output)
+        let outputPath = extraction.output;
+        // If the extraction output path begins with a slash (forward or backward)
+        // then the path from the public directory determined below will be wrong
+        // on Windows, as a drive letter will be incorrectly prepended to
+        // (e.g. '/dist/vendor' -> 'C:\dist\vendor').
+        let startsWithSlash = ['\\', '/'].indexOf(outputPath[0]) >= 0;
+        outputPath = startsWithSlash ? outputPath.substr(1) : outputPath;
+
+        let vendorPath = outputPath
+            ? new File(outputPath)
                   .pathFromPublic(Config.publicPath)
                   .replace(/\.js$/, '')
                   .replace(/\\/g, '/')
             : path.join(this.base, 'vendor').replace(/\\/g, '/');
+        // Add the leading slash back, if needed.
+        //vendorPath = toPrepend + vendorPath;
 
         this.add(vendorPath, extraction.libs);
 
@@ -104,7 +114,11 @@ class Entry {
      */
     normalizePath(output, fallback) {
         // All output paths need to start at the project's public dir.
-        if (!output.pathFromPublic().startsWith('/' + Config.publicPath)) {
+        let path = output.pathFromPublic();
+        if (
+            !path.startsWith('/' + Config.publicPath) &&
+            !path.startsWith('\\' + Config.publicPath)
+        ) {
             output = new File(
                 path.join(Config.publicPath, output.pathFromPublic())
             );
