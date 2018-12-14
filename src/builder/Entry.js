@@ -64,8 +64,7 @@ class Entry {
         // then the path from the public directory determined below will be wrong
         // on Windows, as a drive letter will be incorrectly prepended to
         // (e.g. '/dist/vendor' -> 'C:\dist\vendor').
-        // let startsWithSlash = ['\\', '/'].indexOf(outputPath[0]) >= 0;
-        let startsWithSlash = outputPath.startsWith(path.sep);
+        let startsWithSlash = ['\\', '/'].indexOf(outputPath[0]) >= 0;
         outputPath = startsWithSlash ? outputPath.substr(1) : outputPath;
 
         let vendorPath = outputPath
