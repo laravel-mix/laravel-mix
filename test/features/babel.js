@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.serial(
+test.serial.only(
     'mix.babelConfig() can be used to merge custom Babel options.',
     t => {
         mix.babelConfig({
@@ -89,6 +89,8 @@ test.serial(
 );
 
 let seeBabelPlugin = name => {
+    console.log('Babel config');
+    console.log(Config.babel());
     return (
         Config.babel().plugins.find(plugin => plugin.includes(name)) !==
         undefined
