@@ -6,6 +6,8 @@ class JavaScript {
     constructor() {
         this.vue = new Vue();
         this.toCompile = [];
+
+        JavaScript.vueWebpackConfigApplied = false;
     }
 
     /**
@@ -84,7 +86,11 @@ class JavaScript {
      * @param {Object} webpackConfig
      */
     webpackConfig(webpackConfig) {
-        this.vue.webpackConfig(webpackConfig);
+        if (!JavaScript.vueWebpackConfigApplied) {
+            this.vue.webpackConfig(webpackConfig);
+        }
+
+        JavaScript.vueWebpackConfigApplied = true;
     }
 }
 
