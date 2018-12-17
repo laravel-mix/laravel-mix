@@ -39,6 +39,7 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 // mix.webpackConfig({}); <-- Override webpack.config.js, without editing the file directly.
 // mix.babelConfig({}); <-- Merge extra Babel configuration (plugins, etc.) with Mix's default.
 // mix.then(function () {}) <-- Will be triggered each time Webpack finishes building.
+// mix.dump(); <-- Dump the generated webpack config object t the console.
 // mix.extend(name, handler) <-- Extend Mix's API with your own components.
 // mix.options({
 //   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.

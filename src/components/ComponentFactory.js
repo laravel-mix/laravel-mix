@@ -22,7 +22,8 @@ let components = [
     'Extract',
     'Notifications',
     'DisableNotifications',
-    'PurifyCss'
+    'PurifyCss',
+    'DumpWebpackConfig'
 ];
 
 class ComponentFactory {
