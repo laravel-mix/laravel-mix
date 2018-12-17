@@ -40,6 +40,7 @@ class BabelConfig {
                 [
                     '@babel/preset-env',
                     {
+                        modules: false,
                         forceAllTransforms: true
                     }
                 ]
