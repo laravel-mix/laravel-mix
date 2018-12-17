@@ -29,6 +29,7 @@ class Dependencies {
             .tap(dependencies => {
                 this.execute(
                     this.buildInstallCommand(dependencies),
+                    dependencies,
                     abortOnComplete
                 );
             });
@@ -40,15 +41,22 @@ class Dependencies {
      * @param {string}  command
      * @param {Boolean} abortOnComplete
      */
-    execute(command, abortOnComplete) {
+    execute(command, dependencies, abortOnComplete) {
         console.log(
-            'Additional dependencies must be installed. ' +
-                'This will only take a moment.'
+            '\x1b[32m',
+            '\nAdditional dependencies must be installed. This will only take a moment.'
         );
 
-        console.log('Running: ' + command);
+        console.log('\nRunning: ' + command);
 
         childProcess.execSync(command);
+
+        console.log(
+            '\nOkay, done. The following packages have been installed and saved to your package.json dependencies list:\n'
+        );
+
+        dependencies.forEach(d => console.log('- ' + d));
+        console.log('\x1b[0m'); // reset color
 
         this.respond(abortOnComplete);
     }
