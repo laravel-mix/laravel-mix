@@ -74,14 +74,16 @@ class Dependencies {
      * @param {Boolean} abortOnComplete
      */
     respond(abortOnComplete) {
-        console.log(
-            typeof abortOnComplete === 'string'
-                ? abortOnComplete
-                : 'Finished. Please run Mix again.'
-        );
+        if (abortOnComplete) {
+            console.log(
+                typeof abortOnComplete === 'string'
+                    ? abortOnComplete
+                    : 'Finished. Please run Mix again.'
+            );
 
-        if (!argv['$0'].includes('ava')) {
-            process.exit();
+            if (!argv['$0'].includes('ava')) {
+                process.exit();
+            }
         }
     }
 }
