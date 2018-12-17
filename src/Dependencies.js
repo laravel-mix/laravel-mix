@@ -46,6 +46,8 @@ class Dependencies {
                 'This will only take a moment.'
         );
 
+        console.log('Running: ' + command);
+
         childProcess.execSync(command);
 
         this.respond(abortOnComplete);
