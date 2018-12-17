@@ -7,9 +7,13 @@ class Vue {
      * Required dependencies for the component.
      */
     dependencies() {
+        let dependencies = ['vue-template-compiler'];
+
         if (Config.extractVueStyles && Config.globalVueStyles) {
-            return ['sass-resources-loader'];
+            dependencies.push('sass-resources-loader');
         }
+
+        return dependencies;
     }
 
     /**
