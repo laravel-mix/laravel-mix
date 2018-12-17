@@ -13,7 +13,7 @@ class Css extends AutomaticComponent {
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
-                        options: { plugins: Config.postCss }
+                        options: this.postCssOptions()
                     }
                 ]
             },
@@ -24,6 +24,10 @@ class Css extends AutomaticComponent {
                 loaders: [
                     'style-loader',
                     'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: this.postCssOptions()
+                    },
                     {
                         loader: 'sass-loader',
                         options: {
@@ -41,6 +45,10 @@ class Css extends AutomaticComponent {
                     'style-loader',
                     'css-loader',
                     {
+                        loader: 'postcss-loader',
+                        options: this.postCssOptions()
+                    },
+                    {
                         loader: 'sass-loader',
                         options: {
                             precision: 8,
@@ -54,13 +62,29 @@ class Css extends AutomaticComponent {
             {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
-                loaders: ['style-loader', 'css-loader', 'less-loader']
+                loaders: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: this.postCssOptions()
+                    },
+                    'less-loader'
+                ]
             },
 
             {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
-                loaders: ['style-loader', 'css-loader', 'stylus-loader']
+                loaders: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: this.postCssOptions()
+                    },
+                    'stylus-loader'
+                ]
             }
         ];
     }
@@ -76,6 +100,25 @@ class Css extends AutomaticComponent {
         return exclusions
             ? exclusions.details.map(preprocessor => preprocessor.src.path())
             : [];
+    }
+
+    /**
+     * Fetch the appropriate postcss plugins for the compile.
+     */
+    postCssOptions() {
+        if (Mix.components.get('postCss')) {
+            return {
+                plugins: Mix.components.get('postCss').details[0].postCssPlugins
+            };
+        }
+
+        // If the user has a postcss.config.js file in their project root,
+        // postcss-loader will automatically read and fetch the plugins.
+        if (File.exists(Mix.paths.root('postcss.config.js'))) {
+            return {};
+        }
+
+        return { plugins: Config.postCss };
     }
 }
 

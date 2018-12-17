@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('it prepends vue styles to your sass compiled file', t => {
+test.cb.serial('it appends vue styles to your sass compiled file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -15,14 +15,14 @@ test.cb.serial('it prepends vue styles to your sass compiled file', t => {
         t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
         t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
 
-        let expected = `
-.hello {
-  color: blue;
-}body {
+        let expected = `body {
   color: red;
 }
 
-`;
+
+.hello {
+  color: blue;
+}`;
 
         t.is(
             expected,
