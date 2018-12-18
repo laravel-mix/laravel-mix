@@ -1,5 +1,6 @@
 let childProcess = require('child_process');
-let File = require('../src/File');
+let File = require('./File');
+let Log = require('./Log');
 let argv = require('yargs').argv;
 
 class Dependencies {
@@ -42,21 +43,19 @@ class Dependencies {
      * @param {Boolean} abortOnComplete
      */
     execute(command, dependencies, abortOnComplete) {
-        console.log(
-            '\x1b[32m',
-            '\nAdditional dependencies must be installed. This will only take a moment.'
+        Log.feedback(
+            'Additional dependencies must be installed. This will only take a moment.'
         );
 
-        console.log('\nRunning: ' + command);
+        Log.feedback(`Running: ${command}`);
 
         childProcess.execSync(command);
 
-        console.log(
-            '\nOkay, done. The following packages have been installed and saved to your package.json dependencies list:\n'
+        Log.feedback(
+            'Okay, done. The following packages have been installed and saved to your package.json dependencies list:\n'
         );
 
-        dependencies.forEach(d => console.log('- ' + d));
-        console.log('\x1b[0m'); // reset color
+        dependencies.forEach(d => Log.info('- ' + d));
 
         this.respond(abortOnComplete);
     }
@@ -83,7 +82,7 @@ class Dependencies {
      */
     respond(abortOnComplete) {
         if (abortOnComplete) {
-            console.log(
+            Log.feedback(
                 typeof abortOnComplete === 'string'
                     ? abortOnComplete
                     : 'Finished. Please run Mix again.'

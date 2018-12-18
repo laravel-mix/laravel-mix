@@ -1,3 +1,5 @@
+let Log = require('../Log');
+
 class CustomTasksPlugin {
     /**
      * Apply the plugin.
@@ -59,7 +61,7 @@ class CustomTasksPlugin {
                 try {
                     asset.minify();
                 } catch (e) {
-                    console.log(
+                    Log.error(
                         `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
                             `Perhaps you need to use mix.babel() instead?`
                     );

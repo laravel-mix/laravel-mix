@@ -1,9 +1,10 @@
 import mix from './helpers/setup';
+import Log from '../../src/Log';
 
 test.serial.cb('mix.dumpWebpackConfig()', t => {
     let config;
 
-    console.log = webpackConfig => {
+    Log.info = webpackConfig => {
         config = JSON.parse(webpackConfig);
     };
 

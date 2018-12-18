@@ -1,3 +1,5 @@
+let Log = require('../Log');
+
 class DumpWebpackConfig {
     /**
      * The optional name to be used when called by Mix.
@@ -16,7 +18,7 @@ class DumpWebpackConfig {
                 return this.toString();
             };
 
-            console.log(JSON.stringify(config, null, 2));
+            Log.info(JSON.stringify(config, null, 2));
         });
     }
 }

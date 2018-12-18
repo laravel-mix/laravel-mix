@@ -1,5 +1,6 @@
 let Task = require('./Task');
 let FileCollection = require('../FileCollection');
+let Log = require('../Log');
 const path = require('path');
 
 class CopyFilesTask extends Task {
@@ -37,7 +38,7 @@ class CopyFilesTask extends Task {
             );
         }
 
-        console.log(`Copying ${updatedFile} to ${destination.path()}`);
+        Log.feedbback(`Copying ${updatedFile} to ${destination.path()}`);
 
         this.files.copyTo(destination, new File(updatedFile));
     }
