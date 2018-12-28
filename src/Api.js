@@ -7,7 +7,7 @@ class Api {
      *
      * @param {Boolean} generateForProduction
      * @param {string}  devType
-     * @param {string}  prodType
+     * @param {string}  productionType
      */
     sourceMaps(
         generateForProduction = true,
