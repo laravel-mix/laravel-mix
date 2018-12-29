@@ -38,7 +38,7 @@ class CopyFilesTask extends Task {
             );
         }
 
-        Log.feedbback(`Copying ${updatedFile} to ${destination.path()}`);
+        Log.feedback(`Copying ${updatedFile} to ${destination.path()}`);
 
         this.files.copyTo(destination, new File(updatedFile));
     }
