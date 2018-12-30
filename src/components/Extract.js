@@ -92,8 +92,11 @@ class Extract {
         // If the user didn't specify any libraries to extract,
         // they likely want to extract all vendor libraries.
         if (Object.keys(config.cacheGroups).length === 0) {
-            config.chunks = 'all';
-            config.name = this.extractions[0].output;
+            config.cacheGroups['vendor'] = {
+                test: new RegExp('[\\/]node_modules[\\/]', 'i'),
+                name: this.extractions[0].output,
+                chunks: 'all'
+            };
         }
 
         return config;
