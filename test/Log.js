@@ -17,7 +17,7 @@ test('it can log feedback info to the console', t => {
 
     Log.feedback(message);
 
-    t.true(console.log.calledWith('\x1b[32m', '\n' + message));
+    t.true(console.log.calledWith('\x1b[32m', '\t' + message));
 });
 
 test('it can log error info to the console', t => {
@@ -25,13 +25,13 @@ test('it can log error info to the console', t => {
 
     Log.error(message);
 
-    t.true(console.log.calledWith('\x1b[31m', '\n' + message));
+    t.true(console.log.calledWith('\x1b[31m', message));
 });
 
-test('it can log a new line of info to the console', t => {
+test('it can log a line of info to the console', t => {
     let message = 'Testing';
 
     Log.line(message, 'green');
 
-    t.true(console.log.calledWith('\x1b[32m', '\n' + message));
+    t.true(console.log.calledWith('\x1b[32m', message));
 });
