@@ -38,7 +38,7 @@ class Log {
      * @param  {String} color
      */
     static line(message, color = 'default') {
-        Log.info('\n' + message, color);
+        Log.info(message, color);
     }
 
     /**
