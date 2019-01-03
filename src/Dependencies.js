@@ -53,10 +53,10 @@ class Dependencies {
         childProcess.execSync(command);
 
         Log.feedback(
-            'Okay, done. The following packages have been installed and saved to your package.json dependencies list:\n'
+            'Okay, done. The following packages have been installed and saved to your package.json dependencies list:'
         );
 
-        dependencies.forEach(d => Log.info('- ' + d));
+        dependencies.forEach(d => Log.feedback('- ' + d));
 
         this.respond(abortOnComplete);
     }
