@@ -17,8 +17,9 @@ class Dependencies {
      * Install all dependencies that aren't available.
      *
      * @param {Boolean} abortOnComplete
+     * @param {Boolean} forceNpm
      */
-    install(abortOnComplete = false) {
+    install(abortOnComplete = false, forceNpm = false) {
         this.dependencies
             .reject(dependency => {
                 try {
@@ -29,7 +30,7 @@ class Dependencies {
             })
             .tap(dependencies => {
                 this.execute(
-                    this.buildInstallCommand(dependencies),
+                    this.buildInstallCommand(dependencies, forceNpm),
                     dependencies,
                     abortOnComplete
                 );
@@ -59,17 +60,21 @@ class Dependencies {
 
         this.respond(abortOnComplete);
     }
-
     /**
      * Build the dependency install command.
      *
-     * @param {Object} dependencies
+     * @param {Object}  dependencies
+     * @param {Boolean} forceNpm
      */
-    buildInstallCommand(dependencies) {
+    buildInstallCommand(dependencies, forceNpm = false) {
         dependencies = [].concat(dependencies).join(' ');
 
-        if (File.exists('yarn.lock')) {
-            return `yarn add ${dependencies} --dev --production=false`;
+        if (!forceNpm) {
+            try {
+                childProcess.execSync('command -v yarn >/dev/null');
+
+                return `yarn add ${dependencies} --dev --production=false`;
+            } catch (e) {}
         }
 
         return `npm install ${dependencies} --save-dev --production=false`;
