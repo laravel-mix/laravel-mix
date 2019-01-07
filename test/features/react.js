@@ -53,7 +53,7 @@ test.serial('it sets the babel config correctly', t => {
 
     t.true(
         Config.babel().presets.find(p =>
-            p.includes(path.normalize('@babel/preset-react-app'))
+            p.includes(path.normalize('babel-preset-react-app'))
         ) !== undefined
     );
 });

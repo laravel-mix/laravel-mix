@@ -5,7 +5,7 @@ class React extends JavaScript {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['@babel/preset-react-app'];
+        return ['babel-preset-react-app'];
     }
 
     /**
@@ -13,7 +13,7 @@ class React extends JavaScript {
      */
     babelConfig() {
         return {
-            presets: ['@babel/preset-react-app']
+            presets: ['babel-preset-react-app']
         };
     }
 }
