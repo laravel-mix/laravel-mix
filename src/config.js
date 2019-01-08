@@ -214,6 +214,13 @@ module.exports = function() {
         clearConsole: true,
 
         /**
+         * Options passed to style-loader when using HMR
+         *
+         * @type {Object}
+         */
+        hmrStyleLoaderOptions: {},
+
+        /**
          * Merge the given options with the current defaults.
          *
          * @param {object} options

@@ -91,7 +91,13 @@ class Preprocessor {
                 rules.push({
                     test: preprocessor.src.path(),
                     use: Mix.isUsing('hmr')
-                        ? ['style-loader', ...loaders]
+                        ? [
+                              {
+                                  loader: 'style-loader',
+                                  options: Config.hmrStyleLoaderOptions
+                              },
+                              ...loaders
+                          ]
                         : extractPlugin.extract({
                               fallback: 'style-loader',
                               use: loaders
