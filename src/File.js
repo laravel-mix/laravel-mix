@@ -248,18 +248,28 @@ class File {
      */
     parse() {
         let parsed = path.parse(this.absolutePath);
-
+        let isDir=this.checkIsDirectory(parsed);
         return {
             path: this.filePath,
             absolutePath: this.absolutePath,
             pathWithoutExt: path.join(parsed.dir, `${parsed.name}`),
-            isDir: !parsed.ext && !parsed.name.endsWith('*'),
-            isFile: !!parsed.ext,
+            isDir: isDir,
+            isFile: !isDir && !!parsed.ext,
             name: parsed.name,
             ext: parsed.ext,
             file: parsed.base,
             base: parsed.dir
         };
+    }
+    /**
+     * check if the path is a directory
+     * @param parsed
+     */
+    checkIsDirectory(parsed){
+        if(fs.existsSync(this.absolutePath)){
+            return fs.lstatSync(this.absolutePath).isDirectory();
+        }
+        return !parsed.ext && !parsed.name.endsWith('*');
     }
 }
 
