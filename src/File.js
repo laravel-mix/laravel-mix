@@ -248,7 +248,7 @@ class File {
      */
     parse() {
         let parsed = path.parse(this.absolutePath);
-        let isDir=this.checkIsDirectory(parsed);
+        let isDir = this.checkIsDirectory(parsed);
         return {
             path: this.filePath,
             absolutePath: this.absolutePath,
@@ -261,12 +261,13 @@ class File {
             base: parsed.dir
         };
     }
+    
     /**
      * check if the path is a directory
      * @param parsed
      */
-    checkIsDirectory(parsed){
-        if(fs.existsSync(this.absolutePath)){
+    checkIsDirectory(parsed) {
+        if (fs.existsSync(this.absolutePath)) {
             return fs.lstatSync(this.absolutePath).isDirectory();
         }
         return !parsed.ext && !parsed.name.endsWith('*');
