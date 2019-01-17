@@ -8,7 +8,10 @@ mix.options({
     purifyCss: false,
     //purifyCss: {},
     postCss: [require('autoprefixer')],
-    clearConsole: false
+    clearConsole: false,
+    cssNano: {
+        // discardComments: {removeAll: true},
+    }
 });
 ```
 
@@ -21,3 +24,4 @@ A handful of Mix options and overrides are available, should you require them. P
 -   **purifyCss:** Set this option to `true` if you want Mix to automatically read your HTML/Blade files and strip your CSS bundle of all unused selectors. You can also pass an object containing [purifycss-webpack options](https://github.com/webpack-contrib/purifycss-webpack#options).
 -   **postCss:** Merge any custom postcss plugins.
 -   **clearConsole:** Set this to false, if you don't want the terminal/console to clear after each build.
+-   **cssNano** Use this option to set [cssnano options](https://cssnano.co/optimisations/) that your project requires.
