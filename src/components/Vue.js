@@ -29,7 +29,20 @@ class Vue {
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
 
+        this.updateJsLoaders(webpackConfig);
         this.updateCssLoaders(webpackConfig);
+    }
+
+    /**
+     * Update JS loaders.
+     *
+     * @param {Object} webpackConfig
+     */
+    updateJsLoaders(webpackConfig) {
+        let rule = webpackConfig.module.rules.find(rule => {
+            return rule.test instanceof RegExp && rule.test.test('.js');
+        });
+        rule.exclude = { and: [rule.exclude, { not: [/\.vue\.js$/] }] };
     }
 
     /**
