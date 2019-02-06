@@ -45,9 +45,14 @@ if (Mix.sees('laravel')) {
 Mix.listen('init', () => {
     if (Mix.shouldHotReload()) {
         let http = process.argv.includes('--https') ? 'https' : 'http';
-        let port = process.argv.includes('--port')
-            ? process.argv[process.argv.indexOf('--port') + 1]
-            : Config.hmrOptions.port;
+        let port, arg;
+        if (process.argv.includes('--port')) {
+            port = process.argv[process.argv.indexOf('--port') + 1];
+        } else if (arg = process.argv.find(arg => arg.split('=')[0] === '--port')) {
+            port = arg.split('=')[1];
+        } else {
+            port = Config.hmrOptions.port
+        }
 
         new File(path.join(Config.publicPath, 'hot')).write(
             http + '://' + Config.hmrOptions.host + ':' + port + '/'
