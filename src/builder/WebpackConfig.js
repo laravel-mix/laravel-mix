@@ -59,7 +59,7 @@ class WebpackConfig {
         }
 
         this.webpackConfig.output = {
-            path: path.resolve(Mix.isUsing('hmr') ? '/' : Config.publicPath),
+            path: Mix.isUsing('hmr') ? '/' : path.resolve(Config.publicPath),
             filename: '[name].js',
             chunkFilename: '[name].js',
             publicPath: Mix.isUsing('hmr')
