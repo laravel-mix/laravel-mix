@@ -19,12 +19,15 @@ class TypeScript extends JavaScript {
      * webpack rules to be appended to the master config.
      */
     webpackRules() {
+        const isTsx = /appendTsxSuffixTo/i.test(JSON.stringify(Config.webpackConfig));
+        const suffix = isTsx ? 'appendTsxSuffixTo' : 'appendTsSuffixTo';
+
         return [].concat(super.webpackRules(), {
             test: /\.tsx?$/,
             loader: 'ts-loader',
             exclude: /node_modules/,
             options: {
-                appendTsSuffixTo: [/\.vue$/]
+                [suffix]: [/\.vue$/]
             }
         });
     }
