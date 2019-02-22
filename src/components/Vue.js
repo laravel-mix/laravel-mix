@@ -24,7 +24,8 @@ class Vue {
     webpackConfig(webpackConfig) {
         webpackConfig.module.rules.push({
             test: /\.vue$/,
-            loader: 'vue-loader'
+            loader: 'vue-loader',
+            options: Config.vue || {}
         });
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
