@@ -71,6 +71,13 @@ class Preprocessor {
                     }
                 ];
 
+                if (preprocessor.type !== 'postCss') {
+                    loaders.push({
+                        loader: `${preprocessor.type}-loader`,
+                        options: this.loaderOptions(preprocessor)
+                    });
+                }
+
                 if (preprocessor.type === 'sass' && Config.processCssUrls) {
                     loaders.push({
                         loader: 'resolve-url-loader',
@@ -78,13 +85,6 @@ class Preprocessor {
                             sourceMap: true,
                             root: Mix.paths.root('node_modules')
                         }
-                    });
-                }
-
-                if (preprocessor.type !== 'postCss') {
-                    loaders.push({
-                        loader: `${preprocessor.type}-loader`,
-                        options: this.loaderOptions(preprocessor)
                     });
                 }
 
