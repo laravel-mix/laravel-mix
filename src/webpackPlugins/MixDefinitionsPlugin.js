@@ -45,15 +45,15 @@ MixDefinitionsPlugin.prototype.getDefinitions = function(merge) {
 
     let values = Object.assign(env, merge);
 
-    return {
-        'process.env': Object.keys(values)
+    return (
+        Object.keys(values)
             // Stringify all values so they can be fed into Webpack's DefinePlugin.
             .reduce((value, key) => {
-                value[key] = JSON.stringify(values[key]);
+                value[`process.env.${key}`] = JSON.stringify(values[key]);
 
                 return value;
             }, {})
-    };
+    );
 };
 
 module.exports = MixDefinitionsPlugin;
