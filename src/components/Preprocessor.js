@@ -19,7 +19,7 @@ class Preprocessor {
     webpackRules() {
         let rules = [];
 
-        this.details.forEach(preprocessor => {
+        this.details.forEach((preprocessor, index) => {
             let outputPath = preprocessor.output.filePath
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
@@ -43,7 +43,7 @@ class Preprocessor {
                                 Config.processCssUrls
                                     ? true
                                     : Mix.isUsing('sourcemaps'),
-                            ident: 'postcss',
+                            ident: `postcss${index}`,
                             plugins: (function() {
                                 let plugins = Config.postCss;
 
