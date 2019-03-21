@@ -49,7 +49,9 @@ class Sass extends Preprocessor {
             {
                 precision: 8,
                 outputStyle: 'expanded',
-                implementation: () => require('sass')
+                implementation: () => Mix.seesNpmPackage('node-sass')
+                    ? require('node-sass')
+                    : require('sass')
             },
             pluginOptions,
             { sourceMap: true }
