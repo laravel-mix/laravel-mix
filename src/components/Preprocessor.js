@@ -88,14 +88,19 @@ class Preprocessor {
                     });
                 }
 
+                const applyLoaders = (hmr, loaders) => {
+                    loaders = extractPlugin.extract({
+                        fallback: 'style-loader',
+                        use: loaders,
+                        remove: !hmr
+                    })
+
+                    return hmr ? ['style-loader', ...loaders] : loaders
+                }
+
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: Mix.isUsing('hmr')
-                        ? ['style-loader', ...loaders]
-                        : extractPlugin.extract({
-                              fallback: 'style-loader',
-                              use: loaders
-                          })
+                    use: applyLoaders(Mix.isUsing('hmr'), loaders)
                 });
 
                 this.extractPlugins = (this.extractPlugins || []).concat(
