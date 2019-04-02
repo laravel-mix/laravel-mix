@@ -9,7 +9,9 @@ module.exports = function() {
 
         entry: {},
 
-        output: {},
+        output: {
+            chunkFilename: '[name].[hash:5].js'
+        },
 
         module: { rules: [] },
 
