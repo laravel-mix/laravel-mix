@@ -32,19 +32,6 @@ module.exports = function() {
         })
     );
 
-    // Add some general Webpack loader options.
-    plugins.push(
-        new webpack.LoaderOptionsPlugin({
-            minimize: Mix.isUsing('purifyCss') ? false : Mix.inProduction(),
-            options: {
-                context: __dirname,
-                output: {
-                    path: './'
-                }
-            }
-        })
-    );
-
     // Handle all custom, non-webpack tasks.
     plugins.push(new ManifestPlugin());
 
