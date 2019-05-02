@@ -19,7 +19,7 @@ class Preprocessor {
     webpackRules() {
         let rules = [];
 
-        this.details.forEach(preprocessor => {
+        this.details.forEach((preprocessor, index) => {
             let outputPath = preprocessor.output.filePath
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
@@ -43,7 +43,7 @@ class Preprocessor {
                                 Config.processCssUrls
                                     ? true
                                     : Mix.isUsing('sourcemaps'),
-                            ident: 'postcss',
+                            ident: `postcss${index}`,
                             plugins: (function() {
                                 let plugins = Config.postCss;
 
@@ -88,14 +88,26 @@ class Preprocessor {
                     });
                 }
 
+                if (preprocessor.type !== 'postCss') {
+                    loaders.push({
+                        loader: `${preprocessor.type}-loader`,
+                        options: this.loaderOptions(preprocessor)
+                    });
+                }
+
+                const applyLoaders = (hmr, loaders) => {
+                    loaders = extractPlugin.extract({
+                        fallback: 'style-loader',
+                        use: loaders,
+                        remove: !hmr
+                    });
+
+                    return hmr ? ['style-loader', ...loaders] : loaders;
+                };
+
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: Mix.isUsing('hmr')
-                        ? ['style-loader', ...loaders]
-                        : extractPlugin.extract({
-                              fallback: 'style-loader',
-                              use: loaders
-                          })
+                    use: applyLoaders(Mix.isUsing('hmr'), loaders)
                 });
 
                 this.extractPlugins = (this.extractPlugins || []).concat(

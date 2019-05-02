@@ -15,6 +15,21 @@ test.cb.serial('it compiles JavaScript', t => {
     });
 });
 
+test.cb.serial('it compiles JavaScript with dynamic import', t => {
+    mix.js('test/fixtures/fake-app/resources/assets/dynamic/dynamic.js', 'js');
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/dynamic.js'));
+
+        t.deepEqual(
+            {
+                '/js/dynamic.js': '/js/dynamic.js'
+            },
+            readManifest()
+        );
+    });
+});
+
 test.cb.serial('it compiles JavaScript and Sass', t => {
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
         'test/fixtures/fake-app/resources/assets/sass/app.scss',
