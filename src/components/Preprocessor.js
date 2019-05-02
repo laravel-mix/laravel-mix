@@ -88,13 +88,6 @@ class Preprocessor {
                     });
                 }
 
-                if (preprocessor.type !== 'postCss') {
-                    loaders.push({
-                        loader: `${preprocessor.type}-loader`,
-                        options: this.loaderOptions(preprocessor)
-                    });
-                }
-
                 const applyLoaders = (hmr, loaders) => {
                     loaders = extractPlugin.extract({
                         fallback: 'style-loader',

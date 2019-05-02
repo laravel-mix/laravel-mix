@@ -14,7 +14,7 @@ class Sass extends Preprocessor {
             ],
             dependencies => {
                 if (Config.processCssUrls) {
-                    dependencies.push('resolve-url-loader@3.0.1');
+                    dependencies.push('resolve-url-loader@3.1.0');
                 }
             }
         );
