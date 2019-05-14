@@ -46,7 +46,18 @@ class Api {
 
         return this;
     }
+    
+    /**
+     * Set a root directory for a project in a subdirectory
+     *
+     * @param {string} defaultPath
+     */
+    setRootSubdirectory(defaultPath) {
+        Config.rootSubdirectory = path.normalize(defaultPath.replace(/\/$/, ''));
 
+        return this;
+    }
+    
     /**
      * Merge custom config with the provided webpack.config file.
      *
