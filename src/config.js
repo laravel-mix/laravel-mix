@@ -87,6 +87,14 @@ module.exports = function() {
         resourceRoot: '/',
 
         /**
+         * The root directory your project if it is installed within a
+         * subdirectory e.g. /var/www/[subdirectory]/
+         *
+         * @type {String}
+         */
+        rootSubdirectory: '', 
+        
+        /**
          * Image Loader defaults.
          * See: https://github.com/thetalecrafter/img-loader#options
          *
