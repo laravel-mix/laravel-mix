@@ -52,8 +52,9 @@ class Manifest {
         let hash = new File(path.join(Config.publicPath, file)).version();
 
         let filePath = this.normalizePath(file);
+        let subdirectory = this.normalizePath(Config.rootSubdirectory);
 
-        this.manifest[filePath] = filePath + '?id=' + hash;
+        this.manifest[filePath] = path.join(subdirectory, filePath) + '?id=' + hash; 
 
         return this;
     }
