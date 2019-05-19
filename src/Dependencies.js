@@ -71,7 +71,7 @@ class Dependencies {
 
         if (!forceNpm) {
             try {
-                childProcess.execSync('command -v yarn >/dev/null');
+                childProcess.execSync('yarn -v');
 
                 return `yarn add ${dependencies} --dev --production=false`;
             } catch (e) {}
