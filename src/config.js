@@ -9,6 +9,8 @@ module.exports = function() {
             process.env.NODE_ENV === 'production' ||
             process.argv.includes('-p'),
 
+        testing: process.env.NODE_ENV === 'testing',
+
         /**
          * Determine if we should enable hot reloading.
          *

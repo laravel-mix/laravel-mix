@@ -34,6 +34,13 @@ class Mix {
     }
 
     /**
+     * Determine if Mix is executing in a testing environment.
+     */
+    inTesting() {
+        return Config.testing;
+    }
+
+    /**
      * Determine if Mix should watch files for changes.
      */
     isWatching() {
