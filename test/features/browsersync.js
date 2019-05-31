@@ -8,7 +8,7 @@ mockRequire(
     }
 );
 
-test.cb.serial('it handles Browsersync reloading', t => {
+test.serial.cb('it handles Browsersync reloading', t => {
     let response = mix.browserSync('app.dev');
 
     t.is(mix, response);

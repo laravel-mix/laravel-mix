@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('it handles library autoloading', t => {
+test.serial.cb('it handles library autoloading', t => {
     mix.autoload({
         jquery: ['$', 'window.jQuery'],
         'lodash.map': '_map'

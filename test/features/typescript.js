@@ -19,7 +19,7 @@ test.serial('mix.ts()', t => {
     t.is(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
 });
 
-test.cb.serial(
+test.serial.cb(
     'it applies the correct extensions and aliases to the webpack config',
     t => {
         mix.ts(

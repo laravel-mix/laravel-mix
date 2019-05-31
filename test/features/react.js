@@ -16,7 +16,7 @@ test.serial('mix.react()', t => {
     );
 });
 
-test.cb.serial('it compiles React and a preprocessor properly', t => {
+test.serial.cb('it compiles React and a preprocessor properly', t => {
     mix.react('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
         'test/fixtures/fake-app/resources/assets/sass/app.scss',
         'css'

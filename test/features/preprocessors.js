@@ -28,7 +28,7 @@ test.serial(
     }
 );
 
-test.cb.serial('it compiles Sass without JS', t => {
+test.serial.cb('it compiles Sass without JS', t => {
     mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
 
     compile(t, () => {
@@ -137,7 +137,7 @@ test.serial(
     }
 );
 
-test.cb.serial('cssnano minifier options may be specified', t => {
+test.serial.cb('cssnano minifier options may be specified', t => {
     Config.production = true;
 
     let file = new File(

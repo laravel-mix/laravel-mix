@@ -10,7 +10,7 @@ test.serial('mix.copy()', t => {
     t.is(2, Mix.tasks.length);
 });
 
-test.cb.serial(
+test.serial.cb(
     'it compiles JavaScript and copies the output to a new location.',
     t => {
         mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').copy(

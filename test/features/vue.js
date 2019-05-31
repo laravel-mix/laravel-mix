@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('it appends vue styles to your sass compiled file', t => {
+test.serial.cb('it appends vue styles to your sass compiled file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -31,7 +31,7 @@ test.cb.serial('it appends vue styles to your sass compiled file', t => {
     });
 });
 
-test.cb.serial('it prepends vue styles to your less compiled file', t => {
+test.serial.cb('it prepends vue styles to your less compiled file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -61,7 +61,7 @@ test.cb.serial('it prepends vue styles to your less compiled file', t => {
     });
 });
 
-test.cb.serial(
+test.serial.cb(
     'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
     t => {
         mix.js(
@@ -90,7 +90,7 @@ test.cb.serial(
     }
 );
 
-test.cb.serial('it extracts vue vanilla CSS styles to a dedicated file', t => {
+test.serial.cb('it extracts vue vanilla CSS styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-css.js',
         'js/app.js'
@@ -112,7 +112,7 @@ test.cb.serial('it extracts vue vanilla CSS styles to a dedicated file', t => {
     });
 });
 
-test.cb.serial('it extracts vue Stylus styles to a dedicated file', t => {
+test.serial.cb('it extracts vue Stylus styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-stylus.js',
         'js/app.js'
@@ -147,7 +147,7 @@ test.serial(
     }
 );
 
-test.cb.serial('it extracts vue .scss styles to a dedicated file', t => {
+test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -186,7 +186,7 @@ test.cb.serial('it extracts vue .scss styles to a dedicated file', t => {
     });
 });
 
-test.cb.serial('it extracts vue .sass styles to a dedicated file', t => {
+test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-indented-sass.js',
         'js/app.js'
@@ -225,7 +225,7 @@ test.cb.serial('it extracts vue .sass styles to a dedicated file', t => {
     });
 });
 
-test.cb.serial('it extracts vue PostCSS styles to a dedicated file', t => {
+test.serial.cb('it extracts vue PostCSS styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-postcss.js',
         'js/app.js'
@@ -250,7 +250,7 @@ test.cb.serial('it extracts vue PostCSS styles to a dedicated file', t => {
     });
 });
 
-test.cb.serial('it extracts vue Less styles to a dedicated file', t => {
+test.serial.cb('it extracts vue Less styles to a dedicated file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-less.js',
         'js/app.js'
@@ -271,16 +271,3 @@ test.cb.serial('it extracts vue Less styles to a dedicated file', t => {
         );
     });
 });
-
-test.serial(
-    'it does also add the vue webpack rules with typescript component',
-    t => {
-        mix.ts('resources/assets/js/app.js', 'public/js');
-
-        t.truthy(
-            buildConfig().module.rules.find(
-                rule => rule.test.toString() === '/\\.vue$/'
-            )
-        );
-    }
-);

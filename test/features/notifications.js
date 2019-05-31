@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('it displays OS notifications', t => {
+test.cb('it displays OS notifications', t => {
     compile(t, config => {
         // Find the webpack-notifier plugin. (Yeah, a little awkward...)
         let plugin = config.plugins.find(
@@ -11,7 +11,7 @@ test.cb.serial('it displays OS notifications', t => {
     });
 });
 
-test.cb.serial('it disables OS notifications', t => {
+test.cb('it disables OS notifications', t => {
     mix.disableNotifications();
 
     compile(t, config => {
@@ -24,7 +24,7 @@ test.cb.serial('it disables OS notifications', t => {
     });
 });
 
-test.cb.serial('it disables OS success notifications', t => {
+test.cb('it disables OS success notifications', t => {
     mix.disableSuccessNotifications();
 
     compile(t, config => {
@@ -39,6 +39,6 @@ test.cb.serial('it disables OS success notifications', t => {
     });
 });
 
-test.serial('mix.disableNotifications()', t => {
+test('mix.disableNotifications()', t => {
     t.is(mix, mix.disableNotifications());
 });
