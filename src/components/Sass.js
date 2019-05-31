@@ -14,7 +14,7 @@ class Sass extends Preprocessor {
             ],
             dependencies => {
                 if (Config.processCssUrls) {
-                    dependencies.push('resolve-url-loader@2.3.1');
+                    dependencies.push('resolve-url-loader@3.1.0');
                 }
             }
         );
@@ -49,9 +49,10 @@ class Sass extends Preprocessor {
             {
                 precision: 8,
                 outputStyle: 'expanded',
-                implementation: () => Mix.seesNpmPackage('node-sass')
-                    ? require('node-sass')
-                    : require('sass')
+                implementation: () =>
+                    Mix.seesNpmPackage('node-sass')
+                        ? require('node-sass')
+                        : require('sass')
             },
             pluginOptions,
             { sourceMap: true }

@@ -76,7 +76,7 @@ class Preprocessor {
                         loader: 'resolve-url-loader',
                         options: {
                             sourceMap: true,
-                            root: Mix.paths.root('node_modules')
+                            engine: 'rework'
                         }
                     });
                 }
@@ -93,10 +93,10 @@ class Preprocessor {
                         fallback: 'style-loader',
                         use: loaders,
                         remove: !hmr
-                    })
+                    });
 
-                    return hmr ? ['style-loader', ...loaders] : loaders
-                }
+                    return hmr ? ['style-loader', ...loaders] : loaders;
+                };
 
                 rules.push({
                     test: preprocessor.src.path(),
