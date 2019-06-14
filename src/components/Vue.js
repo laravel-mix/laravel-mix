@@ -1,5 +1,5 @@
 let { VueLoaderPlugin } = require('vue-loader');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let { without } = require('lodash');
 
 class Vue {
@@ -94,10 +94,10 @@ class Vue {
         if (Config.extractVueStyles) {
             let extractPlugin = this.extractPlugin();
 
-            rule.loaders = extractPlugin.extract({
-                fallback: 'style-loader',
-                use: without(rule.loaders, 'style-loader')
-            });
+            rule.loaders = [
+                MiniCssExtractPlugin.loader,
+                ...without(rule.loaders, 'style-loader')
+            ];
 
             this.addExtractPluginToConfig(extractPlugin, webpackConfig);
         }
@@ -158,7 +158,9 @@ class Vue {
 
         // Otherwise, we'll need to whip up a fresh extract text instance.
         return tap(
-            new ExtractTextPlugin(this.extractFileName()),
+            new MiniCssExtractPlugin({
+                filename: this.extractFileName()
+            }),
             extractPlugin => {
                 extractPlugin.isNew = true;
             }
