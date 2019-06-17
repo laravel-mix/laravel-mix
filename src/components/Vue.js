@@ -7,9 +7,10 @@ class Vue {
      * Required dependencies for the component.
      */
     dependencies() {
+        let dependencies = [];
 
         if (Config.vueTemplateCompiler) {
-            let dependencies = ['vue-template-compiler'];
+            dependencies.push('vue-template-compiler');
         }
 
         if (Config.extractVueStyles && Config.globalVueStyles) {
