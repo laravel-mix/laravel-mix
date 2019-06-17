@@ -144,6 +144,17 @@ module.exports = function() {
         extractVueStyles: false,
 
         /**
+         * Should we install vue-template-compiler for non-Vue JavaScript?
+         * Set it to false, if you would like to disable installing it as
+         * a dependency.
+         *
+         * Ex: vueTemplateCompiler: false
+         *
+         * @type {Boolean}
+         */
+        vueTemplateCompiler: true,
+        
+        /**
          * A file path with global styles that should be imported into every Vue component.
          *
          * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
