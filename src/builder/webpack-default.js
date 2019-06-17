@@ -2,6 +2,19 @@ let TerserPlugin = require('terser-webpack-plugin');
 let OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = function() {
+    const optimization = Mix.inProduction()
+        ? {
+              minimizer: [
+                  new TerserPlugin(Config.terser),
+                  new OptimizeCSSAssetsPlugin({
+                      cssProcessorPluginOptions: {
+                          preset: ['default', Config.cssNano]
+                      }
+                  })
+              ]
+          }
+        : {};
+
     return {
         context: Mix.paths.root(),
 
@@ -37,18 +50,17 @@ module.exports = function() {
             hints: false
         },
 
-        optimization: Mix.inProduction()
-            ? {
-                  minimizer: [
-                      new TerserPlugin(Config.terser),
-                      new OptimizeCSSAssetsPlugin({
-                          cssProcessorPluginOptions: {
-                              preset: ['default', Config.cssNano]
-                          }
-                      })
-                  ]
-              }
-            : {},
+        optimization: {
+            ...optimization,
+            namedModules: true,
+            namedChunks: true,
+            splitChunks: {
+                minChunks: 1,
+                cacheGroups: {
+                    default: false
+                }
+            }
+        },
 
         devtool: Config.sourcemaps,
 
