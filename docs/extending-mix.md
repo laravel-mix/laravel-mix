@@ -171,6 +171,7 @@ class Example {
     babelConfig() {
         // Example:
         // return { presets: ['@babel/preset-react'] };
+    }
 }
 ```
 
