@@ -96,6 +96,16 @@ class Api {
     }
 
     /**
+     * Register an event listen for when the webpack
+     * config object has been fully generated.
+     *
+     * @param {Function} callback
+     */
+    override(callback) {
+        Mix.listen('configReady', callback);
+    }
+
+    /**
      * Helper for determining a production environment.
      */
     inProduction() {
