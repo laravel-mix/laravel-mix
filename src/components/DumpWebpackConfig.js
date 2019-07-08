@@ -13,7 +13,7 @@ class DumpWebpackConfig {
      * Register the component.
      */
     register() {
-        Mix.listen('configReady', config => {
+        Mix.listen('configReadyForUser', config => {
             RegExp.prototype.toJSON = function() {
                 return this.toString();
             };
