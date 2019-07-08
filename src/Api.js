@@ -102,7 +102,7 @@ class Api {
      * @param {Function} callback
      */
     override(callback) {
-        Mix.listen('configReady', callback);
+        Mix.listen('configReadyForUser', callback);
     }
 
     /**

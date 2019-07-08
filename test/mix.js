@@ -96,7 +96,7 @@ test('that it listens for when the webpack configuration object has been fully g
     mix.override(config => (called = true));
 
     Mix.dispatch('build');
-    Mix.dispatch('configReady');
+    Mix.dispatch('configReadyForUser');
 
     t.true(called);
 });
