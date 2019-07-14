@@ -1,4 +1,4 @@
-let objectValues = require('lodash').values;
+let collect = require('collect.js');
 
 /**
  * Generic tap function.
@@ -26,36 +26,3 @@ Object.defineProperty(Array.prototype, 'tap', {
         return this;
     }
 });
-
-/**
- * Reject items from an array.
- *
- * @param {mixed}    val
- * @param {Function} callback
- */
-
-Object.defineProperty(Array.prototype, 'reject', {
-    value: function(callback) {
-        return this.filter(item => !callback(item));
-    }
-});
-
-/**
- * Flatten the given array.
- *
- * @param {Array} arr
- */
-global.flatten = function(arr) {
-    return [].concat.apply([], objectValues(arr));
-};
-
-/**
- * Sort object by keys
- *
- * @param {Object} obj
- */
-global.sortObjectKeys = obj => {
-    return Object.keys(obj)
-        .sort()
-        .reduce((r, k) => ((r[k] = obj[k]), r), {});
-};
