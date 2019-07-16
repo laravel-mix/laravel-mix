@@ -159,13 +159,9 @@ class Vue {
         }
 
         // Otherwise, we'll need to whip up a fresh extract text instance.
-        // return collect()
-        return tap(
-            new ExtractTextPlugin(this.extractFileName()),
-            extractPlugin => {
-                extractPlugin.isNew = true;
-            }
-        );
+        return collect(new ExtractTextPlugin(this.extractFileName()))
+            .put('isNew', true)
+            .all();
     }
 
     /**

@@ -222,10 +222,6 @@ module.exports = function() {
          */
         merge(options) {
             Object.keys(options).forEach(key => {
-                if (Array.isArray(options[key])) {
-                    return options[key].concat(this[key]);
-                }
-
                 this[key] = options[key];
             });
         }

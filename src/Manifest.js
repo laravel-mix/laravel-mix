@@ -1,5 +1,4 @@
 let collect = require('collect.js');
-
 let path = require('path');
 
 class Manifest {

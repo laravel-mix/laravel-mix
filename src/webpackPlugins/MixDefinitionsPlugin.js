@@ -1,6 +1,7 @@
 let webpack = require('webpack');
 let dotenv = require('dotenv');
 let expand = require('dotenv-expand');
+let collect = require('collect.js');
 
 /**
  * Create a new plugin instance.

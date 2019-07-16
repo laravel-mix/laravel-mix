@@ -1,4 +1,4 @@
-let collect = require('collect.js');
+let objectValues = require('lodash').values;
 
 /**
  * Generic tap function.
@@ -26,3 +26,12 @@ Object.defineProperty(Array.prototype, 'tap', {
         return this;
     }
 });
+
+/**
+ * Flatten the given array.
+ *
+ * @param {Array} arr
+ */
+global.flatten = function(arr) {
+    return [].concat.apply([], objectValues(arr));
+};
