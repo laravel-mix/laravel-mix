@@ -1,6 +1,6 @@
 let { VueLoaderPlugin } = require('vue-loader');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let { without } = require('lodash');
+let collect = require('collect.js');
 
 class Vue {
     /**
@@ -100,7 +100,9 @@ class Vue {
 
             rule.loaders = extractPlugin.extract({
                 fallback: 'style-loader',
-                use: without(rule.loaders, 'style-loader')
+                use: collect(rule.loaders)
+                    .except('style-loader')
+                    .all()
             });
 
             this.addExtractPluginToConfig(extractPlugin, webpackConfig);
@@ -161,12 +163,9 @@ class Vue {
         }
 
         // Otherwise, we'll need to whip up a fresh extract text instance.
-        return tap(
-            new ExtractTextPlugin(this.extractFileName()),
-            extractPlugin => {
-                extractPlugin.isNew = true;
-            }
-        );
+        return collect(new ExtractTextPlugin(this.extractFileName()))
+            .put('isNew', true)
+            .all();
     }
 
     /**

@@ -1,7 +1,7 @@
 let childProcess = require('child_process');
-let File = require('./File');
 let Log = require('./Log');
 let argv = require('yargs').argv;
+let collect = require('collect.js');
 
 class Dependencies {
     /**
@@ -20,7 +20,7 @@ class Dependencies {
      * @param {Boolean} forceNpm
      */
     install(abortOnComplete = false, forceNpm = false) {
-        this.dependencies
+        collect(this.dependencies)
             .reject(dependency => {
                 try {
                     return require.resolve(
@@ -28,10 +28,10 @@ class Dependencies {
                     );
                 } catch (e) {}
             })
-            .tap(dependencies => {
+            .pipe(dependencies => {
                 this.execute(
-                    this.buildInstallCommand(dependencies, forceNpm),
-                    dependencies,
+                    this.buildInstallCommand(dependencies.all(), forceNpm),
+                    dependencies.all(),
                     abortOnComplete
                 );
             });
