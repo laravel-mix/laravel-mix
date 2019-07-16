@@ -89,3 +89,14 @@ test('that it can check for an installed npm package', t => {
 
     t.true(Mix.seesNpmPackage('webpack'));
 });
+
+test('that it listens for when the webpack configuration object has been fully generated', t => {
+    let called = false;
+
+    mix.override(config => (called = true));
+
+    Mix.dispatch('build');
+    Mix.dispatch('configReadyForUser');
+
+    t.true(called);
+});
