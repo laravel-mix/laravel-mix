@@ -69,7 +69,8 @@ module.exports = function() {
          */
         notifications: {
             onSuccess: true,
-            onFailure: true
+            onFailure: true,
+            timeout: undefined
         },
 
         /**

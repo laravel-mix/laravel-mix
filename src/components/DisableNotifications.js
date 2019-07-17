@@ -11,10 +11,8 @@ class DisableNotifications {
      */
     register() {
         if (this.caller === 'disableSuccessNotifications') {
-            Config.notifications = {
-                onSuccess: false,
-                onFailure: true
-            };
+            Config.notifications.onSuccess = false;
+            Config.notifications.onFailure = true;
         } else {
             Config.notifications = false;
         }

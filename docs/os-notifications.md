@@ -7,3 +7,11 @@ mix.js(src, output).disableNotifications();
 ```
 
 Simple!
+
+You can set the timeout for the notifications with the following:
+
+```js
+mix.setNotificationsTimeout(2);
+```
+
+This would set the notifications timeout to 2 seconds but you may have to use milliseconds based on your OS.

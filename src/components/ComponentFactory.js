@@ -22,6 +22,7 @@ let components = [
     'Extract',
     'Notifications',
     'DisableNotifications',
+    'NotificationsTimeout',
     'PurifyCss',
     'DumpWebpackConfig'
 ];

@@ -33,6 +33,7 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 // mix.sourceMaps(); // Enable sourcemaps
 // mix.version(); // Enable versioning.
 // mix.disableNotifications();
+// mix.setNotificationsTimeout(timeout);
 // mix.setPublicPath('path/to/public');
 // mix.setResourceRoot('prefix/for/resource/locators');
 // mix.autoload({}); <-- Will be passed to Webpack's ProvidePlugin.

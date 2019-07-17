@@ -42,3 +42,18 @@ test.cb('it disables OS success notifications', t => {
 test('mix.disableNotifications()', t => {
     t.is(mix, mix.disableNotifications());
 });
+
+test.cb('it set OS notifications timeout', t => {
+    let timeout = 2;
+    mix.setNotificationsTimeout(timeout);
+
+    compile(t, config => {
+        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
+        let plugin = config.plugins.find(
+            // Check the plugin timeout option
+            plugin => plugin.options && plugin.options.timeout === timeout
+        );
+
+        t.truthy(plugin);
+    });
+});

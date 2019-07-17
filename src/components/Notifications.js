@@ -15,7 +15,7 @@ class Notifications extends AutomaticComponent {
                     process.platform === 'linux'
                         ? 'int:transient:1'
                         : undefined,
-		timeout: 2,
+                timeout: Config.notifications.timeout,
                 contentImage: Mix.paths.root(
                     'node_modules/laravel-mix/icons/laravel.png'
                 )
