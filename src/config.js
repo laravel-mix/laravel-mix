@@ -228,8 +228,12 @@ module.exports = function() {
          * @param {object} options
          */
         merge(options) {
-            Object.keys(options).forEach(key => {
-                this[key] = options[key];
+            let mergeWith = require('lodash').mergeWith;
+
+            mergeWith(this, options, (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
             });
         }
     };

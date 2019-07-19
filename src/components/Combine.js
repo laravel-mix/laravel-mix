@@ -1,7 +1,6 @@
 let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
 let Assert = require('../Assert');
 let _ = require('lodash');
-let collect = require('collect.js');
 let glob = require('glob');
 
 class Combine {
@@ -40,9 +39,10 @@ class Combine {
         Assert.combine(src, output);
 
         if (typeof src === 'string' && File.find(src).isDirectory()) {
-            src = collect(glob.sync(path.join(src, '**/*'), { nodir: true }))
-                .except(output.relativePath())
-                .all();
+            src = _.pull(
+                glob.sync(path.join(src, '**/*'), { nodir: true }),
+                output.relativePath()
+            );
         }
 
         let task = new ConcatFilesTask({ src, output, babel });

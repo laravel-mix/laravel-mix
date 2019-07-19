@@ -1,4 +1,6 @@
-let collect = require('collect.js');
+let objectValues = require('lodash').values;
+let without = require('lodash').without;
+
 let path = require('path');
 
 class Manifest {
@@ -23,9 +25,7 @@ class Manifest {
             );
         }
 
-        return collect(this.manifest)
-            .sortKeys()
-            .all();
+        return sortObjectKeys(this.manifest);
     }
 
     /**
@@ -102,14 +102,10 @@ class Manifest {
 
         // If there's a temporary mix.js chunk, we can safely remove it.
         if (assets.mix) {
-            assets.mix = collect(assets.mix)
-                .except('mix.js')
-                .all();
+            assets.mix = without(assets.mix, 'mix.js');
         }
 
-        return collect(assets)
-            .flatten()
-            .all();
+        return flatten(assets);
     }
 
     /**
