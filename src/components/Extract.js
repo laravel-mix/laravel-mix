@@ -101,7 +101,7 @@ class Extract {
 
     createCacheGroup(extraction) {
         const libsPattern = extraction.libs.join('|');
-        const pattern = new RegExp(`node_modules[\\\\/](${libsPattern})`, 'i');
+        const pattern = new RegExp(`(?<!node_modules.*)[\\\\/]node_modules[\\\\/](${libsPattern})[\\\\/]`, 'i');
 
         return {
             test: pattern,

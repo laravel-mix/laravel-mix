@@ -46,8 +46,7 @@ class Browsersync {
                 files: [
                     'app/**/*.php',
                     'resources/views/**/*.php',
-                    'public/js/**/*.js',
-                    'public/css/**/*.css'
+                    `${Config.publicPath || 'public'}/**/*.(js|css)`
                 ],
                 snippetOptions: {
                     rule: {

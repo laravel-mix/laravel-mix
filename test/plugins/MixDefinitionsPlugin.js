@@ -14,6 +14,6 @@ test('it fetches the MIX_ definitions properly', t => {
 
     // Note that the definitions may contain more keys.
     // During a travis build with cached node modules, there's a MIX_ARCHIVES entry, for example.
-    t.is(MIX_TESTING, definitions['process.env'].MIX_TESTING);
-    t.is(NODE_ENV, definitions['process.env'].NODE_ENV);
+    t.is(MIX_TESTING, definitions['process.env.MIX_TESTING']);
+    t.is(NODE_ENV, definitions['process.env.NODE_ENV']);
 });

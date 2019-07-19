@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('it purifies CSS', t => {
+test.serial.cb('it purifies CSS', t => {
     createPurifyStubs();
 
     mix.less(
@@ -26,7 +26,7 @@ test.cb.serial('it purifies CSS', t => {
     });
 });
 
-test.cb.serial('it purifies CSS with JS compilation', t => {
+test.serial.cb('it purifies CSS with JS compilation', t => {
     createPurifyStubs();
 
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')

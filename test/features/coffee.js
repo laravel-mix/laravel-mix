@@ -14,7 +14,7 @@ test.serial('it applies the correct webpack rules', t => {
     );
 });
 
-test.cb.serial('it compiles CoffeeScript', t => {
+test.serial.cb('it compiles CoffeeScript', t => {
     // Setup.
     new File('test/fixtures/fake-app/resources/assets/js/app.coffee').write(
         'module Foobar'

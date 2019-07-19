@@ -144,7 +144,7 @@ module.exports = function() {
         extractVueStyles: false,
 
         /**
-         * A file path with global styles that shuold be imported into every Vue component.
+         * A file path with global styles that should be imported into every Vue component.
          *
          * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
          *
@@ -228,12 +228,8 @@ module.exports = function() {
          * @param {object} options
          */
         merge(options) {
-            let mergeWith = require('lodash').mergeWith;
-
-            mergeWith(this, options, (objValue, srcValue) => {
-                if (Array.isArray(objValue)) {
-                    return objValue.concat(srcValue);
-                }
+            Object.keys(options).forEach(key => {
+                this[key] = options[key];
             });
         }
     };

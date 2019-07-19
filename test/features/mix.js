@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.cb.serial('the kitchen sink', t => {
+test.serial.cb('the kitchen sink', t => {
     new File('test/fixtures/fake-app/public/file.js').write('var foo');
 
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
@@ -44,7 +44,7 @@ test.cb.serial('the kitchen sink', t => {
     });
 });
 
-test.cb.serial('async chunk splitting works', t => {
+test.serial.cb('async chunk splitting works', t => {
     mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash', 'core-js'])
         .options({
@@ -70,7 +70,7 @@ test.cb.serial('async chunk splitting works', t => {
     });
 });
 
-test.cb.serial('multiple extractions work', t => {
+test.serial.cb('multiple extractions work', t => {
     mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
         .extract(['core-js'], 'js/vendor-core-js.js')
@@ -99,7 +99,7 @@ test.cb.serial('multiple extractions work', t => {
     });
 });
 
-test.cb.serial(
+test.serial.cb(
     'it resolves image- and font-urls and distinguishes between them even if we deal with svg',
     t => {
         // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg

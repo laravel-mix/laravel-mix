@@ -19,7 +19,7 @@ class Preprocessor {
     webpackRules() {
         let rules = [];
 
-        this.details.forEach(preprocessor => {
+        this.details.forEach((preprocessor, index) => {
             let outputPath = preprocessor.output.filePath
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
@@ -43,7 +43,7 @@ class Preprocessor {
                                 Config.processCssUrls
                                     ? true
                                     : Mix.isUsing('sourcemaps'),
-                            ident: 'postcss',
+                            ident: `postcss${index}`,
                             plugins: (function() {
                                 let plugins = Config.postCss;
 
@@ -76,7 +76,7 @@ class Preprocessor {
                         loader: 'resolve-url-loader',
                         options: {
                             sourceMap: true,
-                            root: Mix.paths.root('node_modules')
+                            engine: 'rework'
                         }
                     });
                 }
@@ -88,20 +88,25 @@ class Preprocessor {
                     });
                 }
 
+                const applyLoaders = (hmr, loaders) => {
+                    loaders = extractPlugin.extract({
+                        fallback: 'style-loader',
+                        use: loaders,
+                        remove: !hmr
+                    });
+
+                    return hmr ? [
+                            {
+                                loader: 'style-loader',
+                                options: Config.hmrStyleLoaderOptions
+                            },
+                            ...loaders
+                        ] : loaders;
+                };
+
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: Mix.isUsing('hmr')
-                        ? [
-                              {
-                                  loader: 'style-loader',
-                                  options: Config.hmrStyleLoaderOptions
-                              },
-                              ...loaders
-                          ]
-                        : extractPlugin.extract({
-                              fallback: 'style-loader',
-                              use: loaders
-                          })
+                    use: applyLoaders(Mix.isUsing('hmr'), loaders)
                 });
 
                 this.extractPlugins = (this.extractPlugins || []).concat(
