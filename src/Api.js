@@ -103,8 +103,6 @@ class Api {
      */
     override(callback) {
         Mix.listen('configReadyForUser', callback);
-
-        return this;
     }
 
     /**
