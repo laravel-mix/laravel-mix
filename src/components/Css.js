@@ -106,7 +106,7 @@ class Css extends AutomaticComponent {
      * Fetch the appropriate postcss plugins for the compile.
      */
     postCssOptions() {
-        if (Mix.components.get('postCss')) {
+        if (Mix.components.get('postCss') && Mix.components.get('postCss').details[0].postCssPlugins.length) {
             return {
                 plugins: Mix.components.get('postCss').details[0].postCssPlugins
             };
