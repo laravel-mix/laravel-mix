@@ -54,7 +54,7 @@
         "html-loader": "^0.5.5",
         "imagemin": "^6.0.0",
         "img-loader": "^3.0.0",
-        "lodash": "^4.17.5",
+        "lodash": "^4.17.15",
         "md5": "^2.2.1",
         "optimize-css-assets-webpack-plugin": "^5.0.1",
         "postcss-loader": "^3.0.0",
