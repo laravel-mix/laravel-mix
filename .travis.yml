@@ -12,6 +12,10 @@ node_js:
     - '10'
     - '11'
 
+# Run ESLint after npm test
+script:
+    - npm run eslint
+
 cache:
     directories:
         - 'node_modules'
