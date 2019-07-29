@@ -23,6 +23,7 @@ Object.defineProperty(Array.prototype, 'tap', {
         if (this.length) {
             callback(this);
         }
+
         return this;
     }
 });

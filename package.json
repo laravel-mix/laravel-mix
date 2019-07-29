@@ -9,7 +9,8 @@
         "hmr": "NODE_ENV=development webpack-dev-server --inline --hot",
         "production": "NODE_ENV=production webpack --progress --hide-modules",
         "test": "nyc ava --verbose --serial",
-        "posttest": "nyc report --reporter=html"
+        "posttest": "nyc report --reporter=html",
+        "eslint": "eslint setup/ src/ test/ --max-warnings=0"
     },
     "repository": "JeffreyWay/laravel-mix",
     "bugs": {
@@ -75,6 +76,7 @@
         "coffee-loader": "^0.9.0",
         "coffeescript": "^2.2.3",
         "eol": "^0.9.1",
+        "eslint": "^6.0.1",
         "husky": "^1.2.0",
         "less": "^3.9.0",
         "less-loader": "^4.1.0",
