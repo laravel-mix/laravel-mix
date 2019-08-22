@@ -95,7 +95,7 @@ class Preprocessor {
                         remove: !hmr
                     });
 
-                    return hmr ? ['style-loader', ...loaders] : loaders;
+                    return hmr ? ['css-hot-loader', ...loaders] : loaders;
                 };
 
                 rules.push({
