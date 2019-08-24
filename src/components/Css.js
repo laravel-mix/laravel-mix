@@ -9,8 +9,17 @@ class Css extends AutomaticComponent {
             {
                 test: /\.css$/,
                 loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    {
+                        loader: 'style-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 1,
+                            sourceMap: Mix.isUsing('sourcemaps')
+                        }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -22,28 +31,14 @@ class Css extends AutomaticComponent {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
                 loaders: [
-                    'style-loader',
-                    'css-loader',
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        loader: 'style-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
                     },
                     {
-                        loader: 'sass-loader',
-                        options: {
-                            precision: 8,
-                            outputStyle: 'expanded'
-                        }
-                    }
-                ]
-            },
-
-            {
-                test: /\.sass$/,
-                exclude: this.excludePathsFor('sass'),
-                loaders: [
-                    'style-loader',
-                    'css-loader',
+                        loader: 'css-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -53,7 +48,35 @@ class Css extends AutomaticComponent {
                         options: {
                             precision: 8,
                             outputStyle: 'expanded',
-                            indentedSyntax: true
+                            sourceMap: Mix.isUsing('sourcemaps')
+                        }
+                    }
+                ]
+            },
+
+            {
+                test: /\.sass$/,
+                exclude: this.excludePathsFor('sass'),
+                loaders: [
+                    {
+                        loader: 'style-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: this.postCssOptions()
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            precision: 8,
+                            outputStyle: 'expanded',
+                            indentedSyntax: true,
+                            sourceMap: Mix.isUsing('sourcemaps')
                         }
                     }
                 ]
@@ -63,13 +86,22 @@ class Css extends AutomaticComponent {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
                 loaders: [
-                    'style-loader',
-                    'css-loader',
+                    {
+                        loader: 'style-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    'less-loader'
+                    {
+                        loader: 'less-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    }
                 ]
             },
 
@@ -77,13 +109,22 @@ class Css extends AutomaticComponent {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
                 loaders: [
-                    'style-loader',
-                    'css-loader',
+                    {
+                        loader: 'style-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    'stylus-loader'
+                    {
+                        loader: 'stylus-loader',
+                        options: { sourceMap: Mix.isUsing('sourcemaps') }
+                    }
                 ]
             }
         ];
@@ -108,6 +149,7 @@ class Css extends AutomaticComponent {
     postCssOptions() {
         if (Mix.components.get('postCss')) {
             return {
+                sourceMap: Mix.isUsing('sourcemaps'),
                 plugins: Mix.components.get('postCss').details[0].postCssPlugins
             };
         }
