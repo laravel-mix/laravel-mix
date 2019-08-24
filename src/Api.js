@@ -11,7 +11,7 @@ class Api {
      */
     sourceMaps(
         generateForProduction = true,
-        devType = 'eval-source-map',
+        devType = 'inline-source-map',
         productionType = 'source-map'
     ) {
         let type = devType;
