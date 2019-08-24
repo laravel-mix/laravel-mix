@@ -93,6 +93,11 @@ class Vue {
             return rule.test instanceof RegExp && rule.test.test('.' + loader);
         });
 
+        // Replace `style-loader` to `vue-style-loader`
+        rule.loaders.find(
+            loader => loader.loader === 'style-loader'
+        ).loader = 'vue-style-loader'; // prettier-ignore
+
         callback && callback(rule);
 
         if (Config.extractVueStyles) {
