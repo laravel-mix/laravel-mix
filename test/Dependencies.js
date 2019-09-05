@@ -37,15 +37,3 @@ test('it installs multiple dependencies', t => {
         )
     );
 });
-
-test('it installs a single dependency with Yarn', t => {
-    sinon.stub(File, 'exists').returns(true);
-
-    new Dependencies(['browser-sync']).install();
-
-    t.true(
-        childProcess.execSync.calledWith(
-            'yarn add browser-sync --dev --production=false'
-        )
-    );
-});

@@ -17,9 +17,8 @@ class Dependencies {
      * Install all dependencies that aren't available.
      *
      * @param {Boolean} abortOnComplete
-     * @param {Boolean} forceNpm
      */
-    install(abortOnComplete = false, forceNpm = false) {
+    install(abortOnComplete = false) {
         collect(this.dependencies)
             .reject(dependency => {
                 try {
@@ -30,7 +29,7 @@ class Dependencies {
             })
             .pipe(dependencies => {
                 this.execute(
-                    this.buildInstallCommand(dependencies.all(), forceNpm),
+                    this.buildInstallCommand(dependencies.all()),
                     dependencies.all(),
                     abortOnComplete
                 );
@@ -66,16 +65,8 @@ class Dependencies {
      * @param {Object}  dependencies
      * @param {Boolean} forceNpm
      */
-    buildInstallCommand(dependencies, forceNpm = false) {
+    buildInstallCommand(dependencies) {
         dependencies = [].concat(dependencies).join(' ');
-
-        if (!forceNpm) {
-            try {
-                childProcess.execSync('command -v yarn >/dev/null');
-
-                return `yarn add ${dependencies} --dev --production=false`;
-            } catch (e) {}
-        }
 
         return `npm install ${dependencies} --save-dev --production=false`;
     }
