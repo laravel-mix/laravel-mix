@@ -28,6 +28,10 @@ class Dependencies {
                 } catch (e) {}
             })
             .pipe(dependencies => {
+                if (!dependencies.count()) {
+                    return;
+                }
+
                 this.execute(
                     this.buildInstallCommand(dependencies.all()),
                     dependencies.all(),
