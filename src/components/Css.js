@@ -31,8 +31,10 @@ class Css extends AutomaticComponent {
                     {
                         loader: 'sass-loader',
                         options: {
-                            precision: 8,
-                            outputStyle: 'expanded'
+                            sassOptions: {
+                                precision: 8,
+                                outputStyle: 'expanded'
+                            }
                         }
                     }
                 ]
@@ -51,9 +53,11 @@ class Css extends AutomaticComponent {
                     {
                         loader: 'sass-loader',
                         options: {
-                            precision: 8,
-                            outputStyle: 'expanded',
-                            indentedSyntax: true
+                            sassOptions: {
+                                precision: 8,
+                                outputStyle: 'expanded',
+                                indentedSyntax: true
+                            }
                         }
                     }
                 ]

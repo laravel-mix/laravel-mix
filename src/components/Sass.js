@@ -49,7 +49,7 @@ class Sass extends Preprocessor {
             {
                 sassOptions: {
                     precision: 8,
-                    outputStyle: 'expanded',
+                    outputStyle: 'expanded'
                 },
                 implementation: () =>
                     Mix.seesNpmPackage('node-sass')
