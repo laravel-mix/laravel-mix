@@ -60,7 +60,9 @@ Behind the scenes, Laravel Mix of course defers to Sass (Dart implementation), L
 
 ```js
 mix.sass('src', 'destination', {
-    outputStyle: 'nested',
+    sassOptions: {
+        outputStyle: 'nested',
+    },
     implementation: require('node-sass') // Switch from Dart to node-sass implementation
 });
 ```

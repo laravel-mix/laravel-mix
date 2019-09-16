@@ -9,7 +9,7 @@ class Sass extends Preprocessor {
 
         return tap(
             [
-                'sass-loader@7.*',
+                'sass-loader@8.*',
                 Mix.seesNpmPackage('node-sass') ? 'node-sass' : 'sass'
             ],
             dependencies => {
@@ -47,8 +47,10 @@ class Sass extends Preprocessor {
     pluginOptions(pluginOptions) {
         return Object.assign(
             {
-                precision: 8,
-                outputStyle: 'expanded',
+                sassOptions: {
+                    precision: 8,
+                    outputStyle: 'expanded'
+                },
                 implementation: () =>
                     Mix.seesNpmPackage('node-sass')
                         ? require('node-sass')
