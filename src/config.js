@@ -153,6 +153,14 @@ module.exports = function() {
         globalVueStyles: '',
 
         /**
+         * To detect What plugin should be used to compile styles inside component
+         *
+         *
+         * @type {Boolean|object}
+         */
+        componentStylesCompiler: false,
+
+        /**
          * Terser-specific settings for Webpack.
          *
          * See: https://github.com/webpack-contrib/terser-webpack-plugin#options
