@@ -150,7 +150,7 @@ module.exports = function() {
          *
          * @type {string}
          */
-        globalVueStyles: '',    
+        globalVueStyles: '',
 
         /**
          * Terser-specific settings for Webpack.
