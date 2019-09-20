@@ -55,11 +55,12 @@ class Vue {
 
         // SASS
         let sassCallback = rule => {
-            if (Mix.seesNpmPackage('sass')) {
+            if (Mix.seesNpmPackage('sass')) { // would be better if it's support regex
                 rule.loaders.find(
                     loader => loader.loader === 'sass-loader'
-                ).options.implementation = require('sass');
+                ).options.implementation = Config.componentStylesCompiler ? Config.componentStylesCompiler : require('sass');
             }
+
 
             if (Config.globalVueStyles) {
                 rule.loaders.push({
