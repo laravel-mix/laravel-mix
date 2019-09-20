@@ -9,7 +9,10 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
             'test/fixtures/fake-app/resources/assets/sass/app.scss',
             'css/app.css'
         )
-        .options({ extractVueStyles: true });
+        .options({
+            extractVueStyles: true,
+            componentStylesCompiler: 'node-sass'
+        });
 
     compile(t, () => {
         t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));

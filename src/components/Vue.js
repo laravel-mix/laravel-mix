@@ -55,10 +55,15 @@ class Vue {
 
         // SASS
         let sassCallback = rule => {
-            if (Mix.seesNpmPackage('sass')) {
+            const compiler = Mix.seesNpmPackage(Config.componentStylesCompiler)
+                ? Config.componentStylesCompiler
+                : Mix.seesNpmPackage('sass')
+                ? 'sass'
+                : false;
+            if (compiler) {
                 rule.loaders.find(
                     loader => loader.loader === 'sass-loader'
-                ).options.implementation = require('sass');
+                ).options.implementation = require(compiler);
             }
 
             if (Config.globalVueStyles) {
