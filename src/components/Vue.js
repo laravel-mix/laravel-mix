@@ -59,7 +59,7 @@ class Vue {
                 ? Config.componentStylesCompiler
                 : Mix.seesNpmPackage('sass')
                 ? 'sass'
-                : false;
+                : false; //Select sass compiler
             if (compiler) {
                 rule.loaders.find(
                     loader => loader.loader === 'sass-loader'
