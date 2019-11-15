@@ -1,13 +1,9 @@
 let glob = require('glob');
 let Assert = require('../Assert');
-let Vue = require('./Vue');
 
 class JavaScript {
     constructor() {
-        this.vue = new Vue();
         this.toCompile = [];
-
-        JavaScript.vueWebpackConfigApplied = false;
     }
 
     /**
@@ -16,14 +12,7 @@ class JavaScript {
     name() {
         let name = this.constructor.name.toLowerCase();
 
-        return name === 'javascript' ? ['js', 'vue'] : name;
-    }
-
-    /**
-     * Required dependencies for the component.
-     */
-    dependencies() {
-        return this.vue.dependencies();
+        return name === 'javascript' ? ['js'] : name;
     }
 
     /**
@@ -78,19 +67,6 @@ class JavaScript {
                 ]
             }
         ]);
-    }
-
-    /**
-     * Override the generated webpack configuration.
-     *
-     * @param {Object} webpackConfig
-     */
-    webpackConfig(webpackConfig) {
-        if (!JavaScript.vueWebpackConfigApplied) {
-            this.vue.webpackConfig(webpackConfig);
-        }
-
-        JavaScript.vueWebpackConfigApplied = true;
     }
 }
 
