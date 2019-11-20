@@ -65,6 +65,12 @@ class Preprocessor {
                                     );
                                 }
 
+                                if (Mix.inProduction()) {
+                                    require('cssnano')({
+                                        preset: 'default'
+                                    });
+                                }
+
                                 return plugins;
                             })()
                         }
