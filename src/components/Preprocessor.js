@@ -69,7 +69,6 @@ class Preprocessor {
                                     plugins.push(
                                         require('cssnano')({
                                             preset: ['default', Config.cssNano]
-                                            // preset: 'default'
                                         })
                                     );
                                 }
