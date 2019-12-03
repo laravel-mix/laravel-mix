@@ -40,10 +40,11 @@ class TypeScript extends JavaScript {
             test: /\.tsx?$/,
             loader: 'ts-loader',
             exclude: /node_modules/,
-            options: {
-                appendTsSuffixTo: [/\.vue$/],
-                ...this.options
-            }
+            options: Object.assign(
+                {},
+                { appendTsSuffixTo: [/\.vue$/] },
+                this.options
+            )
         });
     }
 
