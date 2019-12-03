@@ -1,11 +1,28 @@
 let JavaScript = require('./JavaScript');
 
 class TypeScript extends JavaScript {
+    constructor() {
+        super();
+        this.options = {};
+    }
+
     /**
      * The API name for the component.
      */
     name() {
         return ['typeScript', 'ts'];
+    }
+
+    /**
+     * Register the component.
+     *
+     * @param {*} entry
+     * @param {string} output
+     * @param {object} options
+     */
+    register(entry, output, options = {}) {
+        super.register(entry, output);
+        this.options = options;
     }
 
     /**
@@ -24,7 +41,8 @@ class TypeScript extends JavaScript {
             loader: 'ts-loader',
             exclude: /node_modules/,
             options: {
-                appendTsSuffixTo: [/\.vue$/]
+                appendTsSuffixTo: [/\.vue$/],
+                ...this.options
             }
         });
     }
