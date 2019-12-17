@@ -45,3 +45,12 @@ test.serial('it applies the correct webpack rules', t => {
         )
     );
 });
+
+test.serial('it is able to apply options to ts-loader', t => {
+    mix.ts('resources/assets/js/app.js', 'public/js', { transpileOnly: true });
+
+    t.truthy(
+        buildConfig().module.rules.find(rule => rule.loader === 'ts-loader')
+            .options.transpileOnly
+    );
+});
