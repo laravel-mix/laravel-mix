@@ -5,7 +5,7 @@ class CustomTasksPlugin {
     /**
      * Apply the plugin.
      *
-     * @param {Object} compiler
+     * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
         compiler.hooks.done.tapAsync(
@@ -35,6 +35,7 @@ class CustomTasksPlugin {
      * Execute the task.
      *
      * @param {Task} task
+     * @param {import("webpack").Stats} stats
      */
     runTask(task, stats) {
         return Promise.resolve(task.run()).then(() => {

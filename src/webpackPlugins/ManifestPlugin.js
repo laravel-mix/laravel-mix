@@ -2,17 +2,20 @@ class ManifestPlugin {
     /**
      * Apply the plugin.
      *
-     * @param {Object} compiler
+     * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.plugin('emit', (curCompiler, callback) => {
-            let stats = curCompiler.getStats().toJson();
+        compiler.hooks.emit.tapAsync(
+            'ManifestPlugin',
+            (curCompiler, callback) => {
+                let stats = curCompiler.getStats().toJson();
 
-            // Handle the creation of the mix-manifest.json file.
-            Mix.manifest.transform(stats).refresh();
+                // Handle the creation of the mix-manifest.json file.
+                Mix.manifest.transform(stats).refresh();
 
-            callback();
-        });
+                callback();
+            }
+        );
     }
 }
 

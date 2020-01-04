@@ -7,10 +7,10 @@ class MockEntryPlugin {
      * requested any JavaScript compilation, but
      * webpack still requires an entry.
      *
-     * @param {Object} compiler
+     * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.plugin('done', stats => {
+        compiler.hooks.done.tap('MockEntryPlugin', stats => {
             let temporaryOutputFile = stats
                 .toJson()
                 .assets.find(asset => asset.name === 'mix.js');
