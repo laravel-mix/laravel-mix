@@ -8,8 +8,8 @@ class Css extends AutomaticComponent {
         return [
             {
                 test: /\.css$/,
-                loaders: [
-                    'style-loader',
+                use: [
+                    { loader: 'style-loader' },
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
@@ -21,9 +21,9 @@ class Css extends AutomaticComponent {
             {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: [
-                    'style-loader',
-                    'css-loader',
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -43,9 +43,9 @@ class Css extends AutomaticComponent {
             {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: [
-                    'style-loader',
-                    'css-loader',
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -66,28 +66,28 @@ class Css extends AutomaticComponent {
             {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
-                loaders: [
-                    'style-loader',
-                    'css-loader',
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    'less-loader'
+                    { loader: 'less-loader' }
                 ]
             },
 
             {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
-                loaders: [
-                    'style-loader',
-                    'css-loader',
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    'stylus-loader'
+                    { loader: 'stylus-loader' }
                 ]
             }
         ];

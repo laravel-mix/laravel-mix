@@ -46,7 +46,7 @@ class Vue {
     updateCssLoaders(webpackConfig) {
         // Basic CSS and PostCSS
         this.updateCssLoader('css', webpackConfig, rule => {
-            rule.loaders.find(
+            rule.loader.find(
                 loader => loader.loader === 'postcss-loader'
             ).options = this.postCssOptions();
         });
@@ -57,13 +57,13 @@ class Vue {
         // SASS
         let sassCallback = rule => {
             if (Mix.seesNpmPackage('sass')) {
-                rule.loaders.find(
+                rule.loader.find(
                     loader => loader.loader === 'sass-loader'
                 ).options.implementation = require('sass');
             }
 
             if (Config.globalVueStyles) {
-                rule.loaders.push({
+                rule.loader.push({
                     loader: 'sass-resources-loader',
                     options: {
                         resources: Mix.paths.root(Config.globalVueStyles)
@@ -99,9 +99,9 @@ class Vue {
         if (Config.extractVueStyles) {
             let extractPlugin = this.extractPlugin();
 
-            rule.loaders = extractPlugin.extract({
+            rule.loader = extractPlugin.extract({
                 fallback: 'style-loader',
-                use: collect(rule.loaders)
+                use: collect(rule.loader)
                     .except('style-loader')
                     .all()
             });

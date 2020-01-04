@@ -103,7 +103,9 @@ class Preprocessor {
                         remove: !hmr
                     });
 
-                    return hmr ? ['style-loader', ...loaders] : loaders;
+                    return hmr
+                        ? [{ loader: 'style-loader' }, ...loaders]
+                        : loaders;
                 };
 
                 rules.push({
