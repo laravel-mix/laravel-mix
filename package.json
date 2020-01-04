@@ -99,6 +99,6 @@
         "vue-template-compiler": "^2.5.21"
     },
     "engines": {
-        "node": ">=8.9.0"
+        "node": ">=12.14.0"
     }
 }
