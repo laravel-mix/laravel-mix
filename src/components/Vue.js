@@ -22,7 +22,8 @@ class Vue {
      * @param {Object} webpackConfig
      */
     webpackConfig(webpackConfig) {
-        webpackConfig.module.rules.push({
+        // push -> unshift to combat vue loader webpack 5 bug
+        webpackConfig.module.rules.unshift({
             test: /\.vue$/,
             use: [
                 {
