@@ -48,16 +48,6 @@ module.exports = function() {
         },
 
         /**
-         * Determine if Mix should remove unused selectors from your CSS bundle.
-         * You may provide a boolean, or object for the Purify plugin.
-         *
-         * https://github.com/webpack-contrib/purifycss-webpack#options
-         *
-         * @type {Boolean|object}
-         */
-        purifyCss: false,
-
-        /**
          * The public path for the build.
          *
          * @type {String}
