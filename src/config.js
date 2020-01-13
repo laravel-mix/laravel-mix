@@ -1,3 +1,5 @@
+const argv = require('yargs').argv;
+
 module.exports = function() {
     return {
         /**
@@ -23,7 +25,7 @@ module.exports = function() {
          */
         hmrOptions: {
             host: 'localhost',
-            port: '8080'
+            port: !!argv.hmrPort ? argv.hmrPort : '8080'
         },
 
         /**
