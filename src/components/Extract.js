@@ -1,4 +1,4 @@
-let webpackMerge = require('webpack-merge');
+let { Chunks } = require('../Chunks');
 
 class Extract {
     /**
@@ -7,6 +7,8 @@ class Extract {
     constructor() {
         this.entry = null;
         this.extractions = [];
+        this.chunks = Chunks.instance();
+        this.chunks.runtime = true;
     }
 
     /**
@@ -37,6 +39,8 @@ class Extract {
         }
 
         this.extractions.push({ libs, output });
+
+        this.addChunk(this.extractions[this.extractions.length - 1]);
     }
 
     /**
@@ -46,6 +50,7 @@ class Extract {
      */
     webpackEntry(entry) {
         this.entry = entry;
+        this.chunks.entry = entry;
 
         this.extractions.forEach(extraction => {
             extraction.output = this.extractionPath(extraction.output);
@@ -56,59 +61,22 @@ class Extract {
         });
     }
 
-    webpackConfig(config) {
-        const newConfig = webpackMerge.smart(config, this.config());
-
-        config.optimization = newConfig.optimization;
-    }
-
-    config() {
-        return {
-            optimization: {
-                // If we are extracting vendor libraries, then we also need
-                // to extract Webpack's manifest file to assist with caching.
-                runtimeChunk: {
-                    name: path
-                        .join(this.entry.base, 'manifest')
-                        .replace(/\\/g, '/')
-                },
-
-                splitChunks: this.createSplitChunks()
-            }
-        };
-    }
-
-    createSplitChunks() {
-        let config = { cacheGroups: {} };
-
-        for (const [index, extraction] of this.extractions.entries()) {
-            if (extraction.libs.length) {
-                config.cacheGroups[`vendor${index}`] = this.createCacheGroup(
-                    extraction
-                );
-            }
-        }
-
-        // If the user didn't specify any libraries to extract,
-        // they likely want to extract all vendor libraries.
-        if (Object.keys(config.cacheGroups).length === 0) {
-            config.chunks = 'all';
-            config.name = this.extractions[0].output;
-        }
-
-        return config;
-    }
-
-    createCacheGroup(extraction) {
+    addChunk(extraction) {
         const libsPattern = extraction.libs.join('|');
-        const pattern = new RegExp(`(?<!node_modules.*)[\\\\/]node_modules[\\\\/](${libsPattern})[\\\\/]`, 'i');
+        const pattern = new RegExp(
+            `(?<!node_modules.*)[\\\\/]node_modules[\\\\/](${libsPattern})[\\\\/]`,
+            'i'
+        );
 
-        return {
-            test: pattern,
-            name: extraction.output,
-            chunks: 'all',
-            enforce: true
-        };
+        this.chunks.add(
+            `vendor${this.extractions.indexOf(extraction)}`,
+            extraction.output,
+            pattern,
+            {
+                chunks: 'all',
+                enforce: true
+            }
+        );
     }
 
     extractionPath(outputPath) {
