@@ -8,7 +8,6 @@ class Preprocessor {
      */
     constructor() {
         this.chunks = Chunks.instance();
-        this.chunks.runtime = true;
     }
 
     /**
