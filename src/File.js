@@ -87,6 +87,13 @@ class File {
     }
 
     /**
+     * Get the relative path to the file, from the project root.
+     */
+    relativePathWithoutExtension() {
+        return path.relative(Mix.paths.root(), this.pathWithoutExtension());
+    }
+
+    /**
      * Get the absolute path to the file, minus the extension.
      */
     pathWithoutExtension() {

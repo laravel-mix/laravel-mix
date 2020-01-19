@@ -1,7 +1,16 @@
 let Assert = require('../Assert');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let { Chunks } = require('../Chunks');
 
 class Preprocessor {
+    /**
+     * Create a new component instance.
+     */
+    constructor() {
+        this.chunks = Chunks.instance();
+        this.chunks.runtime = true;
+    }
+
     /**
      * Assets to append to the webpack entry.
      *
@@ -125,7 +134,8 @@ class Preprocessor {
     webpackPlugins() {
         return [
             new MiniCssExtractPlugin({
-                filename: '[name].css'
+                filename: '[name].css',
+                esModule: true
             })
         ];
     }
@@ -176,6 +186,17 @@ class Preprocessor {
             pluginOptions,
             postCssPlugins
         });
+
+        this.chunks.add(
+            `styles`,
+            output.relativePathWithoutExtension(),
+            /.css$/,
+            {
+                chunks: 'all',
+                enforce: true,
+                type: 'css/mini-extract'
+            }
+        );
 
         return this;
     }
