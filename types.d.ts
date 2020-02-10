@@ -13,6 +13,7 @@ import { Options as OptipngConfig } from 'imagemin-optipng';
 import { Options as SvgoConfig } from 'imagemin-svgo';
 import { TransformOptions as BabelConfig } from 'babel-core';
 import { Options as BrowserSyncConfig } from 'browser-sync';
+import { PurifyOptions } from 'purifycss-webpack';
 
 interface MixConfig {
     production?: boolean;
@@ -26,7 +27,7 @@ interface MixConfig {
         enabled?: boolean;
         options?: AutoprefixerConfig;
     };
-    purifyCss?: boolean | object; // TODO Add purifycss options.
+    purifyCss?: boolean | PurifyOptions;
     publicPath?: string;
     notifications?: {
         onSuccess?: boolean;
@@ -86,16 +87,20 @@ declare module 'laravel-mix' {
         ) => Api;
 
         type Autoload = (libs: object) => Api;
+        type Babel = Combine;
         type BrowserSync = (userConfig: string | BrowserSyncConfig) => Api;
-        type Coffee = (entry: string | string[], output: string) => Api;
+        type Coffee = Javascript;
         type Combine = (
             src: string | string[],
             output?: string,
             babel?: boolean
         ) => Api;
         type Copy = (from: string | string[], to: string) => Api;
+        type CopyDirectory = Copy;
         type Css = () => Api;
         type DisableNotifications = () => Api;
+        type DisableSuccessNotifications = DisableNotifications;
+        type Dump = DumpWebpackConfig;
         type DumpWebpackConfig = () => Api;
         type Extend = (
             name: string,
@@ -109,22 +114,26 @@ declare module 'laravel-mix' {
         ) => Api;
         type Extract =
             | ((output: string) => Api)
-            | ((libs: string | string[], output?: string) => Api);
+            | ((libs: string | string[], output: string) => Api);
+        type ExtractVendors = Extract;
         type Javascript = (entry: string | string[], output: string) => Api;
         type Less = _Preprocessor;
+        type Minify = Combine;
         type Notifications = () => Api;
         type PostCss = (
             src: string,
             output: string,
             postCssPlugins?: any[] | any
         ) => Api;
-        type Preact = () => Api;
-        type PurifyCss = () => Api;
-        type React = () => Api;
+        type Preact = Javascript;
+        type React = Javascript;
         type Sass = _Preprocessor;
+        type Scripts = Combine;
+        type Styles = Combine;
         type Stylus = _Preprocessor;
-        type TypeScript = () => Api;
+        type Typescript = Javascript;
         type Version = (files?: string | string[]) => Api;
+        type Vue = Javascript;
     }
 
     interface Component {
@@ -171,56 +180,34 @@ declare module 'laravel-mix' {
         // Components.
 
         autoload: components.Autoload;
-
         browserSync: components.BrowserSync;
-
         coffee: components.Coffee;
-
         combine: components.Combine;
-        scripts: components.Combine;
-        babel: components.Combine;
-        styles: components.Combine;
-        minify: components.Combine;
-
+        scripts: components.Scripts;
+        babel: components.Babel;
+        styles: components.Styles;
+        minify: components.Minify;
         copy: components.Copy;
-        copyDirectory: components.Copy;
-
-        css: components.Css;
-
+        copyDirectory: components.CopyDirectory;
+        css: components.Css; // TODO
         disableNotifications: components.DisableNotifications;
-        disableSuccessNotifications: components.DisableNotifications;
-
+        disableSuccessNotifications: components.DisableSuccessNotifications;
         dumpWebpackConfig: components.DumpWebpackConfig;
-        dump: components.DumpWebpackConfig;
-
+        dump: components.Dump;
         extend: components.Extend;
-
         extract: components.Extract;
-        extractVendors: components.Extract;
-
+        extractVendors: components.ExtractVendors;
         js: components.Javascript;
-
         less: components.Less;
-
         notifications: components.Notifications;
-
         postCss: components.PostCss;
-
         preact: components.Preact;
-
-        purifyCss: components.PurifyCss;
-
         react: components.React;
-
         sass: components.Sass;
-
         stylus: components.Stylus;
-
-        typeScript: components.TypeScript;
-        ts: components.TypeScript;
-
+        typeScript: components.Typescript;
+        ts: components.Typescript;
         version: components.Version;
-
-        vue: components.Javascript;
+        vue: components.Vue;
     }
 }

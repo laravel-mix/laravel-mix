@@ -1383,6 +1383,15 @@
             "integrity": "sha1-akDsfr0kGO5p7jl+SOQhaSaKEL8=",
             "dev": true
         },
+        "@types/purifycss-webpack": {
+            "version": "0.7.0",
+            "resolved": "https://registry.npmjs.org/@types/purifycss-webpack/-/purifycss-webpack-0.7.0.tgz",
+            "integrity": "sha512-BILeuBIyRhGwEsG2vZg1D/bJXEfXtPxuYm27X1SWJUfFKrumDo4DHlMaso24ln5OULfmsAOmfwEtD77fir4yIQ==",
+            "dev": true,
+            "requires": {
+                "@types/webpack": "*"
+            }
+        },
         "@types/q": {
             "version": "1.5.2",
             "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.2.tgz",

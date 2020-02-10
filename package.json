@@ -81,6 +81,7 @@
         "@types/imagemin-mozjpeg": "^8.0.0",
         "@types/imagemin-optipng": "^5.2.0",
         "@types/imagemin-svgo": "^7.0.0",
+        "@types/purifycss-webpack": "^0.7.0",
         "@types/webpack": "^4.41.0",
         "ava": "^1.4.1",
         "coffee-loader": "^0.9.0",
