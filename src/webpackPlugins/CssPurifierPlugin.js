@@ -10,7 +10,7 @@ class CssPurifierPlugin {
             Mix.paths.root('resources/views/**/*.blade.php')
         );
         let vueFiles = glob.sync(
-            Mix.paths.root('resources/assets/js/**/*.vue')
+            Mix.paths.root('resources/js/**/*.vue')
         );
 
         let paths = bladeFiles.concat(vueFiles);

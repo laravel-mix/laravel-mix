@@ -35,6 +35,14 @@ class Browsersync {
     }
 
     /**
+     * The regex used to determine where the Browsersync
+     * javascript snippet is injected onto each page.
+     */
+    regex() {
+        return RegExp('(</body>|</pre>)(?!.*(</body>|</pre>))', 'is');
+    }
+
+    /**
      * Build the BrowserSync configuration.
      */
     config() {
@@ -50,7 +58,7 @@ class Browsersync {
                 ],
                 snippetOptions: {
                     rule: {
-                        match: /(<\/body>|<\/pre>)/i,
+                        match: this.regex(),
                         fn: function(snippet, match) {
                             return snippet + match;
                         }
