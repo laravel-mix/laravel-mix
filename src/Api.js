@@ -74,7 +74,8 @@ class Api {
         return this;
     }
 
-    /* Set Mix-specific options.
+    /**
+     * Set Mix-specific options.
      *
      * @param {object} options
      */
@@ -112,6 +113,17 @@ class Api {
      */
     inProduction() {
         return Mix.inProduction();
+    }
+
+    /**
+     * Helper to allow for fluent, conditional configuration.
+     */
+    when(condition, callback) {
+        if (condition) {
+            callback(this);
+        }
+
+        return this;
     }
 }
 

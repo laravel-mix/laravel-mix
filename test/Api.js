@@ -53,3 +53,15 @@ test('mix.options()', t => {
 
     t.is('bar', Config.foo);
 });
+
+test('mix.when()', t => {
+    let called = false;
+
+    mix.when(false, () => (called = true));
+
+    t.false(called);
+
+    mix.when(true, () => (called = true));
+
+    t.true(called);
+});
