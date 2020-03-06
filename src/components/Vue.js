@@ -4,6 +4,7 @@ let JavaScript = require('./JavaScript');
 
 class Vue extends JavaScript {
     constructor() {
+        super();
         this.chunks = Chunks.instance();
     }
 
@@ -11,7 +12,7 @@ class Vue extends JavaScript {
      * Required dependencies for the component.
      */
     dependencies() {
-        let dependencies = [...super.dependencies(), 'vue-template-compiler'];
+        let dependencies = ['vue-template-compiler'];
 
         if (Config.extractVueStyles && Config.globalVueStyles) {
             dependencies.push('sass-resources-loader');
