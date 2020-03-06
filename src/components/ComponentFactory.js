@@ -4,6 +4,7 @@ let webpackMerge = require('webpack-merge');
 
 let components = [
     'JavaScript',
+    'Vue',
     'Preact',
     'React',
     'Coffee',

@@ -1,7 +1,8 @@
 let { VueLoaderPlugin } = require('vue-loader');
 let { Chunks } = require('../Chunks');
+let JavaScript = require('./JavaScript');
 
-class Vue {
+class Vue extends JavaScript {
     constructor() {
         this.chunks = Chunks.instance();
     }
@@ -10,7 +11,7 @@ class Vue {
      * Required dependencies for the component.
      */
     dependencies() {
-        let dependencies = ['vue-template-compiler'];
+        let dependencies = [...super.dependencies(), 'vue-template-compiler'];
 
         if (Config.extractVueStyles && Config.globalVueStyles) {
             dependencies.push('sass-resources-loader');
