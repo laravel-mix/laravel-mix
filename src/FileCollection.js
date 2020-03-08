@@ -1,4 +1,4 @@
-let concatenate = require('concatenate');
+let concat = require('concat');
 let babel = require('@babel/core');
 let glob = require('glob');
 let Log = require('./Log');
@@ -26,8 +26,8 @@ class FileCollection {
      * @param {object} output
      * @param {object} wantsBabel
      */
-    merge(output, wantsBabel = false) {
-        let contents = concatenate.sync(
+    async merge(output, wantsBabel = false) {
+        let contents = await concat(
             this.files,
             output.makeDirectories().path()
         );

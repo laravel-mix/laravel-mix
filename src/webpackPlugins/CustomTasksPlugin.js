@@ -8,23 +8,28 @@ class CustomTasksPlugin {
      * @param {Object} compiler
      */
     apply(compiler) {
-        compiler.plugin('done', stats => {
-            Mix.tasks.forEach(task => this.runTask(task, stats));
+        compiler.hooks.done.tapAsync(
+            this.constructor.name,
+            async (stats, callback) => {
+                for (let i = 0; i < Mix.tasks.length; i++)
+                    await this.runTask(Mix.tasks[i], stats);
 
-            if (Mix.components.get('version')) {
-                this.applyVersioning();
+                if (Mix.components.get('version')) {
+                    this.applyVersioning();
+                }
+
+                if (Mix.inProduction()) {
+                    this.minifyAssets();
+                }
+
+                if (Mix.isWatching()) {
+                    Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                }
+
+                Mix.manifest.refresh();
+                callback();
             }
-
-            if (Mix.inProduction()) {
-                this.minifyAssets();
-            }
-
-            if (Mix.isWatching()) {
-                Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
-            }
-
-            Mix.manifest.refresh();
-        });
+        );
     }
 
     /**
@@ -32,8 +37,8 @@ class CustomTasksPlugin {
      *
      * @param {Task} task
      */
-    runTask(task, stats) {
-        task.run();
+    async runTask(task, stats) {
+        await task.run();
 
         task.assets.forEach(asset => {
             Mix.manifest.add(asset.pathFromPublic());

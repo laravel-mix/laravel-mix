@@ -5,17 +5,19 @@ class ConcatenateFilesTask extends Task {
     /**
      * Run the task.
      */
-    run() {
+    async run() {
         this.files = new FileCollection(this.data.src);
 
-        this.merge();
+        await this.merge();
     }
 
     /**
      * Merge the files into one.
      */
-    merge() {
-        this.assets.push(this.files.merge(this.data.output, this.data.babel));
+    async merge() {
+        this.assets.push(
+            await this.files.merge(this.data.output, this.data.babel)
+        );
     }
 
     /**
