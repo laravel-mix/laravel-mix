@@ -10,24 +10,23 @@ class CustomTasksPlugin {
     apply(compiler) {
         compiler.hooks.done.tapAsync(
             this.constructor.name,
-            async (stats, callback) => {
-                for (let i = 0; i < Mix.tasks.length; i++)
-                    await this.runTask(Mix.tasks[i], stats);
+            (stats, callback) => {
+                this.runTasks(stats).then(() => {
+                    if (Mix.components.get('version')) {
+                        this.applyVersioning();
+                    }
 
-                if (Mix.components.get('version')) {
-                    this.applyVersioning();
-                }
+                    if (Mix.inProduction()) {
+                        this.minifyAssets();
+                    }
 
-                if (Mix.inProduction()) {
-                    this.minifyAssets();
-                }
+                    if (Mix.isWatching()) {
+                        Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                    }
 
-                if (Mix.isWatching()) {
-                    Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
-                }
-
-                Mix.manifest.refresh();
-                callback();
+                    Mix.manifest.refresh();
+                    callback();
+                });
             }
         );
     }
@@ -37,18 +36,33 @@ class CustomTasksPlugin {
      *
      * @param {Task} task
      */
-    async runTask(task, stats) {
-        await task.run();
+    runTask(task, stats) {
+        return Promise.resolve(task.run()).then(() => {
+            task.assets.forEach(asset => {
+                Mix.manifest.add(asset.pathFromPublic());
 
-        task.assets.forEach(asset => {
-            Mix.manifest.add(asset.pathFromPublic());
-
-            // Update the Webpack assets list for better terminal output.
-            stats.compilation.assets[asset.pathFromPublic()] = {
-                size: () => asset.size(),
-                emitted: true
-            };
+                // Update the Webpack assets list for better terminal output.
+                stats.compilation.assets[asset.pathFromPublic()] = {
+                    size: () => asset.size(),
+                    emitted: true
+                };
+            });
         });
+    }
+
+    /**
+     * Execute potentially asynchrone tasks sequentially.
+     *
+     * @param {Array} tasks
+     */
+    runTasks(stats, index = 0) {
+        if (index === Mix.tasks.length) return Promise.resolve();
+
+        const task = Mix.tasks[index];
+
+        return this.runTask(task, stats).then(() =>
+            this.runTasks(stats, index + 1)
+        );
     }
 
     /**

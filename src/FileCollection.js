@@ -26,17 +26,16 @@ class FileCollection {
      * @param {object} output
      * @param {object} wantsBabel
      */
-    async merge(output, wantsBabel = false) {
-        let contents = await concat(
-            this.files,
-            output.makeDirectories().path()
+    merge(output, wantsBabel = false) {
+        return concat(this.files, output.makeDirectories().path()).then(
+            contents => {
+                if (this.shouldCompileWithBabel(wantsBabel, output)) {
+                    output.write(this.babelify(contents));
+                }
+
+                return new File(output.makeDirectories().path());
+            }
         );
-
-        if (this.shouldCompileWithBabel(wantsBabel, output)) {
-            output.write(this.babelify(contents));
-        }
-
-        return new File(output.makeDirectories().path());
     }
 
     /**
