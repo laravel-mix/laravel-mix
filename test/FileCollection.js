@@ -58,3 +58,17 @@ test.cb('that it can merge JS files and apply Babel compilation.', t => {
         t.end();
     });
 });
+
+test.cb("that it throw an error if a file doesn't exist.", t => {
+    let files = [path.resolve(stubsDir, 'fileThatDoesntExist.js')];
+    let output = new File(path.resolve(stubsDir, 'merged.js'));
+    let mergeFiles = () => new FileCollection(files).merge(output);
+    let expectedMessage = `ENOENT: no such file or directory, open '${
+        files[0]
+    }'`;
+
+    t.throwsAsync(mergeFiles(), expectedMessage).then(() => {
+        t.false(File.exists(output.path()));
+        t.end();
+    });
+});
