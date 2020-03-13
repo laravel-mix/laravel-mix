@@ -23,7 +23,7 @@ test.serial.cb('it handles Browsersync reloading', t => {
     });
 });
 
-test.serial.cb('it injects the snippet in the right place', t => {
+test.serial('it injects the snippet in the right place', t => {
     let regex = new Browsersync().regex();
 
     t.is(regex.exec(`<div></div>`), null);
