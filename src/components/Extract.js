@@ -70,7 +70,9 @@ class Extract {
 
         this.chunks.add(
             `vendor${this.extractions.indexOf(extraction)}`,
-            extraction.output,
+            extraction.output
+                ? extraction.output.replace(/.js$/, '')
+                : undefined,
             pattern,
             {
                 chunks: 'all',
