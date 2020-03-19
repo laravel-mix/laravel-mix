@@ -1,5 +1,5 @@
 let Assert = require('../Assert');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 class Preprocessor {
     /**
@@ -24,8 +24,15 @@ class Preprocessor {
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
 
-            tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+            tap({}, () => {
                 let loaders = [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     {
                         loader: 'css-loader',
                         options: {
@@ -97,12 +104,6 @@ class Preprocessor {
                 }
 
                 const applyLoaders = (hmr, loaders) => {
-                    loaders = extractPlugin.extract({
-                        fallback: 'style-loader',
-                        use: loaders,
-                        remove: !hmr
-                    });
-
                     return hmr
                         ? [{ loader: 'style-loader' }, ...loaders]
                         : loaders;
@@ -112,10 +113,6 @@ class Preprocessor {
                     test: preprocessor.src.path(),
                     use: applyLoaders(Mix.isUsing('hmr'), loaders)
                 });
-
-                this.extractPlugins = (this.extractPlugins || []).concat(
-                    extractPlugin
-                );
             });
         });
 
@@ -126,7 +123,11 @@ class Preprocessor {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        return this.extractPlugins;
+        return [
+            new MiniCssExtractPlugin({
+                filename: '[name].css'
+            })
+        ];
     }
 
     /**
