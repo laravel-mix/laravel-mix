@@ -10,7 +10,7 @@ class Css extends AutomaticComponent {
                 test: /\.css$/,
                 loaders: [
                     'style-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    { loader: 'css-loader', options: { importLoaders: 1, modules: Config.enableCssModules } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -23,7 +23,7 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('sass'),
                 loaders: [
                     'style-loader',
-                    'css-loader',
+                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -45,7 +45,7 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('sass'),
                 loaders: [
                     'style-loader',
-                    'css-loader',
+                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -68,7 +68,7 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('less'),
                 loaders: [
                     'style-loader',
-                    'css-loader',
+                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
@@ -82,7 +82,7 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('stylus'),
                 loaders: [
                     'style-loader',
-                    'css-loader',
+                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
