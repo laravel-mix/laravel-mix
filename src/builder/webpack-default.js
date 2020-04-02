@@ -39,14 +39,7 @@ module.exports = function() {
 
         optimization: Mix.inProduction()
             ? {
-                  minimizer: [
-                      new TerserPlugin(Config.terser),
-                      new OptimizeCSSAssetsPlugin({
-                          cssProcessorPluginOptions: {
-                              preset: ['default', Config.cssNano]
-                          }
-                      })
-                  ]
+                  minimizer: [new TerserPlugin(Config.terser)]
               }
             : {},
 
