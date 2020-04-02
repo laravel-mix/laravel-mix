@@ -50,13 +50,24 @@ class CustomTasksPlugin {
      * Minify the given asset file.
      */
     minifyAssets() {
+        const minifiedFiles = {};
+
         collect(Mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
-            .where('constructor.name', '!==', 'CopyFilesTask')
             .each(({ assets }) =>
                 assets.forEach(asset => {
+                    // use the absolute path to the file as the file key
+                    const assetKey = asset.path();
+
+                    // only minify the file once
+                    if (minifiedFiles[assetKey]) {
+                        return;
+                    }
+
                     try {
+                        // minify the file, and remember to skip it if we've met the file again
                         asset.minify();
+                        minifiedFiles[assetKey] = true;
                     } catch (e) {
                         Log.error(
                             `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
