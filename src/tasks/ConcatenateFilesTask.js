@@ -8,14 +8,16 @@ class ConcatenateFilesTask extends Task {
     run() {
         this.files = new FileCollection(this.data.src);
 
-        this.merge();
+        return this.merge();
     }
 
     /**
      * Merge the files into one.
      */
     merge() {
-        this.assets.push(this.files.merge(this.data.output, this.data.babel));
+        return this.files
+            .merge(this.data.output, this.data.babel)
+            .then(this.assets.push.bind(this.assets));
     }
 
     /**

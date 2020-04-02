@@ -8,23 +8,27 @@ class CustomTasksPlugin {
      * @param {Object} compiler
      */
     apply(compiler) {
-        compiler.plugin('done', stats => {
-            Mix.tasks.forEach(task => this.runTask(task, stats));
+        compiler.hooks.done.tapAsync(
+            this.constructor.name,
+            (stats, callback) => {
+                this.runTasks(stats).then(() => {
+                    if (Mix.components.get('version')) {
+                        this.applyVersioning();
+                    }
 
-            if (Mix.components.get('version')) {
-                this.applyVersioning();
+                    if (Mix.inProduction()) {
+                        this.minifyAssets();
+                    }
+
+                    if (Mix.isWatching()) {
+                        Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                    }
+
+                    Mix.manifest.refresh();
+                    callback();
+                });
             }
-
-            if (Mix.inProduction()) {
-                this.minifyAssets();
-            }
-
-            if (Mix.isWatching()) {
-                Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
-            }
-
-            Mix.manifest.refresh();
-        });
+        );
     }
 
     /**
@@ -33,17 +37,32 @@ class CustomTasksPlugin {
      * @param {Task} task
      */
     runTask(task, stats) {
-        task.run();
+        return Promise.resolve(task.run()).then(() => {
+            task.assets.forEach(asset => {
+                Mix.manifest.add(asset.pathFromPublic());
 
-        task.assets.forEach(asset => {
-            Mix.manifest.add(asset.pathFromPublic());
-
-            // Update the Webpack assets list for better terminal output.
-            stats.compilation.assets[asset.pathFromPublic()] = {
-                size: () => asset.size(),
-                emitted: true
-            };
+                // Update the Webpack assets list for better terminal output.
+                stats.compilation.assets[asset.pathFromPublic()] = {
+                    size: () => asset.size(),
+                    emitted: true
+                };
+            });
         });
+    }
+
+    /**
+     * Execute potentially asynchrone tasks sequentially.
+     *
+     * @param {Array} tasks
+     */
+    runTasks(stats, index = 0) {
+        if (index === Mix.tasks.length) return Promise.resolve();
+
+        const task = Mix.tasks[index];
+
+        return this.runTask(task, stats).then(() =>
+            this.runTasks(stats, index + 1)
+        );
     }
 
     /**
