@@ -7,7 +7,7 @@ class Vue {
      * Required dependencies for the component.
      */
     dependencies() {
-        let dependencies = ['vue-template-compiler'];
+        let dependencies = ['vue', 'vue-template-compiler'];
 
         if (Config.extractVueStyles && Config.globalVueStyles) {
             dependencies.push('sass-resources-loader');
