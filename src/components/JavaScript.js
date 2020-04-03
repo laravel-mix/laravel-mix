@@ -8,6 +8,12 @@ class JavaScript {
         this.toCompile = [];
 
         JavaScript.vueWebpackConfigApplied = false;
+        this.usesVue = false;
+
+        try {
+            require.resolve('vue');
+            this.usesVue = true;
+        } catch (e) {}
     }
 
     /**
@@ -16,14 +22,22 @@ class JavaScript {
     name() {
         let name = this.constructor.name.toLowerCase();
 
-        return name === 'javascript' ? ['js', 'vue'] : name;
+        return name === 'javascript'
+            ? this.usesVue
+                ? ['js', 'vue']
+                : 'js'
+            : name;
     }
 
     /**
      * Required dependencies for the component.
      */
     dependencies() {
-        return this.vue.dependencies();
+        if (this.usesVue) {
+            return this.vue.dependencies();
+        }
+
+        return [];
     }
 
     /**
