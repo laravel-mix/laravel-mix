@@ -107,9 +107,13 @@ class Manifest {
                 .all();
         }
 
-        return collect(assets)
-            .flatten()
-            .all();
+        return (
+            collect(assets)
+                .flatten()
+                // Don't add hot updates to manifest
+                .filter(name => name.indexOf('hot-update') === -1)
+                .all()
+        );
     }
 
     /**
