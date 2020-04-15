@@ -57,6 +57,16 @@ test.serial('it configures Browsersync proxy', t => {
     );
 });
 
+test.serial('it configures Browsersync server', t => {
+    let config = buildConfig({ server: './app' });
+    t.is(config.server, './app', 'sets server from user Browsersync config');
+    t.is(
+        config.proxy,
+        undefined,
+        'does not set default proxy when using server'
+    );
+});
+
 let buildConfig = userConfig => {
     let plugin = new Browsersync();
     plugin.register(userConfig);
