@@ -42,3 +42,23 @@ test.serial('it injects the snippet in the right place', t => {
         116
     );
 });
+
+test.serial('it configures Browsersync proxy', t => {
+    t.is(buildConfig().proxy, 'app.test', 'sets default proxy');
+    t.is(
+        buildConfig('example.domain').proxy,
+        'example.domain',
+        'sets proxy from string arg'
+    );
+    t.is(
+        buildConfig({ proxy: 'example.other.domain' }).proxy,
+        'example.other.domain',
+        'sets proxy from user Browsersync config'
+    );
+});
+
+let buildConfig = userConfig => {
+    let plugin = new Browsersync();
+    plugin.register(userConfig);
+    return plugin.config();
+};
