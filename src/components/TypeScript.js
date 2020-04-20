@@ -38,13 +38,21 @@ class TypeScript extends JavaScript {
     webpackRules() {
         return [].concat(super.webpackRules(), {
             test: /\.tsx?$/,
-            loader: 'ts-loader',
             exclude: /node_modules/,
-            options: Object.assign(
-                {},
-                { appendTsSuffixTo: [/\.vue$/] },
-                this.options
-            )
+            use: [
+                {
+                    loader: 'babel-loader',
+                    options: Config.babel()
+                },
+                {
+                    loader: 'ts-loader',
+                    options: Object.assign(
+                        {},
+                        { appendTsSuffixTo: [/\.vue$/] },
+                        this.options
+                    )
+                }
+            ]
         });
     }
 
