@@ -19,7 +19,6 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
   color: red;
 }
 
-
 .hello {
   color: blue;
 }`;
@@ -49,7 +48,6 @@ test.serial.cb('it prepends vue styles to your less compiled file', t => {
         let expected = `body {
   color: pink;
 }
-
 .hello {
   color: blue;
 }`;
@@ -75,8 +73,7 @@ test.serial.cb(
                 File.exists('test/fixtures/fake-app/public/css/vue-styles.css')
             );
 
-            let expected = `
-.hello {
+            let expected = `.hello {
   color: blue;
 }`;
 
@@ -121,8 +118,7 @@ test.serial.cb('it extracts vue Stylus styles to a dedicated file', t => {
     compile(t, config => {
         t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
 
-        let expected = `
-.hello {
+        let expected = `.hello {
   margin: 10px;
 }
 `;
@@ -174,8 +170,7 @@ test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
             File.find('test/fixtures/fake-app/public/css/app.css').read()
         );
 
-        expected = `
-.hello {
+        expected = `.hello {
   color: blue;
 }`;
 
@@ -213,8 +208,7 @@ test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
             File.find('test/fixtures/fake-app/public/css/app.css').read()
         );
 
-        expected = `
-.hello {
+        expected = `.hello {
   color: black;
 }`;
 
@@ -259,8 +253,7 @@ test.serial.cb('it extracts vue Less styles to a dedicated file', t => {
     compile(t, config => {
         t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
 
-        let expected = `
-.hello {
+        let expected = `.hello {
   color: blue;
 }
 `;
