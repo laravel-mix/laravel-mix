@@ -33,9 +33,15 @@ class WebpackConfig {
         // hook in and modify the config as necessary.
         Mix.dispatch('configReady', this.webpackConfig);
 
+        // Rebuild the chunks as plugins may have added new ones
+        this.buildChunks();
+
         // Finally, we'll make one last announcement for the user
         // to hook into - using mix.override().
         Mix.dispatch('configReadyForUser', this.webpackConfig);
+
+        // Rebuild the chunks as the user may have changed things
+        this.buildChunks();
 
         return this.webpackConfig;
     }

@@ -38,7 +38,7 @@ class Vue {
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
 
-        this.updateChunks(webpackConfig);
+        this.updateChunks();
     }
 
     /**
@@ -46,6 +46,8 @@ class Vue {
      *
      */
     updateChunks() {
+        let existingChunk;
+
         // If the user set extractVueStyles: true, we'll try
         // to append the Vue styles to an existing CSS chunk.
         if (typeof Config.extractVueStyles === 'boolean') {
@@ -53,16 +55,22 @@ class Vue {
                 return;
             }
 
-            // TODO: Append to existing CSS
-            return;
+            existingChunk = this.chunks.find((chunk, id) => {
+                // FIXME: This could possibly be smarter but for now it finds the first defined style chunk
+                return id.startsWith('styles-');
+            });
         }
 
-        this.chunks.add(`styles`, 'css/vue-styles', /.css$/, {
-            chunks: 'all',
-            enforce: true,
-            type: 'css/mini-extract',
-            filename: this.extractFileName()
-        });
+        this.chunks.add(
+            'styles-vue',
+            existingChunk ? existingChunk.name : this.extractFileName(),
+            [/.vue$/, module => module.type === 'css/mini-extract'],
+            {
+                chunks: 'all',
+                enforce: true,
+                type: 'css/mini-extract'
+            }
+        );
     }
 
     /**
