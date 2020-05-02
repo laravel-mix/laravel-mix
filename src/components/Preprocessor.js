@@ -174,7 +174,11 @@ class Preprocessor {
             postCssPlugins
         });
 
-        this._addChunks('styles', src, output);
+        this._addChunks(
+            `styles-${output.relativePathWithoutExtension()}`,
+            src,
+            output
+        );
 
         return this;
     }
@@ -208,7 +212,10 @@ class Preprocessor {
     _addChunks(name, src, output) {
         const tests = [
             // 1. Ensure the file is a CSS file
-            /.css$/
+            /.css$/,
+
+            // 2. Ensure that just this file is included in this chunk
+            src.path()
         ];
 
         const attrs = {
@@ -217,12 +224,7 @@ class Preprocessor {
             type: 'css/mini-extract'
         };
 
-        this.chunks.add(
-            name,
-            output.relativePathWithoutExtension(),
-            tests,
-            attrs
-        );
+        this.chunks.add(name, output.relativePath(), tests, attrs);
     }
 }
 
