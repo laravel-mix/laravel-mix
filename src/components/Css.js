@@ -1,4 +1,5 @@
 let AutomaticComponent = require('./AutomaticComponent');
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 class Css extends AutomaticComponent {
     /**
@@ -10,6 +11,13 @@ class Css extends AutomaticComponent {
                 test: /\.css$/,
                 use: [
                     { loader: 'style-loader' },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
@@ -23,6 +31,13 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('sass'),
                 use: [
                     { loader: 'style-loader' },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -45,6 +60,13 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('sass'),
                 use: [
                     { loader: 'style-loader' },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -68,6 +90,13 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('less'),
                 use: [
                     { loader: 'style-loader' },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -82,6 +111,13 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('stylus'),
                 use: [
                     { loader: 'style-loader' },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                            esModule: true
+                        }
+                    },
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -123,6 +159,21 @@ class Css extends AutomaticComponent {
         }
 
         return { plugins: Config.postCss };
+    }
+
+    /**
+     * webpack plugins to be appended to the master config.
+     */
+    webpackPlugins() {
+        return [
+            new MiniCssExtractPlugin({
+                filename: '[name].css',
+                // This intentionally does not have the .css at the end
+                // This must be added in the name of each chunk
+                chunkFilename: '[name]',
+                esModule: true
+            })
+        ];
     }
 }
 

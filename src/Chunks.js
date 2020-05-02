@@ -1,13 +1,19 @@
 let instance;
 
+/** @typedef {import("webpack/declarations/WebpackOptions").OptimizationSplitChunksCacheGroup} CacheGroup */
+
 /**
  * @typedef {(module: import("webpack").Module, chunks: import("webpack").ChunkData[]) => bool} ChunkTestCallback
- * @typedef {string|RegExp|ChunkTestCallback} ChunkTest
+ * @typedef {undefined|boolean|string|RegExp|ChunkTestCallback} ChunkTest
+ */
+
+/**
+ * @typedef {(chunk: CacheGroup, id: string) => bool} ChunkFindCallback
  */
 
 class Chunks {
     constructor() {
-        /** @type {{[key: string]: import("webpack").Options.CacheGroupsOptions}} */
+        /** @type {{[key: string]: CacheGroup}} */
         this.chunks = {};
 
         this.entry = null;
@@ -23,9 +29,10 @@ class Chunks {
 
     /**
      *
-     * @param {string} path
-     * @param {ChunkTest} test
-     * @param {Partial<import("webpack").Options.CacheGroupsOptions>} attrs
+     * @param {string} id A unique identifier for this chunk. Multiple chunks with the same ID are merged.
+     * @param {string} path The output path for this chunk
+     * @param {ChunkTest|ChunkTest[]} test A test that tells webpack how to determine what to put in this chunk
+     * @param {Partial<CacheGroup>} attrs
      */
     add(id, path, test, attrs = {}) {
         this.create(id, path, attrs).addTo(id, test);
@@ -33,9 +40,9 @@ class Chunks {
 
     /**
      *
-     * @param {string} id
-     * @param {string} path
-     * @param {Partial<import("webpack").Options.CacheGroupsOptions>} attrs
+     * @param {string} id A unique identifier for this chunk. Multiple chunks with the same ID are merged.
+     * @param {string} path The output path for this chunk
+     * @param {Partial<CacheGroups>} attrs
      */
     create(id, path, attrs = {}) {
         this.chunks[id] = {
@@ -49,33 +56,43 @@ class Chunks {
     /**
      *
      * @param {string} idOrPath
-     * @param {string} path
-     * @param {Partial<import("webpack").Options.CacheGroupsOptions>} attrs
+     * @param {ChunkTest|ChunkTest[]} test
      */
     addTo(idOrPath, test) {
         const chunk = this.find(idOrPath);
 
-        chunk.test = chunk.test || test;
+        if (Array.isArray(test)) {
+            test = this._checkAllTests(test);
+        }
+
+        if (chunk.test) {
+            test = this._checkAnyTests([chunk.test, test]);
+        }
+
+        chunk.test = test;
 
         return this;
     }
 
     /**
      *
-     * @param {string} idOrPath
+     * @param {string|ChunkFindCallback} idOrPath
+     * @returns {CacheGroup|null}
      */
     find(idOrPath) {
-        if (this.chunks[idOrPath]) {
-            return this.chunks[idOrPath];
-        }
-
-        for (const chunk of Object.values(this.chunks)) {
-            if (chunk.name === idOrPath) {
-                return chunk;
+        if (typeof idOrPath === 'string') {
+            if (this.chunks[idOrPath]) {
+                return this.chunks[idOrPath];
             }
+
+            return this.find((_, id) => id === idOrPath);
         }
 
-        return null;
+        const item = Object.entries(this.chunks).find(([id, chunk]) =>
+            idOrPath(chunk, id)
+        );
+
+        return item ? item[1] : null;
     }
 
     config() {
@@ -133,6 +150,68 @@ class Chunks {
                   }
                 : {})
         };
+    }
+
+    /**
+     * Check to see if a chunk should be included based on multiple tests
+     *
+     * This is for internal use only and may be changed or removed at any time
+     *
+     * @internal
+     *
+     * @param {(undefined|boolean|string|RegExp|Function)[]} tests
+     * @param {Module} module the module
+     * @param {CacheGroupsContext} context context object
+     */
+    _checkAllTests(tests) {
+        return (module, context) =>
+            tests.every(test => this._checkTest(test, module, context));
+    }
+
+    /**
+     * Check to see if a chunk should be included based on multiple tests
+     *
+     * This is for internal use only and may be changed or removed at any time
+     *
+     * @internal
+     *
+     * @param {(undefined|boolean|string|RegExp|Function)[]} tests
+     * @param {Module} module the module
+     * @param {CacheGroupsContext} context context object
+     */
+    _checkAnyTests(tests) {
+        return (module, context) =>
+            tests.some(test => this._checkTest(test, module, context));
+    }
+
+    /**
+     * Check to see if a chunk should be included
+     *
+     * NOTE: This repeats the code from the SplitChunksPlugin checkTest function
+     * This is for internal use only and may be changed or removed at any time
+     *
+     * @internal
+     *
+     * @param {undefined|boolean|string|RegExp|Function} test test option
+     * @param {Module} module the module
+     * @param {CacheGroupsContext} context context object
+     * @returns {boolean} true, if the module should be selected
+     */
+    _checkTest(test, module, context) {
+        if (test === undefined) return true;
+        if (typeof test === 'function') {
+            return test(module, context);
+        }
+        if (typeof test === 'boolean') return test;
+        if (typeof test === 'string') {
+            const name = module.nameForCondition();
+            return name && name.startsWith(test);
+        }
+        if (test instanceof RegExp) {
+            const name = module.nameForCondition();
+            return name && test.test(name);
+        }
+        return false;
     }
 }
 

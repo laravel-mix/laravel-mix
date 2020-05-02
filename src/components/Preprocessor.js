@@ -128,18 +128,6 @@ class Preprocessor {
     }
 
     /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        return [
-            new MiniCssExtractPlugin({
-                filename: '[name].css',
-                esModule: true
-            })
-        ];
-    }
-
-    /**
      * Prepare the preprocessor plugin options.
      *
      * @param {Object} preprocessor
@@ -186,16 +174,7 @@ class Preprocessor {
             postCssPlugins
         });
 
-        this.chunks.add(
-            `styles`,
-            output.relativePathWithoutExtension(),
-            /.css$/,
-            {
-                chunks: 'all',
-                enforce: true,
-                type: 'css/mini-extract'
-            }
-        );
+        this._addChunks('styles', src, output);
 
         return this;
     }
@@ -213,6 +192,37 @@ class Preprocessor {
         }
 
         return output;
+    }
+
+    /**
+     * Add the necessary chunks for this preprocessor
+     *
+     * This method is for internal use only for now.
+     *
+     * @internal
+     *
+     * @param {string} name
+     * @param {Object} src
+     * @param {Object} output
+     */
+    _addChunks(name, src, output) {
+        const tests = [
+            // 1. Ensure the file is a CSS file
+            /.css$/
+        ];
+
+        const attrs = {
+            chunks: 'all',
+            enforce: true,
+            type: 'css/mini-extract'
+        };
+
+        this.chunks.add(
+            name,
+            output.relativePathWithoutExtension(),
+            tests,
+            attrs
+        );
     }
 }
 
