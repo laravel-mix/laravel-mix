@@ -27,15 +27,6 @@ class Version {
 
         Mix.addTask(new VersionFilesTask({ files }));
     }
-
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        if (Mix.inProduction()) {
-            return [new webpack.HashedModuleIdsPlugin()];
-        }
-    }
 }
 
 module.exports = Version;
