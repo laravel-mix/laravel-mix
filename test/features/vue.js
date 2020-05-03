@@ -32,7 +32,7 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
     });
 });
 
-test.serial.cb('it prepends vue styles to your less compiled file', t => {
+test.serial.cb('it appends vue styles to your less compiled file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -53,7 +53,8 @@ test.serial.cb('it prepends vue styles to your less compiled file', t => {
 
 .hello {
   color: blue;
-}`;
+}
+`;
 
         t.is(
             expected,
