@@ -25,7 +25,7 @@ class AppendVueStylesPlugin {
                         }
                     }
 
-                    this.reassignIds(queue);
+                    this.reorderModules(queue);
                 }
             );
         });
@@ -36,7 +36,7 @@ class AppendVueStylesPlugin {
      * @param {import("webpack").ModuleGraph} cg
      * @param {{module: import("webpack").Module, group: any}[]} queue
      */
-    reassignIds(queue) {
+    reorderModules(queue) {
         // Get the largest index for CSS modules
         let largestIndex = 0;
 
@@ -49,7 +49,7 @@ class AppendVueStylesPlugin {
 
         // Push all vue assets to the end in their original order
         for (const { module, group } of queue) {
-            if (module._identifier.includes('?vue')) {
+            if (module.identifier().includes('?vue')) {
                 group.setModulePostOrderIndex(
                     module,
                     largestIndex + group.getModulePostOrderIndex(module)

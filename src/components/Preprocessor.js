@@ -186,6 +186,10 @@ class Preprocessor {
         return output;
     }
 
+    chunkRegex() {
+        return /.css$/;
+    }
+
     /**
      * Add the necessary chunks for this preprocessor
      *
@@ -200,7 +204,7 @@ class Preprocessor {
     _addChunks(name, src, output) {
         const tests = [
             // 1. Ensure the file is a CSS file
-            /.css$/,
+            this.chunkRegex(),
 
             // 2. Ensure that just this file is included in this chunk
             src.path()
