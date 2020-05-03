@@ -158,7 +158,7 @@ test.serial.cb('cssnano minifier options may be specified', t => {
 
     compile(t, () => {
         t.is(
-            '.test{font-family:"Font Awesome 5 Free"}',
+            '.test{font-family:"Font Awesome 5 Free"}\n',
             File.find(
                 'test/fixtures/fake-app/public/css/minifier-example.css'
             ).read()

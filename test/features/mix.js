@@ -31,10 +31,7 @@ test.serial.cb('the kitchen sink', t => {
             {
                 '/js/another.js': '/js/another.js\\?id=\\w{20}',
                 '/css/app.css': '/css/app.css\\?id=\\w{20}',
-                // FIXME: This shouldn't be missing
-                /*
                 '/css/example.css': '/css/example.css\\?id=\\w{20}',
-                */
                 '/js/app.js': '/js/app.js\\?id=\\w{20}',
                 '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
                 '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
