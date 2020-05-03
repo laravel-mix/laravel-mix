@@ -65,7 +65,7 @@
         "terser": "^4.6.7",
         "terser-webpack-plugin": "^2.3.1",
         "vue-loader": "^15.9.1",
-        "webpack": "5.0.0-beta.14",
+        "webpack": "5.0.0-beta.15",
         "webpack-cli": "4.0.0-beta.1",
         "webpack-dev-server": "^3.1.14",
         "webpack-merge": "^4.2.2",
