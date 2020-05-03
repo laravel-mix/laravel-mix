@@ -22,7 +22,8 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
 
 .hello {
   color: blue;
-}`;
+}
+`;
 
         t.is(
             expected,
