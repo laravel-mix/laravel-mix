@@ -10,6 +10,7 @@ test.beforeEach(t => {
     // Reset state.
     global.Config = require('../../../src/config')();
     global.Mix = new (require('../../../src/Mix'))();
+    require('../../../src/Chunks').Chunks.reset();
 
     fs.ensureDirSync('test/fixtures/fake-app/public');
 

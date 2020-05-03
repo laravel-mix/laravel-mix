@@ -24,7 +24,14 @@ class Chunks {
      * @return {Chunks}
      */
     static instance() {
-        return instance || (instance = new Chunks());
+        return instance || this.reset();
+    }
+
+    /**
+     * @return {Chunks}
+     */
+    static reset() {
+        return (instance = new Chunks());
     }
 
     /**
