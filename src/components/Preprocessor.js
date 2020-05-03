@@ -1,6 +1,6 @@
 let Assert = require('../Assert');
-let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let { Chunks } = require('../Chunks');
+let Css = require('./Css');
 
 class Preprocessor {
     /**
@@ -34,13 +34,7 @@ class Preprocessor {
 
             tap({}, () => {
                 let loaders = [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders({ method: 'extract' }),
                     {
                         loader: 'css-loader',
                         options: {
@@ -111,15 +105,9 @@ class Preprocessor {
                     });
                 }
 
-                const applyLoaders = (hmr, loaders) => {
-                    return hmr
-                        ? [{ loader: 'style-loader' }, ...loaders]
-                        : loaders;
-                };
-
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: applyLoaders(Mix.isUsing('hmr'), loaders)
+                    use: loaders
                 });
             });
         });

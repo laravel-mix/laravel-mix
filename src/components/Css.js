@@ -10,14 +10,7 @@ class Css extends AutomaticComponent {
             {
                 test: /\.css$/,
                 use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders(),
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
@@ -30,14 +23,7 @@ class Css extends AutomaticComponent {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -59,14 +45,7 @@ class Css extends AutomaticComponent {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -89,14 +68,7 @@ class Css extends AutomaticComponent {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
                 use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -110,14 +82,7 @@ class Css extends AutomaticComponent {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
                 use: [
-                    { loader: 'style-loader' },
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: process.env.NODE_ENV === 'development',
-                            esModule: true
-                        }
-                    },
+                    ...Css.loaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -174,6 +139,45 @@ class Css extends AutomaticComponent {
                 esModule: true
             })
         ];
+    }
+
+    /**
+     * Gets a list of loaders to handle CSS
+     *
+     * This handles inlining or extraction of CSS based on context.
+     * The default is to inline styles
+     *
+     * @param {object} [options]
+     * @param {"auto" | "inline" | "extract"} options.method The method to use when handling CSS.
+     */
+    static loaders({ method = 'auto' } = {}) {
+        const loaders = [];
+
+        if (method === 'auto') {
+            if (Config.extractVueStyles !== false) {
+                method = 'extract';
+            } else {
+                method = 'inline';
+            }
+        }
+
+        if (method === 'inline') {
+            loaders.push({ loader: 'style-loader' });
+        } else if (method === 'extract') {
+            loaders.push({
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                    hmr: Mix.isUsing('hmr'),
+                    esModule: true
+                }
+            });
+        } else {
+            throw new Error(
+                `Unknown css loader method '${method}'. Expected auto, inline, or extract.`
+            );
+        }
+
+        return loaders;
     }
 }
 
