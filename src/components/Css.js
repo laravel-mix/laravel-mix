@@ -133,9 +133,7 @@ class Css extends AutomaticComponent {
         return [
             new MiniCssExtractPlugin({
                 filename: '[name].css',
-                // This intentionally does not have the .css at the end
-                // This must be added in the name of each chunk
-                chunkFilename: '[name]',
+                chunkFilename: '[name].css',
                 esModule: true
             })
         ];

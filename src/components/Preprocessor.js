@@ -212,7 +212,12 @@ class Preprocessor {
             type: 'css/mini-extract'
         };
 
-        this.chunks.add(name, output.relativePath(), tests, attrs);
+        this.chunks.add(
+            name,
+            output.relativePathWithoutExtension(),
+            tests,
+            attrs
+        );
     }
 }
 

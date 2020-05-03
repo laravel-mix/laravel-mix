@@ -63,7 +63,9 @@ class Vue {
 
         this.chunks.add(
             'styles-vue',
-            existingChunk ? existingChunk.name : this.extractFileName(),
+            existingChunk
+                ? existingChunk.name
+                : this.extractFile().relativePathWithoutExtension(),
             [/.vue$/, module => module.type === 'css/mini-extract'],
             {
                 chunks: 'all',
@@ -83,6 +85,10 @@ class Vue {
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+    }
+
+    extractFile() {
+        return new File(this.extractFileName());
     }
 }
 
