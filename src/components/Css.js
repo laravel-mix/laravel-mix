@@ -1,5 +1,8 @@
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let {
+    AppendVueStylesPlugin
+} = require('../webpackPlugins/AppendVueStylesPlugin');
 
 class Css extends AutomaticComponent {
     /**
@@ -131,6 +134,7 @@ class Css extends AutomaticComponent {
      */
     webpackPlugins() {
         return [
+            new AppendVueStylesPlugin(),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[name].css',
