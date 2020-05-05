@@ -127,7 +127,6 @@ class Chunks {
         return {
             splitChunks: {
                 ...this.cacheGroups()
-                // ...this.other(),
             }
         };
     }
@@ -139,23 +138,6 @@ class Chunks {
                 defaultVendors: false,
                 ...this.chunks
             }
-        };
-    }
-
-    other() {
-        if (Object.keys(this.chunks).length > 0) {
-            return {};
-        }
-
-        return {
-            // If the user didn't specify any libraries to extract,
-            // they likely want to extract all vendor libraries.
-            ...(Object.keys(this.chunks).length === 0
-                ? {
-                      name: this.extractions[0].output,
-                      chunks: 'all'
-                  }
-                : {})
         };
     }
 
