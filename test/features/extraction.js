@@ -43,3 +43,16 @@ test.serial('JS compilation with vendor extraction with default config', t => {
         buildConfig().entry
     );
 });
+
+test.serial.cb('JS compilation with total vendor extraction', t => {
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/extract/app.js',
+        'js'
+    ).extract();
+
+    compile(t, config => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/manifest.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/vendor.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+    });
+});

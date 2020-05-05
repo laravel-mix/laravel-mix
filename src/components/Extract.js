@@ -39,8 +39,6 @@ class Extract {
         }
 
         this.extractions.push({ libs, output });
-
-        this.addChunk(this.extractions[this.extractions.length - 1]);
     }
 
     /**
@@ -58,22 +56,24 @@ class Extract {
             if (extraction.libs.length) {
                 this.entry.addExtraction(extraction);
             }
+
+            this.addChunk(extraction);
         });
     }
 
     addChunk(extraction) {
         const libsPattern = extraction.libs.join('|');
-        const pattern = new RegExp(
-            `(?<!node_modules.*)[\\\\/]node_modules[\\\\/](${libsPattern})[\\\\/]`,
-            'i'
-        );
+
+        let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
+
+        if (libsPattern.length > 0) {
+            pattern = `${pattern}(${libsPattern})[\\\\\/]`;
+        }
 
         this.chunks.add(
             `vendor${this.extractions.indexOf(extraction)}`,
-            extraction.output
-                ? extraction.output.replace(/.js$/, '')
-                : undefined,
-            pattern,
+            extraction.output.replace(/.js$/, ''),
+            new RegExp(pattern, 'i'),
             {
                 chunks: 'all',
                 enforce: true
