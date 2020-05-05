@@ -41,3 +41,14 @@ test.serial.cb('it compiles JavaScript and Sass with versioning', t => {
         );
     });
 });
+
+test.serial.cb('it can build for production with versioning', t => {
+    Config.production = true;
+    t.true(Mix.inProduction());
+
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').version();
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+    });
+});
