@@ -133,12 +133,12 @@ class Chunks {
     }
 
     cacheGroups() {
-        if (Object.keys(this.chunks).length === 0) {
-            return {};
-        }
-
         return {
-            cacheGroups: this.chunks
+            cacheGroups: {
+                default: false,
+                defaultVendors: false,
+                ...this.chunks
+            }
         };
     }
 
