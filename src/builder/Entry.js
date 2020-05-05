@@ -89,6 +89,12 @@ class Entry {
         );
     }
 
+    hasDefault() {
+        return (this.structure.mix || []).some(path =>
+            path.includes('mock-entry.js')
+        );
+    }
+
     /**
      * Build the proper entry name, based on a given output.
      *

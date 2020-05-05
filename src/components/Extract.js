@@ -53,26 +53,34 @@ class Extract {
         this.extractions.forEach(extraction => {
             extraction.output = this.extractionPath(extraction.output);
 
+            // FIXME: This is not ideal
+            // The webpack docs state that entries should not be used for vendor extraction
+            // However if there are no uses of a library then they will not be extracted
+            // Is there a better way to handle this?
             if (extraction.libs.length) {
                 this.entry.addExtraction(extraction);
+            } else {
+                this.addChunk(extraction);
             }
-
-            this.addChunk(extraction);
         });
     }
 
     addChunk(extraction) {
-        const libsPattern = extraction.libs.join('|');
-
         let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
 
+        /*
+        // The FIXME above means that this code should never fire when extraction.libs
+        // is empty. We'll leave this code here in case a better solution comes along
+        const libsPattern = extraction.libs.join('|');
+
         if (libsPattern.length > 0) {
-            pattern = `${pattern}(${libsPattern})[\\\\\/]`;
+            pattern = `${pattern}(${libsPattern})`;
         }
+        */
 
         this.chunks.add(
             `vendor${this.extractions.indexOf(extraction)}`,
-            extraction.output.replace(/.js$/, ''),
+            extraction.output.replace(/\.js$/, ''),
             new RegExp(pattern, 'i'),
             {
                 chunks: 'all',
