@@ -84,6 +84,7 @@
         "less-loader": "^5.0.0",
         "mock-require": "^3.0.2",
         "nyc": "^15.0.0",
+        "playwright": "^1.0.1",
         "postcss-custom-properties": "^9.1.1",
         "prettier": "1.15.2",
         "pretty-quick": "^2.0.1",
