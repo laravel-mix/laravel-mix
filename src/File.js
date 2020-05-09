@@ -155,13 +155,6 @@ class File {
             extra += `/${path.basename(publicPath)}`;
         }
 
-        console.log(
-            'pathFromPublic',
-            extra,
-            this.path(),
-            Mix.paths.root(extra)
-        );
-
         return this.path().replace(Mix.paths.root(extra), '');
     }
 
