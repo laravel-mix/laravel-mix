@@ -91,10 +91,7 @@ class Extract {
 
     extractionPath(outputPath) {
         if (outputPath) {
-            return new File(outputPath)
-                .pathFromPublic(Config.publicPath)
-                .replace(/\.js$/, '')
-                .replace(/\\/g, '/');
+            return new File(outputPath).normalizedOutputPath();
         }
 
         return path.join(this.entry.base, 'vendor').replace(/\\/g, '/');

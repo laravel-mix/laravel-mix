@@ -42,6 +42,12 @@ class File {
         return fs.existsSync(file);
     }
 
+    normalizedOutputPath() {
+        return this.pathFromPublic(Config.publicPath)
+            .replace(/\.(js|css)$/, '')
+            .replace(/\\/g, '/');
+    }
+
     /**
      * Delete/Unlink the current file.
      */
