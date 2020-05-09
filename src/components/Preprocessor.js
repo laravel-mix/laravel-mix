@@ -37,45 +37,7 @@ class Preprocessor {
 
                     {
                         loader: 'postcss-loader',
-                        options: {
-                            sourceMap:
-                                preprocessor.type === 'sass' &&
-                                Config.processCssUrls
-                                    ? true
-                                    : Mix.isUsing('sourcemaps'),
-                            ident: `postcss${index}`,
-                            plugins: (function() {
-                                let plugins = Config.postCss;
-
-                                if (
-                                    preprocessor.postCssPlugins &&
-                                    preprocessor.postCssPlugins.length
-                                ) {
-                                    plugins = preprocessor.postCssPlugins;
-                                }
-
-                                if (
-                                    Config.autoprefixer &&
-                                    Config.autoprefixer.enabled
-                                ) {
-                                    plugins.push(
-                                        require('autoprefixer')(
-                                            Config.autoprefixer.options
-                                        )
-                                    );
-                                }
-
-                                if (Mix.inProduction()) {
-                                    plugins.push(
-                                        require('cssnano')({
-                                            preset: ['default', Config.cssNano]
-                                        })
-                                    );
-                                }
-
-                                return plugins;
-                            })()
-                        }
+                        options: this.postCssLoaderOptions(preprocessor, index)
                     }
                 ];
 
@@ -145,6 +107,55 @@ class Preprocessor {
                     ? true
                     : Mix.isUsing('sourcemaps')
         });
+    }
+
+    /**
+     * Generate the options object for the PostCSS Loader.
+     * @param {string} preprocessor
+     * @param {int} index
+     */
+    postCssLoaderOptions(preprocessor, index) {
+        let options = {
+            sourceMap:
+                preprocessor.type === 'sass' && Config.processCssUrls
+                    ? true
+                    : Mix.isUsing('sourcemaps'),
+            ident: `postcss${index}`
+        };
+
+        let plugins = this.postCssPlugins(preprocessor);
+
+        if (!File.exists(Mix.paths.root('postcss.config.js'))) {
+            options.plugins = plugins;
+        }
+
+        return options;
+    }
+
+    /**
+     * Generate the plugins object for the PostCSS Loader Options.
+     * @param {string} preprocessor
+     */
+    postCssPlugins(preprocessor) {
+        let plugins = Config.postCss;
+
+        if (preprocessor.postCssPlugins && preprocessor.postCssPlugins.length) {
+            plugins = preprocessor.postCssPlugins;
+        }
+
+        if (Config.autoprefixer && Config.autoprefixer.enabled) {
+            plugins.push(require('autoprefixer')(Config.autoprefixer.options));
+        }
+
+        if (Mix.inProduction() && Config.cssNano !== false) {
+            plugins.push(
+                require('cssnano')({
+                    preset: ['default', Config.cssNano]
+                })
+            );
+        }
+
+        return plugins;
     }
 
     /**

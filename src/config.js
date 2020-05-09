@@ -39,8 +39,9 @@ module.exports = function() {
 
         /**
          * Determine if we should enable autoprefixer by default.
+         * May be set to false to disable it.
          *
-         * @type {Boolean}
+         * @type {Boolean|Object}
          */
         autoprefixer: {
             enabled: true,
@@ -177,10 +178,11 @@ module.exports = function() {
 
         /**
          * cssnano-specific settings for Webpack.
+         * Disabled if set to false.
          *
          * See: https://cssnano.co/optimisations/
          *
-         * @type {Object}
+         * @type {Boolean|Object}
          */
         cssNano: {},
 
