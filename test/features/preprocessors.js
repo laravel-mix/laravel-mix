@@ -168,3 +168,31 @@ test.serial.cb('cssnano minifier options may be specified', t => {
         file.delete();
     });
 });
+
+test.serial.cb.only('CSS output paths are normalized', t => {
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+        'public/css'
+    );
+
+    compile(t, () => {
+        process.exit(0);
+
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        t.false(
+            File.exists('test/fixtures/fake-app/public/public/css/app.css')
+        );
+
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.false(File.exists('test/fixtures/fake-app/public/public/js/app.js'));
+
+        t.deepEqual(
+            {
+                '/css/app.js': '/css/app.js',
+                '/css/app.css': '/css/app.css'
+            },
+            readManifest()
+        );
+    });
+});

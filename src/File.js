@@ -122,6 +122,21 @@ class File {
     }
 
     /**
+     *
+     * @param {string} filePath
+     * @param {string|null} publicPath
+     */
+    static stripPublicDir(filePath, publicPath = null) {
+        let publicDir = path.basename(publicPath || Config.publicPath);
+
+        if (filePath.startsWith(`${publicDir}/`)) {
+            return filePath.substr(publicDir.length + 1);
+        }
+
+        return filePath;
+    }
+
+    /**
      * Get the path to the file, starting at the project's public dir.
      *
      * @param {string|null} publicPath
@@ -130,6 +145,22 @@ class File {
         publicPath = publicPath || Config.publicPath;
 
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
+
+        // If the path starts with the public folder remove it
+        if (
+            this.filePath.startsWith(
+                `${publicPath}/${path.basename(publicPath)}`
+            )
+        ) {
+            extra += `/${path.basename(publicPath)}`;
+        }
+
+        console.log(
+            'pathFromPublic',
+            extra,
+            this.path(),
+            Mix.paths.root(extra)
+        );
 
         return this.path().replace(Mix.paths.root(extra), '');
     }

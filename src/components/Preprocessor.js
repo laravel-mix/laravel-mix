@@ -149,6 +149,7 @@ class Preprocessor {
 
         src = new File(src);
 
+        output = File.stripPublicDir(output);
         output = this.normalizeOutput(
             new File(output),
             src.nameWithoutExtension() + '.css'
@@ -216,12 +217,7 @@ class Preprocessor {
             type: 'css/mini-extract'
         };
 
-        this.chunks.add(
-            name,
-            output.relativePathWithoutExtension(),
-            tests,
-            attrs
-        );
+        this.chunks.add(name, output.normalizedOutputPath(), tests, attrs);
     }
 }
 
