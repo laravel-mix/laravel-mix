@@ -302,7 +302,7 @@ test.serial.cb.only('it supports global Vue styles for sass', t => {
 
         let expected = `
 :root {
-  --shared-color: rebeccapurple;
+    --shared-color: rebeccapurple;
 }
 .shared-css {
     color: rebeccapurple;

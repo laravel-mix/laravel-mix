@@ -11,8 +11,7 @@ test.beforeEach(() => {
 
 test.serial('compiling just js', async t => {
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/resources/js/app.js', 'app.js');
-    // mix.postCss('test/fixtures/integration/resources/css/app.css', 'app.css');
+    mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
 
     await compile();
     await assertProducesLogs(t, ['loaded: app.js']);
@@ -20,8 +19,11 @@ test.serial('compiling just js', async t => {
 
 test.serial('compiling js and css together', async t => {
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/resources/js/app.js', 'app.js');
-    mix.postCss('test/fixtures/integration/resources/css/app.css', 'app.css');
+    mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
+    mix.postCss(
+        'test/fixtures/integration/resources/css/app.css',
+        'css/app.css'
+    );
 
     await compile();
     await assertProducesLogs(t, ['loaded: app.js']);
