@@ -60,6 +60,10 @@ class Sass extends Preprocessor {
             { sourceMap: true }
         );
     }
+
+    chunkRegex() {
+        return /\.(css|s[ac]ss)$/;
+    }
 }
 
 module.exports = Sass;

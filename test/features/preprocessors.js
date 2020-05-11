@@ -169,6 +169,30 @@ test.serial.cb('cssnano minifier options may be specified', t => {
     });
 });
 
+test.serial.cb('Sass is extracted properly', t => {
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.sass',
+        'css/app.css'
+    );
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
+    });
+});
+
+test.serial.cb('Stylus is extracted properly', t => {
+    mix.stylus(
+        'test/fixtures/fake-app/resources/assets/stylus/app.styl',
+        'css/app.css'
+    );
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
+    });
+});
+
 test.serial.cb('CSS output paths are normalized', t => {
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
     mix.sass(

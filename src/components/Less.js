@@ -27,7 +27,7 @@ class Less extends Preprocessor {
     }
 
     chunkRegex() {
-        return /.(css|less)$/;
+        return /\.(css|less)$/;
     }
 }
 
