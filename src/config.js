@@ -138,9 +138,21 @@ module.exports = function() {
         /**
          * A file path with global styles that should be imported into every Vue component.
          *
+         * This works with Sass, Less, CSS, etc…
+         * Giving a string or an array works only with sass.
+         * Specify the file type as the key if you want to import for different files. For example:
+         *
+         * ```js
+         * {
+         *   sass: ["path/to/file.sass"],
+         *   scss: ["path/to/file.scss"],
+         *   less: ["path/to/another.less"],
+         * }
+         * ```
+         *
          * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
          *
-         * @type {string}
+         * @type {string|string[]|{[key: string]: string|string[]}}
          */
         globalVueStyles: '',
 

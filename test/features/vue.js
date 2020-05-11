@@ -277,3 +277,58 @@ test.serial.cb('it extracts vue Less styles to a dedicated file', t => {
         );
     });
 });
+
+test.serial.cb.only('it supports global Vue styles for sass', t => {
+    Config.globalVueStyles = {
+        css: ['test/fixtures/fake-app/resources/assets/css/global.css'],
+        sass: ['test/fixtures/fake-app/resources/assets/sass/global.sass'],
+        scss: ['test/fixtures/fake-app/resources/assets/sass/global.scss'],
+        less: ['test/fixtures/fake-app/resources/assets/less/global.less'],
+        stylus: ['test/fixtures/fake-app/resources/assets/stylus/global.styl']
+    };
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-global-styles.js',
+        'js/app.js'
+    );
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+        'css/app.css'
+    );
+    mix.options({ extractVueStyles: 'css/components.css' });
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
+
+        let expected = `
+:root {
+  --shared-color: rebeccapurple;
+}
+.shared-css {
+    color: rebeccapurple;
+    color: var(--shared-color);
+}
+
+.shared-scss {
+  color: rebeccapurple;
+}
+.shared-sass {
+  color: rebeccapurple;
+}
+.shared-less {
+  color: rebeccapurple;
+}
+
+.shared-stylus {
+  color: #639;
+}
+`;
+
+        t.is(
+            expected.trim(),
+            File.find('test/fixtures/fake-app/public/css/components.css')
+                .read()
+                .trim()
+        );
+    });
+});

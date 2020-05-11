@@ -105,6 +105,13 @@ class Preprocessor {
                     });
                 }
 
+                loaders.push(
+                    ...Css.beforeLoaders({
+                        type: preprocessor.type,
+                        injectGlobalStyles: false
+                    })
+                );
+
                 rules.push({
                     test: preprocessor.src.path(),
                     use: loaders

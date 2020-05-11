@@ -1,3 +1,4 @@
+let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
@@ -17,7 +18,11 @@ class Css extends AutomaticComponent {
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
-                    }
+                    },
+                    ...Css.beforeLoaders({
+                        type: 'css',
+                        injectGlobalStyles: true
+                    })
                 ]
             },
 
@@ -39,7 +44,11 @@ class Css extends AutomaticComponent {
                                 outputStyle: 'expanded'
                             }
                         }
-                    }
+                    },
+                    ...Css.beforeLoaders({
+                        type: 'scss',
+                        injectGlobalStyles: true
+                    })
                 ]
             },
 
@@ -62,7 +71,11 @@ class Css extends AutomaticComponent {
                                 indentedSyntax: true
                             }
                         }
-                    }
+                    },
+                    ...Css.beforeLoaders({
+                        type: 'sass',
+                        injectGlobalStyles: true
+                    })
                 ]
             },
 
@@ -76,7 +89,11 @@ class Css extends AutomaticComponent {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    { loader: 'less-loader' }
+                    { loader: 'less-loader' },
+                    ...Css.beforeLoaders({
+                        type: 'less',
+                        injectGlobalStyles: true
+                    })
                 ]
             },
 
@@ -90,7 +107,11 @@ class Css extends AutomaticComponent {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    { loader: 'stylus-loader' }
+                    { loader: 'stylus-loader' },
+                    ...Css.beforeLoaders({
+                        type: 'stylus',
+                        injectGlobalStyles: true
+                    })
                 ]
             }
         ];
@@ -180,6 +201,52 @@ class Css extends AutomaticComponent {
         }
 
         return loaders;
+    }
+
+    /**
+     * Gets a list of loaders to run
+     *
+     * This handles inlining or extraction of CSS based on context.
+     * The default is to inline styles
+     *
+     * @param {object} [options]
+     * @param {string} options.type The file type
+     * @param {boolean} options.injectGlobalStyles Whether or not to inject global styles
+     */
+    static beforeLoaders({ type, injectGlobalStyles }) {
+        const loaders = [];
+
+        if (Config.globalVueStyles && injectGlobalStyles) {
+            let resources = Css.normalizeVueStyles()[type] || [];
+
+            if (resources.length) {
+                loaders.push({
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources
+                    }
+                });
+            }
+        }
+
+        return loaders;
+    }
+
+    static normalizeVueStyles() {
+        let styles = Config.globalVueStyles;
+
+        // Backwards compat:
+        // Config.globalVueStyles as a string only supported sass / scss
+        if (typeof styles !== 'object') {
+            styles = {
+                sass: styles,
+                scss: styles
+            };
+        }
+
+        return mapValues(styles, files => {
+            return Array.wrap(files).map(file => Mix.paths.root(file));
+        });
     }
 }
 
