@@ -34,7 +34,7 @@ class Preprocessor {
 
             tap({}, () => {
                 let loaders = [
-                    ...Css.loaders({ method: 'extract' }),
+                    ...Css.afterLoaders({ method: 'extract' }),
                     {
                         loader: 'css-loader',
                         options: {

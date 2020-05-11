@@ -13,7 +13,7 @@ class Css extends AutomaticComponent {
             {
                 test: /\.css$/,
                 use: [
-                    ...Css.loaders(),
+                    ...Css.afterLoaders(),
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
@@ -30,7 +30,7 @@ class Css extends AutomaticComponent {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    ...Css.loaders(),
+                    ...Css.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -56,7 +56,7 @@ class Css extends AutomaticComponent {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    ...Css.loaders(),
+                    ...Css.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -83,7 +83,7 @@ class Css extends AutomaticComponent {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
                 use: [
-                    ...Css.loaders(),
+                    ...Css.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -101,7 +101,7 @@ class Css extends AutomaticComponent {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
                 use: [
-                    ...Css.loaders(),
+                    ...Css.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -173,7 +173,7 @@ class Css extends AutomaticComponent {
      * @param {object} [options]
      * @param {"auto" | "inline" | "extract"} options.method The method to use when handling CSS.
      */
-    static loaders({ method = 'auto' } = {}) {
+    static afterLoaders({ method = 'auto' } = {}) {
         const loaders = [];
 
         if (method === 'auto') {
