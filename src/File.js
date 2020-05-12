@@ -129,7 +129,10 @@ class File {
     static stripPublicDir(filePath, publicPath = null) {
         let publicDir = path.basename(publicPath || Config.publicPath);
 
-        if (filePath.startsWith(`${publicDir}/`)) {
+        if (
+            filePath.startsWith(`${publicDir}/`) ||
+            filePath.startsWith(`${publicDir}\\`)
+        ) {
             return filePath.substr(publicDir.length + 1);
         }
 
