@@ -1,7 +1,15 @@
 let Assert = require('../Assert');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let { Chunks } = require('../Chunks');
+let Css = require('./Css');
 
 class Preprocessor {
+    /**
+     * Create a new component instance.
+     */
+    constructor() {
+        this.chunks = Chunks.instance();
+    }
+
     /**
      * Assets to append to the webpack entry.
      *
@@ -24,8 +32,9 @@ class Preprocessor {
                 .replace(Config.publicPath + path.sep, path.sep)
                 .replace(/\\/g, '/');
 
-            tap(new ExtractTextPlugin(outputPath), extractPlugin => {
+            tap({}, () => {
                 let loaders = [
+                    ...Css.afterLoaders({ method: 'extract' }),
                     {
                         loader: 'css-loader',
                         options: {
@@ -96,35 +105,21 @@ class Preprocessor {
                     });
                 }
 
-                const applyLoaders = (hmr, loaders) => {
-                    loaders = extractPlugin.extract({
-                        fallback: 'style-loader',
-                        use: loaders,
-                        remove: !hmr
-                    });
-
-                    return hmr ? ['style-loader', ...loaders] : loaders;
-                };
+                loaders.push(
+                    ...Css.beforeLoaders({
+                        type: preprocessor.type,
+                        injectGlobalStyles: false
+                    })
+                );
 
                 rules.push({
                     test: preprocessor.src.path(),
-                    use: applyLoaders(Mix.isUsing('hmr'), loaders)
+                    use: loaders
                 });
-
-                this.extractPlugins = (this.extractPlugins || []).concat(
-                    extractPlugin
-                );
             });
         });
 
         return rules;
-    }
-
-    /**
-     * webpack plugins to be appended to the master config.
-     */
-    webpackPlugins() {
-        return this.extractPlugins;
     }
 
     /**
@@ -161,6 +156,7 @@ class Preprocessor {
 
         src = new File(src);
 
+        output = File.stripPublicDir(output);
         output = this.normalizeOutput(
             new File(output),
             src.nameWithoutExtension() + '.css'
@@ -173,6 +169,12 @@ class Preprocessor {
             pluginOptions,
             postCssPlugins
         });
+
+        this._addChunks(
+            `styles-${output.relativePathWithoutExtension()}`,
+            src,
+            output
+        );
 
         return this;
     }
@@ -190,6 +192,39 @@ class Preprocessor {
         }
 
         return output;
+    }
+
+    chunkRegex() {
+        return /\.css$/;
+    }
+
+    /**
+     * Add the necessary chunks for this preprocessor
+     *
+     * This method is for internal use only for now.
+     *
+     * @internal
+     *
+     * @param {string} name
+     * @param {Object} src
+     * @param {Object} output
+     */
+    _addChunks(name, src, output) {
+        const tests = [
+            // 1. Ensure the file is a CSS file
+            this.chunkRegex(),
+
+            // 2. Ensure that just this file is included in this chunk
+            src.path()
+        ];
+
+        const attrs = {
+            chunks: 'all',
+            enforce: true,
+            type: 'css/mini-extract'
+        };
+
+        this.chunks.add(name, output.normalizedOutputPath(), tests, attrs);
     }
 }
 

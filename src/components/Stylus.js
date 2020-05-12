@@ -32,6 +32,10 @@ class Stylus extends Preprocessor {
             postCssPlugins
         );
     }
+
+    chunkRegex() {
+        return /\.(css|styl(us)?)$/;
+    }
 }
 
 module.exports = Stylus;

@@ -15,7 +15,7 @@ class Coffee extends JavaScript {
         return [
             {
                 test: /\.coffee$/,
-                use: ['coffee-loader']
+                use: [{ loader: 'coffee-loader' }]
             }
         ].concat(super.webpackRules());
     }

@@ -10,6 +10,7 @@ test.beforeEach(t => {
     // Reset state.
     global.Config = require('../../../src/config')();
     global.Mix = new (require('../../../src/Mix'))();
+    require('../../../src/Chunks').Chunks.reset();
 
     fs.ensureDirSync('test/fixtures/fake-app/public');
 
@@ -23,12 +24,19 @@ test.afterEach.always(t => {
 });
 
 global.compile = (t, callback) => {
-    let config = buildConfig();
+    return new Promise((resolve, reject) => {
+        let config = buildConfig();
 
-    webpack(config, function(err, stats) {
-        callback(config);
+        webpack(config, (err, stats) => {
+            callback && callback(config);
+            t && t.end();
 
-        t.end();
+            if (err) {
+                reject({ config, err, stats });
+            } else {
+                resolve({ config, err, stats });
+            }
+        });
     });
 };
 

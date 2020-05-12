@@ -25,6 +25,10 @@ class Less extends Preprocessor {
             postCssPlugins
         );
     }
+
+    chunkRegex() {
+        return /\.(css|less)$/;
+    }
 }
 
 module.exports = Less;

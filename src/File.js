@@ -42,6 +42,12 @@ class File {
         return fs.existsSync(file);
     }
 
+    normalizedOutputPath() {
+        return this.pathFromPublic(Config.publicPath)
+            .replace(/\.(js|css)$/, '')
+            .replace(/\\/g, '/');
+    }
+
     /**
      * Delete/Unlink the current file.
      */
@@ -87,6 +93,13 @@ class File {
     }
 
     /**
+     * Get the relative path to the file, from the project root.
+     */
+    relativePathWithoutExtension() {
+        return path.relative(Mix.paths.root(), this.pathWithoutExtension());
+    }
+
+    /**
      * Get the absolute path to the file, minus the extension.
      */
     pathWithoutExtension() {
@@ -109,6 +122,24 @@ class File {
     }
 
     /**
+     *
+     * @param {string} filePath
+     * @param {string|null} publicPath
+     */
+    static stripPublicDir(filePath, publicPath = null) {
+        let publicDir = path.basename(publicPath || Config.publicPath);
+
+        if (
+            filePath.startsWith(`${publicDir}/`) ||
+            filePath.startsWith(`${publicDir}\\`)
+        ) {
+            return filePath.substr(publicDir.length + 1);
+        }
+
+        return filePath;
+    }
+
+    /**
      * Get the path to the file, starting at the project's public dir.
      *
      * @param {string|null} publicPath
@@ -117,6 +148,15 @@ class File {
         publicPath = publicPath || Config.publicPath;
 
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
+
+        // If the path starts with the public folder remove it
+        if (
+            this.filePath.startsWith(
+                `${publicPath}/${path.basename(publicPath)}`
+            )
+        ) {
+            extra += `/${path.basename(publicPath)}`;
+        }
 
         return this.path().replace(Mix.paths.root(extra), '');
     }

@@ -11,10 +11,10 @@ class BuildCallbackPlugin {
     /**
      * Apply the plugin.
      *
-     * @param {Object} compiler
+     * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.plugin('done', this.callback);
+        compiler.hooks.done.tap('BuildCallbackPlugin', this.callback);
     }
 }
 

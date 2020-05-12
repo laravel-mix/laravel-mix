@@ -52,13 +52,17 @@ class Sass extends Preprocessor {
                     outputStyle: 'expanded'
                 },
                 implementation: () =>
-                    Mix.seesNpmPackage('node-sass')
+                    Mix.seesNpmPackage('node-sass') && !Config.globalVVueStyles
                         ? require('node-sass')
                         : require('sass')
             },
             pluginOptions,
             { sourceMap: true }
         );
+    }
+
+    chunkRegex() {
+        return /\.(css|s[ac]ss)$/;
     }
 }
 

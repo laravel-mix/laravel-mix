@@ -22,7 +22,8 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
 
 .hello {
   color: blue;
-}`;
+}
+`;
 
         t.is(
             expected,
@@ -31,7 +32,7 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
     });
 });
 
-test.serial.cb('it prepends vue styles to your less compiled file', t => {
+test.serial.cb('it appends vue styles to your less compiled file', t => {
     mix.js(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
         'js/app.js'
@@ -52,7 +53,8 @@ test.serial.cb('it prepends vue styles to your less compiled file', t => {
 
 .hello {
   color: blue;
-}`;
+}
+`;
 
         t.is(
             expected,
@@ -75,10 +77,10 @@ test.serial.cb(
                 File.exists('test/fixtures/fake-app/public/css/vue-styles.css')
             );
 
-            let expected = `
-.hello {
+            let expected = `.hello {
   color: blue;
-}`;
+}
+`;
 
             t.is(
                 expected,
@@ -103,6 +105,7 @@ test.serial.cb('it extracts vue vanilla CSS styles to a dedicated file', t => {
 .hello {
     color: green;
 }
+
 `;
 
         t.is(
@@ -121,10 +124,10 @@ test.serial.cb('it extracts vue Stylus styles to a dedicated file', t => {
     compile(t, config => {
         t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
 
-        let expected = `
-.hello {
+        let expected = `.hello {
   margin: 10px;
 }
+
 `;
 
         t.is(
@@ -167,6 +170,7 @@ test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
   color: red;
 }
 
+
 `;
 
         t.is(
@@ -174,10 +178,10 @@ test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
             File.find('test/fixtures/fake-app/public/css/app.css').read()
         );
 
-        expected = `
-.hello {
+        expected = `.hello {
   color: blue;
-}`;
+}
+`;
 
         t.is(
             expected,
@@ -206,6 +210,7 @@ test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
   color: red;
 }
 
+
 `;
 
         t.is(
@@ -213,10 +218,10 @@ test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
             File.find('test/fixtures/fake-app/public/css/app.css').read()
         );
 
-        expected = `
-.hello {
+        expected = `.hello {
   color: black;
-}`;
+}
+`;
 
         t.is(
             expected,
@@ -241,6 +246,7 @@ test.serial.cb('it extracts vue PostCSS styles to a dedicated file', t => {
     color: white;
     color: var(--color);
 }
+
 `;
 
         t.is(
@@ -259,15 +265,70 @@ test.serial.cb('it extracts vue Less styles to a dedicated file', t => {
     compile(t, config => {
         t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
 
-        let expected = `
-.hello {
+        let expected = `.hello {
   color: blue;
 }
+
 `;
 
         t.is(
             expected,
             File.find('test/fixtures/fake-app/public/css/components.css').read()
+        );
+    });
+});
+
+test.serial.cb.only('it supports global Vue styles for sass', t => {
+    Config.globalVueStyles = {
+        css: ['test/fixtures/fake-app/resources/assets/css/global.css'],
+        sass: ['test/fixtures/fake-app/resources/assets/sass/global.sass'],
+        scss: ['test/fixtures/fake-app/resources/assets/sass/global.scss'],
+        less: ['test/fixtures/fake-app/resources/assets/less/global.less'],
+        stylus: ['test/fixtures/fake-app/resources/assets/stylus/global.styl']
+    };
+    mix.js(
+        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-global-styles.js',
+        'js/app.js'
+    );
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+        'css/app.css'
+    );
+    mix.options({ extractVueStyles: 'css/components.css' });
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.true(File.exists('test/fixtures/fake-app/public/css/components.css'));
+
+        let expected = `
+:root {
+    --shared-color: rebeccapurple;
+}
+.shared-css {
+    color: rebeccapurple;
+    color: var(--shared-color);
+}
+
+.shared-scss {
+  color: rebeccapurple;
+}
+.shared-sass {
+  color: rebeccapurple;
+}
+.shared-less {
+  color: rebeccapurple;
+}
+
+.shared-stylus {
+  color: #639;
+}
+`;
+
+        t.is(
+            expected.trim(),
+            File.find('test/fixtures/fake-app/public/css/components.css')
+                .read()
+                .trim()
         );
     });
 });

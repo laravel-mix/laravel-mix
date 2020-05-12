@@ -1,5 +1,6 @@
 let webpack = require('webpack');
 let Entry = require('./Entry');
+let { Chunks } = require('../Chunks');
 let webpackRules = require('./webpack-rules');
 let webpackPlugins = require('./webpack-plugins');
 let webpackDefaultConfig = require('./webpack-default');
@@ -12,6 +13,7 @@ class WebpackConfig {
      */
     constructor() {
         this.webpackConfig = webpackDefaultConfig();
+        this.chunks = Chunks.instance();
     }
 
     /**
@@ -23,6 +25,7 @@ class WebpackConfig {
             .buildRules()
             .buildPlugins()
             .buildResolving()
+            .buildChunks()
             .mergeCustomConfig();
 
         // We'll announce that the core config object has been
@@ -30,9 +33,15 @@ class WebpackConfig {
         // hook in and modify the config as necessary.
         Mix.dispatch('configReady', this.webpackConfig);
 
+        // Rebuild the chunks as plugins may have added new ones
+        this.buildChunks();
+
         // Finally, we'll make one last announcement for the user
         // to hook into - using mix.override().
         Mix.dispatch('configReadyForUser', this.webpackConfig);
+
+        // Rebuild the chunks as the user may have changed things
+        this.buildChunks();
 
         return this.webpackConfig;
     }
@@ -116,6 +125,18 @@ class WebpackConfig {
                 vue$: 'vue/dist/vue.common.js'
             }
         };
+
+        return this;
+    }
+
+    /**
+     * Build the resolve object.
+     */
+    buildChunks() {
+        this.webpackConfig = require('webpack-merge').smart(
+            this.webpackConfig,
+            this.chunks.config()
+        );
 
         return this;
     }

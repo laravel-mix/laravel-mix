@@ -158,7 +158,7 @@ test.serial.cb('cssnano minifier options may be specified', t => {
 
     compile(t, () => {
         t.is(
-            '.test{font-family:"Font Awesome 5 Free"}',
+            '.test{font-family:"Font Awesome 5 Free"}\n',
             File.find(
                 'test/fixtures/fake-app/public/css/minifier-example.css'
             ).read()
@@ -166,5 +166,55 @@ test.serial.cb('cssnano minifier options may be specified', t => {
 
         // Clean up.
         file.delete();
+    });
+});
+
+test.serial.cb('Sass is extracted properly', t => {
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.sass',
+        'css/app.css'
+    );
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
+    });
+});
+
+test.serial.cb('Stylus is extracted properly', t => {
+    mix.stylus(
+        'test/fixtures/fake-app/resources/assets/stylus/app.styl',
+        'css/app.css'
+    );
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
+    });
+});
+
+test.serial.cb('CSS output paths are normalized', t => {
+    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
+    mix.sass(
+        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+        'public/css'
+    );
+
+    compile(t, () => {
+        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+        t.false(
+            File.exists('test/fixtures/fake-app/public/public/css/app.css')
+        );
+
+        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+        t.false(File.exists('test/fixtures/fake-app/public/public/js/app.js'));
+
+        assertManifestIs(
+            {
+                '/js/app.js': '/js/app.js',
+                '/css/app.css': '/css/app.css'
+            },
+            t
+        );
     });
 });

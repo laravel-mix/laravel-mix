@@ -1,8 +1,11 @@
 let { VueLoaderPlugin } = require('vue-loader');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let collect = require('collect.js');
+let { Chunks } = require('../Chunks');
 
 class Vue {
+    constructor() {
+        this.chunks = Chunks.instance();
+    }
+
     /**
      * Required dependencies for the component.
      */
@@ -22,7 +25,8 @@ class Vue {
      * @param {Object} webpackConfig
      */
     webpackConfig(webpackConfig) {
-        webpackConfig.module.rules.push({
+        // push -> unshift to combat vue loader webpack 5 bug
+        webpackConfig.module.rules.unshift({
             test: /\.vue$/,
             use: [
                 {
@@ -34,138 +38,41 @@ class Vue {
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
 
-        this.updateCssLoaders(webpackConfig);
+        this.updateChunks();
     }
 
     /**
-     * Update all preprocessor loaders to support CSS extraction.
+     * Update CSS chunks to extract vue styles
      *
-     * @param {Object} webpackConfig
      */
-    updateCssLoaders(webpackConfig) {
-        // Basic CSS and PostCSS
-        this.updateCssLoader('css', webpackConfig, rule => {
-            rule.loaders.find(
-                loader => loader.loader === 'postcss-loader'
-            ).options = this.postCssOptions();
-        });
+    updateChunks() {
+        let existingChunk;
 
-        // LESS
-        this.updateCssLoader('less', webpackConfig);
-
-        // SASS
-        let sassCallback = rule => {
-            if (Mix.seesNpmPackage('sass')) {
-                rule.loaders.find(
-                    loader => loader.loader === 'sass-loader'
-                ).options.implementation = require('sass');
-            }
-
-            if (Config.globalVueStyles) {
-                rule.loaders.push({
-                    loader: 'sass-resources-loader',
-                    options: {
-                        resources: Mix.paths.root(Config.globalVueStyles)
-                    }
-                });
-            }
-        };
-
-        // SCSS
-        this.updateCssLoader('scss', webpackConfig, sassCallback);
-
-        // SASS
-        this.updateCssLoader('sass', webpackConfig, sassCallback);
-
-        // STYLUS
-        this.updateCssLoader('styl', webpackConfig);
-    }
-
-    /**
-     * Update a single CSS loader.
-     *
-     * @param {string} loader
-     * @param {Object} webpackConfig
-     * @param {Function} callback
-     */
-    updateCssLoader(loader, webpackConfig, callback) {
-        let rule = webpackConfig.module.rules.find(rule => {
-            return rule.test instanceof RegExp && rule.test.test('.' + loader);
-        });
-
-        callback && callback(rule);
-
-        if (Config.extractVueStyles) {
-            let extractPlugin = this.extractPlugin();
-
-            rule.loaders = extractPlugin.extract({
-                fallback: 'style-loader',
-                use: collect(rule.loaders)
-                    .except('style-loader')
-                    .all()
-            });
-
-            this.addExtractPluginToConfig(extractPlugin, webpackConfig);
-        }
-    }
-
-    /**
-     * Fetch the appropriate postcss plugins for the compile.
-     */
-    postCssOptions() {
-        if (Mix.components.get('postCss')) {
-            return {
-                plugins: Mix.components.get('postCss').details[0].postCssPlugins
-            };
-        }
-
-        // If the user has a postcss.config.js file in their project root,
-        // postcss-loader will automatically read and fetch the plugins.
-        if (File.exists(Mix.paths.root('postcss.config.js'))) {
-            return {};
-        }
-
-        return { plugins: Config.postCss };
-    }
-
-    /**
-     * Add an extract text plugin to the webpack config plugins array.
-     *
-     * @param {Object} extractPlugin
-     * @param {Object} webpackConfig
-     */
-    addExtractPluginToConfig(extractPlugin, webpackConfig) {
-        if (extractPlugin.isNew) {
-            webpackConfig.plugins.push(extractPlugin);
-        }
-    }
-
-    /**
-     * Fetch the appropriate extract plugin.
-     */
-    extractPlugin() {
         // If the user set extractVueStyles: true, we'll try
         // to append the Vue styles to an existing CSS chunk.
         if (typeof Config.extractVueStyles === 'boolean') {
-            let preprocessorName = Object.keys(Mix.components.all())
-                .reverse()
-                .find(componentName => {
-                    return ['sass', 'less', 'stylus', 'postCss'].includes(
-                        componentName
-                    );
-                });
-
-            if (preprocessorName) {
-                return Mix.components
-                    .get(preprocessorName)
-                    .extractPlugins.slice(-1)[0];
+            if (!Config.extractVueStyles) {
+                return;
             }
+
+            existingChunk = this.chunks.find((chunk, id) => {
+                // FIXME: This could possibly be smarter but for now it finds the first defined style chunk
+                return id.startsWith('styles-');
+            });
         }
 
-        // Otherwise, we'll need to whip up a fresh extract text instance.
-        return collect(new ExtractTextPlugin(this.extractFileName()))
-            .put('isNew', true)
-            .all();
+        this.chunks.add(
+            'styles-vue',
+            existingChunk
+                ? existingChunk.name
+                : this.extractFile().relativePathWithoutExtension(),
+            [/.vue$/, module => module.type === 'css/mini-extract'],
+            {
+                chunks: 'all',
+                enforce: true,
+                type: 'css/mini-extract'
+            }
+        );
     }
 
     /**
@@ -178,6 +85,10 @@ class Vue {
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+    }
+
+    extractFile() {
+        return new File(this.extractFileName());
     }
 }
 

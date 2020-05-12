@@ -29,6 +29,22 @@ Object.defineProperty(Array.prototype, 'tap', {
 });
 
 /**
+ * Add tap to arrays.
+ *
+ * @param {mixed}    val
+ * @param {Function} callback
+ */
+Object.defineProperty(Array, 'wrap', {
+    value(value) {
+        if (Array.isArray(value)) {
+            return value;
+        }
+
+        return [value];
+    }
+});
+
+/**
  * Flatten the given array.
  *
  * @param {Array} arr

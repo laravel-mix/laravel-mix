@@ -7,10 +7,9 @@ os:
 
 # Test against all supported versions of Node.js
 node_js:
-    - '8'
-    - '10'
     - '12'
     - '13'
+    - '14'
 
 # Run ESLint after npm test
 script:
