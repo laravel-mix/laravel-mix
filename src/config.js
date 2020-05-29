@@ -214,15 +214,6 @@ module.exports = function() {
          * @type {Boolean}
          */
         clearConsole: true,
-        
-        /**
-         * Determine if css-loader CSS Modules support should be enabled
-         * 
-         * See: https://github.com/webpack-contrib/css-loader#modules
-         * 
-         * @type {Boolean|String|Object}
-         */
-        enableCssModules: false,
 
         /**
          * Merge the given options with the current defaults.

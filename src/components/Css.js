@@ -8,12 +8,53 @@ class Css extends AutomaticComponent {
         return [
             {
                 test: /\.css$/,
-                loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1, modules: Config.enableCssModules } },
+                oneOf: [
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        include: /\.module\.css$/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    importLoaders: 1,
+                                    modules: true
+                                }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            }
+                        ]
+                    },
+                    {
+                        resourceQuery: /module/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    importLoaders: 1,
+                                    modules: true
+                                }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            }
+                        ]
+                    },
+                    {
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { importLoaders: 1 }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            }
+                        ]
                     }
                 ]
             },
@@ -21,21 +62,71 @@ class Css extends AutomaticComponent {
             {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
+                oneOf: [
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        include: /\.module\.scss$/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded'
+                                    }
+                                }
+                            }
+                        ]
                     },
                     {
-                        loader: 'sass-loader',
-                        options: {
-                            sassOptions: {
-                                precision: 8,
-                                outputStyle: 'expanded'
+                        resourceQuery: /module/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded'
+                                    }
+                                }
                             }
-                        }
+                        ]
+                    },
+                    {
+                        use: [
+                            'style-loader',
+                            'css-loader',
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded'
+                                    }
+                                }
+                            }
+                        ]
                     }
                 ]
             },
@@ -43,53 +134,173 @@ class Css extends AutomaticComponent {
             {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
-                loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
+                oneOf: [
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        include: /\.module\.sass$/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded',
+                                        indentedSyntax: true
+                                    }
+                                }
+                            }
+                        ]
                     },
                     {
-                        loader: 'sass-loader',
-                        options: {
-                            sassOptions: {
-                                precision: 8,
-                                outputStyle: 'expanded',
-                                indentedSyntax: true
+                        resourceQuery: /module/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded',
+                                        indentedSyntax: true
+                                    }
+                                }
                             }
-                        }
+                        ]
+                    },
+                    {
+                        use: [
+                            'style-loader',
+                            'css-loader',
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sassOptions: {
+                                        precision: 8,
+                                        outputStyle: 'expanded',
+                                        indentedSyntax: true
+                                    }
+                                }
+                            }
+                        ]
                     }
                 ]
             },
 
             {
-                test: /\.less$/,
+                test: /\.less/,
                 exclude: this.excludePathsFor('less'),
-                loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
+                oneOf: [
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        include: /\.module\.less$/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'less-loader'
+                        ]
                     },
-                    'less-loader'
+                    {
+                        resourceQuery: /module/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'less-loader'
+                        ]
+                    },
+                    {
+                        use: [
+                            'style-loader',
+                            'css-loader',
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'less-loader'
+                        ]
+                    }
                 ]
             },
 
             {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
-                loaders: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { modules: Config.enableCssModules } },
+                oneOf: [
                     {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
+                        include: /\.module\.styl(us)?$/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'stylus-loader'
+                        ]
                     },
-                    'stylus-loader'
+                    {
+                        resourceQuery: /module/,
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: { modules: true }
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'stylus-loader'
+                        ]
+                    },
+                    {
+                        use: [
+                            'style-loader',
+                            'css-loader',
+                            {
+                                loader: 'postcss-loader',
+                                options: this.postCssOptions()
+                            },
+                            'stylus-loader'
+                        ]
+                    }
                 ]
-            }
+            },
         ];
     }
 
