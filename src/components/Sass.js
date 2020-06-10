@@ -62,7 +62,7 @@ class Sass extends Preprocessor {
     }
 
     chunkRegex() {
-        return /\.(css|s[ac]ss)$/;
+        return /\.(sa|sc|c)ss)$/;
     }
 }
 
