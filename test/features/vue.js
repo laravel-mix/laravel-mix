@@ -286,7 +286,7 @@ test.serial.cb.only('it supports global Vue styles for sass', t => {
         less: ['test/fixtures/fake-app/resources/assets/less/global.less'],
         stylus: ['test/fixtures/fake-app/resources/assets/stylus/global.styl']
     };
-    mix.js(
+    mix.vue(
         'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-global-styles.js',
         'js/app.js'
     );

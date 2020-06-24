@@ -1,7 +1,7 @@
 import mix from './helpers/setup';
 
 test.serial.cb('JS compilation with vendor extraction config', t => {
-    mix.js(
+    mix.vue(
         'test/fixtures/fake-app/resources/assets/extract/app.js',
         'js'
     ).extract(['vue'], 'js/libraries.js');
@@ -40,7 +40,7 @@ test.serial.cb(
 test.serial.cb(
     'JS compilation with vendor extraction with default config',
     t => {
-        mix.js(
+        mix.vue(
             'test/fixtures/fake-app/resources/assets/extract/app.js',
             'js'
         ).extract(['vue']);
@@ -60,7 +60,7 @@ test.serial.cb(
 );
 
 test.serial.cb('JS compilation with total vendor extraction', t => {
-    mix.js(
+    mix.vue(
         'test/fixtures/fake-app/resources/assets/extract/app.js',
         'js'
     ).extract();

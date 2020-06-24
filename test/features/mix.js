@@ -45,7 +45,7 @@ test.serial.cb('the kitchen sink', t => {
 });
 
 test.serial.cb('async chunk splitting works', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
+    mix.vue('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash', 'core-js'])
         .options({
             babelConfig: {
@@ -70,7 +70,7 @@ test.serial.cb('async chunk splitting works', t => {
 });
 
 test.serial.cb('multiple extractions work', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
+    mix.vue('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
         .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
         .extract(['core-js'], 'js/vendor-core-js.js')
         .options({
