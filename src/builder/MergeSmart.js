@@ -284,4 +284,21 @@ module.exports.mergeSmart = mergeWithCustomize({
 
         return null;
     },
+
+    // Added by Mix to fix a regex merge bug
+    customizeObject: (a, b, key) => {
+        if (a instanceof RegExp) {
+            if (b instanceof RegExp) {
+                return b;
+            }
+
+            return a;
+        }
+
+        if (b instanceof RegExp) {
+            return b;
+        }
+
+        return null;
+    }
 });
