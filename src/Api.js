@@ -55,9 +55,10 @@ class Api {
     webpackConfig(config) {
         config = typeof config == 'function' ? config(webpack) : config;
 
-        Config.webpackConfig = require('webpack-merge').smart(
+        Config.webpackConfig = require('./builder/MergeWebpackConfig')(
             Config.webpackConfig,
-            config
+            config,
+            /* shouldWarn: */ true
         );
 
         return this;

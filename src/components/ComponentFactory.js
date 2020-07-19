@@ -1,6 +1,6 @@
 let mix = require('../index');
 let Assert = require('../Assert');
-let webpackMerge = require('webpack-merge');
+let mergeWebpackConfig = require('../builder/MergeWebpackConfig');
 
 let components = [
     'JavaScript',
@@ -139,7 +139,7 @@ class ComponentFactory {
      * @param {Object} component
      */
     applyBabelConfig(component) {
-        Config.babelConfig = webpackMerge.smart(
+        Config.babelConfig = mergeWebpackConfig(
             Config.babelConfig,
             component.babelConfig()
         );
