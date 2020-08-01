@@ -29,7 +29,7 @@ Object.defineProperty(Array.prototype, 'tap', {
 });
 
 /**
- * Add tap to arrays.
+ * Add wrap to arrays.
  *
  * @param {mixed}    val
  * @param {Function} callback
