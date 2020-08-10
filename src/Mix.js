@@ -80,8 +80,6 @@ class Mix {
      * Determine if Mix should activate hot reloading.
      */
     shouldHotReload() {
-        new File(path.join(Config.publicPath, 'hot')).delete();
-
         return this.isUsing('hmr');
     }
 
