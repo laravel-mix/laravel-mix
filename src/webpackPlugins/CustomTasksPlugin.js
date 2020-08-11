@@ -70,23 +70,23 @@ class CustomTasksPlugin {
      * Minify the given asset file.
      */
     minifyAssets() {
-        collect(Mix.tasks)
+        const assets = collect(Mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
             .where('constructor.name', '!==', 'CopyFilesTask')
-            .each(({ assets }) =>
-                assets.forEach(asset => {
-                    try {
-                        asset.minify();
-                    } catch (e) {
-                        Log.error(
-                            `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
-                                `Perhaps you need to use mix.babel() instead?`
-                        );
+            .flatMap(({ assets }) => assets);
 
-                        throw e;
-                    }
-                })
-            );
+        assets.forEach(asset => {
+            try {
+                asset.minify();
+            } catch (e) {
+                Log.error(
+                    `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
+                        `Perhaps you need to use mix.babel() instead?`
+                );
+
+                throw e;
+            }
+        });
     }
 
     /**
