@@ -11,13 +11,13 @@ class CustomTasksPlugin {
         compiler.hooks.done.tapAsync(
             this.constructor.name,
             (stats, callback) => {
-                this.runTasks(stats).then(() => {
+                this.runTasks(stats).then(async () => {
                     if (Mix.components.get('version')) {
                         this.applyVersioning();
                     }
 
                     if (Mix.inProduction()) {
-                        this.minifyAssets();
+                        await this.minifyAssets();
                     }
 
                     if (Mix.isWatching()) {
@@ -69,15 +69,15 @@ class CustomTasksPlugin {
     /**
      * Minify the given asset file.
      */
-    minifyAssets() {
+    async minifyAssets() {
         const assets = collect(Mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
             .where('constructor.name', '!==', 'CopyFilesTask')
             .flatMap(({ assets }) => assets);
 
-        assets.forEach(asset => {
+        const tasks = assets.map(async asset => {
             try {
-                asset.minify();
+                await asset.minify();
             } catch (e) {
                 Log.error(
                     `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
@@ -87,6 +87,8 @@ class CustomTasksPlugin {
                 throw e;
             }
         });
+
+        await Promise.allSettled(tasks);
     }
 
     /**

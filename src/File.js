@@ -236,17 +236,22 @@ class File {
     /**
      * Minify the file, if it is CSS or JS.
      */
-    minify() {
+    async minify() {
         if (this.extension() === '.js') {
-            this.write(
-                Terser.minify(this.read(), Config.terser.terserOptions).code
+            const output = await Terser.minify(
+                this.read(),
+                Config.terser.terserOptions
             );
+
+            this.write(output.code);
         }
 
         if (this.extension() === '.css') {
-            this.write(
-                new UglifyCss(Config.cleanCss).minify(this.read()).styles
+            const output = await new UglifyCss(Config.cleanCss).minify(
+                this.read()
             );
+
+            this.write(output.styles);
         }
 
         return this;

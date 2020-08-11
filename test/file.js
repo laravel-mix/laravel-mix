@@ -142,7 +142,7 @@ test('it can calculate a unique versioned hash for the file', t => {
     t.true(file.version().length === 20);
 });
 
-test('it can minify JS files.', t => {
+test('it can minify JS files.', async t => {
     let filePath = path.resolve(stubsDir, 'file.js');
 
     let file = new File(filePath);
@@ -152,10 +152,10 @@ test('it can minify JS files.', t => {
             var two = 'two';
     `);
 
-    t.is(eol.auto('var one="one",two="two";\n'), file.minify().read());
+    t.is(eol.auto('var one="one",two="two";\n'), (await file.minify()).read());
 });
 
-test('it can minify CSS files.', t => {
+test('it can minify CSS files.', async t => {
     let filePath = path.resolve(stubsDir, 'file.css');
 
     let file = new File(filePath);
@@ -166,7 +166,7 @@ test('it can minify CSS files.', t => {
             }
         `);
 
-    file.minify();
+    await file.minify();
 
     t.is(eol.auto('body{color:red}\n'), file.read());
 });
