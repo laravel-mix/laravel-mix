@@ -4,6 +4,7 @@ let path = require('path');
 let fs = require('fs-extra');
 let Terser = require('terser');
 let UglifyCss = require('clean-css');
+const { escapeRegExp } = require('lodash');
 
 class File {
     /**
@@ -43,9 +44,9 @@ class File {
     }
 
     normalizedOutputPath() {
-        return this.pathFromPublic(Config.publicPath)
-            .replace(/\.(js|css)$/, '')
-            .replace(/\\/g, '/');
+        let path = this.pathFromPublic(Config.publicPath);
+        path = File.stripPublicDir(path);
+        return path.replace(/\.(js|css)$/, '').replace(/\\/g, '/');
     }
 
     /**
@@ -129,14 +130,9 @@ class File {
     static stripPublicDir(filePath, publicPath = null) {
         let publicDir = path.basename(publicPath || Config.publicPath);
 
-        if (
-            filePath.startsWith(`${publicDir}/`) ||
-            filePath.startsWith(`${publicDir}\\`)
-        ) {
-            return filePath.substr(publicDir.length + 1);
-        }
+        publicDir = escapeRegExp(publicDir);
 
-        return filePath;
+        return filePath.replace(new RegExp(`^[/\\\\]?${publicDir}[/\\\\]`), '');
     }
 
     /**
@@ -156,6 +152,12 @@ class File {
             )
         ) {
             extra += `/${path.basename(publicPath)}`;
+        } else if (
+            this.filePath.startsWith(
+                `${publicPath}\\${path.basename(publicPath)}`
+            )
+        ) {
+            extra += `\\${path.basename(publicPath)}`;
         }
 
         return this.path().replace(Mix.paths.root(extra), '');
