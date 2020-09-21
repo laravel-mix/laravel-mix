@@ -4,7 +4,8 @@ test.serial.cb('the kitchen sink', t => {
     new File('test/fixtures/fake-app/public/file.js').write('var foo');
 
     mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
-        .extract(['vue'])
+        .extract(['vue2'])
+        .vue({ version: 2 })
         .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
         .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')
         .postCss(
@@ -45,8 +46,9 @@ test.serial.cb('the kitchen sink', t => {
 });
 
 test.serial.cb('async chunk splitting works', t => {
+    mix.vue({ version: 2 })
     mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
-        .extract(['vue', 'lodash', 'core-js'])
+        .extract(['vue2', 'lodash', 'core-js'])
         .options({
             babelConfig: {
                 plugins: ['@babel/plugin-syntax-dynamic-import']
@@ -70,8 +72,9 @@ test.serial.cb('async chunk splitting works', t => {
 });
 
 test.serial.cb('multiple extractions work', t => {
+    mix.vue({ version: 2 })
     mix.js('test/fixtures/fake-app/resources/assets/extract/app.js', 'js')
-        .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
+        .extract(['vue2', 'lodash'], 'js/vendor-vue-lodash.js')
         .extract(['core-js'], 'js/vendor-core-js.js')
         .options({
             babelConfig: {

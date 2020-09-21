@@ -1,4 +1,4 @@
-import 'vue';
+import 'vue2';
 import BasicWithLess from './BasicWithLess.vue';
 
 new Vue({

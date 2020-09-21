@@ -30,8 +30,6 @@ test.serial.cb(
         compile(t, webpackConfig => {
             t.true(webpackConfig.resolve.extensions.includes('.ts'));
             t.true(webpackConfig.resolve.extensions.includes('.tsx'));
-
-            t.is('vue/dist/vue.esm.js', webpackConfig.resolve.alias['vue$']);
         });
     }
 );

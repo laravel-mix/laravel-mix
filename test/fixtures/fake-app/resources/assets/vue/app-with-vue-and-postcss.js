@@ -1,4 +1,4 @@
-import 'vue';
+import 'vue2';
 import BasicWithPostCss from './BasicWithPostCss.vue';
 
 new Vue({
