@@ -156,7 +156,6 @@ class Preprocessor {
 
         src = new File(src);
 
-        output = File.stripPublicDir(output);
         output = this.normalizeOutput(
             new File(output),
             src.nameWithoutExtension() + '.css'

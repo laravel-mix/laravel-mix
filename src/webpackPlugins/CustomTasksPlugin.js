@@ -11,13 +11,13 @@ class CustomTasksPlugin {
         compiler.hooks.done.tapAsync(
             this.constructor.name,
             (stats, callback) => {
-                this.runTasks(stats).then(() => {
+                this.runTasks(stats).then(async () => {
                     if (Mix.components.get('version')) {
                         this.applyVersioning();
                     }
 
                     if (Mix.inProduction()) {
-                        this.minifyAssets();
+                        await this.minifyAssets();
                     }
 
                     if (Mix.isWatching()) {
@@ -69,24 +69,26 @@ class CustomTasksPlugin {
     /**
      * Minify the given asset file.
      */
-    minifyAssets() {
-        collect(Mix.tasks)
+    async minifyAssets() {
+        const assets = collect(Mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
             .where('constructor.name', '!==', 'CopyFilesTask')
-            .each(({ assets }) =>
-                assets.forEach(asset => {
-                    try {
-                        asset.minify();
-                    } catch (e) {
-                        Log.error(
-                            `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
-                                `Perhaps you need to use mix.babel() instead?`
-                        );
+            .flatMap(({ assets }) => assets);
 
-                        throw e;
-                    }
-                })
-            );
+        const tasks = assets.map(async asset => {
+            try {
+                await asset.minify();
+            } catch (e) {
+                Log.error(
+                    `Whoops! We had trouble minifying "${asset.relativePath()}". ` +
+                        `Perhaps you need to use mix.babel() instead?`
+                );
+
+                throw e;
+            }
+        });
+
+        await Promise.allSettled(tasks);
     }
 
     /**

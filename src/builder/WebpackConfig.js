@@ -133,7 +133,7 @@ class WebpackConfig {
      * Build the resolve object.
      */
     buildChunks() {
-        this.webpackConfig = require('webpack-merge').smart(
+        this.webpackConfig = require('./MergeWebpackConfig')(
             this.webpackConfig,
             this.chunks.config()
         );
@@ -146,7 +146,7 @@ class WebpackConfig {
      */
     mergeCustomConfig() {
         if (Config.webpackConfig) {
-            this.webpackConfig = require('webpack-merge').smart(
+            this.webpackConfig = require('./MergeWebpackConfig')(
                 this.webpackConfig,
                 Config.webpackConfig
             );
