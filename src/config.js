@@ -138,7 +138,7 @@ module.exports = function() {
         extractVueStyles: false,
 
         /**
-         * Deprecated. Use mix.vue({ globalStyles: string|string[]|{[key: string]: string|string[]} })
+         * Deprecated. Use mix.vue({ globalStyles: {[key: string]: string|string[]} })
          * 
          * A file path with global styles that should be imported into every Vue component.
          *
