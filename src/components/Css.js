@@ -175,6 +175,7 @@ class Css extends AutomaticComponent {
         const loaders = [];
 
         if (method === 'auto') {
+            // TODO: Fix
             if (Config.extractVueStyles !== false) {
                 method = 'extract';
             } else {

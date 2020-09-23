@@ -42,6 +42,7 @@ class TypeScript extends JavaScript {
             exclude: /node_modules/,
             options: Object.assign(
                 {},
+                // TODO: Maybe move to Vue plugin?
                 { appendTsSuffixTo: [/\.vue$/] },
                 this.options
             )
