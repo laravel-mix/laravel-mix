@@ -3,7 +3,7 @@ class Preact {
      * Required dependencies for the component.
      */
     dependencies() {
-        return ['babel-preset-preact'].concat(super.dependencies());
+        return ['babel-preset-preact'];
     }
 
     /**
