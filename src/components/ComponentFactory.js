@@ -19,6 +19,8 @@ let components = [
     'Autoload',
     'Alias',
     'Vue',
+    'React',
+    'Preact',
     'Version',
     'Extend',
     'Extract',

@@ -1,6 +1,4 @@
-let JavaScript = require('./JavaScript');
-
-class React extends JavaScript {
+class React {
     /**
      * Required dependencies for the component.
      */
