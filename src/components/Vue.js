@@ -27,8 +27,8 @@ class Vue {
         this.globalStyles = this.options.globalStyles || Config.globalVueStyles || null
         this.extractStyles = this.options.extractStyles || Config.extractVueStyles || false
 
-        Config.globalVueStyles = this.globalStyles
-        Config.extractVueStyles = this.extractStyles
+        Mix.globalStyles = this.globalStyles
+        Mix.extractingStyles = !!Config.extractVueStyles
     }
 
     /**

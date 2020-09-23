@@ -176,7 +176,7 @@ class Css extends AutomaticComponent {
 
         if (method === 'auto') {
             // TODO: Fix
-            if (Config.extractVueStyles !== false) {
+            if (Mix.extractingStyles !== false) {
                 method = 'extract';
             } else {
                 method = 'inline';
@@ -215,8 +215,8 @@ class Css extends AutomaticComponent {
     static beforeLoaders({ type, injectGlobalStyles }) {
         const loaders = [];
 
-        if (Config.globalVueStyles && injectGlobalStyles) {
-            let resources = Css.normalizeVueStyles()[type] || [];
+        if (Mix.globalStyles && injectGlobalStyles) {
+            let resources = Css.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
 
             if (resources.length) {
                 loaders.push({
@@ -231,11 +231,9 @@ class Css extends AutomaticComponent {
         return loaders;
     }
 
-    static normalizeVueStyles() {
-        let styles = Config.globalVueStyles;
-
-        // Backwards compat:
-        // Config.globalVueStyles as a string only supported sass / scss
+    static normalizeGlobalStyles(styles) {
+        // Backwards compat with existing Config.globalVueStyles:
+        // A string only is supported for sass / scss
         if (typeof styles !== 'object') {
             styles = {
                 sass: styles,
