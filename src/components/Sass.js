@@ -54,7 +54,7 @@ class Sass extends Preprocessor {
                 // TODO: Fix Config.globalVueStyles
                 // TODO: Can we opt to always sass instead of node-sass?
                 implementation: () =>
-                    Mix.seesNpmPackage('node-sass') && !Config.globalVVueStyles
+                    Mix.seesNpmPackage('node-sass') && !Config.globalVueStyles
                         ? require('node-sass')
                         : require('sass')
             },
