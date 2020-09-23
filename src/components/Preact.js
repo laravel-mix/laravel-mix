@@ -1,6 +1,4 @@
-let JavaScript = require('./JavaScript');
-
-class Preact extends JavaScript {
+class Preact {
     /**
      * Required dependencies for the component.
      */

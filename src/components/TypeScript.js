@@ -42,6 +42,7 @@ class TypeScript extends JavaScript {
             exclude: /node_modules/,
             options: Object.assign(
                 {},
+                // TODO: Maybe move to Vue plugin?
                 { appendTsSuffixTo: [/\.vue$/] },
                 this.options
             )
@@ -54,10 +55,7 @@ class TypeScript extends JavaScript {
      * @param {Object} config
      */
     webpackConfig(config) {
-        super.webpackConfig(config);
-
         config.resolve.extensions.push('.ts', '.tsx');
-        config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js';
     }
 }
 

@@ -1,8 +1,8 @@
-import 'vue2';
+import { createApp } from 'vue3';
 import BasicWithLess from './BasicWithLess.vue';
 
-new Vue({
+createApp({
     components: {
         BasicWithLess
     }
-}).$mount('#app');
+}).mount('#app')

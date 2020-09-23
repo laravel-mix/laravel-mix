@@ -1,7 +1,6 @@
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
-let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 let RemoveCssOnlyChunksPlugin = require('../webpackPlugins/Css/RemoveCssOnlyChunksPlugin');
 
 class Css extends AutomaticComponent {
@@ -154,7 +153,6 @@ class Css extends AutomaticComponent {
      */
     webpackPlugins() {
         return [
-            new AppendVueStylesPlugin(),
             new RemoveCssOnlyChunksPlugin(),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
@@ -177,7 +175,8 @@ class Css extends AutomaticComponent {
         const loaders = [];
 
         if (method === 'auto') {
-            if (Config.extractVueStyles !== false) {
+            // TODO: Fix
+            if (Mix.extractingStyles !== false) {
                 method = 'extract';
             } else {
                 method = 'inline';
@@ -216,8 +215,8 @@ class Css extends AutomaticComponent {
     static beforeLoaders({ type, injectGlobalStyles }) {
         const loaders = [];
 
-        if (Config.globalVueStyles && injectGlobalStyles) {
-            let resources = Css.normalizeVueStyles()[type] || [];
+        if (Mix.globalStyles && injectGlobalStyles) {
+            let resources = Css.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
 
             if (resources.length) {
                 loaders.push({
@@ -232,11 +231,9 @@ class Css extends AutomaticComponent {
         return loaders;
     }
 
-    static normalizeVueStyles() {
-        let styles = Config.globalVueStyles;
-
-        // Backwards compat:
-        // Config.globalVueStyles as a string only supported sass / scss
+    static normalizeGlobalStyles(styles) {
+        // Backwards compat with existing Config.globalVueStyles:
+        // A string only is supported for sass / scss
         if (typeof styles !== 'object') {
             styles = {
                 sass: styles,

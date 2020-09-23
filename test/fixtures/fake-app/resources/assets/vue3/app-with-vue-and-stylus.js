@@ -1,8 +1,8 @@
-import 'vue2';
+import { createApp } from 'vue3';
 import BasicWithStylus from './BasicWithStylus.vue';
 
-new Vue({
+createApp({
     components: {
         BasicWithStylus
     }
-}).$mount('#app');
+}).mount('#app')

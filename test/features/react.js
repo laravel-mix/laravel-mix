@@ -1,9 +1,7 @@
 import mix from './helpers/setup';
 
 test.serial('mix.react()', t => {
-    let response = mix.react('resources/assets/js/app.js', 'public/js');
-
-    t.is(mix, response);
+    mix.react().js('resources/assets/js/app.js', 'public/js');
 
     t.deepEqual(
         [
@@ -12,12 +10,12 @@ test.serial('mix.react()', t => {
                 output: new File('public/js')
             }
         ],
-        Mix.components.get('react').toCompile
+        Mix.components.get('js').toCompile
     );
 });
 
 test.serial.cb('it compiles React and a preprocessor properly', t => {
-    mix.react('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
+    mix.react().js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
         'test/fixtures/fake-app/resources/assets/sass/app.scss',
         'css'
     );
@@ -36,7 +34,7 @@ test.serial.cb('it compiles React and a preprocessor properly', t => {
 });
 
 test.serial('it sets the webpack entry correctly', t => {
-    mix.react('resources/assets/js/app.js', 'js');
+    mix.react().js('resources/assets/js/app.js', 'js');
 
     t.deepEqual(
         {
@@ -47,7 +45,7 @@ test.serial('it sets the webpack entry correctly', t => {
 });
 
 test.serial('it sets the babel config correctly', t => {
-    mix.react('resources/assets/js/app.js', 'js');
+    mix.react().js('resources/assets/js/app.js', 'js');
 
     buildConfig();
 

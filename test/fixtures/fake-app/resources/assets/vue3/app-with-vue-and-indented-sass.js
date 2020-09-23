@@ -1,8 +1,8 @@
-import 'vue2';
+import { createApp } from 'vue3';
 import BasicWithIndentedSass from './BasicWithIndentedSass.vue';
 
-new Vue({
+createApp({
     components: {
         BasicWithIndentedSass
     }
-}).$mount('#app');
+}).mount('#app')

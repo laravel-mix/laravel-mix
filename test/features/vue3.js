@@ -1,9 +1,9 @@
 import mix from './helpers/setup';
 
 test.serial.cb('it appends vue styles to your sass compiled file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .sass(
@@ -34,9 +34,9 @@ test.serial.cb('it appends vue styles to your sass compiled file', t => {
 });
 
 test.serial.cb('it appends vue styles to your less compiled file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .less(
@@ -68,9 +68,9 @@ test.serial.cb('it appends vue styles to your less compiled file', t => {
 test.serial.cb(
     'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
     t => {
-        mix.vue({ version: 2 })
+        mix.vue({ version: 3 })
         mix.js(
-            'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
+            'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-scss.js',
             'js/app.js'
         ).options({ extractVueStyles: true });
 
@@ -96,9 +96,9 @@ test.serial.cb(
 );
 
 test.serial.cb('it extracts vue vanilla CSS styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-css.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-css.js',
         'js/app.js'
     ).options({ extractVueStyles: 'css/components.css' });
 
@@ -120,9 +120,9 @@ test.serial.cb('it extracts vue vanilla CSS styles to a dedicated file', t => {
 });
 
 test.serial.cb('it extracts vue Stylus styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-stylus.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-stylus.js',
         'js/app.js'
     ).options({ extractVueStyles: 'css/components.css' });
 
@@ -145,7 +145,7 @@ test.serial.cb('it extracts vue Stylus styles to a dedicated file', t => {
 test.serial(
     'it does also add the vue webpack rules with typescript component',
     t => {
-        mix.vue({ version: 2 })
+        mix.vue({ version: 3 })
         mix.ts('resources/assets/js/app.js', 'public/js');
 
         t.truthy(
@@ -157,9 +157,9 @@ test.serial(
 );
 
 test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-scss.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-scss.js',
         'js/app.js'
     )
         .sass(
@@ -198,9 +198,9 @@ test.serial.cb('it extracts vue .scss styles to a dedicated file', t => {
 });
 
 test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-indented-sass.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-indented-sass.js',
         'js/app.js'
     )
         .sass(
@@ -239,9 +239,9 @@ test.serial.cb('it extracts vue .sass styles to a dedicated file', t => {
 });
 
 test.serial.cb('it extracts vue PostCSS styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-postcss.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-postcss.js',
         'js/app.js'
     ).options({ extractVueStyles: 'css/components.css' });
 
@@ -266,9 +266,9 @@ test.serial.cb('it extracts vue PostCSS styles to a dedicated file', t => {
 });
 
 test.serial.cb('it extracts vue Less styles to a dedicated file', t => {
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-less.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-less.js',
         'js/app.js'
     ).options({ extractVueStyles: 'css/components.css' });
 
@@ -296,9 +296,9 @@ test.serial.cb('it supports global Vue styles for sass', t => {
         less: ['test/fixtures/fake-app/resources/assets/less/global.less'],
         stylus: ['test/fixtures/fake-app/resources/assets/stylus/global.styl']
     };
-    mix.vue({ version: 2 })
+    mix.vue({ version: 3 })
     mix.js(
-        'test/fixtures/fake-app/resources/assets/vue/app-with-vue-and-global-styles.js',
+        'test/fixtures/fake-app/resources/assets/vue3/app-with-vue-and-global-styles.js',
         'js/app.js'
     );
     mix.sass(

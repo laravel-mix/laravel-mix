@@ -10,7 +10,7 @@ class Sass extends Preprocessor {
         return tap(
             [
                 'sass-loader@8.*',
-                Mix.seesNpmPackage('node-sass') ? 'node-sass' : 'sass'
+                'sass'
             ],
             dependencies => {
                 if (Config.processCssUrls) {
@@ -51,10 +51,7 @@ class Sass extends Preprocessor {
                     precision: 8,
                     outputStyle: 'expanded'
                 },
-                implementation: () =>
-                    Mix.seesNpmPackage('node-sass') && !Config.globalVVueStyles
-                        ? require('node-sass')
-                        : require('sass')
+                implementation: () => require('sass')
             },
             pluginOptions,
             { sourceMap: true }

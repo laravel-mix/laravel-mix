@@ -1,8 +1,8 @@
-import 'vue2';
+import { createApp } from 'vue3';
 import BasicWithGlobalStyles from './BasicWithGlobalStyles.vue';
 
-new Vue({
+createApp({
     components: {
         BasicWithGlobalStyles
     }
-}).$mount('#app');
+}).mount('#app')

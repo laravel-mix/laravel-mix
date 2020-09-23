@@ -73,6 +73,7 @@
     },
     "devDependencies": {
         "@babel/preset-react": "^7.0.0",
+        "@vue/compiler-sfc": "^3.0.0",
         "ava": "^1.4.1",
         "coffee-loader": "^1.0.0",
         "coffeescript": "^2.2.3",
@@ -96,9 +97,10 @@
         "sinon": "^9.0.1",
         "stylus": "^0.54.5",
         "stylus-loader": "^3.0.2",
-        "vue": "^2.5.21",
+        "vue2": "npm:vue@^2.6.12",
+        "vue3": "npm:vue@^3.0.0",
         "vue-style-loader": "^4.0.2",
-        "vue-template-compiler": "^2.5.21"
+        "vue-template-compiler": "^2.6.12"
     },
     "engines": {
         "node": ">=12.14.0"

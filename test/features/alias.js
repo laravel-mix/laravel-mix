@@ -11,7 +11,6 @@ test.serial('it handles resolution aliases', async t => {
     t.deepEqual(
         {
             '@': path.resolve(__dirname, '../../foobar'),
-            vue$: 'vue/dist/vue.common.js'
         },
         config.resolve.alias
     );

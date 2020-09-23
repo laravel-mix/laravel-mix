@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 let browser;
 
 test.before(async () => (browser = await chromium.launch()));
-test.after.always(() => browser.close());
+test.after.always(() => browser && browser.close());
 test.beforeEach(() => {
     mix.setPublicPath('test/fixtures/integration/dist');
 });

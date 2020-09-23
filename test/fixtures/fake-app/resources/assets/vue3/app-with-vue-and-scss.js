@@ -1,8 +1,8 @@
-import 'vue2';
+import { createApp } from 'vue3';
 import BasicWithScss from './BasicWithScss.vue';
 
-new Vue({
+createApp({
     components: {
         BasicWithScss
     }
-}).$mount('#app');
+}).mount('#app')
