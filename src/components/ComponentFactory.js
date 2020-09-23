@@ -18,6 +18,7 @@ let components = [
     'Copy',
     'Autoload',
     'Alias',
+    'Vue',
     'Version',
     'Extend',
     'Extract',

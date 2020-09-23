@@ -96,9 +96,9 @@
         "sinon": "^9.0.1",
         "stylus": "^0.54.5",
         "stylus-loader": "^3.0.2",
-        "vue": "^2.5.21",
+        "vue2": "npm:vue@^2.6.12",
         "vue-style-loader": "^4.0.2",
-        "vue-template-compiler": "^2.5.21"
+        "vue-template-compiler": "^2.6.12"
     },
     "engines": {
         "node": ">=12.14.0"

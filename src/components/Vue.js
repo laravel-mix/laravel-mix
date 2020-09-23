@@ -1,5 +1,6 @@
-let { VueLoaderPlugin } = require('vue-loader');
 let { Chunks } = require('../Chunks');
+let { VueLoaderPlugin } = require('vue-loader');
+let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 
 class Vue {
     constructor() {
@@ -7,12 +8,36 @@ class Vue {
     }
 
     /**
+     * Register the component.
+     *
+     * @param {object} options
+     * @param {2} [options.version] Which version of Vue to support. Detected automatically if not given.
+     * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
+     * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
+     */
+    register(options = {}) {
+        this.version = this.resolveVueVersion(options.version)
+
+        // This is here to support backwards compat with mix.options({ … })
+        this.options = options
+    }
+
+    boot() {
+        // This is here instead of in register() to support backwards compat with mix.options({ … })
+        this.globalStyles = this.options.globalStyles || Config.globalVueStyles || null
+        this.extractStyles = this.options.extractStyles || Config.extractVueStyles || false
+
+        Config.globalVueStyles = this.globalStyles
+        Config.extractVueStyles = this.extractStyles
+    }
+
+    /**
      * Required dependencies for the component.
      */
     dependencies() {
-        let dependencies = ['vue-template-compiler'];
+        let dependencies = [this.compilerName()];
 
-        if (Config.extractVueStyles && Config.globalVueStyles) {
+        if (this.extractStyles && this.globalStyles) {
             dependencies.push('sass-resources-loader');
         }
 
@@ -30,42 +55,52 @@ class Vue {
             test: /\.vue$/,
             use: [
                 {
-                    loader: 'vue-loader',
+                    loader: this.loaderName(),
                     options: Config.vue || {}
                 }
             ]
         });
 
-        webpackConfig.plugins.push(new VueLoaderPlugin());
+        // Alias Vue to its ESM build if the user has not already given an alias
+        webpackConfig.resolve.alias = webpackConfig.resolve.alias || {}
+
+        if (! webpackConfig.resolve.alias['vue$']) {
+            if (this.version === 2) {
+                webpackConfig.resolve.alias['vue$'] = 'vue/dist/vue.esm.js';
+            } else if (this.version === 2) {
+                webpackConfig.resolve.alias['vue$'] = 'vue/dist/vue.esm-bundler.js';
+            }
+        }
+
+
+        webpackConfig.resolve.extensions.push('.vue')
 
         this.updateChunks();
     }
+
+    /**
+     * webpack plugins to be appended to the master config.
+     */
+    webpackPlugins() {
+        return [
+            this.loaderPlugin(),
+            new AppendVueStylesPlugin(),
+        ];
+    }
+
 
     /**
      * Update CSS chunks to extract vue styles
      *
      */
     updateChunks() {
-        let existingChunk;
-
-        // If the user set extractVueStyles: true, we'll try
-        // to append the Vue styles to an existing CSS chunk.
-        if (typeof Config.extractVueStyles === 'boolean') {
-            if (!Config.extractVueStyles) {
-                return;
-            }
-
-            existingChunk = this.chunks.find((chunk, id) => {
-                // FIXME: This could possibly be smarter but for now it finds the first defined style chunk
-                return id.startsWith('styles-');
-            });
+        if (this.extractStyles === false) {
+            return
         }
 
         this.chunks.add(
             'styles-vue',
-            existingChunk
-                ? existingChunk.name
-                : this.extractFile().relativePathWithoutExtension(),
+            this.styleChunkName(),
             [/.vue$/, module => module.type === 'css/mini-extract'],
             {
                 chunks: 'all',
@@ -75,13 +110,30 @@ class Vue {
         );
     }
 
+    styleChunkName() {
+        // If the user set extractStyles: true, we'll try
+        // to append the Vue styles to an existing CSS chunk.
+        if (this.extractStyles === true) {
+            // FIXME: This could possibly be smarter but for now it finds the first defined style chunk
+            let chunk = this.chunks.find((chunk, id) => {
+                return id.startsWith('styles-');
+            });
+
+            if (chunk) {
+                return chunk.name
+            }
+        }
+
+        return this.extractFile().relativePathWithoutExtension()
+    }
+
     /**
      * Determine the extract file name.
      */
     extractFileName() {
         let fileName =
-            typeof Config.extractVueStyles === 'string'
-                ? Config.extractVueStyles
+            typeof this.extractStyles === 'string'
+                ? this.extractStyles
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
@@ -89,6 +141,49 @@ class Vue {
 
     extractFile() {
         return new File(this.extractFileName());
+    }
+
+    detectVueVersion() {
+        const vue = require("vue")
+
+        if (! vue) {
+            return null
+        }
+
+        if (vue.version.test(/^2\./)) {
+            return 2
+        }
+
+        return null
+    }
+
+    /**
+     * @param {number|string|null} version 
+     */
+    resolveVueVersion(version) {
+        version = version || this.detectVueVersion()
+
+        if (! version) {
+            throw new Error("Unable to detect vue version. Please specify a version when calling mix.vue")
+        }
+
+        if (version !== 2) {
+            throw new Error(`Unsupported Vue version ${version}`)
+        }
+
+        return parseInt(version)
+    }
+
+    compilerName() {
+        return 'vue-template-compiler'
+    }
+
+    loaderName() {
+        return 'vue-loader'
+    }
+
+    loaderPlugin() {
+        return new VueLoaderPlugin()
     }
 }
 
