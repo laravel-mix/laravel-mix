@@ -11,7 +11,7 @@ class Vue {
      * Register the component.
      *
      * @param {object} options
-     * @param {2} [options.version] Which version of Vue to support. Detected automatically if not given.
+     * @param {2|3} [options.version] Which version of Vue to support. Detected automatically if not given.
      * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
      */
@@ -150,6 +150,10 @@ class Vue {
             return null
         }
 
+        if (vue.version.test(/^3\./)) {
+            return 3
+        }
+
         if (vue.version.test(/^2\./)) {
             return 2
         }
@@ -167,7 +171,7 @@ class Vue {
             throw new Error("Unable to detect vue version. Please specify a version when calling mix.vue")
         }
 
-        if (version !== 2) {
+        if (version !== 2 && version !== 3) {
             throw new Error(`Unsupported Vue version ${version}`)
         }
 
@@ -175,6 +179,10 @@ class Vue {
     }
 
     compilerName() {
+        if (this.version === 3) {
+            return '@vue/compiler-sfc'
+        }
+
         return 'vue-template-compiler'
     }
 
