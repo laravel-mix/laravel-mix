@@ -1,5 +1,7 @@
 import mix from './helpers/setup';
 
+test.beforeEach(() => setupVueAliases(2));
+
 test.serial('it adds the Vue 3 resolve alias', t => {
     mix.vue({ version: 3, extractStyles: true });
 

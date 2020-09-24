@@ -102,6 +102,8 @@
         "sinon": "^9.0.1",
         "stylus": "^0.54.5",
         "stylus-loader": "^3.0.2",
+        "vue-loader15": "npm:vue-loader@^15.9.1",
+        "vue-loader16": "npm:vue-loader@^16.0.0-beta.8",
         "vue-style-loader": "^4.0.2",
         "vue-template-compiler": "^2.6.12",
         "vue2": "npm:vue@^2.6.12",
