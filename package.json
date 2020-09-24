@@ -12,6 +12,11 @@
         "posttest": "nyc report --reporter=html",
         "eslint": "eslint setup/ src/ test/ --max-warnings=0"
     },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
+    },
     "repository": "JeffreyWay/laravel-mix",
     "bugs": {
         "url": "https://github.com/JeffreyWay/laravel-mix/issues"
