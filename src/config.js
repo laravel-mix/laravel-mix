@@ -127,7 +127,7 @@ module.exports = function() {
 
         /**
          * Deprecated. Use mix.vue({ extractStyles: boolean|string })
-         * 
+         *
          * Should we extract .vue component styles into a dedicated file?
          * You may provide a boolean, or a dedicated path to extract to.
          *
@@ -139,7 +139,7 @@ module.exports = function() {
 
         /**
          * Deprecated. Use mix.vue({ globalStyles: {[key: string]: string|string[]} })
-         * 
+         *
          * A file path with global styles that should be imported into every Vue component.
          *
          * This works with Sass, Less, CSS, etc…

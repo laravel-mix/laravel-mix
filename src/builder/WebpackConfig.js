@@ -119,7 +119,7 @@ class WebpackConfig {
      */
     buildResolving() {
         this.webpackConfig.resolve = {
-            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json'],
+            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json']
         };
 
         return this;

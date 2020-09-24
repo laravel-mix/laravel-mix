@@ -216,7 +216,8 @@ class Css extends AutomaticComponent {
         const loaders = [];
 
         if (Mix.globalStyles && injectGlobalStyles) {
-            let resources = Css.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
+            let resources =
+                Css.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
 
             if (resources.length) {
                 loaders.push({

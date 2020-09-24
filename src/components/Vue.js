@@ -16,19 +16,21 @@ class Vue {
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
      */
     register(options = {}) {
-        this.version = this.resolveVueVersion(options.version)
+        this.version = this.resolveVueVersion(options.version);
 
         // This is here to support backwards compat with mix.options({ … })
-        this.options = options
+        this.options = options;
     }
 
     boot() {
         // This is here instead of in register() to support backwards compat with mix.options({ … })
-        this.globalStyles = this.options.globalStyles || Config.globalVueStyles || null
-        this.extractStyles = this.options.extractStyles || Config.extractVueStyles || false
+        this.globalStyles =
+            this.options.globalStyles || Config.globalVueStyles || null;
+        this.extractStyles =
+            this.options.extractStyles || Config.extractVueStyles || false;
 
-        Mix.globalStyles = this.globalStyles
-        Mix.extractingStyles = !!Config.extractVueStyles
+        Mix.globalStyles = this.globalStyles;
+        Mix.extractingStyles = !!Config.extractVueStyles;
     }
 
     /**
@@ -62,18 +64,18 @@ class Vue {
         });
 
         // Alias Vue to its ESM build if the user has not already given an alias
-        webpackConfig.resolve.alias = webpackConfig.resolve.alias || {}
+        webpackConfig.resolve.alias = webpackConfig.resolve.alias || {};
 
-        if (! webpackConfig.resolve.alias['vue$']) {
+        if (!webpackConfig.resolve.alias['vue$']) {
             if (this.version === 2) {
                 webpackConfig.resolve.alias['vue$'] = 'vue/dist/vue.esm.js';
             } else if (this.version === 2) {
-                webpackConfig.resolve.alias['vue$'] = 'vue/dist/vue.esm-bundler.js';
+                webpackConfig.resolve.alias['vue$'] =
+                    'vue/dist/vue.esm-bundler.js';
             }
         }
 
-
-        webpackConfig.resolve.extensions.push('.vue')
+        webpackConfig.resolve.extensions.push('.vue');
 
         this.updateChunks();
     }
@@ -82,12 +84,8 @@ class Vue {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        return [
-            this.loaderPlugin(),
-            new AppendVueStylesPlugin(),
-        ];
+        return [this.loaderPlugin(), new AppendVueStylesPlugin()];
     }
-
 
     /**
      * Update CSS chunks to extract vue styles
@@ -95,7 +93,7 @@ class Vue {
      */
     updateChunks() {
         if (this.extractStyles === false) {
-            return
+            return;
         }
 
         this.chunks.add(
@@ -120,11 +118,11 @@ class Vue {
             });
 
             if (chunk) {
-                return chunk.name
+                return chunk.name;
             }
         }
 
-        return this.extractFile().relativePathWithoutExtension()
+        return this.extractFile().relativePathWithoutExtension();
     }
 
     /**
@@ -144,54 +142,56 @@ class Vue {
     }
 
     detectVueVersion() {
-        const vue = require("vue")
+        const vue = require('vue');
 
-        if (! vue) {
-            return null
+        if (!vue) {
+            return null;
         }
 
         if (vue.version.test(/^3\./)) {
-            return 3
+            return 3;
         }
 
         if (vue.version.test(/^2\./)) {
-            return 2
+            return 2;
         }
 
-        return null
+        return null;
     }
 
     /**
-     * @param {number|string|null} version 
+     * @param {number|string|null} version
      */
     resolveVueVersion(version) {
-        version = version || this.detectVueVersion()
+        version = version || this.detectVueVersion();
 
-        if (! version) {
-            throw new Error("Unable to detect vue version. Please specify a version when calling mix.vue")
+        if (!version) {
+            throw new Error(
+                'Unable to detect vue version. Please specify a version when calling mix.vue'
+            );
         }
 
         if (version !== 2 && version !== 3) {
-            throw new Error(`Unsupported Vue version ${version}`)
+            throw new Error(`Unsupported Vue version ${version}`);
         }
 
-        return parseInt(version)
+        return parseInt(version);
     }
 
     compilerName() {
         if (this.version === 3) {
-            return '@vue/compiler-sfc'
+            return '@vue/compiler-sfc';
         }
 
-        return 'vue-template-compiler'
+        return 'vue-template-compiler';
     }
 
     loaderName() {
-        return 'vue-loader'
+        return 'vue-loader';
     }
 
     loaderPlugin() {
-        return new VueLoaderPlugin()
+        return new VueLoaderPlugin();
     }
 }
 
