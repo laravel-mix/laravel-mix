@@ -109,5 +109,11 @@
     },
     "engines": {
         "node": ">=12.14.0"
+    },
+    "prettier": {
+        "singleQuote": true,
+        "semi": true,
+        "trailingComma": "none",
+        "tabWidth": 4
     }
 }
