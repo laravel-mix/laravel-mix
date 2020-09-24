@@ -18,19 +18,16 @@ class Vue {
     register(options = {}) {
         this.version = this.resolveVueVersion(options.version);
 
-        // This is here to support backwards compat with mix.options({ … })
-        this.options = options;
-    }
+        this.options = {
+            ...{
+                globalStyles: null,
+                extractStyles: false
+            },
+            ...options
+        };
 
-    boot() {
-        // This is here instead of in register() to support backwards compat with mix.options({ … })
-        this.globalStyles =
-            this.options.globalStyles || Config.globalVueStyles || null;
-        this.extractStyles =
-            this.options.extractStyles || Config.extractVueStyles || false;
-
-        Mix.globalStyles = this.globalStyles;
-        Mix.extractingStyles = !!Config.extractVueStyles;
+        Mix.globalStyles = this.options.globalStyles;
+        Mix.extractingStyles = !!this.options.extractStyles;
     }
 
     /**
@@ -39,7 +36,7 @@ class Vue {
     dependencies() {
         let dependencies = [this.compilerName()];
 
-        if (this.extractStyles && this.globalStyles) {
+        if (this.options.extractStyles && this.options.globalStyles) {
             dependencies.push('sass-resources-loader');
         }
 
@@ -92,7 +89,7 @@ class Vue {
      *
      */
     updateChunks() {
-        if (this.extractStyles === false) {
+        if (this.options.extractStyles === false) {
             return;
         }
 
@@ -111,7 +108,7 @@ class Vue {
     styleChunkName() {
         // If the user set extractStyles: true, we'll try
         // to append the Vue styles to an existing CSS chunk.
-        if (this.extractStyles === true) {
+        if (this.options.extractStyles === true) {
             // FIXME: This could possibly be smarter but for now it finds the first defined style chunk
             let chunk = this.chunks.find((chunk, id) => {
                 return id.startsWith('styles-');
@@ -130,8 +127,8 @@ class Vue {
      */
     extractFileName() {
         let fileName =
-            typeof this.extractStyles === 'string'
-                ? this.extractStyles
+            typeof this.options.extractStyles === 'string'
+                ? this.options.extractStyles
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');

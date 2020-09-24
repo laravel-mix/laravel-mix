@@ -44,8 +44,6 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 // mix.dump(); <-- Dump the generated webpack config object to the console.
 // mix.extend(name, handler) <-- Extend Mix's API with your own components.
 // mix.options({
-//   extractVueStyles: false, // Extract .vue component styling to file, rather than inline.
-//   globalVueStyles: file, // Variables file to be imported in every component.
 //   processCssUrls: true, // Process/optimize relative stylesheet url()'s. Set to false, if you don't want them touched.
 //   purifyCss: false, // Remove unused CSS selectors.
 //   terser: {}, // Terser-specific options. https://github.com/webpack-contrib/terser-webpack-plugin#options

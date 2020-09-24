@@ -126,41 +126,6 @@ module.exports = function() {
         processCssUrls: true,
 
         /**
-         * Deprecated. Use mix.vue({ extractStyles: boolean|string })
-         *
-         * Should we extract .vue component styles into a dedicated file?
-         * You may provide a boolean, or a dedicated path to extract to.
-         *
-         * Ex: extractVueStyles: '/css/vue.css'
-         *
-         * @type {Boolean|string}
-         */
-        extractVueStyles: false,
-
-        /**
-         * Deprecated. Use mix.vue({ globalStyles: {[key: string]: string|string[]} })
-         *
-         * A file path with global styles that should be imported into every Vue component.
-         *
-         * This works with Sass, Less, CSS, etc…
-         * Giving a string or an array works only with sass.
-         * Specify the file type as the key if you want to import for different files. For example:
-         *
-         * ```js
-         * {
-         *   sass: ["path/to/file.sass"],
-         *   scss: ["path/to/file.scss"],
-         *   less: ["path/to/another.less"],
-         * }
-         * ```
-         *
-         * See: https://vue-loader.vuejs.org/en/configurations/pre-processors.html#loading-a-global-settings-file
-         *
-         * @type {string|string[]|{[key: string]: string|string[]}}
-         */
-        globalVueStyles: '',
-
-        /**
          * Terser-specific settings for Webpack.
          *
          * See: https://github.com/webpack-contrib/terser-webpack-plugin#options
