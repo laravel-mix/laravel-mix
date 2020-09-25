@@ -1,6 +1,5 @@
 let { Chunks } = require('../Chunks');
 let VueVersion = require('../VueVersion');
-let { VueLoaderPlugin } = require('vue-loader');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 
 class Vue {
@@ -85,6 +84,8 @@ class Vue {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
+        let { VueLoaderPlugin } = require('vue-loader');
+
         return [new VueLoaderPlugin(), new AppendVueStylesPlugin()];
     }
 
