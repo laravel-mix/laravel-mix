@@ -23,7 +23,14 @@ class Css extends AutomaticComponent {
                 exclude: this.excludePathsFor('sass'),
                 loaders: [
                     'style-loader',
-                    'css-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: Config.processCssUrls,
+                            sourceMap: Mix.isUsing('sourcemaps'),
+                            importLoaders: 2
+                        }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
