@@ -1,7 +1,6 @@
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
-let RemoveCssOnlyChunksPlugin = require('../webpackPlugins/Css/RemoveCssOnlyChunksPlugin');
 
 class Css extends AutomaticComponent {
     /**
@@ -153,7 +152,6 @@ class Css extends AutomaticComponent {
      */
     webpackPlugins() {
         return [
-            new RemoveCssOnlyChunksPlugin(),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[name].css',
