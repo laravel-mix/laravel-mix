@@ -1,4 +1,3 @@
-let webpack = require('webpack');
 let FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 let MixDefinitionsPlugin = require('../webpackPlugins/MixDefinitionsPlugin');
 let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
