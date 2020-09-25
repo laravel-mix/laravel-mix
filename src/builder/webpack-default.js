@@ -1,5 +1,4 @@
 let TerserPlugin = require('terser-webpack-plugin');
-let OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = function() {
     return {
