@@ -1,5 +1,19 @@
 import mix from './helpers/setup';
 
+test.serial('it adds the Vue 2 resolve alias', t => {
+    mix.vue({ version: 2, extractStyles: true });
+
+    t.is('vue/dist/vue.esm.js', buildConfig().resolve.alias.vue$);
+});
+
+test.serial('it knows the Vue 2 compiler name', t => {
+    mix.vue({ version: 2 });
+
+    let dependencies = Mix.components.get('vue').dependencies();
+
+    t.true(dependencies.includes('vue-template-compiler'));
+});
+
 test.serial.cb('it appends vue styles to your sass compiled file', t => {
     mix.vue({ version: 2, extractStyles: true });
     mix.js(
