@@ -37,6 +37,8 @@ class Vue {
      * Required dependencies for the component.
      */
     dependencies() {
+        this.requiresReload = true;
+
         let dependencies = [
             this.version === 2 ? 'vue-template-compiler' : '@vue/compiler-sfc',
             this.version === 2
