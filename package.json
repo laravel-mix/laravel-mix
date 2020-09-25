@@ -17,6 +17,10 @@
             "pre-commit": "pretty-quick --staged"
         }
     },
+    "bin": {
+        "mix": "./bin/cli.js",
+        "laravel-mix": "./bin/cli.js"
+    },
     "repository": "JeffreyWay/laravel-mix",
     "bugs": {
         "url": "https://github.com/JeffreyWay/laravel-mix/issues"
@@ -48,6 +52,7 @@
         "chokidar": "^3.3.1",
         "clean-css": "^4.1.3",
         "collect.js": "^4.12.8",
+        "commander": "^6.1.0",
         "concat": "^1.0.3",
         "css-loader": "^4.2.1",
         "dotenv": "^8.2.0",
