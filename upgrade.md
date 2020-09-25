@@ -69,12 +69,12 @@ mix.js('resources/js/app.js', 'public/js').vue({
 });
 ```
 
+> Notice the slight property name change: `extractVueStyles` => `extractStyles`.
+
 ### Goodbye Node Sass
 
 Previous versions of Mix supported both the Dart and Node bindings for Sass. If we detected that `node-sass` was installed for your project, we'd use it. However, due to the number of issues that surround the `node-sass` implementation, as part of Mix 6, we
 will exclusively install and use the Dart-specific version (`sass`).
-
-> Notice the slight property name change: `extractVueStyles` => `extractStyles`.
 
 ##### Before
 
