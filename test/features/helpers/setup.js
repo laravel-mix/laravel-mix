@@ -2,6 +2,7 @@ let mix = require('../../../src/index');
 let fs = require('fs-extra');
 let ComponentFactory = require('../../../src/components/ComponentFactory');
 let webpack = require('webpack');
+let mockRequire = require('mock-require');
 
 global.WebpackConfig = require('../../../src/builder/WebpackConfig');
 global.test = require('ava');
@@ -59,6 +60,24 @@ global.assertManifestIs = (expected, t) => {
 
     Object.keys(expected).forEach(key => {
         t.true(new RegExp(expected[key]).test(manifest[key]));
+    });
+};
+
+global.setupVueAliases = version => {
+    const vueModule = version === 3 ? 'vue3' : 'vue2';
+    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
+
+    mockRequire('vue', vueModule);
+    mockRequire('vue-loader', vueLoaderModule);
+
+    mix.alias({ vue: require.resolve(vueModule) });
+
+    mix.webpackConfig({
+        resolveLoader: {
+            alias: {
+                'vue-loader': vueLoaderModule
+            }
+        }
     });
 };
 
