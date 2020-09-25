@@ -233,8 +233,8 @@ class Css extends AutomaticComponent {
     }
 
     static normalizeGlobalStyles(styles) {
-        // Backwards compat with existing Config.globalVueStyles:
-        // A string only is supported for sass / scss
+        // Backwards compat with existing Vue globalStyles:
+        // A string only is supported for sass / scss.
         if (typeof styles !== 'object') {
             styles = {
                 sass: styles,
