@@ -4,10 +4,7 @@
     "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
     "main": "src/index.js",
     "scripts": {
-        "webpack": "NODE_ENV=development webpack --progress --hide-modules",
-        "dev": "NODE_ENV=development webpack --watch --progress --hide-modules",
-        "hmr": "NODE_ENV=development webpack-dev-server --inline --hot",
-        "production": "NODE_ENV=production webpack --progress --hide-modules",
+        "mix": "./bin/cli.js",
         "test": "nyc ava --verbose --serial",
         "posttest": "nyc report --reporter=html",
         "eslint": "eslint setup/ src/ test/ --max-warnings=0"
