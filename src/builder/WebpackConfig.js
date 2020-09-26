@@ -24,7 +24,6 @@ class WebpackConfig {
             .buildOutput()
             .buildRules()
             .buildPlugins()
-            .buildResolving()
             .buildChunks()
             .mergeCustomConfig();
 
@@ -110,17 +109,6 @@ class WebpackConfig {
         );
 
         Mix.dispatch('loading-plugins', this.webpackConfig.plugins);
-
-        return this;
-    }
-
-    /**
-     * Build the resolve object.
-     */
-    buildResolving() {
-        this.webpackConfig.resolve = {
-            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json']
-        };
 
         return this;
     }

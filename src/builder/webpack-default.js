@@ -16,6 +16,11 @@ module.exports = function() {
 
         plugins: [],
 
+        resolve: {
+            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json'],
+            roots: [Config.publicPath]
+        },
+
         stats: {
             hash: false,
             version: false,
