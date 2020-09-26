@@ -1,5 +1,6 @@
 # Test against all supported versions of Node.js on windows
 environment:
+    PLAYWRIGHT_BROWSERS_PATH: '0'
     matrix:
         - nodejs_version: '12'
         - nodejs_version: '13'
@@ -15,6 +16,7 @@ install:
     - ps: Install-Product node $env:nodejs_version
     - npm install --global npm@latest
     - npm install
+    - npm install playwright
 
 # Post-install test scripts.
 test_script:
