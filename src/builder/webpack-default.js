@@ -18,7 +18,7 @@ module.exports = function() {
 
         resolve: {
             extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json'],
-            roots: [Config.publicPath]
+            roots: [path.resolve(Config.publicPath)]
         },
 
         stats: {
