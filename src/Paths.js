@@ -28,7 +28,9 @@ class Paths {
      */
     mix() {
         return this.root(
-            argv.env && argv.env.mixfile ? argv.env.mixfile : 'webpack.mix'
+            process.env && process.env.MIX_FILE
+                ? process.env.MIX_FILE
+                : 'webpack.mix'
         );
     }
 
