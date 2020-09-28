@@ -37,10 +37,22 @@ test.serial.cb(
 test.serial('it applies the correct webpack rules', t => {
     mix.ts('resources/assets/js/app.js', 'public/js');
 
-    t.truthy(
-        buildConfig().module.rules.find(
+    t.true(
+        buildConfig().module.rules.some(
             rule => rule.test.toString() === '/\\.tsx?$/'
         )
+    );
+});
+
+test.serial('it applies Babel transformation', t => {
+    mix.ts('resources/assets/js/app.js', 'public/js');
+
+    t.true(
+        buildConfig()
+            .module.rules.find(rule => {
+                return rule.test.test('foo.tsx');
+            })
+            .use.some(loader => loader.loader === 'babel-loader')
     );
 });
 

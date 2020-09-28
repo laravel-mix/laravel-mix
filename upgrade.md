@@ -96,3 +96,4 @@ mix.sass('resources/sass/app.sass', 'public/css');
 -   Support for Vue 2 and 3 applications
 -   `npx mix` executable
 -   **Component:** `mix.alias()`
+-   `mix.ts()` now applies Babel transformation just like `mix.js()`
