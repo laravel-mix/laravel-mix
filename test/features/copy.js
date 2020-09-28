@@ -1,6 +1,8 @@
 import mix from './helpers/setup';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
 
-test.serial('mix.copy()', t => {
+test.serial('it adds to the tasks array', t => {
     mix.copy('this/file.js', 'this/other/location.js');
 
     t.is(1, Mix.tasks.length);
@@ -10,26 +12,24 @@ test.serial('mix.copy()', t => {
     t.is(2, Mix.tasks.length);
 });
 
-test.serial.cb(
+test.serial(
     'it compiles JavaScript and copies the output to a new location.',
-    t => {
-        mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').copy(
-            'test/fixtures/fake-app/public/js/app.js',
-            'test/fixtures/fake-app/public/somewhere'
+    async t => {
+        mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').copy(
+            `${fakeApp}/public/js/app.js`,
+            `${fakeApp}/public/somewhere`
         );
 
-        compile(t, () => {
-            t.true(
-                File.exists('test/fixtures/fake-app/public/somewhere/app.js')
-            );
+        await compile();
 
-            t.deepEqual(
-                {
-                    '/js/app.js': '/js/app.js',
-                    '/somewhere/app.js': '/somewhere/app.js'
-                },
-                readManifest()
-            );
-        });
+        t.true(File.exists(`${fakeApp}/public/somewhere/app.js`));
+
+        assert.manifestEquals(
+            {
+                '/js/app.js': '/js/app.js',
+                '/somewhere/app.js': '/somewhere/app.js'
+            },
+            t
+        );
     }
 );

@@ -1,53 +1,55 @@
 import mix from './helpers/setup';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
 
-test.serial.cb('it compiles JavaScript', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js');
+test.serial('it compiles JavaScript', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js'
+        },
+        t
+    );
 });
 
-test.serial.cb('it compiles JavaScript with dynamic import', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/dynamic/dynamic.js', 'js');
+test.serial('it compiles JavaScript with dynamic import', async t => {
+    mix.js('${fakeApp}/resources/assets/dynamic/dynamic.js', 'js');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/dynamic.js'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/js/dynamic.js': '/js/dynamic.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/dynamic.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/dynamic.js': '/js/dynamic.js'
+        },
+        t
+    );
 });
 
-test.serial.cb('it compiles JavaScript and Sass', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
-        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+test.serial('it compiles JavaScript and Sass', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').sass(
+        `${fakeApp}/resources/assets/sass/app.scss`,
         'css'
     );
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js',
-                '/css/app.css': '/css/app.css'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
 });
 
 test.serial('basic JS compilation config.', t => {
@@ -64,7 +66,7 @@ test.serial('basic JS compilation config.', t => {
 
     t.deepEqual(
         {
-            path: path.resolve('test/fixtures/fake-app/public'),
+            path: path.resolve(`${fakeApp}/public`),
             filename: '[name].js',
             chunkFilename: '[name].js',
             publicPath: '/'
