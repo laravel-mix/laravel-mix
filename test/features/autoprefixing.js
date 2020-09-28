@@ -19,7 +19,7 @@ test.serial(
                     )
             )
             .use.find(loader => loader.loader == 'postcss-loader')
-            .options.plugins.map(
+            .options.postcssOptions.plugins.map(
                 plugin => plugin.postcssPlugin || plugin().postcssPlugin
             );
 

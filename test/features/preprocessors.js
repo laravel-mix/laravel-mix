@@ -98,7 +98,7 @@ test.serial(
                         rule.test.toString().includes(file)
                     )
                     .use.find(loader => loader.loader === 'postcss-loader')
-                    .options.plugins.find(
+                    .options.postcssOptions.plugins.find(
                         plugin => plugin.postcssPlugin === pluginName
                     ) !== undefined
             );

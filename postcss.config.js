@@ -1,5 +1,3 @@
 module.exports = {
-    plugins: {
-        'postcss-custom-properties': {}
-    }
+    plugins: ['postcss-custom-properties']
 };

@@ -52,38 +52,42 @@ class Preprocessor {
                                 Config.processCssUrls
                                     ? true
                                     : Mix.isUsing('sourcemaps'),
-                            ident: `postcss${index}`,
-                            plugins: (function() {
-                                let plugins = Config.postCss;
+                            postcssOptions: {
+                                plugins: (function() {
+                                    let plugins = Config.postCss;
 
-                                if (
-                                    preprocessor.postCssPlugins &&
-                                    preprocessor.postCssPlugins.length
-                                ) {
-                                    plugins = preprocessor.postCssPlugins;
-                                }
+                                    if (
+                                        preprocessor.postCssPlugins &&
+                                        preprocessor.postCssPlugins.length
+                                    ) {
+                                        plugins = preprocessor.postCssPlugins;
+                                    }
 
-                                if (
-                                    Config.autoprefixer &&
-                                    Config.autoprefixer.enabled
-                                ) {
-                                    plugins.push(
-                                        require('autoprefixer')(
-                                            Config.autoprefixer.options
-                                        )
-                                    );
-                                }
+                                    if (
+                                        Config.autoprefixer &&
+                                        Config.autoprefixer.enabled
+                                    ) {
+                                        plugins.push(
+                                            require('autoprefixer')(
+                                                Config.autoprefixer.options
+                                            )
+                                        );
+                                    }
 
-                                if (Mix.inProduction()) {
-                                    plugins.push(
-                                        require('cssnano')({
-                                            preset: ['default', Config.cssNano]
-                                        })
-                                    );
-                                }
+                                    if (Mix.inProduction()) {
+                                        plugins.push(
+                                            require('cssnano')({
+                                                preset: [
+                                                    'default',
+                                                    Config.cssNano
+                                                ]
+                                            })
+                                        );
+                                    }
 
-                                return plugins;
-                            })()
+                                    return plugins;
+                                })()
+                            }
                         }
                     }
                 ];
