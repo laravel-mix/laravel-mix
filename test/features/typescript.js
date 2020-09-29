@@ -35,16 +35,6 @@ test.serial(
     }
 );
 
-test.serial('it applies the correct webpack rules', t => {
-    mix.ts('resources/assets/js/app.js', 'public/js');
-
-    t.true(
-        buildConfig().module.rules.some(
-            rule => rule.test.toString() === '/\\.tsx?$/'
-        )
-    );
-});
-
 test.serial('it applies Babel transformation', t => {
     mix.ts('resources/assets/js/app.js', 'public/js');
 

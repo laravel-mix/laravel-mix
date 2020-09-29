@@ -2,6 +2,18 @@ import mix from './helpers/setup';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 
+test.serial('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
+    mix.js('resources/assets/js/app.js', 'public/js');
+
+    let rules = buildConfig().module.rules;
+
+    t.true(rules.some(rule => rule.test.test('file.js')));
+    t.true(rules.some(rule => rule.test.test('file.cjs')));
+    t.true(rules.some(rule => rule.test.test('file.mjs')));
+    t.true(rules.some(rule => rule.test.test('file.ts')));
+    t.true(rules.some(rule => rule.test.test('file.tsx')));
+});
+
 test.serial('it compiles JavaScript', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js');
 

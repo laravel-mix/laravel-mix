@@ -55,9 +55,9 @@ class JavaScript {
      * webpack rules to be appended to the master config.
      */
     webpackRules() {
-        return [].concat([
+        return [
             {
-                test: /\.[jt]sx?$/,
+                test: /\.([cm]?js)|(tsx?)$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
@@ -66,7 +66,7 @@ class JavaScript {
                     }
                 ]
             }
-        ]);
+        ];
     }
 }
 
