@@ -57,7 +57,7 @@ class JavaScript {
     webpackRules() {
         return [
             {
-                test: /\.([cm]?js)|(tsx?)$/,
+                test: /\.(cjs|mjs|jsx?|tsx?)$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
