@@ -1,7 +1,7 @@
 import test from 'ava';
 import mix from '../src/index';
 import sinon from 'sinon';
-import ComponentFactory from '../src/components/ComponentFactory';
+import ComponentRegistrar from '../src/components/ComponentRegistrar';
 
 test.beforeEach(t => {
     Config = require('../src/config')();
@@ -70,7 +70,7 @@ test('that it can add a task', t => {
 });
 
 test('that it can fetch a registered component', t => {
-    new ComponentFactory().installAll();
+    new ComponentRegistrar().addMany();
 
     let component = new class {
         register() {}

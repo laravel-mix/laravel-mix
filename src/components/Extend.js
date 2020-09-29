@@ -1,4 +1,4 @@
-let ComponentFactory = require('./ComponentFactory');
+let ComponentRegistrar = require('./ComponentRegistrar');
 
 class Extend {
     /**
@@ -11,10 +11,10 @@ class Extend {
         if (typeof component !== 'function') {
             component.name = () => name;
 
-            return new ComponentFactory().install(component);
+            return new ComponentRegistrar().add(component);
         }
 
-        new ComponentFactory().install({
+        new ComponentRegistrar().add({
             name: () => name,
 
             register(...args) {

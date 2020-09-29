@@ -1,6 +1,6 @@
 let mix = require('../../../src/index');
 let fs = require('fs-extra');
-let ComponentFactory = require('../../../src/components/ComponentFactory');
+let ComponentRegistrar = require('../../../src/components/ComponentRegistrar');
 let webpack = require('webpack');
 let mockRequire = require('mock-require');
 
@@ -17,7 +17,7 @@ test.beforeEach(t => {
 
     mix.setPublicPath('test/fixtures/fake-app/public');
 
-    new ComponentFactory().installAll();
+    new ComponentRegistrar().addMany();
 });
 
 test.afterEach.always(t => {

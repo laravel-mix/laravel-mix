@@ -1,13 +1,13 @@
 import test from 'ava';
 import path from 'path';
 import mix from '../src/index';
-import ComponentFactory from '../src/components/ComponentFactory';
+import ComponentRegistrar from '../src/components/ComponentRegistrar';
 
 test.beforeEach(t => {
     Config = require('../src/config')();
     Mix.tasks = [];
 
-    new ComponentFactory().installAll();
+    new ComponentRegistrar().addMany();
 });
 
 test('mix.setPublicPath()', t => {
