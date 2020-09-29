@@ -1,61 +1,60 @@
 import mix from './helpers/setup';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
 
-test.serial.cb('it combines a folder of scripts', t => {
-    let output = 'test/fixtures/fake-app/public/all.js';
+test.serial('it combines a folder of scripts', async t => {
+    let output = `${fakeApp}/public/all.js`;
 
-    mix.scripts('test/fixtures/fake-app/resources/assets/js', output);
+    mix.scripts(`${fakeApp}/resources/assets/js`, output);
 
-    compile(t, () => {
-        t.true(File.exists(output));
+    await compile();
 
-        t.is(
-            "alert('another stub');\n\nalert('stub');\n",
-            File.find(output).read()
-        );
-    });
+    t.true(File.exists(output));
+
+    t.is(
+        "alert('another stub');\n\nalert('stub');\n",
+        File.find(output).read()
+    );
 });
 
-test.serial.cb('it can minify a file', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').minify(
-        'test/fixtures/fake-app/public/js/app.js'
+test.serial('it can minify a file', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').minify(
+        `${fakeApp}/public/js/app.js`
     );
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.min.js'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js',
-                '/js/app.min.js': '/js/app.min.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.min.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/app.min.js': '/js/app.min.js'
+        },
+        t
+    );
 });
 
-test.serial.cb('it compiles JS and then combines the bundles files.', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
-        .js('test/fixtures/fake-app/resources/assets/js/another.js', 'js')
+test.serial('it compiles JS and then combines the bundles files.', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
+        .js(`${fakeApp}/resources/assets/js/another.js`, 'js')
         .scripts(
-            [
-                'test/fixtures/fake-app/public/js/app.js',
-                'test/fixtures/fake-app/public/js/another.js'
-            ],
-            'test/fixtures/fake-app/public/js/all.js'
+            [`${fakeApp}/public/js/app.js`, `${fakeApp}/public/js/another.js`],
+            `${fakeApp}/public/js/all.js`
         );
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/all.js'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js',
-                '/js/another.js': '/js/another.js',
-                '/js/all.js': '/js/all.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/all.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/another.js': '/js/another.js',
+            '/js/all.js': '/js/all.js'
+        },
+        t
+    );
 });
 
 test.serial('mix.combine/scripts/styles/babel()', t => {

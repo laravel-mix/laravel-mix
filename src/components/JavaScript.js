@@ -57,7 +57,7 @@ class JavaScript {
     webpackRules() {
         return [].concat([
             {
-                test: /\.jsx?$/,
+                test: /\.[jt]sx?$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {

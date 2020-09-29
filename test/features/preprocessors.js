@@ -1,18 +1,20 @@
 import mix from './helpers/setup';
+import { fakeApp } from '../helpers/paths';
+import assert from '../helpers/assertions';
 
-test.serial.cb('it compiles Sass without JS', t => {
-    mix.sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css');
+test.serial('it compiles Sass without JS', async t => {
+    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+    await compile();
 
-        t.deepEqual(
-            {
-                '/css/app.css': '/css/app.css'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+
+    assert.manifestEquals(
+        {
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
 });
 
 test.serial('JS and Sass + Less + Stylus compilation config', t => {
@@ -77,19 +79,13 @@ test.serial('Generic Stylus rules are applied', t => {
 test.serial(
     'Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.',
     t => {
-        mix.sass(
-            'test/fixtures/fake-app/resources/assets/sass/app.scss',
-            'css',
-            {},
-            [{ postcssPlugin: 'postcss-plugin-stub' }]
-        );
+        mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css', {}, [
+            { postcssPlugin: 'postcss-plugin-stub' }
+        ]);
 
-        mix.sass(
-            'test/fixtures/fake-app/resources/assets/sass/app2.scss',
-            'css',
-            {},
-            [{ postcssPlugin: 'second-postcss-plugin-stub' }]
-        );
+        mix.sass(`${fakeApp}/resources/assets/sass/app2.scss`, 'css', {}, [
+            { postcssPlugin: 'second-postcss-plugin-stub' }
+        ]);
 
         let seePostCssPluginFor = (file, pluginName) => {
             t.true(
@@ -98,7 +94,7 @@ test.serial(
                         rule.test.toString().includes(file)
                     )
                     .use.find(loader => loader.loader === 'postcss-loader')
-                    .options.plugins.find(
+                    .options.postcssOptions.plugins.find(
                         plugin => plugin.postcssPlugin === pluginName
                     ) !== undefined
             );
@@ -109,11 +105,11 @@ test.serial(
     }
 );
 
-test.serial.cb('cssnano minifier options may be specified', t => {
+test.serial('cssnano minifier options may be specified', async t => {
     Config.production = true;
 
     let file = new File(
-        'test/fixtures/fake-app/resources/assets/sass/minifier-example.scss'
+        `${fakeApp}/resources/assets/sass/minifier-example.scss`
     );
 
     file.write(`
@@ -128,65 +124,53 @@ test.serial.cb('cssnano minifier options may be specified', t => {
         cssNano: { minifyFontValues: false }
     });
 
-    compile(t, () => {
-        t.is(
-            '.test{font-family:"Font Awesome 5 Free"}\n',
-            File.find(
-                'test/fixtures/fake-app/public/css/minifier-example.css'
-            ).read()
-        );
+    await compile();
 
-        // Clean up.
-        file.delete();
-    });
-});
-
-test.serial.cb('Sass is extracted properly', t => {
-    mix.sass(
-        'test/fixtures/fake-app/resources/assets/sass/app.sass',
-        'css/app.css'
+    t.is(
+        '.test{font-family:"Font Awesome 5 Free"}\n',
+        File.find(`${fakeApp}/public/css/minifier-example.css`).read()
     );
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
-        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
-    });
+    // Clean up.
+    file.delete();
 });
 
-test.serial.cb('Stylus is extracted properly', t => {
-    mix.stylus(
-        'test/fixtures/fake-app/resources/assets/stylus/app.styl',
-        'css/app.css'
-    );
+test.serial('Sass is extracted properly', async t => {
+    mix.sass(`${fakeApp}/resources/assets/sass/app.sass`, 'css/app.css');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
-        assertManifestIs({ '/css/app.css': '/css/app.css' }, t);
-    });
+    await compile();
+
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+
+    assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
 });
 
-test.serial.cb('CSS output paths are normalized', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
-    mix.sass(
-        'test/fixtures/fake-app/resources/assets/sass/app.scss',
-        'public/css'
+test.serial('Stylus is extracted properly', async t => {
+    mix.stylus(`${fakeApp}/resources/assets/stylus/app.styl`, 'css/app.css');
+
+    await compile();
+
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+    assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
+});
+
+test.serial('CSS output paths are normalized', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'public/js');
+    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'public/css');
+
+    await compile();
+
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+    t.false(File.exists(`${fakeApp}/public/public/css/app.css`));
+
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+    t.false(File.exists(`${fakeApp}/public/public/js/app.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/app.css': '/css/app.css'
+        },
+        t
     );
-
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
-        t.false(
-            File.exists('test/fixtures/fake-app/public/public/css/app.css')
-        );
-
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-        t.false(File.exists('test/fixtures/fake-app/public/public/js/app.js'));
-
-        assertManifestIs(
-            {
-                '/js/app.js': '/js/app.js',
-                '/css/app.css': '/css/app.css'
-            },
-            t
-        );
-    });
 });

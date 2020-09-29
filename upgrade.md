@@ -90,9 +90,11 @@ mix.sass('resources/sass/app.sass', 'public/css', {
 mix.sass('resources/sass/app.sass', 'public/css');
 ```
 
-# New Features
+# Updates
 
 -   Support for webpack 5
 -   Support for Vue 2 and 3 applications
+-   Upgraded to `postcss-loader` v4.
 -   `npx mix` executable
 -   **Component:** `mix.alias()`
+-   `mix.ts()` now applies Babel transformation just like `mix.js()`

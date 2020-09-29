@@ -1,4 +1,6 @@
 import mix from './helpers/setup';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
 
 test.serial('mix.react()', t => {
     mix.react().js('resources/assets/js/app.js', 'public/js');
@@ -14,23 +16,22 @@ test.serial('mix.react()', t => {
     );
 });
 
-test.serial.cb('it compiles React and a preprocessor properly', t => {
-    mix.react().js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
-        'test/fixtures/fake-app/resources/assets/sass/app.scss',
-        'css'
+test.serial('it compiles React and a preprocessor properly', async t => {
+    mix.react()
+        .js(`${fakeApp}/resources/assets/js/app.js`, 'js')
+        .sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');
+
+    await compile();
+
+    assert.manifestEquals(
+        {
+            '/css/app.css': '/css/app.css',
+            '/js/app.js': '/js/app.js'
+        },
+        t
     );
 
-    compile(t, config => {
-        assertManifestIs(
-            {
-                '/css/app.css': '/css/app.css',
-                '/js/app.js': '/js/app.js'
-            },
-            t
-        );
-
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
 });
 
 test.serial('it sets the webpack entry correctly', t => {

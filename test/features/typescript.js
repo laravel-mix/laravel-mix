@@ -1,4 +1,5 @@
 import mix from './helpers/setup';
+import File from '../../src/File';
 
 test.serial('mix.ts()', t => {
     let response = mix.ts('resources/assets/js/app.ts', 'public/js');
@@ -19,28 +20,40 @@ test.serial('mix.ts()', t => {
     t.is(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
 });
 
-test.serial.cb(
+test.serial(
     'it applies the correct extensions and aliases to the webpack config',
-    t => {
+    async t => {
         mix.ts(
             'test/fixtures/fake-app/resources/assets/js/app.js',
             'public/js'
         );
 
-        compile(t, webpackConfig => {
-            t.true(webpackConfig.resolve.extensions.includes('.ts'));
-            t.true(webpackConfig.resolve.extensions.includes('.tsx'));
-        });
+        let { config } = await compile();
+
+        t.true(config.resolve.extensions.includes('.ts'));
+        t.true(config.resolve.extensions.includes('.tsx'));
     }
 );
 
 test.serial('it applies the correct webpack rules', t => {
     mix.ts('resources/assets/js/app.js', 'public/js');
 
-    t.truthy(
-        buildConfig().module.rules.find(
+    t.true(
+        buildConfig().module.rules.some(
             rule => rule.test.toString() === '/\\.tsx?$/'
         )
+    );
+});
+
+test.serial('it applies Babel transformation', t => {
+    mix.ts('resources/assets/js/app.js', 'public/js');
+
+    t.true(
+        buildConfig()
+            .module.rules.find(rule => {
+                return rule.test.test('foo.tsx');
+            })
+            .use.some(loader => loader.loader === 'babel-loader')
     );
 });
 
