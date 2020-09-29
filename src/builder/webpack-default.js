@@ -58,6 +58,10 @@ module.exports = function() {
             noInfo: true,
             compress: true,
             quiet: true
+        },
+        
+        watchOptions: {
+            ignored: /node_modules/
         }
     };
 };
