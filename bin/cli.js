@@ -1,82 +1,79 @@
 #!/usr/bin/env node
 
-const { Command } = require('commander');
+const { Command, command } = require('commander');
 const { spawn } = require('child_process');
-const debug = require('debug')('laravel-mix');
 
 run();
 
+/**
+ * Run the progran.
+ */
 async function run() {
-    // TODO: This really shouldn't be here I don't think
-    require('../src/index');
-
-    const mixConfigPath = Mix.paths.mix();
-
     const program = new Command();
 
     program.name('mix');
     program.version('0.0.1');
     program.option(
         '--mix-config <path>',
-        'Specify mix config file',
-        mixConfigPath
+        'The path to your Mix configuration file.',
+        'webpack.mix'
     );
 
     program
         .command('watch')
-        .description('Watch files for changes')
-        .option('--hmr', 'Run hot reload server', false)
+        .description('Build and watch files for changes.')
+        .option('--hmr', 'Enable hot reloading.', false)
         .action(cmd =>
             executeScript('watch', { ...program.opts(), ...cmd.opts() })
         );
 
     program
         .command('build', { isDefault: true })
-        .description('Build')
+        .description('Compile Mix.')
         .option('-p, --production', 'Run Mix in production mode.', false)
         .action(cmd =>
-            executeScript('build', {
-                ...program.opts(),
-                ...cmd.opts()
-            })
+            executeScript('build', { ...program.opts(), ...cmd.opts() })
         );
 
     await program.parseAsync(process.argv);
 }
 
 /**
+ * Execute the script.
+ *
  * @param {"build"|"watch"} cmd
  * @param {{[key: string]: any}} opts
  */
 async function executeScript(cmd, opts) {
-    let script = [];
+    let script = [
+        `NODE_ENV=${opts.production ? 'production' : 'development'}`,
+        `MIX_FILE=${opts.mixConfig}`,
+        commandScript(cmd, opts),
+        `--config=${require.resolve('../setup/webpack.config.js')}`
+    ].join(' ');
 
-    script.push(`NODE_ENV=${opts.production ? 'production' : 'development'}`);
-
-    if (opts.mixConfig) {
-        script.push(`MIX_FILE=${opts.mixConfig}`);
+    if (process.env.TESTING) {
+        return process.stdout.write(script);
     }
-
-    if (cmd === 'build') {
-        script.push(`npx webpack`);
-        script.push(`--progress`);
-    } else if (cmd === 'watch' && !opts.hmr) {
-        script.push(`npx webpack`);
-        script.push(`--progress`);
-        script.push(`--watch`);
-    } else if (cmd === 'watch' && opts.hmr) {
-        script.push(`npx webpack-dev-server`);
-        script.push(`--inline --hot`);
-    }
-
-    script.push(`--config=${require.resolve('../setup/webpack.config.js')}`);
-
-    script = script.join(' ');
-
-    debug('Running script %s', script);
 
     spawn(script, {
         stdio: 'inherit',
         shell: true
     });
+}
+
+/**
+ * Get the command-specific portion of the script.
+ *
+ * @param {"build"|"watch"} cmd
+ * @param {{[key: string]: any}} opts
+ */
+function commandScript(cmd, opts) {
+    if (cmd === 'build') {
+        return 'npx webpack --progress';
+    } else if (cmd === 'watch' && !opts.hmr) {
+        return 'npx webpack --progress --watch';
+    } else if (cmd === 'watch' && opts.hmr) {
+        return 'npx webpack-dev-server --inline --hot';
+    }
 }
