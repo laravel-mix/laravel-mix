@@ -46,7 +46,7 @@ async function run() {
  */
 async function executeScript(cmd, opts) {
     let script = [
-        `NODE_ENV=${opts.production ? 'production' : 'development'}`,
+        `cross-env NODE_ENV=${opts.production ? 'production' : 'development'}`,
         `MIX_FILE=${opts.mixConfig}`,
         commandScript(cmd, opts),
         `--config=${require.resolve('../setup/webpack.config.js')}`

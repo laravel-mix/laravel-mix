@@ -6,7 +6,9 @@ function mix(args = []) {
     console.log(`node ${path.resolve('./bin/cli')} ${args.join(' ')}`);
     return new Promise(resolve => {
         exec(
-            `TESTING=true node ${path.resolve('./bin/cli')} ${args.join(' ')}`,
+            `cross-env TESTING=true node ${path.resolve(
+                './bin/cli'
+            )} ${args.join(' ')}`,
             { cwd: '.' },
             (error, stdout, stderr) => {
                 resolve({
@@ -24,7 +26,7 @@ test('it calls webpack in development mode', async t => {
     let { stdout } = await mix();
 
     t.is(
-        'NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --config=' +
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --config=' +
             require.resolve('../setup/webpack.config.js'),
         stdout
     );
@@ -34,7 +36,7 @@ test('it calls webpack in production mode', async t => {
     let { stdout } = await mix(['--production']);
 
     t.is(
-        'NODE_ENV=production MIX_FILE=webpack.mix npx webpack --progress --config=' +
+        'cross-env NODE_ENV=production MIX_FILE=webpack.mix npx webpack --progress --config=' +
             require.resolve('../setup/webpack.config.js'),
         stdout
     );
@@ -44,7 +46,7 @@ test('it calls webpack with watch mode', async t => {
     let { stdout } = await mix(['watch']);
 
     t.is(
-        'NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
             require.resolve('../setup/webpack.config.js'),
         stdout
     );
@@ -54,7 +56,7 @@ test('it calls webpack with hot reloading', async t => {
     let { stdout } = await mix(['watch', '--hmr']);
 
     t.is(
-        'NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
             require.resolve('../setup/webpack.config.js'),
         stdout
     );
