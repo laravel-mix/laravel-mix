@@ -25,7 +25,9 @@ class Dependencies {
                     return require.resolve(
                         dependency.replace(/(?!^@)@.+$/, '')
                     );
-                } catch (e) {}
+                } catch (e) {
+                    //
+                }
             })
             .pipe(dependencies => {
                 if (!dependencies.count()) {
@@ -44,6 +46,7 @@ class Dependencies {
      * Execute the provided console command.
      *
      * @param {string}  command
+     * @param {array}   dependencies
      * @param {Boolean} abortOnComplete
      */
     execute(command, dependencies, abortOnComplete) {
@@ -63,11 +66,11 @@ class Dependencies {
 
         this.respond(abortOnComplete);
     }
+
     /**
      * Build the dependency install command.
      *
      * @param {Object}  dependencies
-     * @param {Boolean} forceNpm
      */
     buildInstallCommand(dependencies) {
         dependencies = [].concat(dependencies).join(' ');
