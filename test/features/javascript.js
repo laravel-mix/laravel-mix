@@ -18,7 +18,7 @@ test.serial('it compiles JavaScript', async t => {
 });
 
 test.serial('it compiles JavaScript with dynamic import', async t => {
-    mix.js('${fakeApp}/resources/assets/dynamic/dynamic.js', 'js');
+    mix.js(`${fakeApp}/resources/assets/dynamic/dynamic.js`, 'js');
 
     await compile();
 
