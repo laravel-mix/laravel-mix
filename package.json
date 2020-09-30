@@ -5,8 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "mix": "./bin/cli.js",
-        "test": "nyc ava --verbose --serial",
-        "posttest": "nyc report --reporter=html",
+        "test": "ava --verbose --serial",
         "eslint": "eslint setup/ src/ test/ --max-warnings=0"
     },
     "husky": {
@@ -90,7 +89,6 @@
         "less": "^3.9.0",
         "less-loader": "^7.0.0",
         "mock-require": "^3.0.2",
-        "nyc": "^15.0.0",
         "playwright": "^1.0.1",
         "postcss-custom-properties": "^10.0.0",
         "prettier": "1.15.2",
