@@ -1,7 +1,7 @@
+import '../../src/index';
 import test from 'ava';
-import mix from '../src/index';
 import sinon from 'sinon';
-import FileCollection from '../src/FileCollection';
+import FileCollection from '../../src/FileCollection';
 import fs from 'fs-extra';
 import eol from 'eol';
 

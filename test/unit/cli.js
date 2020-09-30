@@ -3,7 +3,6 @@ import { exec } from 'child_process';
 import path from 'path';
 
 function mix(args = []) {
-    console.log(`node ${path.resolve('./bin/cli')} ${args.join(' ')}`);
     return new Promise(resolve => {
         exec(
             `cross-env TESTING=true node ${path.resolve(
@@ -27,7 +26,7 @@ test('it calls webpack in development mode', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --config=' +
-            require.resolve('../setup/webpack.config.js'),
+            require.resolve('../../setup/webpack.config.js'),
         stdout
     );
 });
@@ -37,7 +36,7 @@ test('it calls webpack in production mode', async t => {
 
     t.is(
         'cross-env NODE_ENV=production MIX_FILE=webpack.mix npx webpack --progress --config=' +
-            require.resolve('../setup/webpack.config.js'),
+            require.resolve('../../setup/webpack.config.js'),
         stdout
     );
 });
@@ -47,7 +46,7 @@ test('it calls webpack with watch mode', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
-            require.resolve('../setup/webpack.config.js'),
+            require.resolve('../../setup/webpack.config.js'),
         stdout
     );
 });
@@ -57,7 +56,7 @@ test('it calls webpack with hot reloading', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
-            require.resolve('../setup/webpack.config.js'),
+            require.resolve('../../setup/webpack.config.js'),
         stdout
     );
 });

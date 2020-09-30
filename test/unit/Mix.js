@@ -1,10 +1,10 @@
 import test from 'ava';
-import mix from '../src/index';
+import mix from '../../src';
 import sinon from 'sinon';
-import ComponentRegistrar from '../src/components/ComponentRegistrar';
+import ComponentRegistrar from '../../src/components/ComponentRegistrar';
 
 test.beforeEach(t => {
-    Config = require('../src/config')();
+    Config = require('../../src/config')();
     Mix.tasks = [];
 });
 

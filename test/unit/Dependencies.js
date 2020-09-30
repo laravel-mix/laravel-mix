@@ -1,9 +1,8 @@
-import '../src/helpers';
+import '../../src/helpers';
 import test from 'ava';
 import childProcess from 'child_process';
 import sinon from 'sinon';
-import Dependencies from '../src/Dependencies';
-import File from '../src/File';
+import Dependencies from '../../src/Dependencies';
 
 test.beforeEach(() => {
     console.log = () => {};

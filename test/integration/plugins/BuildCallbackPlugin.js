@@ -1,7 +1,7 @@
 import test from 'ava';
 import webpack from 'webpack';
 import { TempSandbox } from 'temp-sandbox';
-import BuildCallbackPlugin from '../../src/webpackPlugins/BuildCallbackPlugin';
+import BuildCallbackPlugin from '../../../src/webpackPlugins/BuildCallbackPlugin';
 
 const sandbox = new TempSandbox({ randomDir: true });
 

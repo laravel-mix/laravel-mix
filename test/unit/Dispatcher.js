@@ -1,5 +1,5 @@
 import test from 'ava';
-import Dispatcher from '../src/Dispatcher';
+import Dispatcher from '../../src/Dispatcher';
 import sinon from 'sinon';
 
 test('that it can dispatch events', t => {

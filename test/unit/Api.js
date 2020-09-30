@@ -1,10 +1,10 @@
 import test from 'ava';
 import path from 'path';
-import mix from '../src/index';
-import ComponentRegistrar from '../src/components/ComponentRegistrar';
+import mix from '../../src';
+import ComponentRegistrar from '../../src/components/ComponentRegistrar';
 
 test.beforeEach(t => {
-    Config = require('../src/config')();
+    Config = require('../../src/config')();
     Mix.tasks = [];
 
     new ComponentRegistrar().addMany();

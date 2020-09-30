@@ -1,6 +1,6 @@
 import test from 'ava';
-import mix from '../src/index';
-import Manifest from '../src/Manifest';
+import mix from '../../src/index';
+import Manifest from '../../src/Manifest';
 import fs from 'fs-extra';
 
 test.beforeEach(() => (Mix.manifest = new Manifest()));
