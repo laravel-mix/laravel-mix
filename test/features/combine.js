@@ -1,13 +1,14 @@
 import mix from './helpers/setup';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
-test.serial('it combines a folder of scripts', async t => {
+test('it combines a folder of scripts', async t => {
     let output = `${fakeApp}/public/all.js`;
 
     mix.scripts(`${fakeApp}/resources/assets/js`, output);
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(output));
 
@@ -17,12 +18,12 @@ test.serial('it combines a folder of scripts', async t => {
     );
 });
 
-test.serial('it can minify a file', async t => {
+test('it can minify a file', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').minify(
         `${fakeApp}/public/js/app.js`
     );
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.min.js`));
 
@@ -35,7 +36,7 @@ test.serial('it can minify a file', async t => {
     );
 });
 
-test.serial('it compiles JS and then combines the bundles files.', async t => {
+test('it compiles JS and then combines the bundles files.', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
         .js(`${fakeApp}/resources/assets/js/another.js`, 'js')
         .scripts(
@@ -43,7 +44,7 @@ test.serial('it compiles JS and then combines the bundles files.', async t => {
             `${fakeApp}/public/js/all.js`
         );
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/all.js`));
 
@@ -57,7 +58,7 @@ test.serial('it compiles JS and then combines the bundles files.', async t => {
     );
 });
 
-test.serial('mix.combine/scripts/styles/babel()', t => {
+test('mix.combine/scripts/styles/babel()', t => {
     t.is(mix, mix.combine([], 'public/js/combined.js'));
 
     t.is(1, Mix.tasks.length);
@@ -66,7 +67,7 @@ test.serial('mix.combine/scripts/styles/babel()', t => {
     t.is(mix, mix.babel([], 'public/js/combined.js'));
 });
 
-test.serial('mix.minify()', t => {
+test('mix.minify()', t => {
     t.is(mix, mix.minify('public/js/minify.js'));
 
     t.is(1, Mix.tasks.length);

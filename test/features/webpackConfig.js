@@ -1,6 +1,7 @@
 import mix from './helpers/setup';
+import { buildConfig } from '../helpers/webpack';
 
-test.serial('mix.webpackConfig()', t => {
+test('mix.webpackConfig()', t => {
     // Test config passed as an object.
     let config = { context: 'changed' };
     let response = mix.webpackConfig(config);
@@ -18,13 +19,13 @@ test.serial('mix.webpackConfig()', t => {
     t.deepEqual(config, Config.webpackConfig);
 });
 
-test.serial('Custom user config can be merged', t => {
+test.only('Custom user config can be merged', t => {
     mix.webpackConfig({ context: 'changed' });
 
     t.is('changed', buildConfig().context);
 });
 
-test.serial('Custom user config can be merged as a callback function', t => {
+test('Custom user config can be merged as a callback function', t => {
     mix.webpackConfig(webpack => {
         return {
             context: 'changed'

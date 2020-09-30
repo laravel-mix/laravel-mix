@@ -3,6 +3,7 @@ import mix from './helpers/setup';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
 import ComponentRegistrar from '../../src/components/ComponentRegistrar';
+import webpack from '../helpers/webpack';
 
 new ComponentRegistrar().addMany();
 
@@ -138,7 +139,7 @@ test('custom Babel config may be merged', t => {
 
     mix.reactNext();
 
-    buildConfig();
+    webpack.buildConfig();
 
     t.true(
         Config.babel().plugins.find(plugin =>

@@ -2,10 +2,11 @@ import mix from './helpers/setup';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 import File from '../../src/File';
+import webpack from '../helpers/webpack';
 
 test.beforeEach(() => setupVueAliases(2));
 
-test.serial('the kitchen sink', async t => {
+test('the kitchen sink', async t => {
     new File(`${fakeApp}/public/file.js`).write('var foo');
 
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
@@ -24,7 +25,7 @@ test.serial('the kitchen sink', async t => {
         )
         .version([`${fakeApp}/public/file.js`]);
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/all.js`));
 
@@ -44,7 +45,7 @@ test.serial('the kitchen sink', async t => {
     );
 });
 
-test.serial('async chunk splitting works', async t => {
+test('async chunk splitting works', async t => {
     mix.vue({ version: 2 });
     mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
         .extract(['vue', 'lodash', 'core-js'])
@@ -55,7 +56,7 @@ test.serial('async chunk splitting works', async t => {
         })
         .version();
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
 
@@ -70,7 +71,7 @@ test.serial('async chunk splitting works', async t => {
     );
 });
 
-test.serial('multiple extractions work', async t => {
+test('multiple extractions work', async t => {
     mix.vue({ version: 2 });
     mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
         .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
@@ -82,7 +83,7 @@ test.serial('multiple extractions work', async t => {
         })
         .version();
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
 
@@ -98,25 +99,22 @@ test.serial('multiple extractions work', async t => {
     );
 });
 
-test.serial(
-    'it resolves image- and font-urls and distinguishes between them even if we deal with svg',
-    async t => {
-        // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
-        mix.sass(`${fakeApp}/resources/assets/sass/font-and-image.scss`, 'css');
-        // When we compile it
-        await compile();
+test('it resolves image- and font-urls and distinguishes between them even if we deal with svg', async t => {
+    // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
+    mix.sass(`${fakeApp}/resources/assets/sass/font-and-image.scss`, 'css');
+    // When we compile it
+    await webpack.compile();
 
-        // Then we expect the css to be built
-        t.true(File.exists(`${fakeApp}/public/css/font-and-image.css`));
-        // Along with the referred image in the images folder
-        t.true(File.exists(`${fakeApp}/public/images/img.svg`));
-        // And the referred fonts in the fonts folder
-        t.true(File.exists(`${fakeApp}/public/fonts/font.svg`));
-        t.true(File.exists(`${fakeApp}/public/fonts/awesome.svg`));
-        // And we expect the image NOT to be in the fonts folder:
-        t.false(File.exists(`${fakeApp}/public/fonts/img.svg`));
-        // And the fonts NOT to be in the image folder
-        t.false(File.exists(`${fakeApp}/public/images/font.svg`));
-        t.false(File.exists(`${fakeApp}/public/images/awesome.svg`));
-    }
-);
+    // Then we expect the css to be built
+    t.true(File.exists(`${fakeApp}/public/css/font-and-image.css`));
+    // Along with the referred image in the images folder
+    t.true(File.exists(`${fakeApp}/public/images/img.svg`));
+    // And the referred fonts in the fonts folder
+    t.true(File.exists(`${fakeApp}/public/fonts/font.svg`));
+    t.true(File.exists(`${fakeApp}/public/fonts/awesome.svg`));
+    // And we expect the image NOT to be in the fonts folder:
+    t.false(File.exists(`${fakeApp}/public/fonts/img.svg`));
+    // And the fonts NOT to be in the image folder
+    t.false(File.exists(`${fakeApp}/public/images/font.svg`));
+    t.false(File.exists(`${fakeApp}/public/images/awesome.svg`));
+});

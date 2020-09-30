@@ -1,15 +1,16 @@
 import mix from './helpers/setup';
 import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
 test.beforeEach(() => setupVueAliases(2));
 
-test.serial('it adds the Vue 2 resolve alias', t => {
+test('it adds the Vue 2 resolve alias', t => {
     mix.vue({ version: 2, extractStyles: true });
 
-    t.is('vue/dist/vue.esm.js', buildConfig().resolve.alias.vue$);
+    t.is('vue/dist/vue.esm.js', webpack.buildConfig().resolve.alias.vue$);
 });
 
-test.serial('it knows the Vue 2 compiler name', t => {
+test('it knows the Vue 2 compiler name', t => {
     mix.vue({ version: 2 });
 
     let dependencies = Mix.components.get('vue').dependencies();
@@ -17,14 +18,14 @@ test.serial('it knows the Vue 2 compiler name', t => {
     t.true(dependencies.includes('vue-template-compiler'));
 });
 
-test.serial('it appends vue styles to your sass compiled file', async t => {
+test('it appends vue styles to your sass compiled file', async t => {
     mix.vue({ version: 2, extractStyles: true });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-scss.js`,
         'js/app.js'
     ).sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
@@ -42,14 +43,14 @@ test.serial('it appends vue styles to your sass compiled file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/app.css`).read());
 });
 
-test.serial('it appends vue styles to your less compiled file', async t => {
+test('it appends vue styles to your less compiled file', async t => {
     mix.vue({ version: 2, extractStyles: true });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-scss.js`,
         'js/app.js'
     ).less(`${fakeApp}/resources/assets/less/main.less`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
@@ -66,66 +67,54 @@ test.serial('it appends vue styles to your less compiled file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/app.css`).read());
 });
 
-test.serial(
-    'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
-    async t => {
-        mix.vue({ version: 2, extractStyles: true });
-        mix.js(
-            `${fakeApp}/resources/assets/vue/app-with-vue-and-scss.js`,
-            'js/app.js'
-        );
+test('it appends vue styles to a vue-styles.css file, if no preprocessor is used', async t => {
+    mix.vue({ version: 2, extractStyles: true });
+    mix.js(
+        `${fakeApp}/resources/assets/vue/app-with-vue-and-scss.js`,
+        'js/app.js'
+    );
 
-        await compile();
-        t.true(File.exists(`${fakeApp}/public/js/app.js`));
-        t.true(File.exists(`${fakeApp}/public/css/vue-styles.css`));
+    await webpack.compile();
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+    t.true(File.exists(`${fakeApp}/public/css/vue-styles.css`));
 
-        let expected = `.hello {
+    let expected = `.hello {
   color: blue;
 }
 `;
 
-        t.is(
-            expected,
-            File.find(`${fakeApp}/public/css/vue-styles.css`).read()
-        );
-    }
-);
+    t.is(expected, File.find(`${fakeApp}/public/css/vue-styles.css`).read());
+});
 
-test.serial(
-    'it extracts vue vanilla CSS styles to a dedicated file',
-    async t => {
-        mix.vue({ version: 2, extractStyles: 'css/components.css' });
-        mix.js(
-            `${fakeApp}/resources/assets/vue/app-with-vue-and-css.js`,
-            'js/app.js'
-        );
+test('it extracts vue vanilla CSS styles to a dedicated file', async t => {
+    mix.vue({ version: 2, extractStyles: 'css/components.css' });
+    mix.js(
+        `${fakeApp}/resources/assets/vue/app-with-vue-and-css.js`,
+        'js/app.js'
+    );
 
-        await compile();
+    await webpack.compile();
 
-        t.true(File.exists(`${fakeApp}/public/css/components.css`));
+    t.true(File.exists(`${fakeApp}/public/css/components.css`));
 
-        let expected = `
+    let expected = `
 .hello {
     color: green;
 }
 
 `;
 
-        t.is(
-            expected,
-            File.find(`${fakeApp}/public/css/components.css`).read()
-        );
-    }
-);
+    t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
+});
 
-test.serial('it extracts vue Stylus styles to a dedicated file', async t => {
+test('it extracts vue Stylus styles to a dedicated file', async t => {
     mix.vue({ version: 2, extractStyles: 'css/components.css' });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-stylus.js`,
         'js/app.js'
     );
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/components.css`));
 
@@ -138,28 +127,25 @@ test.serial('it extracts vue Stylus styles to a dedicated file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
 });
 
-test.serial(
-    'it does also add the vue webpack rules with typescript component',
-    t => {
-        mix.vue({ version: 2 });
-        mix.ts('resources/assets/js/app.js', 'public/js');
+test('it does also add the vue webpack rules with typescript component', t => {
+    mix.vue({ version: 2 });
+    mix.ts('resources/assets/js/app.js', 'public/js');
 
-        t.truthy(
-            buildConfig().module.rules.find(
-                rule => rule.test.toString() === '/\\.vue$/'
-            )
-        );
-    }
-);
+    t.truthy(
+        webpack
+            .buildConfig()
+            .module.rules.find(rule => rule.test.toString() === '/\\.vue$/')
+    );
+});
 
-test.serial('it extracts vue .scss styles to a dedicated file', async t => {
+test('it extracts vue .scss styles to a dedicated file', async t => {
     mix.vue({ version: 2, extractStyles: 'css/components.css' });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-scss.js`,
         'js/app.js'
     ).sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
@@ -182,14 +168,14 @@ test.serial('it extracts vue .scss styles to a dedicated file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
 });
 
-test.serial('it extracts vue .sass styles to a dedicated file', async t => {
+test('it extracts vue .sass styles to a dedicated file', async t => {
     mix.vue({ version: 2, extractStyles: 'css/components.css' });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-indented-sass.js`,
         'js/app.js'
     ).sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
@@ -212,14 +198,14 @@ test.serial('it extracts vue .sass styles to a dedicated file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
 });
 
-test.serial('it extracts vue PostCSS styles to a dedicated file', async t => {
+test('it extracts vue PostCSS styles to a dedicated file', async t => {
     mix.vue({ version: 2, extractStyles: 'css/components.css' });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-postcss.js`,
         'js/app.js'
     );
 
-    await compile();
+    await webpack.compile();
 
     // In this example, postcss-loader is reading from postcss.config.js.
     let expected = `
@@ -236,14 +222,14 @@ test.serial('it extracts vue PostCSS styles to a dedicated file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
 });
 
-test.serial('it extracts vue Less styles to a dedicated file', async t => {
+test('it extracts vue Less styles to a dedicated file', async t => {
     mix.vue({ version: 2, extractStyles: 'css/components.css' });
     mix.js(
         `${fakeApp}/resources/assets/vue/app-with-vue-and-less.js`,
         'js/app.js'
     );
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/components.css`));
 
@@ -256,7 +242,7 @@ test.serial('it extracts vue Less styles to a dedicated file', async t => {
     t.is(expected, File.find(`${fakeApp}/public/css/components.css`).read());
 });
 
-test.serial('it supports global Vue styles for sass', async t => {
+test('it supports global Vue styles for sass', async t => {
     mix.vue({
         version: 2,
         extractStyles: 'css/components.css',
@@ -274,7 +260,7 @@ test.serial('it supports global Vue styles for sass', async t => {
     );
     mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/components.css`));

@@ -1,6 +1,6 @@
 import mix from './helpers/setup';
 
-test.serial('mix.sourceMaps()', t => {
+test('mix.sourceMaps()', t => {
     t.false(Config.sourcemaps);
 
     let response = mix.sourceMaps();

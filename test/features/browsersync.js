@@ -1,6 +1,7 @@
 import mix from './helpers/setup';
 import mockRequire from 'mock-require';
 import Browsersync from '../../src/components/Browsersync';
+import webpack from '../helpers/webpack';
 
 mockRequire(
     'browser-sync-webpack-plugin',
@@ -9,21 +10,21 @@ mockRequire(
     }
 );
 
-test.serial.cb('it handles Browsersync reloading', t => {
+test('it handles Browsersync reloading', async t => {
     let response = mix.browserSync('app.dev');
 
     t.is(mix, response);
 
-    compile(t, config => {
-        t.truthy(
-            config.plugins.find(
-                plugin => plugin.constructor.name === 'BrowserSyncPluginStub'
-            )
-        );
-    });
+    let { config } = await webpack.compile();
+
+    t.truthy(
+        config.plugins.find(
+            plugin => plugin.constructor.name === 'BrowserSyncPluginStub'
+        )
+    );
 });
 
-test.serial('it injects the snippet in the right place', t => {
+test('it injects the snippet in the right place', t => {
     let regex = new Browsersync().regex();
 
     t.is(regex.exec(`<div></div>`), null);
@@ -43,22 +44,23 @@ test.serial('it injects the snippet in the right place', t => {
     );
 });
 
-test.serial('it configures Browsersync proxy', t => {
-    t.is(buildConfig().proxy, 'app.test', 'sets default proxy');
+test('it configures Browsersync proxy', t => {
+    t.is(browsersyncConfig().proxy, 'app.test', 'sets default proxy');
     t.is(
-        buildConfig('example.domain').proxy,
+        browsersyncConfig('example.domain').proxy,
         'example.domain',
         'sets proxy from string arg'
     );
     t.is(
-        buildConfig({ proxy: 'example.other.domain' }).proxy,
+        browsersyncConfig({ proxy: 'example.other.domain' }).proxy,
         'example.other.domain',
         'sets proxy from user Browsersync config'
     );
 });
 
-test.serial('it configures Browsersync server', t => {
-    let config = buildConfig({ server: './app' });
+test('it configures Browsersync server', t => {
+    let config = browsersyncConfig({ server: './app' });
+
     t.is(config.server, './app', 'sets server from user Browsersync config');
     t.is(
         config.proxy,
@@ -67,8 +69,10 @@ test.serial('it configures Browsersync server', t => {
     );
 });
 
-let buildConfig = userConfig => {
+let browsersyncConfig = userConfig => {
     let plugin = new Browsersync();
+
     plugin.register(userConfig);
+
     return plugin.config();
 };

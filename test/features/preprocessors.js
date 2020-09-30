@@ -1,11 +1,12 @@
 import mix from './helpers/setup';
 import { fakeApp } from '../helpers/paths';
 import assert from '../helpers/assertions';
+import webpack from '../helpers/webpack';
 
-test.serial('it compiles Sass without JS', async t => {
+test('it compiles Sass without JS', async t => {
     mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
 
@@ -17,7 +18,7 @@ test.serial('it compiles Sass without JS', async t => {
     );
 });
 
-test.serial('JS and Sass + Less + Stylus compilation config', t => {
+test('JS and Sass + Less + Stylus compilation config', t => {
     mix.js('resources/assets/js/app.js', 'js')
         .sass('resources/assets/sass/sass.scss', 'css')
         .less('resources/assets/less/less.less', 'css')
@@ -32,80 +33,76 @@ test.serial('JS and Sass + Less + Stylus compilation config', t => {
                 path.resolve('resources/assets/stylus/stylus.styl')
             ]
         },
-        buildConfig().entry
+        webpack.buildConfig().entry
     );
 });
 
-test.serial('Generic Sass rules are applied', t => {
+test('Generic Sass rules are applied', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     t.truthy(
-        buildConfig().module.rules.find(rule => {
+        webpack.buildConfig().module.rules.find(rule => {
             return rule.test.toString() === '/\\.scss$/';
         })
     );
 });
 
-test.serial('Generic Less rules are applied', t => {
+test('Generic Less rules are applied', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     t.truthy(
-        buildConfig().module.rules.find(rule => {
+        webpack.buildConfig().module.rules.find(rule => {
             return rule.test.toString() === '/\\.less$/';
         })
     );
 });
 
-test.serial('Generic CSS rules are applied', t => {
+test('Generic CSS rules are applied', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     t.truthy(
-        buildConfig().module.rules.find(rule => {
+        webpack.buildConfig().module.rules.find(rule => {
             return rule.test.toString() === '/\\.css$/';
         })
     );
 });
 
-test.serial('Generic Stylus rules are applied', t => {
+test('Generic Stylus rules are applied', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
     t.truthy(
-        buildConfig().module.rules.find(rule => {
+        webpack.buildConfig().module.rules.find(rule => {
             return rule.test.toString() === '/\\.styl(us)?$/';
         })
     );
 });
 
-test.serial(
-    'Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.',
-    t => {
-        mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css', {}, [
-            { postcssPlugin: 'postcss-plugin-stub' }
-        ]);
+test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.', t => {
+    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css', {}, [
+        { postcssPlugin: 'postcss-plugin-stub' }
+    ]);
 
-        mix.sass(`${fakeApp}/resources/assets/sass/app2.scss`, 'css', {}, [
-            { postcssPlugin: 'second-postcss-plugin-stub' }
-        ]);
+    mix.sass(`${fakeApp}/resources/assets/sass/app2.scss`, 'css', {}, [
+        { postcssPlugin: 'second-postcss-plugin-stub' }
+    ]);
 
-        let seePostCssPluginFor = (file, pluginName) => {
-            t.true(
-                buildConfig()
-                    .module.rules.find(rule =>
-                        rule.test.toString().includes(file)
-                    )
-                    .use.find(loader => loader.loader === 'postcss-loader')
-                    .options.postcssOptions.plugins.find(
-                        plugin => plugin.postcssPlugin === pluginName
-                    ) !== undefined
-            );
-        };
+    let seePostCssPluginFor = (file, pluginName) => {
+        t.true(
+            webpack
+                .buildConfig()
+                .module.rules.find(rule => rule.test.toString().includes(file))
+                .use.find(loader => loader.loader === 'postcss-loader')
+                .options.postcssOptions.plugins.find(
+                    plugin => plugin.postcssPlugin === pluginName
+                ) !== undefined
+        );
+    };
 
-        seePostCssPluginFor('app.scss', 'postcss-plugin-stub');
-        seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
-    }
-);
+    seePostCssPluginFor('app.scss', 'postcss-plugin-stub');
+    seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
+});
 
-test.serial('cssnano minifier options may be specified', async t => {
+test('cssnano minifier options may be specified', async t => {
     Config.production = true;
 
     let file = new File(
@@ -124,7 +121,7 @@ test.serial('cssnano minifier options may be specified', async t => {
         cssNano: { minifyFontValues: false }
     });
 
-    await compile();
+    await webpack.compile();
 
     t.is(
         '.test{font-family:"Font Awesome 5 Free"}\n',
@@ -135,30 +132,30 @@ test.serial('cssnano minifier options may be specified', async t => {
     file.delete();
 });
 
-test.serial('Sass is extracted properly', async t => {
+test('Sass is extracted properly', async t => {
     mix.sass(`${fakeApp}/resources/assets/sass/app.sass`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
 
     assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
 });
 
-test.serial('Stylus is extracted properly', async t => {
+test('Stylus is extracted properly', async t => {
     mix.stylus(`${fakeApp}/resources/assets/stylus/app.styl`, 'css/app.css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
     assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
 });
 
-test.serial('CSS output paths are normalized', async t => {
+test('CSS output paths are normalized', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'public/js');
     mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'public/css');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
     t.false(File.exists(`${fakeApp}/public/public/css/app.css`));

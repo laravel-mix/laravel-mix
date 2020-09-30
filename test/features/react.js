@@ -1,8 +1,9 @@
 import mix from './helpers/setup';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
-test.serial('mix.react()', t => {
+test('mix.react()', t => {
     mix.react().js('resources/assets/js/app.js', 'public/js');
 
     t.deepEqual(
@@ -16,12 +17,12 @@ test.serial('mix.react()', t => {
     );
 });
 
-test.serial('it compiles React and a preprocessor properly', async t => {
+test('it compiles React and a preprocessor properly', async t => {
     mix.react()
         .js(`${fakeApp}/resources/assets/js/app.js`, 'js')
         .sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');
 
-    await compile();
+    await webpack.compile();
 
     assert.manifestEquals(
         {
@@ -34,21 +35,21 @@ test.serial('it compiles React and a preprocessor properly', async t => {
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
 });
 
-test.serial('it sets the webpack entry correctly', t => {
+test('it sets the webpack entry correctly', t => {
     mix.react().js('resources/assets/js/app.js', 'js');
 
     t.deepEqual(
         {
             '/js/app': [path.resolve('resources/assets/js/app.js')]
         },
-        buildConfig().entry
+        webpack.buildConfig().entry
     );
 });
 
-test.serial('it sets the babel config correctly', t => {
+test('it sets the babel config correctly', t => {
     mix.react().js('resources/assets/js/app.js', 'js');
 
-    buildConfig();
+    webpack.buildConfig();
 
     t.true(
         Config.babel().presets.find(p =>

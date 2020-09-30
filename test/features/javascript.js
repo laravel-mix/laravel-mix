@@ -1,11 +1,12 @@
 import mix from './helpers/setup';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
-test.serial('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
+test('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
     mix.js('resources/assets/js/app.js', 'public/js');
 
-    let rules = buildConfig().module.rules;
+    let rules = webpack.buildConfig().module.rules;
 
     t.true(rules.some(rule => rule.test.test('file.js')));
     t.true(rules.some(rule => rule.test.test('file.cjs')));
@@ -14,10 +15,10 @@ test.serial('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
     t.true(rules.some(rule => rule.test.test('file.tsx')));
 });
 
-test.serial('it compiles JavaScript', async t => {
+test('it compiles JavaScript', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
 
@@ -29,10 +30,10 @@ test.serial('it compiles JavaScript', async t => {
     );
 });
 
-test.serial('it compiles JavaScript with dynamic import', async t => {
+test('it compiles JavaScript with dynamic import', async t => {
     mix.js(`${fakeApp}/resources/assets/dynamic/dynamic.js`, 'js');
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/dynamic.js`));
 
@@ -44,13 +45,13 @@ test.serial('it compiles JavaScript with dynamic import', async t => {
     );
 });
 
-test.serial('it compiles JavaScript and Sass', async t => {
+test('it compiles JavaScript and Sass', async t => {
     mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').sass(
         `${fakeApp}/resources/assets/sass/app.scss`,
         'css'
     );
 
-    await compile();
+    await webpack.compile();
 
     t.true(File.exists(`${fakeApp}/public/js/app.js`));
     t.true(File.exists(`${fakeApp}/public/css/app.css`));
@@ -64,10 +65,10 @@ test.serial('it compiles JavaScript and Sass', async t => {
     );
 });
 
-test.serial('basic JS compilation config.', t => {
+test('basic JS compilation config.', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
-    let webpackConfig = buildConfig();
+    let webpackConfig = webpack.buildConfig();
 
     t.deepEqual(
         {
@@ -87,21 +88,18 @@ test.serial('basic JS compilation config.', t => {
     );
 });
 
-test.serial(
-    'basic JS compilation with output public directory omitted config.',
-    t => {
-        mix.js('resources/assets/js/app.js', 'js');
+test('basic JS compilation with output public directory omitted config.', t => {
+    mix.js('resources/assets/js/app.js', 'js');
 
-        t.deepEqual(
-            {
-                '/js/app': [path.resolve('resources/assets/js/app.js')]
-            },
-            buildConfig().entry
-        );
-    }
-);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')]
+        },
+        webpack.buildConfig().entry
+    );
+});
 
-test.serial('basic JS compilation with a different public path', t => {
+test('basic JS compilation with a different public path', t => {
     mix.js('resources/assets/js/app.js', 'public/js').setPublicPath(
         'public-html'
     );
@@ -113,22 +111,22 @@ test.serial('basic JS compilation with a different public path', t => {
             chunkFilename: '[name].js',
             publicPath: '/'
         },
-        buildConfig().output
+        webpack.buildConfig().output
     );
 });
 
-test.serial('basic JS compilation with a specific output path config.', t => {
+test('basic JS compilation with a specific output path config.', t => {
     mix.js('resources/assets/js/app.js', 'js/output.js');
 
     t.deepEqual(
         {
             '/js/output': [path.resolve('resources/assets/js/app.js')]
         },
-        buildConfig().entry
+        webpack.buildConfig().entry
     );
 });
 
-test.serial('mix.js()', t => {
+test('mix.js()', t => {
     let response = mix.js('resources/assets/js/app.js', 'public/js');
 
     t.is(mix, response);
