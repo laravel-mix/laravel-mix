@@ -5,7 +5,7 @@ import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
 test('it returns the mix instance', t => {
-    t.is(mix, mix.coffee('resources/assets/js/app.coffee', 'public/js'));
+    t.deepEqual(mix, mix.coffee('resources/assets/js/app.coffee', 'public/js'));
 });
 
 test('it applies the correct webpack rules', t => {

@@ -13,7 +13,7 @@ mockRequire(
 test('it handles Browsersync reloading', async t => {
     let response = mix.browserSync('app.dev');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     let { config } = await webpack.compile();
 

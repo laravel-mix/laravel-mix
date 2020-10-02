@@ -6,7 +6,7 @@ test('mix.sourceMaps()', t => {
     let response = mix.sourceMaps();
 
     // Sourcemaps should use a sensible type as the default for dev.
-    t.is(mix, response);
+    t.deepEqual(mix, response);
     t.is('eval-source-map', Config.sourcemaps);
 
     // For production builds, we should use a more performant type.

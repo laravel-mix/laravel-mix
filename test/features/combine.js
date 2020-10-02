@@ -59,16 +59,16 @@ test('it compiles JS and then combines the bundles files.', async t => {
 });
 
 test('mix.combine/scripts/styles/babel()', t => {
-    t.is(mix, mix.combine([], 'public/js/combined.js'));
+    t.deepEqual(mix, mix.combine([], 'public/js/combined.js'));
 
     t.is(1, Mix.tasks.length);
 
-    t.is(mix, mix.scripts([], 'public/js/combined.js'));
-    t.is(mix, mix.babel([], 'public/js/combined.js'));
+    t.deepEqual(mix, mix.scripts([], 'public/js/combined.js'));
+    t.deepEqual(mix, mix.babel([], 'public/js/combined.js'));
 });
 
 test('mix.minify()', t => {
-    t.is(mix, mix.minify('public/js/minify.js'));
+    t.deepEqual(mix, mix.minify('public/js/minify.js'));
 
     t.is(1, Mix.tasks.length);
 });

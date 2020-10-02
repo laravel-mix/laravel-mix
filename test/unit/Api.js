@@ -13,7 +13,7 @@ test.beforeEach(t => {
 test('mix.setPublicPath()', t => {
     let response = mix.setPublicPath('somewhere/else');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.is(path.normalize('somewhere/else'), Config.publicPath);
 
@@ -26,7 +26,7 @@ test('mix.setPublicPath()', t => {
 test('mix.setResourceRoot()', t => {
     let response = mix.setResourceRoot('some/path');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.is('some/path', Config.resourceRoot);
 });
@@ -37,7 +37,7 @@ test('mix.then()', t => {
     // mix.then() registers a "build" event listener.
     let response = mix.then(() => (called = true));
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     // Let's fire a "build" event, and make sure that
     // our callback handler is called, as expected.

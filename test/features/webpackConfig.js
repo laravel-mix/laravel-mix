@@ -6,7 +6,7 @@ test('mix.webpackConfig()', t => {
     let config = { context: 'changed' };
     let response = mix.webpackConfig(config);
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.deepEqual(config, Config.webpackConfig);
 
@@ -14,7 +14,7 @@ test('mix.webpackConfig()', t => {
     config = { context: 'changed again' };
     response = mix.webpackConfig(webpack => config);
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.deepEqual(config, Config.webpackConfig);
 });

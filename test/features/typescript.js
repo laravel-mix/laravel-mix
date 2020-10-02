@@ -5,7 +5,7 @@ import webpack from '../helpers/webpack';
 test('mix.ts()', t => {
     let response = mix.ts('resources/assets/js/app.ts', 'public/js');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.deepEqual(
         [
@@ -18,7 +18,7 @@ test('mix.ts()', t => {
     );
 
     // There's also a mix.typeScript() alias.
-    t.is(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
+    t.deepEqual(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
 });
 
 test('it applies the correct extensions and aliases to the webpack config', async t => {

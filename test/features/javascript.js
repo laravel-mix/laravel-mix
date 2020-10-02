@@ -133,7 +133,7 @@ test('basic JS compilation with a specific output path config.', t => {
 test('mix.js()', t => {
     let response = mix.js('resources/assets/js/app.js', 'public/js');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     let jsComponent = Mix.components.get('js');
 

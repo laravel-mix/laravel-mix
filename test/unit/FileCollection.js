@@ -52,6 +52,7 @@ test.cb('that it can merge JS files and apply Babel compilation.', t => {
 
     let output = new File(path.resolve(stubsDir, 'merged.js'));
     let useBabel = true;
+
     collection.merge(output, useBabel).then(() => {
         t.true(File.exists(output.path()));
         t.is(eol.auto('fake minified output\n'), output.read());
@@ -59,16 +60,13 @@ test.cb('that it can merge JS files and apply Babel compilation.', t => {
     });
 });
 
-test.cb("that it throw an error if a file doesn't exist.", t => {
+test("that it throw an error if a file doesn't exist.", async t => {
     let files = [path.resolve(stubsDir, 'fileThatDoesntExist.js')];
     let output = new File(path.resolve(stubsDir, 'merged.js'));
-    let mergeFiles = () => new FileCollection(files).merge(output);
-    let expectedMessage = `ENOENT: no such file or directory, open '${
-        files[0]
-    }'`;
 
-    t.throwsAsync(mergeFiles(), expectedMessage).then(() => {
-        t.false(File.exists(output.path()));
-        t.end();
-    });
+    let mergeFiles = () => new FileCollection(files).merge(output);
+
+    await t.throwsAsync(mergeFiles());
+
+    t.false(File.exists(output.path()));
 });
