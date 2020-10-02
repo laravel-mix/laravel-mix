@@ -4,9 +4,10 @@
 
 -   [Installation](installation.md)
 -   [Basic Laravel Workflow](workflow.md)
+-   [The Mix API](api.md)
 -   [FAQ](faq.md)
 
-## API
+## Dig Deeper
 
 -   [JavaScript](mixjs.md)
 -   [Library Code Splitting](extract.md)
