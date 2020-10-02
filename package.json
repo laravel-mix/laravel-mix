@@ -100,7 +100,7 @@
         "sass-resources-loader": "^2.1.1",
         "sinon": "^9.1.0",
         "stylus": "^0.54.5",
-        "stylus-loader": "^3.0.2",
+        "stylus-loader": "^4.0.0",
         "vue-loader15": "npm:vue-loader@^15.9.1",
         "vue-loader16": "npm:vue-loader@^16.0.0-beta.8",
         "vue-style-loader": "^4.0.2",
