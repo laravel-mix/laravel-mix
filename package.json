@@ -94,8 +94,6 @@
         "postcss-custom-properties": "^10.0.0",
         "prettier": "1.15.2",
         "pretty-quick": "^2.0.1",
-        "purify-css": "^1.2.6",
-        "purifycss-webpack": "^0.7.0",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.26.11",
         "sass-loader": "^10.0.1",
