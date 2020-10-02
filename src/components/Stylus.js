@@ -17,13 +17,6 @@ class Stylus extends Preprocessor {
      * @param {Array}  postCssPlugins
      */
     register(src, output, pluginOptions = {}, postCssPlugins = []) {
-        pluginOptions = Object.assign(
-            {
-                preferPathResolver: 'webpack'
-            },
-            pluginOptions
-        );
-
         return this.preprocess(
             'stylus',
             src,
