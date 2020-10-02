@@ -38,7 +38,7 @@ If those files don't exist in your project, go ahead and create them. Populate `
 alert('Hello World');
 ```
 
-```sass
+```scss
 // resources/sass/app.scss
 $primary: red;
 
