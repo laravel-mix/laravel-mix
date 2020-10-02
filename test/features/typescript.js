@@ -1,9 +1,11 @@
 import mix from './helpers/setup';
+import File from '../../src/File';
+import webpack from '../helpers/webpack';
 
-test.serial('mix.ts()', t => {
+test('mix.ts()', t => {
     let response = mix.ts('resources/assets/js/app.ts', 'public/js');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     t.deepEqual(
         [
@@ -16,39 +18,38 @@ test.serial('mix.ts()', t => {
     );
 
     // There's also a mix.typeScript() alias.
-    t.is(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
+    t.deepEqual(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
 });
 
-test.serial.cb(
-    'it applies the correct extensions and aliases to the webpack config',
-    t => {
-        mix.ts(
-            'test/fixtures/fake-app/resources/assets/js/app.js',
-            'public/js'
-        );
+test('it applies the correct extensions and aliases to the webpack config', async t => {
+    mix.ts('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
 
-        compile(t, webpackConfig => {
-            t.true(webpackConfig.resolve.extensions.includes('.ts'));
-            t.true(webpackConfig.resolve.extensions.includes('.tsx'));
-        });
-    }
-);
+    let { config } = await webpack.compile();
 
-test.serial('it applies the correct webpack rules', t => {
+    t.true(config.resolve.extensions.includes('.ts'));
+    t.true(config.resolve.extensions.includes('.tsx'));
+});
+
+test('it applies Babel transformation', t => {
     mix.ts('resources/assets/js/app.js', 'public/js');
 
-    t.truthy(
-        buildConfig().module.rules.find(
-            rule => rule.test.toString() === '/\\.tsx?$/'
-        )
+    t.true(
+        webpack
+            .buildConfig()
+            .module.rules.find(rule => {
+                return rule.test.test('foo.tsx');
+            })
+            .use.some(loader => loader.loader === 'babel-loader')
     );
 });
 
-test.serial('it is able to apply options to ts-loader', t => {
+test('it is able to apply options to ts-loader', t => {
     mix.ts('resources/assets/js/app.js', 'public/js', { transpileOnly: true });
 
     t.truthy(
-        buildConfig().module.rules.find(rule => rule.loader === 'ts-loader')
-            .options.transpileOnly
+        webpack
+            .buildConfig()
+            .module.rules.find(rule => rule.loader === 'ts-loader').options
+            .transpileOnly
     );
 });

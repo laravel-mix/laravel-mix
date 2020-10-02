@@ -1,54 +1,53 @@
 import mix from './helpers/setup';
 import fs from 'fs-extra';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
-test.serial.cb('it can version an entire directory or regex of files.', t => {
-    fs.ensureDirSync('test/fixtures/fake-app/public/js/folder');
+test('it can version an entire directory or regex of files.', async t => {
+    fs.ensureDirSync(`${fakeApp}/public/js/folder`);
 
-    new File('test/fixtures/fake-app/public/js/folder/one.js').write('var one');
-    new File('test/fixtures/fake-app/public/js/folder/two.js').write('var two');
-    new File('test/fixtures/fake-app/public/js/folder/three.js').write(
-        'var three'
+    new File(`${fakeApp}/public/js/folder/one.js`).write('var one');
+    new File(`${fakeApp}/public/js/folder/two.js`).write('var two');
+    new File(`${fakeApp}/public/js/folder/three.js`).write('var three');
+
+    mix.version(`${fakeApp}/public/js/folder`);
+
+    await webpack.compile();
+
+    assert.manifestEquals(
+        {
+            '/js/folder/one.js': '/js/folder/one.js\\?id=\\w{20}',
+            '/js/folder/three.js': '/js/folder/three.js\\?id=\\w{20}',
+            '/js/folder/two.js': '/js/folder/two.js\\?id=\\w{20}'
+        },
+        t
     );
-
-    mix.version('test/fixtures/fake-app/public/js/folder');
-
-    compile(t, () => {
-        assertManifestIs(
-            {
-                '/js/folder/one.js': '/js/folder/one.js\\?id=\\w{20}',
-                '/js/folder/three.js': '/js/folder/three.js\\?id=\\w{20}',
-                '/js/folder/two.js': '/js/folder/two.js\\?id=\\w{20}'
-            },
-            t
-        );
-    });
 });
 
-test.serial.cb('it compiles JavaScript and Sass with versioning', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js')
-        .sass('test/fixtures/fake-app/resources/assets/sass/app.scss', 'css')
+test('it compiles JavaScript and Sass with versioning', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
+        .sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css')
         .version();
 
-    compile(t, () => {
-        let manifest = readManifest();
+    await webpack.compile();
 
-        assertManifestIs(
-            {
-                '/css/app.css': '/css/app.css\\?id=\\w{20}',
-                '/js/app.js': '/js/app.js\\?id=\\w{20}'
-            },
-            t
-        );
-    });
+    assert.manifestEquals(
+        {
+            '/css/app.css': '/css/app.css\\?id=\\w{20}',
+            '/js/app.js': '/js/app.js\\?id=\\w{20}'
+        },
+        t
+    );
 });
 
-test.serial.cb('it can build for production with versioning', t => {
+test('it can build for production with versioning', async t => {
     Config.production = true;
     t.true(Mix.inProduction());
 
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').version();
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').version();
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-    });
+    await webpack.compile();
+
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
 });

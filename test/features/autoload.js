@@ -1,23 +1,24 @@
 import mix from './helpers/setup';
+import webpack from '../helpers/webpack';
 
-test.serial.cb('it handles library autoloading', t => {
+test('it handles library autoloading', async t => {
     mix.autoload({
         jquery: ['$', 'window.jQuery'],
         'lodash.map': '_map'
     });
 
-    compile(t, config => {
-        let providePlugin = config.plugins.find(
-            plugin => plugin.constructor.name === 'ProvidePlugin'
-        );
+    let { config } = await webpack.compile();
 
-        t.deepEqual(
-            {
-                $: 'jquery',
-                'window.jQuery': 'jquery',
-                _map: ['lodash', 'map']
-            },
-            providePlugin.definitions
-        );
-    });
+    let providePlugin = config.plugins.find(
+        plugin => plugin.constructor.name === 'ProvidePlugin'
+    );
+
+    t.deepEqual(
+        {
+            $: 'jquery',
+            'window.jQuery': 'jquery',
+            _map: ['lodash', 'map']
+        },
+        providePlugin.definitions
+    );
 });

@@ -1,7 +1,7 @@
 import test from 'ava';
 import mockRequire from 'mock-require';
-import Log from '../src/Log';
-import VueVersion from '../src/VueVersion';
+import Log from '../../src/Log';
+import VueVersion from '../../src/VueVersion';
 
 test('it detects Vue 2', t => {
     mockRequire('vue', { version: '2.0' });

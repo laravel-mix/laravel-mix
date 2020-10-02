@@ -1,6 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon';
-import Log from '../src/Log';
+import Log from '../../src/Log';
 
 sinon.stub(console, 'log');
 

@@ -1,59 +1,76 @@
 import mix from './helpers/setup';
+import assert from '../helpers/assertions';
+import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
-test.serial.cb('it compiles JavaScript', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js');
+test('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
+    mix.js('resources/assets/js/app.js', 'public/js');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+    let rules = webpack.buildConfig().module.rules;
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(rules.some(rule => rule.test.test('file.js')));
+    t.true(rules.some(rule => rule.test.test('file.cjs')));
+    t.true(rules.some(rule => rule.test.test('file.mjs')));
+    t.true(rules.some(rule => rule.test.test('file.ts')));
+    t.true(rules.some(rule => rule.test.test('file.tsx')));
 });
 
-test.serial.cb('it compiles JavaScript with dynamic import', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/dynamic/dynamic.js', 'js');
+test('it compiles JavaScript', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js');
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/dynamic.js'));
+    await webpack.compile();
 
-        t.deepEqual(
-            {
-                '/js/dynamic.js': '/js/dynamic.js'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js'
+        },
+        t
+    );
 });
 
-test.serial.cb('it compiles JavaScript and Sass', t => {
-    mix.js('test/fixtures/fake-app/resources/assets/js/app.js', 'js').sass(
-        'test/fixtures/fake-app/resources/assets/sass/app.scss',
+test('it compiles JavaScript with dynamic import', async t => {
+    mix.js(`${fakeApp}/resources/assets/dynamic/dynamic.js`, 'js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`${fakeApp}/public/js/dynamic.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/absolute.js': '/js/absolute.js',
+            '/js/dynamic.js': '/js/dynamic.js',
+            '/js/named.js': '/js/named.js'
+        },
+        t
+    );
+});
+
+test('it compiles JavaScript and Sass', async t => {
+    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').sass(
+        `${fakeApp}/resources/assets/sass/app.scss`,
         'css'
     );
 
-    compile(t, () => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/css/app.css'));
+    await webpack.compile();
 
-        t.deepEqual(
-            {
-                '/js/app.js': '/js/app.js',
-                '/css/app.css': '/css/app.css'
-            },
-            readManifest()
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
 });
 
-test.serial('basic JS compilation config.', t => {
+test('basic JS compilation config.', t => {
     mix.js('resources/assets/js/app.js', 'js');
 
-    let webpackConfig = buildConfig();
+    let webpackConfig = webpack.buildConfig();
 
     t.deepEqual(
         {
@@ -64,60 +81,59 @@ test.serial('basic JS compilation config.', t => {
 
     t.deepEqual(
         {
-            path: path.resolve('test/fixtures/fake-app/public'),
+            path: path.resolve(`${fakeApp}/public`),
             filename: '[name].js',
-            chunkFilename: '[name].js',
+            chunkFilename: webpackConfig.output.chunkFilename,
             publicPath: '/'
         },
         webpackConfig.output
     );
 });
 
-test.serial(
-    'basic JS compilation with output public directory omitted config.',
-    t => {
-        mix.js('resources/assets/js/app.js', 'js');
+test('basic JS compilation with output public directory omitted config.', t => {
+    mix.js('resources/assets/js/app.js', 'js');
 
-        t.deepEqual(
-            {
-                '/js/app': [path.resolve('resources/assets/js/app.js')]
-            },
-            buildConfig().entry
-        );
-    }
-);
+    t.deepEqual(
+        {
+            '/js/app': [path.resolve('resources/assets/js/app.js')]
+        },
+        webpack.buildConfig().entry
+    );
+});
 
-test.serial('basic JS compilation with a different public path', t => {
+test('basic JS compilation with a different public path', t => {
     mix.js('resources/assets/js/app.js', 'public/js').setPublicPath(
         'public-html'
     );
+
+    let webpackConfig = webpack.buildConfig();
 
     t.deepEqual(
         {
             path: path.resolve('public-html'),
             filename: '[name].js',
-            chunkFilename: '[name].js',
+            chunkFilename: webpackConfig.output.chunkFilename,
             publicPath: '/'
         },
-        buildConfig().output
+        webpackConfig.output
     );
 });
 
-test.serial('basic JS compilation with a specific output path config.', t => {
+test('basic JS compilation with a specific output path config.', t => {
     mix.js('resources/assets/js/app.js', 'js/output.js');
 
     t.deepEqual(
         {
             '/js/output': [path.resolve('resources/assets/js/app.js')]
         },
-        buildConfig().entry
+        webpack.buildConfig().entry
     );
 });
 
-test.serial('mix.js()', t => {
+test('mix.js()', t => {
     let response = mix.js('resources/assets/js/app.js', 'public/js');
 
-    t.is(mix, response);
+    t.deepEqual(mix, response);
 
     let jsComponent = Mix.components.get('js');
 

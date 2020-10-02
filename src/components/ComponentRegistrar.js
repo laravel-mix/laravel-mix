@@ -30,14 +30,14 @@ let components = [
     'DumpWebpackConfig'
 ];
 
-class ComponentFactory {
+class ComponentRegistrar {
     /**
      * Install all default components.
      */
-    installAll() {
+    addMany() {
         components
             .map(name => require(`./${name}`))
-            .forEach(this.install.bind(this));
+            .forEach(this.add.bind(this));
     }
 
     /**
@@ -45,7 +45,7 @@ class ComponentFactory {
      *
      * @param {Component} Component
      */
-    install(Component) {
+    add(Component) {
         let component =
             typeof Component === 'function' ? new Component() : Component;
 
@@ -174,4 +174,4 @@ class ComponentFactory {
     }
 }
 
-module.exports = ComponentFactory;
+module.exports = ComponentRegistrar;

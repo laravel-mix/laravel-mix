@@ -2,7 +2,7 @@ import test from 'ava';
 import path from 'path';
 import fs from 'fs-extra';
 import eol from 'eol';
-import '../src/index';
+import '../../src';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 

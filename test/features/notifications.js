@@ -1,44 +1,45 @@
 import mix from './helpers/setup';
+import webpack from '../helpers/webpack';
 
-test.cb('it displays OS notifications', t => {
-    compile(t, config => {
-        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
-        let plugin = config.plugins.find(
-            plugin => plugin.options && plugin.options.alwaysNotify === true
-        );
-
-        t.truthy(plugin);
-    });
+test('it returns the mix instance', t => {
+    t.deepEqual(mix, mix.disableNotifications());
 });
 
-test.cb('it disables OS notifications', t => {
+test('it displays OS notifications', async t => {
+    let { config } = await webpack.compile();
+
+    // Find the webpack-notifier plugin.
+    let plugin = config.plugins.find(
+        plugin => plugin.options && plugin.options.alwaysNotify === true
+    );
+
+    t.truthy(plugin);
+});
+
+test('it disables OS notifications', async t => {
     mix.disableNotifications();
 
-    compile(t, config => {
-        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
-        let plugin = config.plugins.find(
-            plugin => plugin.options && plugin.options.alwaysNotify === true
-        );
+    let { config } = await webpack.compile();
 
-        t.falsy(plugin);
-    });
+    // Find the webpack-notifier plugin.
+    let plugin = config.plugins.find(
+        plugin => plugin.options && plugin.options.alwaysNotify === true
+    );
+
+    t.falsy(plugin);
 });
 
-test.cb('it disables OS success notifications', t => {
+test('it disables OS success notifications', async t => {
     mix.disableSuccessNotifications();
 
-    compile(t, config => {
-        // Find the webpack-notifier plugin. (Yeah, a little awkward...)
-        let plugin = config.plugins.find(
-            // To disable success notifications, we only have to set the alwaysNotify
-            // option on the webpack plugin to false.
-            plugin => plugin.options && plugin.options.alwaysNotify === false
-        );
+    let { config } = await webpack.compile();
 
-        t.truthy(plugin);
-    });
-});
+    // Find the webpack-notifier plugin.
+    let plugin = config.plugins.find(
+        // To disable success notifications, we only have to set the alwaysNotify
+        // option on the webpack plugin to false.
+        plugin => plugin.options && plugin.options.alwaysNotify === false
+    );
 
-test('mix.disableNotifications()', t => {
-    t.is(mix, mix.disableNotifications());
+    t.truthy(plugin);
 });

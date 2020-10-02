@@ -1,78 +1,59 @@
 import mix from './helpers/setup';
+import File from '../../src/File';
+import { fakeApp } from '../helpers/paths';
+import webpack from '../helpers/webpack';
 
 test.beforeEach(() => setupVueAliases(2));
 
-test.serial.cb('JS compilation with vendor extraction config', t => {
-    mix.vue({ version: 2 });
-    mix.js(
-        'test/fixtures/fake-app/resources/assets/extract/app.js',
-        'js'
-    ).extract(['vue'], 'js/libraries.js');
+test('JS compilation with vendor extraction config', async t => {
+    mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
+        .vue({ version: 2 })
+        .extract(['vue'], 'js/libraries.js');
 
-    compile(t, config => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/manifest.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/js/libraries.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+    await webpack.compile();
 
-        t.true(
-            new File('test/fixtures/fake-app/public/js/libraries.js')
-                .read()
-                .includes('vue')
-        );
-    });
+    t.true(File.exists(`${fakeApp}/public/js/manifest.js`));
+    t.true(File.exists(`${fakeApp}/public/js/libraries.js`));
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
+
+    t.true(
+        new File(`${fakeApp}/public/js/libraries.js`).read().includes('vue')
+    );
 });
 
-test.serial.cb(
-    'vendor extraction with no requested JS compilation will still extract vendor libraries',
-    t => {
-        mix.extract(['vue']);
+test('vendor extraction with no requested JS compilation will still extract vendor libraries', async t => {
+    mix.extract(['vue']);
 
-        compile(t, config => {
-            t.true(File.exists('test/fixtures/fake-app/public/manifest.js'));
-            t.true(File.exists('test/fixtures/fake-app/public/vendor.js'));
+    await webpack.compile();
 
-            t.true(
-                new File('test/fixtures/fake-app/public/vendor.js')
-                    .read()
-                    .includes('vue')
-            );
-        });
-    }
-);
+    t.true(File.exists(`${fakeApp}/public/manifest.js`));
+    t.true(File.exists(`${fakeApp}/public/vendor.js`));
 
-test.serial.cb(
-    'JS compilation with vendor extraction with default config',
-    t => {
-        mix.vue({ version: 2 });
-        mix.js(
-            'test/fixtures/fake-app/resources/assets/extract/app.js',
-            'js'
-        ).extract(['vue']);
+    t.true(new File(`${fakeApp}/public/vendor.js`).read().includes('vue'));
+});
 
-        compile(t, config => {
-            t.true(File.exists('test/fixtures/fake-app/public/js/manifest.js'));
-            t.true(File.exists('test/fixtures/fake-app/public/js/vendor.js'));
-            t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
+test('JS compilation with vendor extraction with default config', async t => {
+    mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
+        .vue({ version: 2 })
+        .extract(['vue']);
 
-            t.true(
-                new File('test/fixtures/fake-app/public/js/vendor.js')
-                    .read()
-                    .includes('vue')
-            );
-        });
-    }
-);
+    await webpack.compile();
 
-test.serial.cb('JS compilation with total vendor extraction', t => {
-    mix.vue({ version: 2 });
-    mix.js(
-        'test/fixtures/fake-app/resources/assets/extract/app.js',
-        'js'
-    ).extract();
+    t.true(File.exists(`${fakeApp}/public/js/manifest.js`));
+    t.true(File.exists(`${fakeApp}/public/js/vendor.js`));
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
 
-    compile(t, config => {
-        t.true(File.exists('test/fixtures/fake-app/public/js/manifest.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/js/vendor.js'));
-        t.true(File.exists('test/fixtures/fake-app/public/js/app.js'));
-    });
+    t.true(new File(`${fakeApp}/public/js/vendor.js`).read().includes('vue'));
+});
+
+test('JS compilation with total vendor extraction', async t => {
+    mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
+        .vue({ version: 2 })
+        .extract();
+
+    await webpack.compile();
+
+    t.true(File.exists(`${fakeApp}/public/js/manifest.js`));
+    t.true(File.exists(`${fakeApp}/public/js/vendor.js`));
+    t.true(File.exists(`${fakeApp}/public/js/app.js`));
 });

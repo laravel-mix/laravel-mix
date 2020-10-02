@@ -5,9 +5,9 @@
  */
 let mix = require('../src/index');
 
-let ComponentFactory = require('../src/components/ComponentFactory');
+let ComponentRegistrar = require('../src/components/ComponentRegistrar');
 
-new ComponentFactory().installAll();
+new ComponentRegistrar().addMany();
 
 require(Mix.paths.mix());
 

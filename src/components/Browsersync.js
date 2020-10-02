@@ -46,27 +46,31 @@ class Browsersync {
      * Build the BrowserSync configuration.
      */
     config() {
-        return Object.assign(
-            {
-                host: 'localhost',
-                port: 3000,
-                proxy: 'app.test',
-                files: [
-                    'app/**/*.php',
-                    'resources/views/**/*.php',
-                    `${Config.publicPath || 'public'}/**/*.(js|css)`
-                ],
-                snippetOptions: {
-                    rule: {
-                        match: this.regex(),
-                        fn: function(snippet, match) {
-                            return snippet + match;
-                        }
+        let userConfig = this.userConfig;
+        let defaultConfig = {
+            host: 'localhost',
+            port: 3000,
+            proxy: 'app.test',
+            files: [
+                'app/**/*.php',
+                'resources/views/**/*.php',
+                `${Config.publicPath || 'public'}/**/*.(js|css)`
+            ],
+            snippetOptions: {
+                rule: {
+                    match: this.regex(),
+                    fn: function(snippet, match) {
+                        return snippet + match;
                     }
                 }
-            },
-            this.userConfig
-        );
+            }
+        };
+
+        if (userConfig && userConfig.server) {
+            delete defaultConfig.proxy;
+        }
+
+        return Object.assign(defaultConfig, userConfig);
     }
 }
 

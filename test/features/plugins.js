@@ -2,9 +2,10 @@ import test from 'ava';
 import mix from './helpers/setup';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
-import ComponentFactory from '../../src/components/ComponentFactory';
+import ComponentRegistrar from '../../src/components/ComponentRegistrar';
+import webpack from '../helpers/webpack';
 
-new ComponentFactory().installAll();
+new ComponentRegistrar().addMany();
 
 test('mix can be extended with new functionality as a callback', t => {
     let registration = sinon.spy();
@@ -138,7 +139,7 @@ test('custom Babel config may be merged', t => {
 
     mix.reactNext();
 
-    buildConfig();
+    webpack.buildConfig();
 
     t.true(
         Config.babel().plugins.find(plugin =>

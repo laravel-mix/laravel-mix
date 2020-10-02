@@ -1,16 +1,17 @@
 import mix from './helpers/setup';
 import path from 'path';
+import webpack from '../helpers/webpack';
 
-test.serial('it handles resolution aliases', async t => {
+test('it handles resolution aliases', async t => {
     mix.alias({
         '@': './foobar'
     });
 
-    const { config } = await compile();
+    let { config } = await webpack.compile();
 
     t.deepEqual(
         {
-            '@': path.resolve(__dirname, '../../foobar'),
+            '@': path.resolve(__dirname, '../../foobar')
         },
         config.resolve.alias
     );

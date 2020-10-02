@@ -8,13 +8,16 @@
 
 ## Introduction
 
+![Laravel Mix thumbnail](https://repository-images.githubusercontent.com/76991633/43a4fe80-025e-11eb-8b88-bf742e4412a7)
+
+
 Laravel Mix provides a clean, fluent API for defining basic [webpack](http://github.com/webpack/webpack) build steps for your Laravel application. Mix supports several common CSS and JavaScript pre-processors.
 
 If you've ever been confused about how to get started with module bundling and asset compilation, you will love Laravel Mix!
 
 ## Documentation
 
-You may review the initial documentation [here](https://laravel-mix.com/docs/5.0/basic-example).
+You may review the initial documentation [here](docs/).
 
 ## License
 

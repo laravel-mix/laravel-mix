@@ -1,7 +1,8 @@
 import mix from './helpers/setup';
 import Log from '../../src/Log';
+import webpack from '../helpers/webpack';
 
-test.serial.cb('mix.dumpWebpackConfig()', t => {
+test('mix.dumpWebpackConfig()', async t => {
     let config;
 
     Log.info = webpackConfig => {
@@ -13,10 +14,10 @@ test.serial.cb('mix.dumpWebpackConfig()', t => {
         'js'
     ).dumpWebpackConfig();
 
-    compile(t, () => {
-        // Quick test to ensure that a webpack config object was logged.
-        t.truthy(config.context);
-        t.true(typeof config.module === 'object');
-        t.true(typeof config.plugins === 'object');
-    });
+    await webpack.compile();
+
+    // Quick test to ensure that a webpack config object was logged.
+    t.truthy(config.context);
+    t.true(typeof config.module === 'object');
+    t.true(typeof config.plugins === 'object');
 });

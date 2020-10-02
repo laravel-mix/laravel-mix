@@ -1,5 +1,5 @@
 let webpackMerge = require('webpack-merge');
-let { mergeSmart } = require('./mergeSmart');
+let { mergeSmart } = require('./MergeSmart');
 
 let hasWarned = false;
 

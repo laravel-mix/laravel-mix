@@ -1,5 +1,6 @@
 import mix from '../features/helpers/setup';
 import { chromium } from 'playwright';
+import webpack from '../helpers/webpack';
 
 let browser;
 
@@ -9,15 +10,15 @@ test.beforeEach(() => {
     mix.setPublicPath('test/fixtures/integration/dist');
 });
 
-test.serial('compiling just js', async t => {
+test('compiling just js', async t => {
     // Build a simple mix setup
     mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
 
-    await compile();
+    await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
 });
 
-test.serial('compiling js and css together', async t => {
+test('compiling js and css together', async t => {
     // Build a simple mix setup
     mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
     mix.postCss(
@@ -25,7 +26,7 @@ test.serial('compiling js and css together', async t => {
         'css/app.css'
     );
 
-    await compile();
+    await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
 });
 

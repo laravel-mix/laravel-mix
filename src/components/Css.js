@@ -134,7 +134,10 @@ class Css extends AutomaticComponent {
     postCssOptions() {
         if (Mix.components.get('postCss')) {
             return {
-                plugins: Mix.components.get('postCss').details[0].postCssPlugins
+                postcssOptions: {
+                    plugins: Mix.components.get('postCss').details[0]
+                        .postCssPlugins
+                }
             };
         }
 
@@ -144,7 +147,9 @@ class Css extends AutomaticComponent {
             return {};
         }
 
-        return { plugins: Config.postCss };
+        return {
+            postcssOptions: { plugins: Config.postCss }
+        };
     }
 
     /**
