@@ -2,68 +2,39 @@
 
 ### Does this tool require that I use Laravel?
 
-No. It has a few optimizations for Laravel, but it can be used for any project.
+No. It has awareness of Laravel, but it can be used for any project. Just be sure to explicitly set the path to your project's `public` or `dist` directory, like so:
+
+```js
+mix.setPublicPath('dist');
+```
+
+This tells Mix the basic directory where all of your assets should be compiled to.
 
 ### My code isn't being minified.
 
-Minification will only be performed, when your `NODE_ENV` is set to _production_. Not only will this speed up your compilation time, but it's also unnecessary during development. Here's an example of running webpack for production.
+Minification will only be performed when your `NODE_ENV` is set to _production_. By default, this mode is set to development.
 
 ```bash
-export NODE_ENV=production && webpack --progress --hide-modules
+npx mix
 ```
 
-It's highly recommended that you add the following NPM scripts to your `package.json` file. Please note that Laravel includes these out of the box.
+If you're ready to build for a production environment, add the `--production` flag, like so:
 
-```js
-  "scripts": {
-    "dev": "NODE_ENV=development webpack --progress --hide-modules",
-    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hot": "NODE_ENV=development webpack-dev-server --inline --hot",
-    "production": "NODE_ENV=production webpack --progress --hide-modules"
-  },
+```bash
+npx mix --production
 ```
 
 ### I'm using a VM, and webpack isn't picking up my file changes.
 
-If you're running `npm run dev` through a VM, you may find that file changes are not picked up by webpack. If that's the case, there are two ways to resolve this:
-
-1. Configure webpack to **poll** the filesystem for changes _Note: Polling the filesystem is resource-intensive and will likely shorten battery life on the go._
-2. **Forward** file change notifications to the VM by using something like [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify). _Note, this is a [Vagrant](https://www.vagrantup.com)-only plugin._
-
-To **poll** the VM's filesystem, update your NPM script to use the `--watch-poll` flag, in addition to the `--watch` flag. Like this:
+If you're running `npx mix` through a VM, you may find that file changes are not picked up by webpack. If that's the case, consider configuring webpack to **poll** your filesystem for changes, like so:
 
 ```js
-"scripts": {
-    "watch": "NODE_ENV=development webpack --watch --watch-poll",
-  }
+npx mix watch --poll
 ```
-
-To **forward** file change notifications to the VM, simply install [vagrant-fsnotify](https://github.com/adrienkohlbecker/vagrant-fsnotify) on the host machine:
-
-```bash
-vagrant plugin install vagrant-fsnotify
-```
-
-Now you may [configure](https://github.com/adrienkohlbecker/vagrant-fsnotify#basic-setup) vagrant to use the plugin. In [Homestead](https://laravel.com/docs/5.4/homestead), your `Homestead.yaml` file would look something like this:
-
-```yaml
-folders:
-    - map: /Users/jeffrey/Code/laravel
-      to: /home/vagrant/Code/laravel
-      options:
-          fsnotify: true
-          exclude:
-              - node_modules
-              - vendor
-```
-
-Once your vagrant machine is started, simply run `vagrant fsnotify` on the host machine to forward all file changes to the VM. You may then run `npm run watch` inside the VM and have your changes automatically picked up.
-
-If you're still having trouble, [see here for additional troubleshooting tips](https://webpack.github.io/docs/troubleshooting.html#webpack-doesn-t-recompile-on-change-while-watching).
 
 ### Why is it saying that an image in my CSS file can't be found in `node_modules`?
 
-Let's imagine that you have a relative path to an asset that doesn't exist in your `resources/assets/sass/app.scss` file.
+Imagine that you have a relative path to an asset that doesn't exist in your `resources/sass/app.scss` file.
 
 ```css
 body {
@@ -71,7 +42,7 @@ body {
 }
 ```
 
-When referencing a relative path, always think in terms of the current file. As such, webpack will look for `resources/assets/img/example.jpg`. If it can't find it, it'll then begin searching for the file location, including within `node_modules`. If it still can't be found, you'll receive the error:
+When referencing a relative path, always think in terms of the current file. As such, webpack will look one level up for `resources/assets/img/example.jpg`. If it can't find it, it'll then begin searching for the file location, including within the massive `node_modules` directory. If it still can't be found, you'll receive the error:
 
 ```
  ERROR  Failed to compile with 1 errors
@@ -95,11 +66,11 @@ This is particularly useful for legacy projects where your folder structure is a
 
 ### My mix-manifest.json file shouldn't be in the project root.
 
-If you're not using Laravel, your `mix-manifest.json` file will be dumped into the project root. If you need to change this, call `mix.setPublicPath('dist/');`, and your manifest file will now be saved in that base directory.
+If you're not using Laravel, your `mix-manifest.json` file will be dumped into the project root. If you need to change this, call `mix.setPublicPath('dist/');`, and your manifest file will now correctly be saved to the `dist` directory.
 
-### How Do I autoload modules with webpack?
+### Can I autoload modules with Mix and webpack?
 
-Through its `ProvidePlugin` plugin, webpack allows you to automatically load modules, where needed. A common use-case for this is when we need to pull in jQuery.
+Yes. Through its `ProvidePlugin` plugin, webpack allows for this very functionality. A common use-case for this is when we need jQuery to be available to all of your modules. Here's a webpack-specific example of how you might accomplish this.
 
 ```js
 new webpack.ProvidePlugin({
@@ -113,7 +84,7 @@ jQuery('#item'); // <= just works
 // $ is automatically set to the exports of module "jquery"
 ```
 
-While Laravel Mix automatically loads jQuery for you (exactly as the example above demonstrates), should you need to disable it (by passing an empty object), or override it with your own modules, you may use the `mix.autoload()` method. Here's an example:
+Of course, Mix provides an API on top of webpack to make this sort of autoloading a cinch.
 
 ```js
 mix.autoload({
@@ -121,6 +92,8 @@ mix.autoload({
     moment: 'moment' // only one
 });
 ```
+
+Above, we're effectively saying, "When webpack comes across the `$` or `window.jQuery` or `jQuery` symbols, replace it with the exported jQuery module."
 
 ### Why am I seeing a "Vue packages version mismatch" error?
 
@@ -135,7 +108,7 @@ Vue packages version mismatch:
 * vue-template-compiler@2.5.15
 ```
 
-This means your `vue` and `vue-template-compiler` dependencies are out of sync. Per Vue's instructions, the version number for both of these dependencies must be identical. Update as needed to fix the problem:
+This means your `vue` and `vue-template-compiler` dependencies are out of sync. Per Vue 2's instructions, the version number for both of these dependencies must be identical. Update as needed to fix the problem:
 
 ```
 npm update vue
@@ -143,4 +116,18 @@ npm update vue
 // or
 
 npm install vue@2.5.15
+```
+
+### I'm having trouble updating/installing Mix.
+
+Unfortunately, there are countless reasons why your dependencies may not be installing properly. A common root relates to an ancient version of Node (`node -v`) and npm (`npm -v`) installed. As a first step, visit http://nodejs.org and update those.
+
+Otherwise, often, it's related to a faulty lock file that needs to be deleted. Give this series of commands a try to install everything from scratch:
+
+```bash
+rm -rf node_modules
+rm package-lock.json yarn.lock
+npm cache clear --force
+npm install
+``
 ```

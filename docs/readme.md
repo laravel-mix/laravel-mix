@@ -2,11 +2,9 @@
 
 ## Overview
 
--   [Basic Example](basic-example.md)
 -   [Installation](installation.md)
--   [Laravel Workflow](workflow.md)
+-   [Basic Laravel Workflow](workflow.md)
 -   [FAQ](faq.md)
--   [Troubleshooting](troubleshooting.md)
 
 ## API
 
