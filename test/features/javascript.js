@@ -39,7 +39,9 @@ test('it compiles JavaScript with dynamic import', async t => {
 
     assert.manifestEquals(
         {
-            '/js/dynamic.js': '/js/dynamic.js'
+            '/js/absolute.js': '/js/absolute.js',
+            '/js/dynamic.js': '/js/dynamic.js',
+            '/js/named.js': '/js/named.js'
         },
         t
     );

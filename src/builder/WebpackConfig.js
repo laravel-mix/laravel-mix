@@ -76,7 +76,20 @@ class WebpackConfig {
         this.webpackConfig.output = {
             path: Mix.isUsing('hmr') ? '/' : path.resolve(Config.publicPath),
             filename: '[name].js',
-            chunkFilename: '[name].js',
+
+            chunkFilename: pathData => {
+                let hasAbsolutePathChunkName =
+                    pathData.chunk.name && pathData.chunk.name.startsWith('/');
+
+                if (Mix.components.get('js') && !hasAbsolutePathChunkName) {
+                    let output = Mix.components.get('js').toCompile[0].output;
+
+                    return `${output.filePath}/[name].js`;
+                }
+
+                return '[name].js';
+            },
+
             publicPath: Mix.isUsing('hmr')
                 ? `${http}://${Config.hmrOptions.host}:${
                       Config.hmrOptions.port
