@@ -81,7 +81,7 @@ test('basic JS compilation config.', t => {
         {
             path: path.resolve(`${fakeApp}/public`),
             filename: '[name].js',
-            chunkFilename: '[name].js',
+            chunkFilename: webpackConfig.output.chunkFilename,
             publicPath: '/'
         },
         webpackConfig.output
@@ -104,14 +104,16 @@ test('basic JS compilation with a different public path', t => {
         'public-html'
     );
 
+    let webpackConfig = webpack.buildConfig();
+
     t.deepEqual(
         {
             path: path.resolve('public-html'),
             filename: '[name].js',
-            chunkFilename: '[name].js',
+            chunkFilename: webpackConfig.output.chunkFilename,
             publicPath: '/'
         },
-        webpack.buildConfig().output
+        webpackConfig.output
     );
 });
 
