@@ -13,6 +13,8 @@ jobs:
   build:
     name: Build and test for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: 0
   
     strategy:
       fail-fast: false
