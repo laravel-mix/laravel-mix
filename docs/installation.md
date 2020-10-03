@@ -1,8 +1,13 @@
 # Installation
 
+-   [Stand-Alone Projects](#stand-alone-projects)
+-   [Laravel Projects](#laravel-projects)
+
 Though Laravel Mix was originally built for Laravel projects, it of course may be used for any type of application.
 
-### Stand-Alone Projects
+## Stand-Alone Projects
+
+### Step 1. Install Mix
 
 Begin by installing Laravel Mix through NPM or Yarn.
 
@@ -11,6 +16,8 @@ mkdir my-app && cd my-app
 npm init -y
 npm install laravel-mix --save-dev
 ```
+
+### Step 2. Create a Mix Configuration File
 
 Next, create a Mix configuration file within the root of your new project.
 
@@ -26,7 +33,9 @@ You should now have the following directory structure:
 
 `webpack.mix.js` is your configuration layer on top of webpack. Most of your time will be spent here.
 
-Head over there now, and add the following.
+### Step 3. Define Your Compilation
+
+Open `webpack.mix.js` and add the following code:
 
 ```js
 // webpack.mix.js
@@ -43,7 +52,11 @@ At its core, Mix is an opinionated, fluent API on top of webpack. In the example
 alert('hello world');
 ```
 
-Of course this is only a placeholder. We're now ready to compile. Mix provides a command-line program called `mix` which triggers the necessary webpack build. Give it a run now.
+Of course this is only a placeholder for your actual JavaScript code.
+
+### Step 4. Compile
+
+We're now ready to bundle up our assets. Mix provides a command-line program called `mix` which triggers the appropriate webpack build. Give it a run now.
 
 ```
 npx mix
@@ -51,7 +64,7 @@ npx mix
 
 Congrats! You've created your first bundle. Create an HTML file, load your script, and you'll see an alert when the page loads.
 
-### Laravel Projects
+## Laravel Projects
 
 Laravel ships with everything you need to get started. Simply:
 

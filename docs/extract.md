@@ -1,27 +1,34 @@
-# Library Code Splitting
+# Code Splitting
 
-```js
-mix.js(src, output).extract();
-```
+-   [Basic Usage](#basic-usage)
+-   [The Manifest File](#the-manifest-file)
 
-Bundling all JavaScript into a single files does come with a potential downside: each time you change a minor detail in your application code, you must bust the cache for all users. That means all of your vendor libraries must be re-downloaded and cached. Yikes - not ideal!
+Bundling your JavaScript into a single file has one big downside: each time you change a minor detail in your application code, you must bust the browser cache. Even if you only change a single variable name, users will still need to re-download that generated file.
 
-One solution is to isolate, or extract, your vendor libraries into their own file.
+One solution is to isolate, or extract, your vendor libraries into their own file(s).
 
 -   **Application Code**: `app.js`
 -   **Vendor Libraries**: `vendor.js`
 -   **Manifest \(webpack Runtime\)**: `manifest.js`
 
+This will result in a significantly smaller `app.js` file. Now, using the above example, if you change a variable name, only the application-specific JavaScript will need to be re-downloaded. The larger vendor libraries - `vendor.js` - may remain cached.
+
+### Basic Usage
+
 ```js
+// 1. Extract all node_modules vendor libraries into a vendor.js file.
 mix.extract();
 
-// Or:
+// 2. Only extract the Vue and jQuery libraries into a vendor.js file.
 mix.extract(['vue', 'jquery']);
+
+// 3. Extract Vue and jQuery to custom-vendor-name.js.
+mix.extract(['vue', 'jquery'], 'custom-vendor-name.js');
 ```
 
-If you don't provide an array of npm libraries to the `extract` method, Mix will extract all imported libraries from the node_modules directory. This is a useful default, and is likely what you want. However, if you need to be explicit, pass an array and only those vendor libraries will be extracted.
+If you don't pass an array of npm libraries to the `extract` method, Mix will extract _all_ imported libraries from your project's `node_modules` directory. This is a useful default; however, if you need to be explicit, pass an array of the specific libraries that should be extracted.
 
-Once you run webpack to compile your code, you'll find three new files. You may reference these at the bottom of your HTML.
+Once you compile your code - `npx mix` - you'll find three new files: `app.js`, `vendor.js`, and `manifest.js`. You may reference these at the bottom of your HTML.
 
 ```html
 <script src="/js/manifest.js"></script>
@@ -29,8 +36,8 @@ Once you run webpack to compile your code, you'll find three new files. You may 
 <script src="/js/app.js"></script>
 ```
 
-In effect, we pay a small HTTP request penalty, in exchange for improved long-term caching of vendor code that very rarely will change.
+While it's true that we're now importing three scripts instead of one, the benefit is improved long-term caching of vendor code that rarely changes. Further, HTTP2 makes the cost of importing multiple scripts a non-issue.
 
-### What's That Manifest File?
+### The Manifest File
 
-webpack compiles with a small bit of run-time code, to assist with its job. When not using `mix.extract()`, this code is invisible to you, and lives inside your bundle file. However, if we want to split our code and allow for long-term caching, that runtime code needs to live somewhere. As such, mix will extract it to its own file as well. This way, both your vendor and manifest files can be cached as long as possible.
+You might still be confused by that third `manifest.js` file. Webpack compiles with a small bit of run-time code to assist with its job. When not using `mix.extract()`, this code is invisible to you and lives inside your bundle file. However, if we need to split our code, that runtime code must "live" somewhere. As such, Laravel Mix will extract it to its own file.

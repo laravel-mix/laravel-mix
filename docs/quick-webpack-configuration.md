@@ -1,12 +1,27 @@
-# Quick webpack Configuration
+# Webpack Configuration
+
+-   [Basic Usage](#basic-usage)
+-   [Passing a Callback Function](#passing-a-callback-function)
+
+In certain cases, it may prove easier to drop down a level and override the underlying webpack configuration directly. Mix provides the `mix.webpackConfig()` command to allow for this.
+
+### Basic Usage
 
 ```js
-mix.webpackConfig({} || cb);
+// 1. Pass an object.
+mix.webpackConfig({
+    plugins: []
+});
+
+// 2. Pass a callback function.
+mix.webpackConfig(webpack => {
+    return {
+        plugins: []
+    };
+});
 ```
 
-In some cases, it may prove easier to override the underlying webpack configuration directly. 
-
-As an example, perhaps you want to add a custom array of modules that should be automatically loaded by webpack. We'll use Laravel Spark as an example.
+As an example, perhaps you want to provide an array of modules that should be automatically loaded by webpack. We'll use Laravel Spark as an example.
 
 ```js
 mix.webpackConfig({
@@ -19,10 +34,9 @@ mix.webpackConfig({
 });
 ```
 
-The object passed to the `webpackConfig()` method will now be merged with Mix's generated config object.
+The object passed to `mix.webpackConfig()` will now smartly be merged with Mix's generated webpack configuration.
 
-
-## Using a Callback Function
+### Passing a Callback Function
 
 You may alternatively access webpack and all of its properties by passing a callback function.
 
@@ -31,9 +45,7 @@ mix.webpackConfig(webpack => {
     return {
         plugins: [
             new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery'
+                //
             })
         ]
     };
