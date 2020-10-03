@@ -23,8 +23,17 @@ async function run() {
         .command('watch')
         .description('Build and watch files for changes.')
         .option('--hmr', 'Enable hot reloading.', false)
+        .option(
+            '--poll',
+            'Poll for changes to files (use if changes are not being detected).',
+            false
+        )
         .action(cmd =>
-            executeScript('watch', { ...program.opts(), ...cmd.opts() })
+            executeScript(
+                'watch',
+                { ...program.opts(), ...cmd.opts() },
+                cmd.args
+            )
         );
 
     program
@@ -32,7 +41,11 @@ async function run() {
         .description('Compile Mix.')
         .option('-p, --production', 'Run Mix in production mode.', false)
         .action(cmd =>
-            executeScript('build', { ...program.opts(), ...cmd.opts() })
+            executeScript(
+                'build',
+                { ...program.opts(), ...cmd.opts() },
+                cmd.args
+            )
         );
 
     await program.parseAsync(process.argv);
@@ -43,13 +56,15 @@ async function run() {
  *
  * @param {"build"|"watch"} cmd
  * @param {{[key: string]: any}} opts
+ * @param {string[]} args
  */
-async function executeScript(cmd, opts) {
+async function executeScript(cmd, opts, args = []) {
     let script = [
         `cross-env NODE_ENV=${opts.production ? 'production' : 'development'}`,
         `MIX_FILE=${opts.mixConfig}`,
         commandScript(cmd, opts),
-        `--config=${require.resolve('../setup/webpack.config.js')}`
+        `--config=${require.resolve('../setup/webpack.config.js')}`,
+        ...args
     ].join(' ');
 
     if (process.env.TESTING) {

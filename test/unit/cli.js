@@ -51,12 +51,34 @@ test('it calls webpack with watch mode', async t => {
     );
 });
 
+test('it calls webpack with watch mode using polling', async t => {
+    let { stdout } = await mix(['watch', '--', '--watch-poll']);
+
+    t.is(
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
+            require.resolve('../../setup/webpack.config.js') +
+            ' --watch-poll',
+        stdout
+    );
+});
+
 test('it calls webpack with hot reloading', async t => {
     let { stdout } = await mix(['watch', '--hmr']);
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
             require.resolve('../../setup/webpack.config.js'),
+        stdout
+    );
+});
+
+test('it calls webpack with hot reloading using polling', async t => {
+    let { stdout } = await mix(['watch', '--hmr', '--', '--watch-poll']);
+
+    t.is(
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
+            require.resolve('../../setup/webpack.config.js') +
+            ' --watch-poll',
         stdout
     );
 });
