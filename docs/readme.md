@@ -9,7 +9,8 @@
 
 ## Dig Deeper
 
--   [JavaScript](mixjs.md)
+-   [JavaScript Bundling](mixjs.md)
+-   [Vue Support](vue.md)
 -   [Library Code Splitting](extract.md)
 -   [BrowserSync](browsersync.md)
 -   [Hot Module Replacement](hot-module-replacement.md)

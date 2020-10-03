@@ -45,7 +45,6 @@ mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
 // mix.extend(name, handler) <-- Extend Mix's API with your own components.
 // mix.options({
 //   processCssUrls: true, // Process/optimize relative stylesheet url()'s. Set to false, if you don't want them touched.
-//   purifyCss: false, // Remove unused CSS selectors.
 //   terser: {}, // Terser-specific options. https://github.com/webpack-contrib/terser-webpack-plugin#options
 //   postCss: [] // Post-CSS options: https://github.com/postcss/postcss/blob/master/docs/plugins.md
 // });

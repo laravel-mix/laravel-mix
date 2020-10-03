@@ -132,3 +132,68 @@ Monitor files for changes and update the browser without requiring a manual page
 ```js
 mix.js('...').browserSync('your-domain.test');
 ```
+
+### `.setPublicPath(path)`
+
+Set the path to where all public assets should be compiled to. For non-Laravel projects, always include a call to this method.
+
+```js
+mix.setPublicPath('dist');
+```
+
+### `.webpackConfig(config)`
+
+Merge a webpack configuration object with the one Mix has generated. This can be useful when you want to drop down a level and manipulate the webpack configuration directly.
+
+```js
+mix.webpackConfig({
+    plugins: [new SomeWebpackPlugin()]
+});
+```
+
+### `.override(fn(webpackConfig))`
+
+Register a handler for _after_ the webpack configuration has been fully constructed. This is your last chance to override Mix's configuration before the compiling begins.
+
+```js
+mix.override(webpackConfig => {
+    webpackConfig.module.rules.push({
+        test: /\.extension$/,
+        use: []
+    });
+});
+```
+
+### `.dump()`
+
+Log the generated webpack configuration to the console. This is temporary command that may be useful for debugging purposes.
+
+```js
+mix.dump();
+```
+
+### `.autoload(libraries)`
+
+Make a module available as a variable in every other module required by webpack. If you're working with a particular plugin or library that depends upon a global variable, such as jQuery, this command may prove useful.
+
+```js
+mix.autoload({
+    jquery: ['$', 'window.jQuery']
+});
+```
+
+### `.options(options)`
+
+Merge and override Mix's default configuration settings. Refer to this package's `src/Config.js` file for a full list of settings that can be overridden.
+
+Below is a brief list of the most common overrides.
+
+```js
+mix.options({
+    processCssUrls: false,
+    postCss: [],
+    terser: {},
+    autoprefixer: {},
+    cssName: {}
+});
+```
