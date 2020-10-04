@@ -27,6 +27,7 @@ let components = [
     'Notifications',
     'DisableNotifications',
     'PurifyCss',
+    'WebpackConfig',
     'DumpWebpackConfig'
 ];
 
@@ -91,7 +92,9 @@ class ComponentRegistrar {
             .concat(
                 typeof component.name === 'function'
                     ? component.name()
-                    : component.constructor.name.toLowerCase()
+                    : component.constructor.name.replace(/^([A-Z])/, letter =>
+                          letter.toLowerCase()
+                      )
             )
             .forEach(name => {
                 mix[name] = (...args) => {

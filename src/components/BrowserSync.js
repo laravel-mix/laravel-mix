@@ -1,11 +1,4 @@
-class Browsersync {
-    /**
-     * The API name for the component.
-     */
-    name() {
-        return 'browserSync';
-    }
-
+class BrowserSync {
     /**
      * Required dependencies for the component.
      */
@@ -74,4 +67,4 @@ class Browsersync {
     }
 }
 
-module.exports = Browsersync;
+module.exports = BrowserSync;

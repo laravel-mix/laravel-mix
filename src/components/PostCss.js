@@ -3,13 +3,6 @@ let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {
     /**
-     * The API name for the component.
-     */
-    name() {
-        return 'postCss';
-    }
-
-    /**
      * Register the component.
      *
      * @param {*} src
