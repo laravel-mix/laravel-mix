@@ -37,7 +37,7 @@ mix.js('src/app.js', 'dist/').js('src/forum.js', 'dist/');
 Laravel Mix also ships with basic Typescript support. Simply update your `mix.js()` call to `mix.ts()`, and then use the exact same set of arguments.
 
 ```js
-mix.ts('src/app.js', 'dist');
+mix.ts('src/app.ts', 'dist');
 ```
 
 Of course, you'll still want to handle any TypeScript-specific tweeks like creating a `tsconfig.json` file and installing [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped), but everything else should be taken care of.
