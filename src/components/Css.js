@@ -192,7 +192,6 @@ class Css extends AutomaticComponent {
             loaders.push({
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                    hmr: Mix.isUsing('hmr'),
                     esModule: true
                 }
             });
