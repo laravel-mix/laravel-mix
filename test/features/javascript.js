@@ -39,9 +39,7 @@ test('it compiles JavaScript with dynamic import', async t => {
 
     assert.manifestEquals(
         {
-            '/js/absolute.js': '/js/absolute.js',
-            '/js/dynamic.js': '/js/dynamic.js',
-            '/js/named.js': '/js/named.js'
+            '/js/dynamic.js': '/js/dynamic.js'
         },
         t
     );
@@ -83,7 +81,7 @@ test('basic JS compilation config.', t => {
         {
             path: path.resolve(`${fakeApp}/public`),
             filename: '[name].js',
-            chunkFilename: webpackConfig.output.chunkFilename,
+            chunkFilename: '[name].js',
             publicPath: '/'
         },
         webpackConfig.output
@@ -106,16 +104,14 @@ test('basic JS compilation with a different public path', t => {
         'public-html'
     );
 
-    let webpackConfig = webpack.buildConfig();
-
     t.deepEqual(
         {
             path: path.resolve('public-html'),
             filename: '[name].js',
-            chunkFilename: webpackConfig.output.chunkFilename,
+            chunkFilename: '[name].js',
             publicPath: '/'
         },
-        webpackConfig.output
+        webpack.buildConfig().output
     );
 });
 
