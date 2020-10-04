@@ -6,7 +6,7 @@
     "types": "typings/index.d.ts",
     "scripts": {
         "mix": "./bin/cli.js",
-        "test": "ava --verbose --serial",
+        "test": "ava --verbose --serial --timeout=30s",
         "eslint": "eslint setup/ src/ test/ --max-warnings=0"
     },
     "husky": {
