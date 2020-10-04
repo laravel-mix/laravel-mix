@@ -9,7 +9,7 @@
 module.exports = {
     components: {
         PureSplit: () =>
-            import(/* webpackChunkName: 'js/split' */ './PureSplit.js')
+            import(/* webpackChunkName: '/js/split' */ './PureSplit.js')
     },
 
     data() {

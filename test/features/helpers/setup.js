@@ -2,6 +2,7 @@ let mix = require('../../../src/index');
 let fs = require('fs-extra');
 let ComponentRegistrar = require('../../../src/components/ComponentRegistrar');
 let mockRequire = require('mock-require');
+let friendlyErrorOutput = require('friendly-errors-webpack-plugin/src/output');
 
 global.WebpackConfig = require('../../../src/builder/WebpackConfig');
 global.test = require('ava');
@@ -18,6 +19,9 @@ test.beforeEach(t => {
     mix.setPublicPath('test/fixtures/fake-app/public');
 
     new ComponentRegistrar().addMany();
+
+    // Disable friendly-errors webpack plugin output
+    friendlyErrorOutput.endCapture();
 });
 
 test.afterEach.always(t => {
