@@ -34,6 +34,7 @@
 ### Helpers and Configuration
 
 -   [BrowserSync](browsersync.md)
+-   [Aliases](aliases.md)
 -   [OS Notifications](os-notifications.md)
 -   [Mix Configuration](options.md)
 -   [Custom Webpack Configuration](quick-webpack-configuration.md)

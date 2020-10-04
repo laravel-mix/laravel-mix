@@ -1,12 +1,15 @@
 # Aliases
 
+-   [Aliasing Paths](#aliasing-paths)
+-   [Aliasing Existing Modules](#aliasing-existing-modules)
+
 Mix offers the ability to configure aliases that get expanded when importing files. It supports aliasing specific paths and whole modules.
 
-## Aliasing paths
+### Aliasing Paths
 
 Path aliases are useful when you want to include files from a particular directory but do so from many others without repeatedly writing things like `../file.js` and `../../../file.js`.
 
-Consider the following example:
+Mix can assist in this regard. Consider the following example:
 
 ```js
 mix.alias({
@@ -14,9 +17,9 @@ mix.alias({
 });
 ```
 
-This allows one to write `import { useFoo } from "@/Hooks` in whichever file they wish and it'll get expanded to `import { useFoo } from "/absolute/path/to/your/project/resources/js/Hooks`
+This allows one to write `import { useFoo } from "@/Hooks` and it'll be expanded to `import { useFoo } from "/absolute/path/to/your/project/resources/js/Hooks`.
 
-## Aliasing existing modules
+### Aliasing Existing Modules
 
 In addition to aliasing paths you can also alias the definition of an entire module. For example, when importing Vue 3.x we'd prefer to import the ESM bundler version which is more suitable for tree-shaking.
 
