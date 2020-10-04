@@ -2,7 +2,6 @@
 
 -   [Basic Usage](#basic-usage)
 -   [Autoprefixer](#autoprefixer)
--   [Global Plugin Options](#global-plugin-options)
 
 ### Basic Usage
 
