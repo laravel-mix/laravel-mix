@@ -4,6 +4,7 @@ let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
+let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
 
 module.exports = function() {
     let plugins = [];
@@ -41,6 +42,9 @@ module.exports = function() {
     plugins.push(
         new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
     );
+
+    // Enable custom output when webpack builds
+    plugins.push(new BuildOutputPlugin());
 
     return plugins;
 };

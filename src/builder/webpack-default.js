@@ -23,19 +23,8 @@ module.exports = function() {
         },
 
         stats: {
-            hash: false,
-            version: false,
-            timings: false,
-            children: false,
-            errorDetails: false,
-            entrypoints: false,
-            performance: Mix.inProduction(),
-            chunks: false,
-            modules: false,
-            reasons: false,
-            source: false,
-            publicPath: false,
-            builtAt: false
+            preset: 'none',
+            performance: Mix.inProduction()
         },
 
         performance: {

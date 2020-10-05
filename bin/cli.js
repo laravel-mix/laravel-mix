@@ -23,11 +23,6 @@ async function run() {
         .command('watch')
         .description('Build and watch files for changes.')
         .option('--hmr', 'Enable hot reloading.', false)
-        .option(
-            '--poll',
-            'Poll for changes to files (use if changes are not being detected).',
-            false
-        )
         .action(cmd =>
             executeScript(
                 'watch',
