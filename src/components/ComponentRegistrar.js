@@ -12,7 +12,7 @@ let components = [
     'Stylus',
     'PostCss',
     'Css',
-    'Browsersync',
+    'BrowserSync',
     'Combine',
     'Copy',
     'Autoload',
