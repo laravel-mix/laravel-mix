@@ -14,7 +14,7 @@ test('that it can fetch the underlying manifest object', t => {
     t.deepEqual({ '/file/path.js': '/file/path.js' }, Mix.manifest.get());
 });
 
-test('that it can get fetch a single versioned path from the underlying manifest', t => {
+test('that it can fetch a single versioned path from the underlying manifest', t => {
     Config.publicPath = 'public';
 
     Mix.manifest.add('file/path.js');
