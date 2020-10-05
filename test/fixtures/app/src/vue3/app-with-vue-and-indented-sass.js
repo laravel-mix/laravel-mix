@@ -5,4 +5,4 @@ createApp({
     components: {
         BasicWithIndentedSass
     }
-}).mount('#app')
+}).mount('#app');

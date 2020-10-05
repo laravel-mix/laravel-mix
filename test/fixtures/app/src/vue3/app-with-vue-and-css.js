@@ -5,4 +5,4 @@ createApp({
     components: {
         BasicWithCss
     }
-}).mount('#app')
+}).mount('#app');

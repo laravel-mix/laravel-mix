@@ -60,6 +60,7 @@
         "autoprefixer": "^10.0.1",
         "babel-loader": "^8.0.4",
         "babel-merge": "^3.0.0",
+        "chalk": "^4.1.0",
         "chokidar": "^3.3.1",
         "clean-css": "^4.1.3",
         "cli-table3": "^0.6.0",

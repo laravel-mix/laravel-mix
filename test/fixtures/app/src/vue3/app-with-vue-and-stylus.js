@@ -5,4 +5,4 @@ createApp({
     components: {
         BasicWithStylus
     }
-}).mount('#app')
+}).mount('#app');
