@@ -28,7 +28,15 @@ let components = [
     'DisableNotifications',
     'PurifyCss',
     'WebpackConfig',
-    'DumpWebpackConfig'
+    'DumpWebpackConfig',
+    'Then',
+    'Override',
+    'SourceMaps',
+    'SetPublicPath',
+    'SetResourceRoot',
+    'Options',
+    'When',
+    'BabelConfig'
 ];
 
 class ComponentRegistrar {
