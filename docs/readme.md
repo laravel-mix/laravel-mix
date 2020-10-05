@@ -3,7 +3,8 @@
 ## Overview
 
 -   [Installation](installation.md)
--   [Basic Laravel Workflow](workflow.md)
+-   [Examples](examples.md)
+-   [Laravel Quick Start](workflow.md)
 -   [The Full Mix API](api.md)
 -   [FAQ](faq.md)
 
