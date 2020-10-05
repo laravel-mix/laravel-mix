@@ -29,99 +29,90 @@ class Preprocessor {
     webpackRules() {
         let rules = [];
 
-        this.details.forEach((preprocessor, index) => {
-            let outputPath = preprocessor.output.filePath
-                .replace(Config.publicPath + path.sep, path.sep)
-                .replace(/\\/g, '/');
+        this.details.forEach(preprocessor => {
+            let loaders = [
+                ...Css.afterLoaders({ method: 'extract' }),
+                {
+                    loader: 'css-loader',
+                    options: {
+                        url: Config.processCssUrls,
+                        sourceMap: Mix.isUsing('sourcemaps'),
+                        importLoaders: 1
+                    }
+                },
 
-            tap({}, () => {
-                let loaders = [
-                    ...Css.afterLoaders({ method: 'extract' }),
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            url: Config.processCssUrls,
-                            sourceMap: Mix.isUsing('sourcemaps'),
-                            importLoaders: 1
-                        }
-                    },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap:
+                            preprocessor.type === 'sass' &&
+                            Config.processCssUrls
+                                ? true
+                                : Mix.isUsing('sourcemaps'),
+                        postcssOptions: {
+                            plugins: (function() {
+                                let plugins = Config.postCss;
 
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap:
-                                preprocessor.type === 'sass' &&
-                                Config.processCssUrls
-                                    ? true
-                                    : Mix.isUsing('sourcemaps'),
-                            postcssOptions: {
-                                plugins: (function() {
-                                    let plugins = Config.postCss;
+                                if (
+                                    preprocessor.postCssPlugins &&
+                                    preprocessor.postCssPlugins.length
+                                ) {
+                                    plugins = preprocessor.postCssPlugins;
+                                }
 
-                                    if (
-                                        preprocessor.postCssPlugins &&
-                                        preprocessor.postCssPlugins.length
-                                    ) {
-                                        plugins = preprocessor.postCssPlugins;
-                                    }
+                                if (
+                                    Config.autoprefixer &&
+                                    Config.autoprefixer.enabled
+                                ) {
+                                    plugins.push(
+                                        require('autoprefixer')(
+                                            Config.autoprefixer.options
+                                        )
+                                    );
+                                }
 
-                                    if (
-                                        Config.autoprefixer &&
-                                        Config.autoprefixer.enabled
-                                    ) {
-                                        plugins.push(
-                                            require('autoprefixer')(
-                                                Config.autoprefixer.options
-                                            )
-                                        );
-                                    }
+                                if (Mix.inProduction()) {
+                                    plugins.push(
+                                        require('cssnano')({
+                                            preset: ['default', Config.cssNano]
+                                        })
+                                    );
+                                }
 
-                                    if (Mix.inProduction()) {
-                                        plugins.push(
-                                            require('cssnano')({
-                                                preset: [
-                                                    'default',
-                                                    Config.cssNano
-                                                ]
-                                            })
-                                        );
-                                    }
-
-                                    return plugins;
-                                })()
-                            }
+                                return plugins;
+                            })()
                         }
                     }
-                ];
-
-                if (preprocessor.type === 'sass' && Config.processCssUrls) {
-                    loaders.push({
-                        loader: 'resolve-url-loader',
-                        options: {
-                            sourceMap: true,
-                            engine: 'rework'
-                        }
-                    });
                 }
+            ];
 
-                if (preprocessor.type !== 'postCss') {
-                    loaders.push({
-                        loader: `${preprocessor.type}-loader`,
-                        options: this.loaderOptions(preprocessor)
-                    });
-                }
-
-                loaders.push(
-                    ...Css.beforeLoaders({
-                        type: preprocessor.type,
-                        injectGlobalStyles: false
-                    })
-                );
-
-                rules.push({
-                    test: preprocessor.src.path(),
-                    use: loaders
+            if (preprocessor.type === 'sass' && Config.processCssUrls) {
+                loaders.push({
+                    loader: 'resolve-url-loader',
+                    options: {
+                        sourceMap: true,
+                        engine: 'rework'
+                    }
                 });
+            }
+
+            if (preprocessor.type !== 'postCss') {
+                loaders.push({
+                    loader: `${preprocessor.type}-loader`,
+                    options: this.loaderOptions(preprocessor)
+                });
+            }
+
+            loaders.push(
+                ...Css.beforeLoaders({
+                    type: preprocessor.type,
+                    injectGlobalStyles: false
+                })
+            );
+
+            rules.push({
+                test: preprocessor.src.path(),
+                use: loaders
             });
         });
 
