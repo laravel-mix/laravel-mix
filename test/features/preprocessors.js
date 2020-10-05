@@ -1,18 +1,18 @@
 import test from 'ava';
 import path from 'path';
 import File from '../../src/File';
-import { fakeApp } from '../helpers/paths';
+
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
 test('it compiles Sass without JS', async t => {
-    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');
+    mix.sass(`test/fixtures/app/src/sass/app.scss`, 'css');
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
 
     assert.manifestEquals(
         {
@@ -23,18 +23,18 @@ test('it compiles Sass without JS', async t => {
 });
 
 test('JS and Sass + Less + Stylus compilation config', t => {
-    mix.js('resources/assets/js/app.js', 'js')
-        .sass('resources/assets/sass/sass.scss', 'css')
-        .less('resources/assets/less/less.less', 'css')
-        .stylus('resources/assets/stylus/stylus.styl', 'css');
+    mix.js('js/app.js', 'js')
+        .sass('src/sass.scss', 'css')
+        .less('src/less.less', 'css')
+        .stylus('src/stylus.styl', 'css');
 
     t.deepEqual(
         {
             '/js/app': [
-                path.resolve('resources/assets/js/app.js'),
-                path.resolve('resources/assets/less/less.less'),
-                path.resolve('resources/assets/sass/sass.scss'),
-                path.resolve('resources/assets/stylus/stylus.styl')
+                path.resolve('js/app.js'),
+                path.resolve('src/less.less'),
+                path.resolve('src/sass.scss'),
+                path.resolve('src/stylus.styl')
             ]
         },
         webpack.buildConfig().entry
@@ -42,7 +42,7 @@ test('JS and Sass + Less + Stylus compilation config', t => {
 });
 
 test('Generic Sass rules are applied', t => {
-    mix.js('resources/assets/js/app.js', 'js');
+    mix.js('js/app.js', 'js');
 
     t.truthy(
         webpack.buildConfig().module.rules.find(rule => {
@@ -52,7 +52,7 @@ test('Generic Sass rules are applied', t => {
 });
 
 test('Generic Less rules are applied', t => {
-    mix.js('resources/assets/js/app.js', 'js');
+    mix.js('js/app.js', 'js');
 
     t.truthy(
         webpack.buildConfig().module.rules.find(rule => {
@@ -62,7 +62,7 @@ test('Generic Less rules are applied', t => {
 });
 
 test('Generic CSS rules are applied', t => {
-    mix.js('resources/assets/js/app.js', 'js');
+    mix.js('js/app.js', 'js');
 
     t.truthy(
         webpack.buildConfig().module.rules.find(rule => {
@@ -72,7 +72,7 @@ test('Generic CSS rules are applied', t => {
 });
 
 test('Generic Stylus rules are applied', t => {
-    mix.js('resources/assets/js/app.js', 'js');
+    mix.js('js/app.js', 'js');
 
     t.truthy(
         webpack.buildConfig().module.rules.find(rule => {
@@ -82,11 +82,11 @@ test('Generic Stylus rules are applied', t => {
 });
 
 test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.', t => {
-    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css', {}, [
+    mix.sass(`test/fixtures/app/src/sass/app.scss`, 'css', {}, [
         { postcssPlugin: 'postcss-plugin-stub' }
     ]);
 
-    mix.sass(`${fakeApp}/resources/assets/sass/app2.scss`, 'css', {}, [
+    mix.sass(`test/fixtures/app/src/sass/app2.scss`, 'css', {}, [
         { postcssPlugin: 'second-postcss-plugin-stub' }
     ]);
 
@@ -109,9 +109,7 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
 test('cssnano minifier options may be specified', async t => {
     Config.production = true;
 
-    let file = new File(
-        `${fakeApp}/resources/assets/sass/minifier-example.scss`
-    );
+    let file = new File(`test/fixtures/app/src/sass/minifier-example.scss`);
 
     file.write(`
         .test {
@@ -129,7 +127,7 @@ test('cssnano minifier options may be specified', async t => {
 
     t.is(
         '.test{font-family:"Font Awesome 5 Free"}\n',
-        File.find(`${fakeApp}/public/css/minifier-example.css`).read()
+        File.find(`test/fixtures/app/dist/css/minifier-example.css`).read()
     );
 
     // Clean up.
@@ -137,35 +135,35 @@ test('cssnano minifier options may be specified', async t => {
 });
 
 test('Sass is extracted properly', async t => {
-    mix.sass(`${fakeApp}/resources/assets/sass/app.sass`, 'css/app.css');
+    mix.sass(`test/fixtures/app/src/sass/app.sass`, 'css/app.css');
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
 
     assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
 });
 
 test('Stylus is extracted properly', async t => {
-    mix.stylus(`${fakeApp}/resources/assets/stylus/app.styl`, 'css/app.css');
+    mix.stylus(`test/fixtures/app/src/stylus/app.styl`, 'css/app.css');
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/css/app.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
     assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
 });
 
 test('CSS output paths are normalized', async t => {
-    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'public/js');
-    mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'public/css');
+    mix.js(`test/fixtures/app/src/js/app.js`, 'dist/js');
+    mix.sass(`test/fixtures/app/src/sass/app.scss`, 'dist/css');
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/css/app.css`));
-    t.false(File.exists(`${fakeApp}/public/public/css/app.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    t.false(File.exists(`test/fixtures/app/dist/dist/css/app.css`));
 
-    t.true(File.exists(`${fakeApp}/public/js/app.js`));
-    t.false(File.exists(`${fakeApp}/public/public/js/app.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    t.false(File.exists(`test/fixtures/app/dist/dist/js/app.js`));
 
     assert.manifestEquals(
         {

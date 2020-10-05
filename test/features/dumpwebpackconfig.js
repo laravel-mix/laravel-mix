@@ -11,10 +11,7 @@ test('mix.dumpWebpackConfig()', async t => {
         config = JSON.parse(webpackConfig);
     };
 
-    mix.js(
-        'test/fixtures/fake-app/resources/assets/js/app.js',
-        'js'
-    ).dumpWebpackConfig();
+    mix.js('test/fixtures/app/js/app.js', 'js').dumpWebpackConfig();
 
     await webpack.compile();
 

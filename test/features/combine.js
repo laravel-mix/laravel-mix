@@ -1,15 +1,14 @@
 import test from 'ava';
 import File from '../../src/File';
 import assert from '../helpers/assertions';
-import { fakeApp } from '../helpers/paths';
 import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
 test('it combines a folder of scripts', async t => {
-    let output = `${fakeApp}/public/all.js`;
+    let output = `test/fixtures/app/dist/all.js`;
 
-    mix.scripts(`${fakeApp}/resources/assets/js`, output);
+    mix.scripts(`test/fixtures/app/src/js`, output);
 
     await webpack.compile();
 
@@ -22,13 +21,13 @@ test('it combines a folder of scripts', async t => {
 });
 
 test('it can minify a file', async t => {
-    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').minify(
-        `${fakeApp}/public/js/app.js`
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js').minify(
+        `test/fixtures/app/dist/js/app.js`
     );
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/js/app.min.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/app.min.js`));
 
     assert.manifestEquals(
         {
@@ -40,16 +39,19 @@ test('it can minify a file', async t => {
 });
 
 test('it compiles JS and then combines the bundles files.', async t => {
-    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
-        .js(`${fakeApp}/resources/assets/js/another.js`, 'js')
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js')
+        .js(`test/fixtures/app/src/js/another.js`, 'js')
         .scripts(
-            [`${fakeApp}/public/js/app.js`, `${fakeApp}/public/js/another.js`],
-            `${fakeApp}/public/js/all.js`
+            [
+                `test/fixtures/app/dist/js/app.js`,
+                `test/fixtures/app/dist/js/another.js`
+            ],
+            `test/fixtures/app/dist/js/all.js`
         );
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/js/all.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/all.js`));
 
     assert.manifestEquals(
         {
@@ -62,16 +64,16 @@ test('it compiles JS and then combines the bundles files.', async t => {
 });
 
 test('mix.combine/scripts/styles/babel()', t => {
-    t.deepEqual(mix, mix.combine([], 'public/js/combined.js'));
+    t.deepEqual(mix, mix.combine([], 'dist/js/combined.js'));
 
     t.is(1, Mix.tasks.length);
 
-    t.deepEqual(mix, mix.scripts([], 'public/js/combined.js'));
-    t.deepEqual(mix, mix.babel([], 'public/js/combined.js'));
+    t.deepEqual(mix, mix.scripts([], 'dist/js/combined.js'));
+    t.deepEqual(mix, mix.babel([], 'dist/js/combined.js'));
 });
 
 test('mix.minify()', t => {
-    t.deepEqual(mix, mix.minify('public/js/minify.js'));
+    t.deepEqual(mix, mix.minify('dist/js/minify.js'));
 
     t.is(1, Mix.tasks.length);
 });

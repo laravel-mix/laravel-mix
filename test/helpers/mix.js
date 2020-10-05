@@ -7,13 +7,12 @@ let friendlyErrorOutput = require('friendly-errors-webpack-plugin/src/output');
 test.beforeEach(() => {
     global.mix = bootstrap();
 
-    fs.ensureDirSync('test/fixtures/fake-app/public');
-
-    mix.setPublicPath('test/fixtures/fake-app/public');
+    fs.ensureDirSync(`test/fixtures/app/dist`);
+    mix.setPublicPath(`test/fixtures/app/dist`);
 
     friendlyErrorOutput.endCapture();
 });
 
 test.afterEach.always(t => {
-    fs.removeSync('test/fixtures/fake-app/public');
+    fs.removeSync(`test/fixtures/app/dist`);
 });

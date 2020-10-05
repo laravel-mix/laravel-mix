@@ -1,7 +1,6 @@
 import test from 'ava';
 import File from '../../src/File';
 import assert from '../helpers/assertions';
-import { fakeApp } from '../helpers/paths';
 import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
@@ -17,14 +16,14 @@ test('it adds to the tasks array', t => {
 });
 
 test('it compiles JavaScript and copies the output to a new location.', async t => {
-    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js').copy(
-        `${fakeApp}/public/js/app.js`,
-        `${fakeApp}/public/somewhere`
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js').copy(
+        `test/fixtures/app/dist/js/app.js`,
+        `test/fixtures/app/dist/somewhere`
     );
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/somewhere/app.js`));
+    t.true(File.exists(`test/fixtures/app/dist/somewhere/app.js`));
 
     assert.manifestEquals(
         {

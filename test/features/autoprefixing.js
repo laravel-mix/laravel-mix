@@ -5,16 +5,14 @@ import webpack from '../helpers/webpack';
 import '../helpers/mix';
 
 test('Autoprefixer should always be applied after all other postcss plugins', t => {
-    mix.sass('resources/assets/sass/sass.scss', 'public/css').options({
+    mix.sass('src/sass.scss', 'dist/css').options({
         postCss: [require('postcss-custom-properties')]
     });
 
     let plugins = webpack
         .buildConfig()
         .module.rules.find(rule =>
-            rule.test
-                .toString()
-                .includes(path.normalize('/resources/assets/sass/sass.scss'))
+            rule.test.toString().includes(path.normalize('src/sass.scss'))
         )
         .use.find(loader => loader.loader === 'postcss-loader')
         .options.postcssOptions.plugins.map(

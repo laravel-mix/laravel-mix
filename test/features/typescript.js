@@ -5,26 +5,26 @@ import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
 test('mix.ts()', t => {
-    let response = mix.ts('resources/assets/js/app.ts', 'public/js');
+    let response = mix.ts('src/app.ts', 'dist');
 
     t.deepEqual(mix, response);
 
     t.deepEqual(
         [
             {
-                entry: [new File('resources/assets/js/app.ts')],
-                output: new File('public/js')
+                entry: [new File('src/app.ts')],
+                output: new File('dist')
             }
         ],
         Mix.components.get('ts').toCompile
     );
 
     // There's also a mix.typeScript() alias.
-    t.deepEqual(mix, mix.typeScript('resources/assets/js/app.ts', 'public/js'));
+    t.deepEqual(mix, mix.typeScript('src/app.ts', 'dist'));
 });
 
 test('it applies the correct extensions and aliases to the webpack config', async t => {
-    mix.ts('test/fixtures/fake-app/resources/assets/js/app.js', 'public/js');
+    mix.ts(`test/fixtures/app/js/app.js`, 'dist');
 
     let { config } = await webpack.compile();
 
@@ -33,7 +33,7 @@ test('it applies the correct extensions and aliases to the webpack config', asyn
 });
 
 test('it applies Babel transformation', t => {
-    mix.ts('resources/assets/js/app.js', 'public/js');
+    mix.ts('js/app.js', 'dist');
 
     t.true(
         webpack
@@ -46,7 +46,7 @@ test('it applies Babel transformation', t => {
 });
 
 test('it is able to apply options to ts-loader', t => {
-    mix.ts('resources/assets/js/app.js', 'public/js', { transpileOnly: true });
+    mix.ts('js/app.js', 'dist', { transpileOnly: true });
 
     t.truthy(
         webpack

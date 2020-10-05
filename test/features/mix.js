@@ -1,6 +1,5 @@
 import test from 'ava';
 import assert from '../helpers/assertions';
-import { fakeApp } from '../helpers/paths';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
@@ -9,27 +8,30 @@ import '../helpers/mix';
 test.beforeEach(() => webpack.setupVueAliases(2));
 
 test('the kitchen sink', async t => {
-    new File(`${fakeApp}/public/file.js`).write('var foo');
+    new File(`test/fixtures/app/dist/file.js`).write('var foo');
 
-    mix.js(`${fakeApp}/resources/assets/js/app.js`, 'js')
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js')
         .extract(['vue'])
         .vue({ version: 2 })
-        .js(`${fakeApp}/resources/assets/js/another.js`, 'js')
-        .sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css')
-        .postCss(`${fakeApp}/resources/assets/css/app.css`, 'css/example.css')
-        .copy(`${fakeApp}/public/js/app.js`, `${fakeApp}/public/somewhere`)
+        .js(`test/fixtures/app/src/js/another.js`, 'js')
+        .sass(`test/fixtures/app/src/sass/app.scss`, 'css')
+        .postCss(`test/fixtures/app/src/css/app.css`, 'css/example.css')
+        .copy(
+            `test/fixtures/app/dist/js/app.js`,
+            `test/fixtures/app/dist/somewhere`
+        )
         .scripts(
             [
-                `${fakeApp}/public/somewhere/app.js`,
-                `${fakeApp}/public/js/another.js`
+                `test/fixtures/app/dist/somewhere/app.js`,
+                `test/fixtures/app/dist/js/another.js`
             ],
-            `${fakeApp}/public/js/all.js`
+            `test/fixtures/app/dist/js/all.js`
         )
-        .version([`${fakeApp}/public/file.js`]);
+        .version([`test/fixtures/app/dist/file.js`]);
 
     await webpack.compile();
 
-    t.true(File.exists(`${fakeApp}/public/js/all.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/all.js`));
 
     assert.manifestEquals(
         {
@@ -49,20 +51,20 @@ test('the kitchen sink', async t => {
 
 test('it resolves image- and font-urls and distinguishes between them even if we deal with svg', async t => {
     // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
-    mix.sass(`${fakeApp}/resources/assets/sass/font-and-image.scss`, 'css');
+    mix.sass(`test/fixtures/app/src/sass/font-and-image.scss`, 'css');
     // When we compile it
     await webpack.compile();
 
     // Then we expect the css to be built
-    t.true(File.exists(`${fakeApp}/public/css/font-and-image.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/font-and-image.css`));
     // Along with the referred image in the images folder
-    t.true(File.exists(`${fakeApp}/public/images/img.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img.svg`));
     // And the referred fonts in the fonts folder
-    t.true(File.exists(`${fakeApp}/public/fonts/font.svg`));
-    t.true(File.exists(`${fakeApp}/public/fonts/awesome.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/fonts/font.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
     // And we expect the image NOT to be in the fonts folder:
-    t.false(File.exists(`${fakeApp}/public/fonts/img.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/fonts/img.svg`));
     // And the fonts NOT to be in the image folder
-    t.false(File.exists(`${fakeApp}/public/images/font.svg`));
-    t.false(File.exists(`${fakeApp}/public/images/awesome.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/font.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/awesome.svg`));
 });

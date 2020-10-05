@@ -15,7 +15,7 @@ test.beforeEach(() => {
 
 test('compiling just js', async t => {
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
@@ -23,11 +23,8 @@ test('compiling just js', async t => {
 
 test('compiling js and css together', async t => {
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/resources/js/app.js', 'js/app.js');
-    mix.postCss(
-        'test/fixtures/integration/resources/css/app.css',
-        'css/app.css'
-    );
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
