@@ -1,3 +1,4 @@
+const argv = require('yargs');
 const chalk = require('chalk');
 const Table = require('cli-table3');
 const { formatSize } = require('webpack/lib/SizeFormatHelpers');
@@ -9,6 +10,10 @@ class BuildOutputPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
+        if (argv['$0'].includes('ava')) {
+            return;
+        }
+
         compiler.hooks.done.tap('BuildOutputPlugin', stats => {
             if (stats.hasErrors()) {
                 return false;
