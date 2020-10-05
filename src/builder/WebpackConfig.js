@@ -12,7 +12,6 @@ class WebpackConfig {
      * Create a new instance.
      */
     constructor() {
-        this.webpackConfig = webpackDefaultConfig();
         this.chunks = Chunks.instance();
     }
 
@@ -20,6 +19,8 @@ class WebpackConfig {
      * Build the Webpack configuration object.
      */
     build() {
+        this.webpackConfig = webpackDefaultConfig();
+
         this.buildEntry()
             .buildOutput()
             .buildRules()
