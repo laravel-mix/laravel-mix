@@ -18,6 +18,6 @@ if (Mix.sees('laravel')) {
 Mix.listen('init', () => require('./HotReloading').record());
 
 module.exports = tap(mix, mix => {
-    // For legacy purposes.
+    // Legacy.
     mix.inProduction = () => Config.production;
 });
