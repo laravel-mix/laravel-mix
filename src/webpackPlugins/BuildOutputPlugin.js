@@ -1,6 +1,7 @@
 const argv = require('yargs');
 const chalk = require('chalk');
 const Table = require('cli-table3');
+const readline = require('readline');
 const { formatSize } = require('webpack/lib/SizeFormatHelpers');
 
 class BuildOutputPlugin {
@@ -19,29 +20,59 @@ class BuildOutputPlugin {
                 return false;
             }
 
-            console.log('\n');
-            console.log(
-                chalk.bgBlue.white.bold(this.section('Laravel Mix v6'))
-            );
+            this.clearConsole();
+
+            let data = stats.toJson({
+                assets: true,
+                builtAt: true,
+                hash: true,
+                performance: true
+            });
+
+            this.heading('Laravel Mix v6');
 
             console.log(
-                this.statsTable(
-                    stats.toJson({
-                        assets: true,
-                        builtAt: true,
-                        hash: true,
-                        performance: true
-                    })
-                )
+                chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`)
             );
+
+            console.log(this.statsTable(data));
         });
+    }
+
+    /**
+     * Print a block section heading.
+     *
+     * @param text
+     */
+    heading(text) {
+        console.log();
+
+        console.log(chalk.bgBlue.white.bold(this.section(text)));
+
+        console.log();
+    }
+
+    /**
+     * Create a block section.
+     *
+     * @param {string} text
+     */
+    section(text) {
+        const padLength = 3;
+        const padding = ' '.repeat(padLength);
+
+        text = `${padding}${text}${padding}`;
+
+        const line = ' '.repeat(text.length);
+
+        return `${line}\n${text}\n${line}`;
     }
 
     /**
      * Generate the stats table.
      *
      * @param {any} data
-     * @returns {Table}
+     * @returns {string}
      */
     statsTable(data) {
         const table = new Table({
@@ -60,19 +91,14 @@ class BuildOutputPlugin {
     }
 
     /**
-     * Create a block section.
-     *
-     * @param {string} text
+     * Clear the entire screen.
      */
-    section(text) {
-        const padLength = 17;
-        const padding = ' '.repeat(padLength);
+    clearConsole() {
+        const blank = '\n'.repeat(process.stdout.rows);
+        console.log(blank);
 
-        text = `${padding}${text}${padding}`;
-
-        const line = ' '.repeat(text.length);
-
-        return `${line}\n${text}\n${line}`;
+        readline.cursorTo(process.stdout, 0, 0);
+        readline.clearScreenDown(process.stdout);
     }
 }
 
