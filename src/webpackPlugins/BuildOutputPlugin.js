@@ -10,53 +10,57 @@ class BuildOutputPlugin {
      */
     apply(compiler) {
         compiler.hooks.done.tap('BuildOutputPlugin', stats => {
-            const data = stats.toJson({
-                assets: true,
-                builtAt: true,
-                hash: true,
-                performance: true
-            });
-
-            const table = this.statsTable(data);
-
-            console.log('\n');
-            console.log(chalk.bgBlue.white.bold(this.section('Laravel Mix')));
-            console.log();
-
             if (stats.hasErrors()) {
-                console.log(chalk.red.bold(`✖︎ Error`));
-            } else {
-                console.log(chalk.green.bold(`✔ Success`));
+                return false;
             }
 
-            console.log(chalk.blue.bold(`ℹ Built in ${data.time}ms`));
-            console.log();
-            console.log(table.toString());
+            console.log('\n');
+            console.log(
+                chalk.bgBlue.white.bold(this.section('Laravel Mix v6'))
+            );
+
+            console.log(
+                this.statsTable(
+                    stats.toJson({
+                        assets: true,
+                        builtAt: true,
+                        hash: true,
+                        performance: true
+                    })
+                )
+            );
         });
     }
 
     /**
+     * Generate the stats table.
+     *
      * @param {any} data
      * @returns {Table}
      */
     statsTable(data) {
         const table = new Table({
-            head: ['File', 'Size']
+            head: [chalk.bold('File'), chalk.bold('Size')],
+            colWidths: [35],
+            style: {
+                head: []
+            }
         });
 
         for (const asset of data.assets) {
-            table.push([asset.name, formatSize(asset.size)]);
+            table.push([chalk.green(asset.name), formatSize(asset.size)]);
         }
 
-        return table;
+        return table.toString();
     }
 
     /**
+     * Create a block section.
      *
      * @param {string} text
      */
     section(text) {
-        const padLength = 3;
+        const padLength = 17;
         const padding = ' '.repeat(padLength);
 
         text = `${padding}${text}${padding}`;
