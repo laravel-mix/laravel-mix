@@ -1,8 +1,10 @@
-import mix from './helpers/setup';
+import test from 'ava';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('it returns the mix instance', t => {
     t.deepEqual(mix, mix.coffee('resources/assets/js/app.coffee', 'public/js'));

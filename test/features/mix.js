@@ -1,10 +1,12 @@
-import mix from './helpers/setup';
+import test from 'ava';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
-test.beforeEach(() => setupVueAliases(2));
+import '../helpers/mix';
+
+test.beforeEach(() => webpack.setupVueAliases(2));
 
 test('the kitchen sink', async t => {
     new File(`${fakeApp}/public/file.js`).write('var foo');
@@ -40,60 +42,6 @@ test('the kitchen sink', async t => {
             '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
             '/js/all.js': '/js/all.js\\?id=\\w{20}',
             '/file.js': '/file.js\\?id=\\w{20}'
-        },
-        t
-    );
-});
-
-test('async chunk splitting works', async t => {
-    mix.vue({ version: 2 });
-    mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
-        .extract(['vue', 'lodash', 'core-js'])
-        .options({
-            babelConfig: {
-                plugins: ['@babel/plugin-syntax-dynamic-import']
-            }
-        })
-        .version();
-
-    await webpack.compile();
-
-    t.true(File.exists(`${fakeApp}/public/js/app.js`));
-
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
-            '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
-            '/js/split.js': '/js/split.js\\?id=\\w{20}'
-        },
-        t
-    );
-});
-
-test('multiple extractions work', async t => {
-    mix.vue({ version: 2 });
-    mix.js(`${fakeApp}/resources/assets/extract/app.js`, 'js')
-        .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
-        .extract(['core-js'], 'js/vendor-core-js.js')
-        .options({
-            babelConfig: {
-                plugins: ['@babel/plugin-syntax-dynamic-import']
-            }
-        })
-        .version();
-
-    await webpack.compile();
-
-    t.true(File.exists(`${fakeApp}/public/js/app.js`));
-
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
-            '/js/vendor-core-js.js': '/js/vendor-core-js.js\\?id=\\w{20}',
-            '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js\\?id=\\w{20}',
-            '/js/split.js': '/js/split.js\\?id=\\w{20}'
         },
         t
     );

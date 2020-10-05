@@ -1,4 +1,5 @@
 let Task = require('./Task');
+let File = require('../File');
 let FileCollection = require('../FileCollection');
 
 class VersionFilesTask extends Task {

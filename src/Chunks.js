@@ -1,4 +1,5 @@
 let instance;
+let path = require('path');
 
 /** @typedef {import("webpack/declarations/WebpackOptions").OptimizationSplitChunksCacheGroup} CacheGroup */
 

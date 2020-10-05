@@ -45,7 +45,9 @@ class File {
 
     normalizedOutputPath() {
         let path = this.pathFromPublic(Config.publicPath);
+
         path = File.stripPublicDir(path);
+
         return path.replace(/\.(js|css)$/, '').replace(/\\/g, '/');
     }
 

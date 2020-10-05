@@ -1,4 +1,6 @@
 let merge = require('babel-merge');
+let path = require('path');
+let File = require('./File');
 
 class BabelConfig {
     /**

@@ -1,4 +1,3 @@
-let mix = require('../index');
 let Assert = require('../Assert');
 let mergeWebpackConfig = require('../builder/MergeWebpackConfig');
 
@@ -40,13 +39,19 @@ let components = [
 ];
 
 class ComponentRegistrar {
+    constructor() {
+        this.components = {};
+    }
+
     /**
      * Install all default components.
      */
-    addMany() {
+    installAll() {
         components
             .map(name => require(`./${name}`))
-            .forEach(this.add.bind(this));
+            .forEach(this.install.bind(this));
+
+        return this.components;
     }
 
     /**
@@ -54,7 +59,7 @@ class ComponentRegistrar {
      *
      * @param {Component} Component
      */
-    add(Component) {
+    install(Component) {
         let component =
             typeof Component === 'function' ? new Component() : Component;
 
@@ -88,6 +93,8 @@ class ComponentRegistrar {
                 component.webpackConfig && component.webpackConfig(config);
             });
         });
+
+        return this.components;
     }
 
     /**
@@ -105,7 +112,7 @@ class ComponentRegistrar {
                       )
             )
             .forEach(name => {
-                mix[name] = (...args) => {
+                this.components[name] = (...args) => {
                     Mix.components.record(name, component);
 
                     component.caller = name;
@@ -114,20 +121,20 @@ class ComponentRegistrar {
 
                     component.activated = true;
 
-                    return mix;
+                    return this.components;
                 };
 
                 // If we're dealing with a passive component that doesn't
                 // need to be explicitly triggered by the user, we'll
                 // call it now.
                 if (component.passive) {
-                    mix[name]();
+                    this.components[name]();
                 }
 
                 // Components can optionally write to the Mix API directly.
                 if (component.mix) {
                     Object.keys(component.mix()).forEach(name => {
-                        mix[name] = component.mix()[name];
+                        this.components[name] = component.mix()[name];
                     });
                 }
             });

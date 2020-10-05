@@ -1,6 +1,7 @@
 let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
 let Assert = require('../Assert');
-let _ = require('lodash');
+let File = require('../File');
+let path = require('path');
 let collect = require('collect.js');
 let glob = require('glob');
 

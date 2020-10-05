@@ -1,4 +1,5 @@
 let { Chunks } = require('../Chunks');
+let File = require('../File');
 let VueVersion = require('../VueVersion');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 

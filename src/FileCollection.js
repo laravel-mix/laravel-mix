@@ -2,6 +2,7 @@ let concat = require('concat');
 let babel = require('@babel/core');
 let glob = require('glob');
 let Log = require('./Log');
+let File = require('./File');
 
 class FileCollection {
     /**

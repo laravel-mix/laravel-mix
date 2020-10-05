@@ -1,5 +1,6 @@
 let glob = require('glob');
 let path = require('path');
+let File = require('../File');
 let webpack = require('webpack');
 let VersionFilesTask = require('../tasks/VersionFilesTask');
 

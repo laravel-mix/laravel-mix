@@ -1,4 +1,6 @@
 let Assert = require('../Assert');
+let path = require('path');
+let File = require('../File');
 let { Chunks } = require('../Chunks');
 let Css = require('./Css');
 

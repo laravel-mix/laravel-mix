@@ -1,4 +1,5 @@
 let Assert = require('../Assert');
+let File = require('../File');
 let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {

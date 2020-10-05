@@ -1,7 +1,11 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import path from 'path';
+import File from '../../src/File';
 import { fakeApp } from '../helpers/paths';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('it compiles Sass without JS', async t => {
     mix.sass(`${fakeApp}/resources/assets/sass/app.scss`, 'css');

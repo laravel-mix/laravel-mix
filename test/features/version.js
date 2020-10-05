@@ -1,8 +1,11 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import File from '../../src/File';
 import fs from 'fs-extra';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('it can version an entire directory or regex of files.', async t => {
     fs.ensureDirSync(`${fakeApp}/public/js/folder`);

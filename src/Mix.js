@@ -1,3 +1,4 @@
+let File = require('./File');
 let Paths = require('./Paths');
 let Manifest = require('./Manifest');
 let Dispatcher = require('./Dispatcher');
@@ -74,15 +75,6 @@ class Mix {
         } catch (e) {
             return false;
         }
-    }
-
-    /**
-     * Determine if Mix should activate hot reloading.
-     */
-    shouldHotReload() {
-        new File(path.join(Config.publicPath, 'hot')).delete();
-
-        return this.isUsing('hmr');
     }
 
     /**

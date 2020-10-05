@@ -1,5 +1,8 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import path from 'path';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('Autoprefixer should always be applied after all other postcss plugins', t => {
     mix.sass('resources/assets/sass/sass.scss', 'public/css').options({

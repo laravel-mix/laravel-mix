@@ -1,12 +1,8 @@
 import test from 'ava';
-import mix from '../../src';
 import sinon from 'sinon';
-import ComponentRegistrar from '../../src/components/ComponentRegistrar';
+import File from '../../src/File';
 
-test.beforeEach(t => {
-    Config = require('../../src/config')();
-    Mix.tasks = [];
-});
+import '../helpers/mix';
 
 test('that it knows if it is being executed in a production environment', t => {
     Config.production = true;
@@ -55,14 +51,6 @@ test('that it can see if we are using a Laravel app', t => {
     File.find('./artisan').delete();
 });
 
-test('that it detect if hot reloading should be enabled', t => {
-    t.false(Mix.shouldHotReload());
-
-    Config.hmr = true;
-
-    t.true(Mix.shouldHotReload());
-});
-
 test('that it can add a task', t => {
     Mix.addTask('footask');
 
@@ -70,8 +58,6 @@ test('that it can add a task', t => {
 });
 
 test('that it can fetch a registered component', t => {
-    new ComponentRegistrar().addMany();
-
     let component = new class {
         register() {}
     }();

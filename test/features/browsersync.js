@@ -1,7 +1,9 @@
-import mix from './helpers/setup';
+import test from 'ava';
 import mockRequire from 'mock-require';
 import Browsersync from '../../src/components/Browsersync';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 mockRequire(
     'browser-sync-webpack-plugin',

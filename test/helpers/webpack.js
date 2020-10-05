@@ -1,11 +1,9 @@
 import webpack from 'webpack';
 
 export function buildConfig() {
-    require('../../src/index');
-
     Mix.dispatch('init');
 
-    return new WebpackConfig().build();
+    return webpackConfig.build();
 }
 
 export async function compile(config) {
@@ -22,4 +20,24 @@ export async function compile(config) {
     });
 }
 
-export default { buildConfig, compile };
+export function setupVueAliases(version) {
+    let mockRequire = require('mock-require');
+
+    const vueModule = version === 3 ? 'vue3' : 'vue2';
+    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
+
+    mockRequire('vue', vueModule);
+    mockRequire('vue-loader', vueLoaderModule);
+
+    mix.alias({ vue: require.resolve(vueModule) });
+
+    mix.webpackConfig({
+        resolveLoader: {
+            alias: {
+                'vue-loader': vueLoaderModule
+            }
+        }
+    });
+}
+
+export default { buildConfig, compile, setupVueAliases };

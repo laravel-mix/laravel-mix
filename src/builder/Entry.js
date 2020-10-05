@@ -1,3 +1,6 @@
+let path = require('path');
+let File = require('../File');
+
 class Entry {
     /**
      * Create a new Entry instance.

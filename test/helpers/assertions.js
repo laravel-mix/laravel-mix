@@ -1,3 +1,4 @@
+import File from '../../src/File';
 import { fakeApp } from './paths';
 
 export default {

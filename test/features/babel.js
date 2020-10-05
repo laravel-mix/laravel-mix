@@ -1,7 +1,11 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import File from '../../src/File';
+import path from 'path';
 import webpack from '../helpers/webpack';
 
-test('mix.babelConfig() can be used to merge custom Babel options.', t => {
+import '../helpers/mix';
+
+test.only('mix.babelConfig() can be used to merge custom Babel options.', t => {
     mix.babelConfig({
         plugins: ['@babel/plugin-proposal-unicode-property-regex']
     });

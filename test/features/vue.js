@@ -1,8 +1,11 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import File from '../../src/File';
 import { fakeApp } from '../helpers/paths';
 import webpack from '../helpers/webpack';
 
-test.beforeEach(() => setupVueAliases(2));
+import '../helpers/mix';
+
+test.beforeEach(() => webpack.setupVueAliases(2));
 
 test('it adds the Vue 2 resolve alias', t => {
     mix.vue({ version: 2, extractStyles: true });

@@ -1,5 +1,3 @@
-let ComponentRegistrar = require('./ComponentRegistrar');
-
 class Extend {
     /**
      * Register the component.
@@ -11,10 +9,10 @@ class Extend {
         if (typeof component !== 'function') {
             component.name = () => name;
 
-            return new ComponentRegistrar().add(component);
+            return Mix.registrar.install(component);
         }
 
-        new ComponentRegistrar().add({
+        Mix.registrar.install({
             name: () => name,
 
             register(...args) {

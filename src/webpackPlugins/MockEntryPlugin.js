@@ -1,3 +1,6 @@
+let File = require('../File');
+let path = require('path');
+
 class MockEntryPlugin {
     /**
      * Handle the deletion of the temporary mix.js

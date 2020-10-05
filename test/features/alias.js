@@ -1,6 +1,8 @@
-import mix from './helpers/setup';
+import test from 'ava';
 import path from 'path';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('it handles resolution aliases', async t => {
     mix.alias({

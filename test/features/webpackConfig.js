@@ -1,4 +1,6 @@
-import mix from './helpers/setup';
+import test from 'ava';
+
+import '../helpers/mix';
 import { buildConfig } from '../helpers/webpack';
 
 test('mix.webpackConfig()', t => {

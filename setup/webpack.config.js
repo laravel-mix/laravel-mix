@@ -1,13 +1,10 @@
+require('../src/index');
+
 /**
  * As our first step, we'll pull in the user's webpack.mix.js
  * file. Based on what the user requests in that file,
  * a generic config object will be constructed for us.
  */
-let mix = require('../src/index');
-
-let ComponentRegistrar = require('../src/components/ComponentRegistrar');
-
-new ComponentRegistrar().addMany();
 
 require(Mix.paths.mix());
 
@@ -19,11 +16,8 @@ require(Mix.paths.mix());
 Mix.dispatch('init', Mix);
 
 /**
- * Now that we know which build tasks are required by the
- * user, we can dynamically create a configuration object
- * for Webpack. And that's all there is to it. Simple!
+ * Now that we know which build tasks are required by the user,
+ * we can begin constructing the webpack configuration object.
  */
 
-let WebpackConfig = require('../src/builder/WebpackConfig');
-
-module.exports = new WebpackConfig().build();
+module.exports = webpackConfig.build();

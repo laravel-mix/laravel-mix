@@ -1,3 +1,5 @@
+let path = require('path');
+let File = require('../File');
 let { Chunks } = require('../Chunks');
 
 class Extract {

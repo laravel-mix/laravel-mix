@@ -1,4 +1,6 @@
-import mix from './helpers/setup';
+import test from 'ava';
+
+import '../helpers/mix';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 

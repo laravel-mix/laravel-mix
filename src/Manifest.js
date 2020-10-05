@@ -1,5 +1,6 @@
 let collect = require('collect.js');
 let path = require('path');
+let File = require('./File');
 
 class Manifest {
     /**

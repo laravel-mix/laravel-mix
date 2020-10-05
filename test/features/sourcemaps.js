@@ -1,4 +1,6 @@
-import mix from './helpers/setup';
+import test from 'ava';
+
+import '../helpers/mix';
 
 test('mix.sourceMaps()', t => {
     t.false(Config.sourcemaps);

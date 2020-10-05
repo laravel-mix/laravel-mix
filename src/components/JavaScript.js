@@ -1,4 +1,5 @@
 let glob = require('glob');
+let File = require('../File');
 let Assert = require('../Assert');
 
 class JavaScript {

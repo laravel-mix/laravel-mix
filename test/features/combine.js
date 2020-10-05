@@ -1,7 +1,10 @@
-import mix from './helpers/setup';
+import test from 'ava';
+import File from '../../src/File';
 import assert from '../helpers/assertions';
 import { fakeApp } from '../helpers/paths';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 test('it combines a folder of scripts', async t => {
     let output = `${fakeApp}/public/all.js`;

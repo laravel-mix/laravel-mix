@@ -1,3 +1,4 @@
+let File = require('../File');
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');

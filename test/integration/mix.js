@@ -1,6 +1,9 @@
-import mix from '../features/helpers/setup';
+import test from 'ava';
+import path from 'path';
 import { chromium } from 'playwright';
 import webpack from '../helpers/webpack';
+
+import '../helpers/mix';
 
 let browser;
 

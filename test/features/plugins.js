@@ -1,11 +1,10 @@
 import test from 'ava';
-import mix from './helpers/setup';
+import path from 'path';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
-import ComponentRegistrar from '../../src/components/ComponentRegistrar';
 import webpack from '../helpers/webpack';
 
-new ComponentRegistrar().addMany();
+import '../helpers/mix';
 
 test('mix can be extended with new functionality as a callback', t => {
     let registration = sinon.spy();
@@ -14,11 +13,7 @@ test('mix can be extended with new functionality as a callback', t => {
 
     mix.foobar('baz', 'buzz');
 
-    Mix.dispatch('init');
-
-    let config = new WebpackConfig().build();
-
-    t.true(registration.calledWith(config, 'baz', 'buzz'));
+    t.true(registration.calledWith(webpack.buildConfig(), 'baz', 'buzz'));
 });
 
 test('mix can be extended with new functionality as a class', t => {

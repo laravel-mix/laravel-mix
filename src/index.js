@@ -9,60 +9,15 @@
  |
  */
 
-/**
- * We'll begin by pulling in a few globals that Mix often uses.
- */
-
-require('./helpers');
-require('dotenv').config();
-
-global.path = require('path');
-global.File = require('./File');
-
-/**
- * This config object is what Mix will reference, when it's time
- * to dynamically build up your Webpack configuration object.
- */
-
-global.Config = require('./config')();
-global.Mix = new (require('./Mix'))();
-
-/**
- * If we're working in a Laravel app, we'll explicitly
- * set the default public path, as a convenience.
- */
+let mix = require('./bootstrap')();
 
 if (Mix.sees('laravel')) {
     Config.publicPath = 'public';
 }
 
-/**
- * If the user activates hot reloading, with the --hot
- * flag, we'll record it as a file, so that Laravel
- * can detect it and update its mix() url paths.
- */
+Mix.listen('init', () => require('./HotReloading').record());
 
-Mix.listen('init', () => {
-    if (Mix.shouldHotReload()) {
-        let http = process.argv.includes('--https') ? 'https' : 'http';
-        let port = process.argv.includes('--port')
-            ? process.argv[process.argv.indexOf('--port') + 1]
-            : Config.hmrOptions.port;
-
-        new File(path.join(Config.publicPath, 'hot')).write(
-            http + '://' + Config.hmrOptions.host + ':' + port + '/'
-        );
-    }
+module.exports = tap(mix, mix => {
+    // For legacy purposes.
+    mix.inProduction = () => Config.production;
 });
-
-/**
- * Mix exposes a simple, fluent API for activating many common build
- * steps that a typical project should require. Behind the scenes,
- * all calls to this fluent API will update the above config.
- */
-
-let Api = require('./Api');
-let api = new Api();
-
-module.exports = api;
-module.exports.config = Config;

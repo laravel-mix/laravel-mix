@@ -1,3 +1,4 @@
+let File = require('../File');
 let CopyFilesTask = require('../tasks/CopyFilesTask');
 
 class Copy {

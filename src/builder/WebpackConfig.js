@@ -1,4 +1,4 @@
-let webpack = require('webpack');
+let path = require('path');
 let Entry = require('./Entry');
 let { Chunks } = require('../Chunks');
 let webpackRules = require('./webpack-rules');

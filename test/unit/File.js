@@ -2,11 +2,17 @@ import test from 'ava';
 import path from 'path';
 import fs from 'fs-extra';
 import eol from 'eol';
-import '../../src';
+import File from '../../src/File';
+
+import '../helpers/mix';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 
-test.before(t => fs.ensureDirSync(stubsDir));
+test.beforeEach(() => {
+    mix.setPublicPath('public');
+
+    fs.ensureDirSync(stubsDir);
+});
 
 test.afterEach(t => {
     fs.emptyDirSync(stubsDir);
