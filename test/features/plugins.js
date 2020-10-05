@@ -152,18 +152,18 @@ test('the fully constructed webpack config object is available for modification,
             register() {}
 
             webpackConfig(config) {
-                config.stats.hash = true;
+                config.stats.performance = true;
             }
         }()
     );
 
-    t.false(new WebpackConfig().build().stats.hash);
+    t.false(new WebpackConfig().build().stats.performance);
 
     mix.extension();
 
     Mix.dispatch('init');
 
-    t.true(new WebpackConfig().build().stats.hash);
+    t.true(new WebpackConfig().build().stats.performance);
 });
 
 test('prior Mix components can be overwritten', t => {
