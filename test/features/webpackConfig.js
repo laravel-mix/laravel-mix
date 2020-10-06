@@ -21,7 +21,7 @@ test('mix.webpackConfig()', t => {
     t.deepEqual(config, Config.webpackConfig);
 });
 
-test.only('Custom user config can be merged', t => {
+test('Custom user config can be merged', t => {
     mix.webpackConfig({ context: 'changed' });
 
     t.is('changed', buildConfig().context);

@@ -1,4 +1,5 @@
 import test from 'ava';
+import path from 'path';
 import File from '../../src/File';
 
 import webpack from '../helpers/webpack';
@@ -19,7 +20,7 @@ test('mix.react()', t => {
     );
 });
 
-test.only('it compiles React and a preprocessor properly', async t => {
+test('it compiles React and a preprocessor properly', async t => {
     mix.react()
         .js(`test/fixtures/app/src/js/app.js`, 'js')
         .sass(`test/fixtures/app/src/sass/app.scss`, 'css');

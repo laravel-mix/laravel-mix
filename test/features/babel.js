@@ -5,7 +5,7 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
-test.only('mix.babelConfig() can be used to merge custom Babel options.', t => {
+test('mix.babelConfig() can be used to merge custom Babel options.', t => {
     mix.babelConfig({
         plugins: ['@babel/plugin-proposal-unicode-property-regex']
     });
@@ -63,7 +63,7 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
     File.find(babelRcPath).delete();
 });
 
-test.only('Babel config from Mix extensions is merged with the defaults', t => {
+test('Babel config from Mix extensions is merged with the defaults', t => {
     mix.extend(
         'extensionWithBabelConfig',
         new class {
