@@ -3,6 +3,7 @@ let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
 let Css = require('./Css');
+let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class Preprocessor {
     /**
@@ -43,46 +44,7 @@ class Preprocessor {
 
                 {
                     loader: 'postcss-loader',
-                    options: {
-                        sourceMap:
-                            preprocessor.type === 'sass' &&
-                            Config.processCssUrls
-                                ? true
-                                : Mix.isUsing('sourcemaps'),
-                        postcssOptions: {
-                            plugins: (function() {
-                                let plugins = Config.postCss;
-
-                                if (
-                                    preprocessor.postCssPlugins &&
-                                    preprocessor.postCssPlugins.length
-                                ) {
-                                    plugins = preprocessor.postCssPlugins;
-                                }
-
-                                if (
-                                    Config.autoprefixer &&
-                                    Config.autoprefixer.enabled
-                                ) {
-                                    plugins.push(
-                                        require('autoprefixer')(
-                                            Config.autoprefixer.options
-                                        )
-                                    );
-                                }
-
-                                if (Mix.inProduction()) {
-                                    plugins.push(
-                                        require('cssnano')({
-                                            preset: ['default', Config.cssNano]
-                                        })
-                                    );
-                                }
-
-                                return plugins;
-                            })()
-                        }
-                    }
+                    options: this.postCssLoaderOptions(preprocessor)
                 }
             ];
 
@@ -137,6 +99,23 @@ class Preprocessor {
                     ? true
                     : Mix.isUsing('sourcemaps')
         });
+    }
+
+    /**
+     * Generate the options object for the PostCSS Loader.
+     *
+     * @param {string} preprocessor
+     */
+    postCssLoaderOptions(preprocessor) {
+        return {
+            sourceMap:
+                preprocessor.type === 'sass' && Config.processCssUrls
+                    ? true
+                    : Mix.isUsing('sourcemaps'),
+            postcssOptions: {
+                plugins: new PostCssPluginsFactory(preprocessor, Config).load()
+            }
+        };
     }
 
     /**

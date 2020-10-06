@@ -106,34 +106,6 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
     seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
 });
 
-test('cssnano minifier options may be specified', async t => {
-    Config.production = true;
-
-    let file = new File(`test/fixtures/app/src/sass/minifier-example.scss`);
-
-    file.write(`
-        .test {
-            font-family: 'Font Awesome 5 Free';
-        }
-    `);
-
-    mix.sass(file.relativePath(), 'css');
-
-    mix.options({
-        cssNano: { minifyFontValues: false }
-    });
-
-    await webpack.compile();
-
-    t.is(
-        '.test{font-family:"Font Awesome 5 Free"}\n',
-        File.find(`test/fixtures/app/dist/css/minifier-example.css`).read()
-    );
-
-    // Clean up.
-    file.delete();
-});
-
 test('Sass is extracted properly', async t => {
     mix.sass(`test/fixtures/app/src/sass/app.sass`, 'css/app.css');
 

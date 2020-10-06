@@ -1,8 +1,8 @@
 import test from 'ava';
-
 import webpack from '../helpers/webpack';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import File from '../../src/File';
+import path from 'path';
 
 import '../helpers/mix';
 
@@ -10,7 +10,7 @@ test.beforeEach(() => {
     webpack.setupVueAliases(3);
 });
 
-test.only('it adds the Vue 3 resolve alias', t => {
+test('it adds the Vue 3 resolve alias', t => {
     mix.vue({ version: 3, extractStyles: true });
 
     Mix.dispatch('init');
@@ -28,7 +28,7 @@ test('it knows the Vue 3 compiler name', t => {
     t.true(dependencies.includes('@vue/compiler-sfc'));
 });
 
-test.only('it appends vue styles to your sass compiled file', async t => {
+test('it appends vue styles to your sass compiled file', async t => {
     mix.vue({ version: 3, extractStyles: true });
 
     mix.js(
@@ -220,6 +220,11 @@ test('it extracts vue .sass styles to a dedicated file', async t => {
 });
 
 test('it extracts vue PostCSS styles to a dedicated file', async t => {
+    // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
+    let postCssConfigFile = new File(path.resolve('postcss.config.js')).write(
+        `module.exports = { plugins: [require('postcss-custom-properties')] };`
+    );
+
     mix.vue({ version: 3, extractStyles: 'css/components.css' });
     mix.js(
         `test/fixtures/app/src/vue3/app-with-vue-and-postcss.js`,
@@ -244,6 +249,9 @@ test('it extracts vue PostCSS styles to a dedicated file', async t => {
         expected,
         File.find(`test/fixtures/app/dist/css/components.css`).read()
     );
+
+    // Clean up
+    postCssConfigFile.delete();
 });
 
 test('it extracts vue Less styles to a dedicated file', async t => {
@@ -267,6 +275,11 @@ test('it extracts vue Less styles to a dedicated file', async t => {
 });
 
 test('it supports global Vue styles for sass', async t => {
+    // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
+    let postCssConfigFile = new File(path.resolve('postcss.config.js')).write(
+        `module.exports = { plugins: [require('postcss-custom-properties')] };`
+    );
+
     mix.vue({
         version: 3,
         extractStyles: 'css/components.css',
@@ -319,4 +332,6 @@ test('it supports global Vue styles for sass', async t => {
             .read()
             .trim()
     );
+
+    postCssConfigFile.delete();
 });

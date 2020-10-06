@@ -3,7 +3,7 @@ let objectValues = require('lodash').values;
 /**
  * Generic tap function.
  *
- * @param {mixed}    val
+ * @param {*}    val
  * @param {Function} callback
  */
 global.tap = function(val, callback) {
@@ -15,7 +15,7 @@ global.tap = function(val, callback) {
 /**
  * Add tap to arrays.
  *
- * @param {mixed}    val
+ * @param {*}    val
  * @param {Function} callback
  */
 Object.defineProperty(Array.prototype, 'tap', {
@@ -31,7 +31,7 @@ Object.defineProperty(Array.prototype, 'tap', {
 /**
  * Add wrap to arrays.
  *
- * @param {mixed}    val
+ * @param {*}    val
  * @param {Function} callback
  */
 Object.defineProperty(Array, 'wrap', {
