@@ -98,3 +98,4 @@ mix.sass('resources/sass/app.sass', 'public/css');
 -   `npx mix` executable
 -   **Component:** `mix.alias()`
 -   `mix.ts()` now applies Babel transformation just like `mix.js()`
+-   Fixed and improved PostCSS plugin autoloading and merging.
