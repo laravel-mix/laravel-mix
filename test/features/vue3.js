@@ -19,6 +19,15 @@ test('it adds the Vue 3 resolve alias', t => {
     );
 });
 
+test('it adds the Vue 3 runtime resolve alias', t => {
+    mix.vue({ version: 3, runtimeOnly: true });
+
+    t.is(
+        'vue/dist/vue.runtime.esm-bundler.js',
+        webpack.buildConfig().resolve.alias.vue$
+    );
+});
+
 test('it knows the Vue 3 compiler name', t => {
     mix.vue({ version: 3 });
 
