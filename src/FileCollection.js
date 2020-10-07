@@ -1,4 +1,6 @@
 let concat = require('concat');
+let path = require('path');
+let fs = require('fs');
 let babel = require('@babel/core');
 let glob = require('glob');
 let Log = require('./Log');
@@ -80,7 +82,13 @@ class FileCollection {
         }
 
         if (src.isDirectory()) {
-            return src.copyTo(destination.path());
+            src.copyTo(destination.path());
+
+            this.assets = fs.readdirSync(src.path()).map(file => {
+                return new File(path.resolve(destination.path(), file));
+            });
+
+            return;
         }
 
         if (src.contains('*')) {

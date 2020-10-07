@@ -52,9 +52,10 @@ class CustomTasksPlugin {
     }
 
     /**
-     * Execute potentially asynchrone tasks sequentially.
+     * Execute potentially asynchronous tasks sequentially.
      *
-     * @param {Array} tasks
+     * @param stats
+     * @param index
      */
     runTasks(stats, index = 0) {
         if (index === Mix.tasks.length) return Promise.resolve();
@@ -72,7 +73,6 @@ class CustomTasksPlugin {
     async minifyAssets() {
         const assets = collect(Mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
-            .where('constructor.name', '!==', 'CopyFilesTask')
             .flatMap(({ assets }) => assets);
 
         const tasks = assets.map(async asset => {

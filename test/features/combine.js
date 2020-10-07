@@ -1,4 +1,5 @@
 import test from 'ava';
+import fs from 'fs-extra';
 import File from '../../src/File';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
@@ -61,6 +62,42 @@ test('it compiles JS and then combines the bundles files.', async t => {
         },
         t
     );
+});
+
+test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
+    Config.production = true;
+
+    // Setup
+    new File('test/fixtures/app/src/combine/one.js')
+        .makeDirectories()
+        .write("alert('one')");
+
+    new File('test/fixtures/app/src/combine/two.js').write("alert('two')");
+
+    mix.scripts(
+        [
+            `test/fixtures/app/src/combine/one.js`,
+            `test/fixtures/app/src/combine/two.js`
+        ],
+        'test/fixtures/app/dist/output/combined-scripts.js'
+    );
+
+    mix.copyDirectory(
+        'test/fixtures/app/dist/output',
+        'test/fixtures/app/dist/js'
+    );
+
+    await webpack.compile();
+
+    let expected = `alert("one"),alert("two");\n`;
+
+    t.is(
+        expected,
+        File.find('test/fixtures/app/dist/js/combined-scripts.js').read()
+    );
+
+    // Clean up
+    fs.removeSync('test/fixtures/app/src/combine');
 });
 
 test('mix.combine/scripts/styles/babel()', t => {
