@@ -178,6 +178,7 @@ class Preprocessor {
             this.chunkRegex(),
 
             // 2. Ensure that just this file is included in this chunk
+            // _or any dependencies_
             src.path()
         ];
 

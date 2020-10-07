@@ -174,3 +174,26 @@ test('Compiling multiple CSS assets places CSS in the correct location', async t
         t
     );
 });
+
+test('SASS/SCSS with imports does not place files in the wrong output dir', async t => {
+    mix.js(`test/fixtures/app/src/js/app.js`, 'dist/js');
+    mix.sass(`test/fixtures/app/src/sass/import.scss`, 'dist/css');
+    mix.options({
+        processCssUrls: false
+    });
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/import.css`));
+    t.false(File.exists(`test/fixtures/app/dist/js/import.css`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/import.css': '/css/import.css'
+        },
+        t
+    );
+
+    assert.fileNotEmpty(`test/fixtures/app/dist/css/import.css`, t);
+});

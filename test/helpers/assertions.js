@@ -14,6 +14,20 @@ export default {
     },
 
     /**
+     * Check thata file isn't empty
+     * @param {string} path
+     * @param {import("ava").Assertions} t
+     */
+    fileNotEmpty: (path, t) => {
+        t.not(
+            File.find(path)
+                .read()
+                .replace(/\s/g, ''),
+            ''
+        );
+    },
+
+    /**
      * Strips all whitespace before checking the file
      *
      * @param {string} path

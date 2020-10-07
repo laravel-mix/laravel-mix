@@ -192,6 +192,10 @@ class Chunks {
             return true;
         }
 
+        if (module.issuer) {
+            return this._checkTest(test, module.issuer, context);
+        }
+
         return false;
     }
 
