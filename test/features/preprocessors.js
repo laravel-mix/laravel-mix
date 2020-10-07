@@ -145,3 +145,32 @@ test('CSS output paths are normalized', async t => {
         t
     );
 });
+
+test('Compiling multiple CSS assets places CSS in the correct location', async t => {
+    mix.js(`test/fixtures/app/src/js/app.js`, 'dist/js');
+    mix.sass(`test/fixtures/app/src/sass/app.scss`, 'dist/css');
+    mix.postCss(`test/fixtures/app/src/css/app.css`, 'dist/css');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    t.false(File.exists(`test/fixtures/app/dist/dist/css/app.css`));
+    t.false(File.exists(`test/fixtures/app/dist/js/app.css`));
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    t.false(File.exists(`test/fixtures/app/dist/dist/js/app.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
+
+    assert.fileMatchesCss(
+        `test/fixtures/app/dist/css/app.css`,
+        `body{color:red;}.app{color:red;}`,
+        t
+    );
+});

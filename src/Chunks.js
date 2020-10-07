@@ -53,7 +53,7 @@ class Chunks {
      * @param {Partial<CacheGroups>} attrs
      */
     create(id, path, attrs = {}) {
-        this.chunks[id] = {
+        this.chunks[id] = this.chunks[id] || {
             name: path,
             ...attrs
         };
