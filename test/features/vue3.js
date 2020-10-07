@@ -1,5 +1,6 @@
 import test from 'ava';
 import webpack from '../helpers/webpack';
+import assert from '../helpers/assertions';
 import WebpackConfig from '../../src/builder/WebpackConfig';
 import File from '../../src/File';
 import path from 'path';
@@ -59,7 +60,7 @@ test('it appends vue styles to your sass compiled file', async t => {
 }
 `;
 
-    t.is(expected, File.find(`test/fixtures/app/dist/css/app.css`).read());
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/app.css`, expected, t);
 });
 
 test('it appends vue styles to your less compiled file', async t => {
@@ -181,16 +182,17 @@ test('it extracts vue .scss styles to a dedicated file', async t => {
 
 `;
 
-    t.is(expected, File.find(`test/fixtures/app/dist/css/app.css`).read());
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/app.css`, expected, t);
 
     expected = `.hello {
   color: blue;
 }
 `;
 
-    t.is(
+    assert.fileMatchesCss(
+        `test/fixtures/app/dist/css/components.css`,
         expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
+        t
     );
 });
 
@@ -214,16 +216,17 @@ test('it extracts vue .sass styles to a dedicated file', async t => {
 
 `;
 
-    t.is(expected, File.find(`test/fixtures/app/dist/css/app.css`).read());
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/app.css`, expected, t);
 
     expected = `.hello {
   color: black;
 }
 `;
 
-    t.is(
+    assert.fileMatchesCss(
+        `test/fixtures/app/dist/css/components.css`,
         expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
+        t
     );
 });
 
