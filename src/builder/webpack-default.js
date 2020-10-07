@@ -33,6 +33,9 @@ module.exports = function() {
 
         optimization: Mix.inProduction()
             ? {
+                  providedExports: true,
+                  sideEffects: true,
+                  usedExports: true,
                   minimizer: [new TerserPlugin(Config.terser)]
               }
             : {},

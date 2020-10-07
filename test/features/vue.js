@@ -14,6 +14,15 @@ test('it adds the Vue 2 resolve alias', t => {
     t.is('vue/dist/vue.esm.js', webpack.buildConfig().resolve.alias.vue$);
 });
 
+test('it adds the Vue 2 runtime resolve alias', t => {
+    mix.vue({ version: 2, runtimeOnly: true });
+
+    t.is(
+        'vue/dist/vue.runtime.esm.js',
+        webpack.buildConfig().resolve.alias.vue$
+    );
+});
+
 test('it knows the Vue 2 compiler name', t => {
     mix.vue({ version: 2 });
 
