@@ -1,4 +1,5 @@
 import test from 'ava';
+import os from 'os';
 import fs from 'fs-extra';
 import File from '../../src/File';
 import assert from '../helpers/assertions';
@@ -89,7 +90,7 @@ test('it concatenates a directory of files, copies the output to a new location,
 
     await webpack.compile();
 
-    let expected = `alert("one"),alert("two");\n`;
+    let expected = `alert("one"),alert("two");` + os.EOL;
 
     t.is(
         expected,
