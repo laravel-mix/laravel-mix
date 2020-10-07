@@ -75,15 +75,24 @@ class Vue {
         webpackConfig.resolve.alias = webpackConfig.resolve.alias || {};
 
         if (!webpackConfig.resolve.alias['vue$']) {
-            webpackConfig.resolve.alias['vue$'] =
-                this.version === 2
-                    ? 'vue/dist/vue.esm.js'
-                    : 'vue/dist/vue.esm-bundler.js';
+            webpackConfig.resolve.alias['vue$'] = this.aliasPath();
         }
 
         webpackConfig.resolve.extensions.push('.vue');
 
         this.updateChunks();
+    }
+
+    aliasPath() {
+        if (this.version === 2) {
+            return this.options.runtimeOnly
+                ? 'vue/dist/vue.runtime.esm.js'
+                : 'vue/dist/vue.esm.js';
+        }
+
+        return this.options.runtimeOnly
+            ? 'vue/dist/vue.runtime.esm-bundler.js'
+            : 'vue/dist/vue.esm-bundler.js';
     }
 
     /**
