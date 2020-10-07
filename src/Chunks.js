@@ -183,11 +183,32 @@ class Chunks {
      * @internal
      *
      * @param {undefined|boolean|string|RegExp|Function} test test option
-     * @param {Module} module the module
-     * @param {CacheGroupsContext} context context object
+     * @param {import("webpack").Module} module the module
+     * @param {any} context context object
      * @returns {boolean} true, if the module should be selected
      */
     _checkTest(test, module, context) {
+        if (this._checkModuleTest(test, module, context)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check to see if a chunk should be included
+     *
+     * NOTE: This repeats the code from the SplitChunksPlugin checkTest function
+     * This is for internal use only and may be changed or removed at any time
+     *
+     * @internal
+     *
+     * @param {undefined|boolean|string|RegExp|Function} test test option
+     * @param {import("webpack").Module} module the module
+     * @param {any} context context object
+     * @returns {boolean} true, if the module should be selected
+     */
+    _checkModuleTest(test, module, context) {
         if (test === undefined) return true;
         if (typeof test === 'function') {
             return test(module, context);
@@ -195,12 +216,15 @@ class Chunks {
         if (typeof test === 'boolean') return test;
         if (typeof test === 'string') {
             const name = module.nameForCondition();
+
             return name && name.startsWith(test);
         }
         if (test instanceof RegExp) {
             const name = module.nameForCondition();
+
             return name && test.test(name);
         }
+
         return false;
     }
 }
