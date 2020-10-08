@@ -22,7 +22,7 @@ async function run() {
     program
         .command('watch')
         .description('Build and watch files for changes.')
-        .option('--hmr', 'Enable hot reloading.', false)
+        .option('--hot', 'Enable hot reloading.', false)
         .action(cmd =>
             executeScript(
                 'watch',
@@ -81,9 +81,9 @@ async function executeScript(cmd, opts, args = []) {
 function commandScript(cmd, opts) {
     if (cmd === 'build') {
         return 'npx webpack --progress';
-    } else if (cmd === 'watch' && !opts.hmr) {
+    } else if (cmd === 'watch' && !opts.hot) {
         return 'npx webpack --progress --watch';
-    } else if (cmd === 'watch' && opts.hmr) {
+    } else if (cmd === 'watch' && opts.hot) {
         return 'npx webpack serve --hot --inline --disable-host-check';
     }
 }

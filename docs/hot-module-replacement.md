@@ -14,7 +14,7 @@ reflect your change without requiring a page refresh. The current count will rem
 
 Laravel and Mix work together to tuck away the necessary complexity required to get hot reloading up and running.
 
-From the command line, run `npx mix watch --hmr` to boot up a Node server and monitor your bundle for changes. Next, load your Laravel app in the browser, as you normally would: perhaps `http://my-app.test`.
+From the command line, run `npx mix watch --hot` to boot up a Node server and monitor your bundle for changes. Next, load your Laravel app in the browser, as you normally would: perhaps `http://my-app.test`.
 
 The key to making hot reloading work within a Laravel application is ensuring that all script sources reference the Node server URL that we just booted up. This will be [http://localhost:8080](http://localhost:8080). Now you could of course manually update your HTML/Blade files, like so:
 
@@ -37,4 +37,4 @@ However, it can be a burden - and risk - to manually change this URL back and fo
 </body>
 ```
 
-With this adjustment, Laravel will do the work for you. If you run `npx mix watch --hmr` to enable hot reloading, the function will prepend the necessary `http://localhost:8080` base url. If, instead, you run `npx mix` or `npx mix watch`, it'll reference your domain as the base.
+With this adjustment, Laravel will do the work for you. If you run `npx mix watch --hot` to enable hot reloading, the function will prepend the necessary `http://localhost:8080` base url. If, instead, you run `npx mix` or `npx mix watch`, it'll reference your domain as the base.

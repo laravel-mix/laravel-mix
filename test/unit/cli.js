@@ -63,7 +63,7 @@ test('it calls webpack with watch mode using polling', async t => {
 });
 
 test('it calls webpack with hot reloading', async t => {
-    let { stdout } = await mix(['watch', '--hmr']);
+    let { stdout } = await mix(['watch', '--hot']);
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
@@ -73,7 +73,7 @@ test('it calls webpack with hot reloading', async t => {
 });
 
 test('it calls webpack with hot reloading using polling', async t => {
-    let { stdout } = await mix(['watch', '--hmr', '--', '--watch-poll']);
+    let { stdout } = await mix(['watch', '--hot', '--', '--watch-poll']);
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
