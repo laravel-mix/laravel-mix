@@ -12,7 +12,7 @@ class CustomTasksPlugin {
             this.constructor.name,
             (stats, callback) => {
                 this.runTasks(stats).then(async () => {
-                    if (Mix.components.get('version')) {
+                    if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
                         this.applyVersioning();
                     }
 
