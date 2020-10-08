@@ -14,6 +14,26 @@ export default {
     },
 
     /**
+     * Assert that a file exists
+     *
+     * @param {string} path
+     * @param {import("ava").Assertions} t
+     */
+    fileExists: (path, t) => {
+        t.true(File.exists(path));
+    },
+
+    /**
+     * Assert that a file does not exist
+     *
+     * @param {string} path
+     * @param {import("ava").Assertions} t
+     */
+    fileDoesNotExist: (path, t) => {
+        t.false(File.exists(path));
+    },
+
+    /**
      * Assert that a file isn't empty.
      *
      * @param {string} path
@@ -42,5 +62,27 @@ export default {
                 .replace(/\s/g, ''),
             expected.replace(/\s/g, '')
         );
+    },
+
+    /**
+     * Assert that a file contains the given string
+     *
+     * @param {string} path
+     * @param {string} expected
+     * @param {import("ava").Assertions} t
+     */
+    fileContains: (path, str, t) => {
+        t.true(new File(path).read().includes(str));
+    },
+
+    /**
+     * Assert that a file does not contain the given string
+     *
+     * @param {string} path
+     * @param {string} expected
+     * @param {import("ava").Assertions} t
+     */
+    fileDoesNotContain: (path, str, t) => {
+        t.false(new File(path).read().includes(str));
     }
 };
