@@ -90,6 +90,40 @@ mix.sass('resources/sass/app.sass', 'public/css', {
 mix.sass('resources/sass/app.sass', 'public/css');
 ```
 
+### Changes to unused library extraction
+
+Mix when given `mix.extract(["library-1", "library-2"])` would previously extract libraries to a file regardless of whether or not they're used in the main JS bundle. Now, in Mix 6, we extract only the libraries that are used by your JS bundle. This means that these libraries are now also eligible for tree-shaking.
+
+With this change libraries should no longer be duplicated in multiple files. For example, if you used `vue` in your JS bundle and called `mix.extract(["vue])` it was possible in some scenarios for Vue to be included in each the vendor file and your app js file. This should no longer happen.
+
+Should you need to preserve the behavior of all listed libraries being included you can create a file that imports the necessary libraries. It may also be necessary for you to disable tree-shaking optimizations.
+
+##### Before
+
+```js
+// webpack.mix.js
+mix.extract(['library-1', 'library-2']);
+```
+
+##### After
+
+```js
+// src/libraries.js
+import 'library-1';
+import 'library-2';
+
+// webpack.mix.js
+mix.js('src/libraries.js');
+mix.extract(['library-1', 'library-2']);
+mix.webpackConfig({
+    optimization: {
+        providedExports: false,
+        sideEffects: false,
+        usedExports: false
+    }
+});
+```
+
 # Updates
 
 -   Support for webpack 5
