@@ -2,12 +2,19 @@ let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
 
+/** @typedef {import('../../typings/extract').Extraction} Extraction */
+/** @typedef {import('../../typings/extract').ExtractConfig} ExtractConfig */
+/** @typedef {import('../builder/Entry').Entry} Entry */
+
 class Extract {
     /**
      * Create a new component instance.
      */
     constructor() {
+        /** @type {Entry|null} */
         this.entry = null;
+
+        /** @type {Extraction[]} */
         this.extractions = [];
         this.chunks = Chunks.instance();
         this.chunks.runtime = true;
@@ -25,22 +32,11 @@ class Extract {
     /**
      * Register the component.
      *
-     * @param {*} libs
-     * @param {string} output
+     * @param {ExtractConfig} [config]
+     * @param {string} [output]
      */
-    register(libs = [], output) {
-        // If the user provides an output path as the first argument, they probably
-        // want to extract all node_module libraries to the specified file.
-        if (
-            arguments.length === 1 &&
-            typeof libs === 'string' &&
-            libs.endsWith('.js')
-        ) {
-            output = libs;
-            libs = [];
-        }
-
-        this.extractions.push({ libs, output });
+    register(config = null, output = null) {
+        this.extractions.push(this.normalizeExtraction(config, output));
     }
 
     /**
@@ -57,34 +53,18 @@ class Extract {
         }
 
         this.extractions.forEach(extraction => {
-            extraction.output = this.extractionPath(extraction.output);
+            const path = this.extractionPath(extraction.to);
 
-            this.addChunk(extraction);
+            this.chunks.add(
+                `vendor${this.extractions.indexOf(extraction)}`,
+                path.replace(/\.js$/, ''),
+                extraction.test,
+                {
+                    chunks: 'all',
+                    enforce: true
+                }
+            );
         });
-    }
-
-    addChunk(extraction) {
-        let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
-
-        /*
-        // The FIXME above means that this code should never fire when extraction.libs
-        // is empty. We'll leave this code here in case a better solution comes along
-        const libsPattern = extraction.libs.join('|');
-
-        if (libsPattern.length > 0) {
-            pattern = `${pattern}(${libsPattern})`;
-        }
-        */
-
-        this.chunks.add(
-            `vendor${this.extractions.indexOf(extraction)}`,
-            extraction.output.replace(/\.js$/, ''),
-            new RegExp(pattern, 'i'),
-            {
-                chunks: 'all',
-                enforce: true
-            }
-        );
     }
 
     extractionPath(outputPath) {
@@ -93,6 +73,56 @@ class Extract {
         }
 
         return path.join(this.entry.base, 'vendor').replace(/\\/g, '/');
+    }
+
+    /**
+     *
+     * @param {ExtractConfig|null} [config]
+     * @param {string} [output]
+     * @returns {Extraction}
+     */
+    normalizeExtraction(config = null, output = null) {
+        config = config || {};
+
+        if (typeof config === 'string') {
+            if (output !== null || !config.endsWith('.js')) {
+                throw new Error(
+                    'mix.extract(string) expects a file path as its only argument'
+                );
+            }
+
+            config = { to: config };
+        } else if (Array.isArray(config)) {
+            config = { test: this.buildLibraryRegex(config) };
+        } else {
+            config = {};
+        }
+
+        return {
+            to: output || null,
+            ...config,
+            test: config.test || this.buildLibraryRegex(config.libraries || [])
+        };
+    }
+
+    /**
+     *
+     * @param {string[]} libraries
+     */
+    buildLibraryRegex(libraries = []) {
+        let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
+        let extra = '';
+
+        if (Array.isArray(libraries)) {
+            extra = libraries.map(lib => `${lib}[\\\\/]`).join('|');
+        } else {
+            throw new Error(
+                `Unexpected type [${typeof libraries}] passed to mix.extract({ libraries: … }). ` +
+                    `You may pass an array of strings.`
+            );
+        }
+
+        return new RegExp(`${pattern}(${extra})`, 'i');
     }
 }
 
