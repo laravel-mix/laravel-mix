@@ -1,6 +1,6 @@
 {
     "name": "laravel-mix",
-    "version": "6.0.0-beta.5",
+    "version": "6.0.0-beta.6",
     "description": "Laravel Mix is an elegant wrapper around Webpack for the 80% use case.",
     "main": "src/index.js",
     "types": "typings/index.d.ts",
