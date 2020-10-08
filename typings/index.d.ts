@@ -14,6 +14,7 @@ import { Options as SvgoConfig } from 'imagemin-svgo';
 import { TransformOptions as BabelConfig } from 'babel-core';
 import { Options as BrowserSyncConfig } from 'browser-sync';
 import { TerserPluginOptions } from 'terser-webpack-plugin';
+import * as ExtractTypes from './extract';
 
 interface MixConfig {
     production?: boolean;
@@ -81,9 +82,13 @@ declare module 'laravel-mix' {
                   ) => void)
         ) => Api;
         type Extract =
-            | (() => Api)
-            | ((output: string) => Api)
-            | ((libs: string | string[], output: string) => Api);
+            | ((output?: string) => Api)
+            | ((libs: string[], output?: string) => Api)
+            | ((test: ExtractTypes.ExtractTestCallback, output?: string) => Api)
+            | ((
+                  config: Partial<ExtractTypes.Extraction>,
+                  output?: string
+              ) => Api);
         type Notifications = () => Api;
         type Version = (files?: string | string[]) => Api;
 

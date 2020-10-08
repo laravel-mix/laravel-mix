@@ -92,10 +92,10 @@ class Extract {
             }
 
             config = { to: config };
+        } else if (typeof config === 'function') {
+            config = { test: config };
         } else if (Array.isArray(config)) {
             config = { test: this.buildLibraryRegex(config) };
-        } else {
-            config = {};
         }
 
         return {
@@ -107,7 +107,7 @@ class Extract {
 
     /**
      *
-     * @param {string[]} libraries
+     * @param {string[]|RegExp} libraries
      */
     buildLibraryRegex(libraries = []) {
         let pattern = '(?<!node_modules)[\\\\/]node_modules[\\\\/]';
@@ -115,10 +115,12 @@ class Extract {
 
         if (Array.isArray(libraries)) {
             extra = libraries.map(lib => `${lib}[\\\\/]`).join('|');
+        } else if (libraries instanceof RegExp) {
+            extra = libraries.source;
         } else {
             throw new Error(
                 `Unexpected type [${typeof libraries}] passed to mix.extract({ libraries: … }). ` +
-                    `You may pass an array of strings.`
+                    `You may pass either an array of strings or a regular expression.`
             );
         }
 

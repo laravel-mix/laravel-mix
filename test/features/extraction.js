@@ -126,3 +126,54 @@ test('multiple extractions work', async t => {
         t
     );
 });
+
+test.only('configurable extractions work', async t => {
+    mix.vue({ version: 2 });
+    mix.js(`test/fixtures/app/src/extract/app.js`, 'js');
+
+    mix.extract({
+        to: 'js/vendor-vue-lodash.js',
+        libraries: /vue2|lodash/
+    });
+
+    mix.extract({
+        to: 'js/vendor-core-js.js',
+        test(mod) {
+            return /core-js/.test(mod.nameForCondition());
+        }
+    });
+
+    mix.extract(mod => /eol/.test(mod.nameForCondition()), 'js/vendor-eol.js');
+
+    await webpack.compile();
+
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-core-js.js`,
+        'core-js',
+        t
+    );
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-vue-lodash.js`,
+        'vue',
+        t
+    );
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-vue-lodash.js`,
+        'uniq',
+        t
+    );
+    assert.fileContains(`test/fixtures/app/dist/js/vendor-eol.js`, 'auto', t);
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/manifest.js': '/js/manifest.js',
+            '/js/vendor-core-js.js': '/js/vendor-core-js.js',
+            '/js/vendor-eol.js': '/js/vendor-eol.js',
+            '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js',
+            '/js/split.js': '/js/split.js'
+        },
+        t
+    );
+});

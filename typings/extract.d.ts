@@ -18,7 +18,7 @@ export type Extraction = {
     test: RegExp | ExtractTestCallback;
 
     /** A list of libraries to match against */
-    libraries: string[];
+    libraries: string[] | RegExp;
 };
 
 export type ExtractConfig =
@@ -27,6 +27,9 @@ export type ExtractConfig =
 
     // A list of vendor files
     | string[]
+
+    // Custom extraction test function
+    | ExtractTestCallback
 
     // Extraction config
     | Partial<Extraction>;
