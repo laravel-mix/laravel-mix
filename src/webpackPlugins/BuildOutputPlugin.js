@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const Table = require('cli-table3');
 const readline = require('readline');
 const { formatSize } = require('webpack/lib/SizeFormatHelpers');
+const { version } = require('../../package.json');
 
 class BuildOutputPlugin {
     /**
@@ -29,7 +30,7 @@ class BuildOutputPlugin {
                 performance: true
             });
 
-            this.heading('Laravel Mix v6');
+            this.heading(`Laravel Mix v${version}`);
 
             console.log(
                 chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`)
