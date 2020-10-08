@@ -87,17 +87,8 @@ class Preprocessor {
      * @param {Object} preprocessor
      */
     loaderOptions(preprocessor) {
-        tap(preprocessor.pluginOptions.implementation, implementation => {
-            if (typeof implementation === 'function') {
-                preprocessor.pluginOptions.implementation = implementation();
-            }
-        });
-
         return Object.assign(preprocessor.pluginOptions, {
-            sourceMap:
-                preprocessor.type === 'sass' && Config.processCssUrls
-                    ? true
-                    : Mix.isUsing('sourcemaps')
+            sourceMap: Mix.isUsing('sourcemaps')
         });
     }
 
@@ -108,10 +99,7 @@ class Preprocessor {
      */
     postCssLoaderOptions(preprocessor) {
         return {
-            sourceMap:
-                preprocessor.type === 'sass' && Config.processCssUrls
-                    ? true
-                    : Mix.isUsing('sourcemaps'),
+            sourceMap: Mix.isUsing('sourcemaps'),
             postcssOptions: {
                 plugins: new PostCssPluginsFactory(preprocessor, Config).load()
             }
@@ -190,6 +178,7 @@ class Preprocessor {
             this.chunkRegex(),
 
             // 2. Ensure that just this file is included in this chunk
+            // _or any dependencies_
             src.path()
         ];
 
