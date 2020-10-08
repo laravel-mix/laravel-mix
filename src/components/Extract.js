@@ -110,7 +110,7 @@ class Extract {
      * @param {string[]} libraries
      */
     buildLibraryRegex(libraries = []) {
-        let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
+        let pattern = '(?<!node_modules)[\\\\/]node_modules[\\\\/]';
         let extra = '';
 
         if (Array.isArray(libraries)) {
