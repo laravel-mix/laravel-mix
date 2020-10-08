@@ -14,7 +14,8 @@ export default {
     },
 
     /**
-     * Check thata file isn't empty
+     * Assert that a file isn't empty.
+     *
      * @param {string} path
      * @param {import("ava").Assertions} t
      */
@@ -28,7 +29,7 @@ export default {
     },
 
     /**
-     * Strips all whitespace before checking the file
+     * Assert that a file path matches the given CSS.
      *
      * @param {string} path
      * @param {string} expected
