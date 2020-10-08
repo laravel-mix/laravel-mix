@@ -84,6 +84,6 @@ function commandScript(cmd, opts) {
     } else if (cmd === 'watch' && !opts.hmr) {
         return 'npx webpack --progress --watch';
     } else if (cmd === 'watch' && opts.hmr) {
-        return 'npx webpack-dev-server --inline --hot';
+        return 'npx webpack serve --hot --inline --disable-host-check';
     }
 }

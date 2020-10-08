@@ -66,7 +66,7 @@ test('it calls webpack with hot reloading', async t => {
     let { stdout } = await mix(['watch', '--hmr']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
             require.resolve('../../setup/webpack.config.js'),
         stdout
     );
@@ -76,7 +76,7 @@ test('it calls webpack with hot reloading using polling', async t => {
     let { stdout } = await mix(['watch', '--hmr', '--', '--watch-poll']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack-dev-server --inline --hot --config=' +
+        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
             require.resolve('../../setup/webpack.config.js') +
             ' --watch-poll',
         stdout
