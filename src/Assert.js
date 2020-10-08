@@ -49,8 +49,14 @@ class Assert {
      */
     static combine(src, output) {
         assert(
+            typeof src === 'string' || Array.isArray(src),
+            `mix.combine() requires a valid src string or array.`
+        );
+
+        assert(
             output.isFile(),
-            'mix.combine() requires a full output file path as the second argument.'
+            'mix.combine() requires a full output file path as the second argument. Got ' +
+                output.path()
         );
     }
 

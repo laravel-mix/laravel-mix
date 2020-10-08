@@ -1,41 +1,54 @@
 import test from 'ava';
-import eol from 'eol';
-import fs from 'fs-extra';
 import File from '../../src/File';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
-test('it combines a folder of scripts', async t => {
-    let output = `test/fixtures/app/dist/all.js`;
-
-    mix.scripts(`test/fixtures/app/src/js`, output);
+test('it accepts a src directory', async t => {
+    mix.scripts(
+        'test/fixtures/app/src/combine/foo',
+        'test/fixtures/app/dist/js/combined-scripts.js'
+    );
 
     await webpack.compile();
 
-    t.true(File.exists(output));
-
-    t.is(
-        "alert('another stub');\n\nalert('stub');\n",
-        File.find(output).read()
+    assert.fileMatchesCss(
+        'test/fixtures/app/dist/js/combined-scripts.js',
+        "alert('foo1');alert('foo2');",
+        t
     );
 });
 
-test('it can minify a file', async t => {
-    mix.js(`test/fixtures/app/src/js/app.js`, 'js').minify(
-        `test/fixtures/app/dist/js/app.js`
+test('it accepts a src wildcard', async t => {
+    mix.scripts(
+        'test/fixtures/app/src/combine/foo/*.js',
+        'test/fixtures/app/dist/js/combined-scripts.js'
     );
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.min.js`));
+    assert.fileMatchesCss(
+        'test/fixtures/app/dist/js/combined-scripts.js',
+        "alert('foo1');alert('foo2');",
+        t
+    );
+});
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/js/app.min.js': '/js/app.min.js'
-        },
+test('it accepts a src array of wildcards', async t => {
+    mix.scripts(
+        [
+            'test/fixtures/app/src/combine/foo/*.js',
+            `test/fixtures/app/src/combine/bar/*.js`
+        ],
+        'test/fixtures/app/dist/js/combined-scripts.js'
+    );
+
+    await webpack.compile();
+
+    assert.fileMatchesCss(
+        'test/fixtures/app/dist/js/combined-scripts.js',
+        "alert('foo1');alert('foo2');alert('bar1');alert('bar2');",
         t
     );
 });
@@ -68,17 +81,10 @@ test('it compiles JS and then combines the bundles files.', async t => {
 test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
     Config.production = true;
 
-    // Setup
-    new File('test/fixtures/app/src/combine/one.js')
-        .makeDirectories()
-        .write("alert('one')");
-
-    new File('test/fixtures/app/src/combine/two.js').write("alert('two')");
-
     mix.scripts(
         [
-            `test/fixtures/app/src/combine/one.js`,
-            `test/fixtures/app/src/combine/two.js`
+            `test/fixtures/app/src/combine/foo/one.js`,
+            `test/fixtures/app/src/combine/foo/two.js`
         ],
         'test/fixtures/app/dist/output/combined-scripts.js'
     );
@@ -90,28 +96,53 @@ test('it concatenates a directory of files, copies the output to a new location,
 
     await webpack.compile();
 
-    let expected = 'alert("one"),alert("two");' + eol.auto;
+    assert.fileMatchesCss(
+        'test/fixtures/app/dist/js/combined-scripts.js',
+        'alert("foo1"),alert("foo2");',
+        t
+    );
+});
 
-    t.is(
-        expected,
-        File.find('test/fixtures/app/dist/js/combined-scripts.js').read()
+test('it minifies a file', async t => {
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js').minify(
+        `test/fixtures/app/dist/js/app.js`
     );
 
-    // Clean up
-    fs.removeSync('test/fixtures/app/src/combine');
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.min.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/app.min.js': '/js/app.min.js'
+        },
+        t
+    );
 });
 
-test('mix.combine/scripts/styles/babel()', t => {
-    t.deepEqual(mix, mix.combine([], 'dist/js/combined.js'));
+test('it minifies an array of files', async t => {
+    mix.minify([
+        `test/fixtures/app/src/combine/foo/one.js`,
+        `test/fixtures/app/src/combine/foo/two.js`
+    ]);
 
-    t.is(1, Mix.tasks.length);
+    await webpack.compile();
 
-    t.deepEqual(mix, mix.scripts([], 'dist/js/combined.js'));
-    t.deepEqual(mix, mix.babel([], 'dist/js/combined.js'));
-});
+    t.true(File.exists(`test/fixtures/app/src/combine/foo/one.min.js`));
+    t.true(File.exists(`test/fixtures/app/src/combine/foo/two.min.js`));
 
-test('mix.minify()', t => {
-    t.deepEqual(mix, mix.minify('dist/js/minify.js'));
+    assert.manifestEquals(
+        {
+            '/test/fixtures/app/src/combine/foo/one.min.js':
+                '/test/fixtures/app/src/combine/foo/one.min.js',
+            '/test/fixtures/app/src/combine/foo/two.min.js':
+                '/test/fixtures/app/src/combine/foo/two.min.js'
+        },
+        t
+    );
 
-    t.is(1, Mix.tasks.length);
+    // Clean Up
+    File.find(`test/fixtures/app/src/combine/foo/one.min.js`).delete();
+    File.find(`test/fixtures/app/src/combine/foo/two.min.js`).delete();
 });
