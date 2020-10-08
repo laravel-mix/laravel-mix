@@ -50,39 +50,6 @@ class Entry {
     }
 
     /**
-     * Add a vendor extraction.
-     *
-     * @param {Object} extraction
-     */
-    addExtraction(extraction) {
-        if (!Mix.bundlingJavaScript && !extraction.output) {
-            throw new Error(
-                'Please provide an output path as the second argument to mix.extract().'
-            );
-        }
-
-        let outputPath = extraction.output;
-
-        // If the extraction output path begins with a slash (forward or backward)
-        // then the path from the public directory determined below will be wrong
-        // on Windows, as a drive letter will be incorrectly prepended to
-        // (e.g. '/dist/vendor' -> 'C:\dist\vendor').
-        let startsWithSlash = ['\\', '/'].indexOf(outputPath[0]) >= 0;
-        outputPath = startsWithSlash ? outputPath.substr(1) : outputPath;
-
-        let vendorPath = outputPath
-            ? new File(outputPath)
-                  .pathFromPublic(Config.publicPath)
-                  .replace(/\.js$/, '')
-                  .replace(/\\/g, '/')
-            : path.join(this.base, 'vendor').replace(/\\/g, '/');
-
-        this.add(vendorPath, extraction.libs);
-
-        return vendorPath;
-    }
-
-    /**
      * Add a default entry script to the structure.
      */
     addDefault() {

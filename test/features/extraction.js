@@ -31,14 +31,14 @@ test('JS compilation with vendor extraction config', async t => {
     );
 });
 
-test('vendor extraction with no requested JS compilation will still extract vendor libraries', async t => {
+test('vendor extraction with no requested JS compilation will throw an error', async t => {
     mix.extract(['vue']);
 
-    await webpack.compile();
-
-    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
-    assert.fileExists(`test/fixtures/app/dist/vendor.js`, t);
-    assert.fileContains(`test/fixtures/app/dist/vendor.js`, 'vue', t);
+    await t.throwsAsync(
+        webpack.compile(),
+        null,
+        'You must compile JS to extract vendor code'
+    );
 });
 
 test('JS compilation with vendor extraction with default config', async t => {
