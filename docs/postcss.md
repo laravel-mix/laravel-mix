@@ -1,4 +1,4 @@
-# PostCss Preprocessing
+# PostCSS Preprocessing
 
 -   [Basic Usage](#basic-usage)
 -   [Autoprefixer](#autoprefixer)
@@ -6,7 +6,7 @@
 ### Basic Usage
 
 Here's a quick example to get you started. Imagine that you have the following CSS file that needs to be compiled and piped through a series of PostCSS plugins. In the example below,
-we'll need to pull in the `postcss-custom-properties` PostCss plugin.
+we'll need to pull in the `postcss-custom-properties` PostCSS plugin.
 
 ```css
 :root {
@@ -18,7 +18,7 @@ we'll need to pull in the `postcss-custom-properties` PostCss plugin.
 }
 ```
 
-No problem. Let's add PostCss compilation to our `webpack.mix.js` file.
+No problem. Let's add PostCSS compilation to our `webpack.mix.js` file.
 
 ```js
 // webpack.mix.js
@@ -27,6 +27,8 @@ let mix = require('laravel-mix');
 
 mix.postCss('src/app.css', 'dist', [require('postcss-custom-properties')]);
 ```
+
+> Tip: `mix.postCss()` and `mix.css()` are aliases. Either option works for all examples in this section.
 
 Notice how, as the third argument to `mix.postCss()`, we can provide an optional array of PostCSS plugins that should be included as part of the build.
 

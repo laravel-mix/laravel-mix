@@ -2,7 +2,7 @@ let Assert = require('../Assert');
 let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
-let Css = require('./Css');
+let CssWebpackConfig = require('./CssWebpackConfig');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class Preprocessor {
@@ -32,7 +32,7 @@ class Preprocessor {
 
         this.details.forEach(preprocessor => {
             let loaders = [
-                ...Css.afterLoaders({ method: 'extract' }),
+                ...CssWebpackConfig.afterLoaders({ method: 'extract' }),
                 {
                     loader: 'css-loader',
                     options: {
@@ -66,7 +66,7 @@ class Preprocessor {
             }
 
             loaders.push(
-                ...Css.beforeLoaders({
+                ...CssWebpackConfig.beforeLoaders({
                     type: preprocessor.type,
                     injectGlobalStyles: false
                 })

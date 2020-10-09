@@ -11,7 +11,7 @@ let components = [
     'Sass',
     'Stylus',
     'PostCss',
-    'Css',
+    'CssWebpackConfig',
     'BrowserSync',
     'Combine',
     'Copy',

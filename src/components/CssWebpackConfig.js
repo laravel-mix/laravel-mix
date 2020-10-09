@@ -3,7 +3,7 @@ let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-class Css extends AutomaticComponent {
+class CssWebpackConfig extends AutomaticComponent {
     /**
      * webpack rules to be appended to the master config.
      */
@@ -12,13 +12,13 @@ class Css extends AutomaticComponent {
             {
                 test: /\.css$/,
                 use: [
-                    ...Css.afterLoaders(),
+                    ...CssWebpackConfig.afterLoaders(),
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
-                    ...Css.beforeLoaders({
+                    ...CssWebpackConfig.beforeLoaders({
                         type: 'css',
                         injectGlobalStyles: true
                     })
@@ -29,7 +29,7 @@ class Css extends AutomaticComponent {
                 test: /\.scss$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    ...Css.afterLoaders(),
+                    ...CssWebpackConfig.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -44,7 +44,7 @@ class Css extends AutomaticComponent {
                             }
                         }
                     },
-                    ...Css.beforeLoaders({
+                    ...CssWebpackConfig.beforeLoaders({
                         type: 'scss',
                         injectGlobalStyles: true
                     })
@@ -55,7 +55,7 @@ class Css extends AutomaticComponent {
                 test: /\.sass$/,
                 exclude: this.excludePathsFor('sass'),
                 use: [
-                    ...Css.afterLoaders(),
+                    ...CssWebpackConfig.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
@@ -71,7 +71,7 @@ class Css extends AutomaticComponent {
                             }
                         }
                     },
-                    ...Css.beforeLoaders({
+                    ...CssWebpackConfig.beforeLoaders({
                         type: 'sass',
                         injectGlobalStyles: true
                     })
@@ -82,14 +82,14 @@ class Css extends AutomaticComponent {
                 test: /\.less$/,
                 exclude: this.excludePathsFor('less'),
                 use: [
-                    ...Css.afterLoaders(),
+                    ...CssWebpackConfig.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
                     { loader: 'less-loader' },
-                    ...Css.beforeLoaders({
+                    ...CssWebpackConfig.beforeLoaders({
                         type: 'less',
                         injectGlobalStyles: true
                     })
@@ -100,14 +100,14 @@ class Css extends AutomaticComponent {
                 test: /\.styl(us)?$/,
                 exclude: this.excludePathsFor('stylus'),
                 use: [
-                    ...Css.afterLoaders(),
+                    ...CssWebpackConfig.afterLoaders(),
                     { loader: 'css-loader' },
                     {
                         loader: 'postcss-loader',
                         options: this.postCssOptions()
                     },
                     { loader: 'stylus-loader' },
-                    ...Css.beforeLoaders({
+                    ...CssWebpackConfig.beforeLoaders({
                         type: 'stylus',
                         injectGlobalStyles: true
                     })
@@ -220,7 +220,9 @@ class Css extends AutomaticComponent {
 
         if (Mix.globalStyles && injectGlobalStyles) {
             let resources =
-                Css.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
+                CssWebpackConfig.normalizeGlobalStyles(Mix.globalStyles)[
+                    type
+                ] || [];
 
             if (resources.length) {
                 loaders.push({
@@ -251,4 +253,4 @@ class Css extends AutomaticComponent {
     }
 }
 
-module.exports = Css;
+module.exports = CssWebpackConfig;

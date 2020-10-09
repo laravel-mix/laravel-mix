@@ -4,6 +4,13 @@ let Preprocessor = require('./Preprocessor');
 
 class PostCss extends Preprocessor {
     /**
+     * The Mix API name for the component.
+     */
+    name() {
+        return ['postCss', 'css'];
+    }
+
+    /**
      * Register the component.
      *
      * @param {*} src

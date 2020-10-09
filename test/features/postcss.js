@@ -20,6 +20,30 @@ test.after.always(() => {
     postCssConfigFile.delete();
 });
 
+test('basic mix.postCss() compilation', async t => {
+    let css = 'body { color: red; }';
+
+    let file = new Stub('css/basic-compilation.css', css);
+
+    mix.postCss(file.relativePath(), 'css');
+
+    await webpack.compile();
+
+    t.true(file.hasCompiledContent(css));
+});
+
+test('mix.css() is an alias for mix.postCss()', async t => {
+    let css = 'body { color: red; }';
+
+    let file = new Stub('css/basic-compilation.css', css);
+
+    mix.css(file.relativePath(), 'css');
+
+    await webpack.compile();
+
+    t.true(file.hasCompiledContent(css));
+});
+
 test('it applies autoprefixer to compiled CSS', async t => {
     let css = `
         @keyframes testing { 

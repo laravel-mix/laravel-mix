@@ -21,10 +21,11 @@
 
 ### CSS
 
+-   [General CSS Compilation](css.md)
+-   [PostCSS Compilation](postcss.md)
 -   [Sass Compilation](sass.md)
 -   [Less Compilation](less.md)
 -   [Stylus Compilation](stylus.md)
--   [PostCss Compilation](postcss.md)
 -   [Relative URL Rewriting](url-rewriting.md)
 
 ### Tasks
