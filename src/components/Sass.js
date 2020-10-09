@@ -44,8 +44,7 @@ class Sass extends Preprocessor {
                 sassOptions: {
                     precision: 8,
                     outputStyle: 'expanded'
-                },
-                implementation: require('sass')
+                }
             },
             pluginOptions,
             { sourceMap: true }
