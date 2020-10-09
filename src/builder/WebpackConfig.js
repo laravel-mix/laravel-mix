@@ -85,7 +85,7 @@ class WebpackConfig {
                 if (Mix.components.get('js') && !hasAbsolutePathChunkName) {
                     let output = Mix.components.get('js').toCompile[0].output;
 
-                    return `${output.filePath}/[name].js`;
+                    return `${output.normalizedOutputPath()}/[name].js`;
                 }
 
                 return '[name].js';
