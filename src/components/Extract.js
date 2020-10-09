@@ -54,6 +54,8 @@ class Extract {
 
         this.extractions.forEach(extraction => {
             const path = this.extractionPath(extraction.to);
+            const isDefaultVendorChunk =
+                extraction.to === null || extraction.to === undefined;
 
             this.chunks.add(
                 `vendor${this.extractions.indexOf(extraction)}`,
@@ -61,7 +63,8 @@ class Extract {
                 extraction.test,
                 {
                     chunks: 'all',
-                    enforce: true
+                    enforce: true,
+                    priority: isDefaultVendorChunk ? -10 : 0
                 }
             );
         });
