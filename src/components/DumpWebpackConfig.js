@@ -3,7 +3,6 @@ let Log = require('../Log');
 class DumpWebpackConfig {
     /**
      * The optional name to be used when called by Mix.
-     * Defaults to the class name, lowercased.
      */
     name() {
         return ['dumpWebpackConfig', 'dump'];
