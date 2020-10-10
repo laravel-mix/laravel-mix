@@ -2,6 +2,7 @@
 
 ## Overview
 
+-   [What is Mix?](what-is-mix.md)
 -   [Installation](installation.md)
 -   [Examples](examples.md)
 -   [Laravel Quick Start](workflow.md)
