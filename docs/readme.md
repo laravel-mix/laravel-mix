@@ -38,7 +38,6 @@
 -   [BrowserSync](browsersync.md)
 -   [Aliases](aliases.md)
 -   [OS Notifications](os-notifications.md)
--   [Mix Configuration](options.md)
 -   [Custom Webpack Configuration](quick-webpack-configuration.md)
 
 ## Plugin Development
@@ -49,4 +48,3 @@
 ## Custom Recipes
 
 -   [LiveReload](livereload.md)
--   [jQuery UI](jquery-ui.md)

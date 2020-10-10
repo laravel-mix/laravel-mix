@@ -1,48 +1,73 @@
 # Extending Mix
 
-The very component-based system that Mix uses behind the scenes to build its API is also accessible to you - whether to extend Mix for your own personal projects, or to distribute to the world as a reusable package.
+- [Build a Simple Plugin](#build-a-simple-plugin)
+- [Component Classes](#component-classes)
+- [The Component Interface](#the-component-interface)
+- [Plugin Usage](#plugin-usage)
 
-## Example
+The very component-based system that Mix uses behind the scenes to build its API is also 
+accessible to you - whether to extend Mix for your own personal projects, or to distribute as a package to the rest of the world.
+
+### Build a Simple Plugin
 
 ```js
 // webpack.mix.js;
 let mix = require('laravel-mix');
 
 mix.extend('foo', function(webpackConfig, ...args) {
-    console.log(webpackConfig); // the compiled webpack configuration object.
-    console.log(args); // the values passed to mix.foo(); - ['some-value']
+    // The webpack configuration object.
+    console.log(webpackConfig); 
+
+    // All arguments passed to mix.foo();
+    console.log(args);  // ['some-foo']
 });
 
-mix.js('src', 'output').foo('some-value');
+// Trigger your new plugin.
+mix.foo('some-value');
 ```
 
-In the example above, we can see that `mix.extend()` accepts two parameters: the name that should be used when triggering your component, and a callback function or class that registers and organizes the necessary webpack logic. Behind the scenes, Mix will trigger this callback function once the underlying webpack configuration object has been constructed. This will give you a chance to insert or override any settings that are necessary.
+In the example above, notice how `mix.extend()` accepts two parameters: 
 
-While a simple callback function may be useful for quick extensions, in most scenarios, you'll likely want to build a full component class, like so:
+1. The name that should be used when triggering your component.
+2. A callback function or class that registers and organizes the necessary webpack logic. Behind the scenes, Mix will call this function after the underlying webpack configuration object has been constructed. 
+This will give you a chance to insert or override any necessary webpack-specific settings.
+
+### Component Classes
+
+While a simple callback function may be useful for quick extensions, in most scenarios, 
+you'll likely want to build a full component class, like so:
+
+~~~js
+// foo.js
+let mix = require('laravel-mix');
+
+class FooPlugin {
+    register(val) {
+        console.log('mix.foo() was called with ' + val);
+    }
+
+    webpackConfig(config) {
+        // 
+    }
+}
+
+mix.extend('foo', new FooPlugin());
+~~~
 
 ```js
-mix.extend(
-    'foo',
-    new class {
-        register(val) {
-            console.log('mix.foo() was called with ' + val);
-        }
+// webpack.mix.js
 
-        dependencies() {}
+let mix = require('laravel-mix');
 
-        webpackRules() {}
+require('./foo');
 
-        webpackPlugins() {}
-
-        // ...
-    }()
-);
+mix.foo('bar'); // "mix.foo() was called with bar"
 ```
 
-When extending Mix, you'll typically want to trigger a handful of instructions:
+When preparing Mix extensions, you'll typically need to trigger a handful of instructions. For instance:
 
 1.  Install _these_ dependencies.
-2.  Add this rule/loader to webpack.
+2.  Add this rule/loader to the webpack config.
 3.  Include this webpack plugin.
 4.  Override this part of the webpack configuration entirely.
 5.  Add this config to Babel.
@@ -52,17 +77,17 @@ Any of these operations are a cinch with Mix's component system.
 
 ### The Component Interface
 
--   **name**: What should be used as the method name, when calling the component. (Defaults to the class name.)
+-   **name**: What should be used as the method name, when calling the component. (Defaults to camelCased version of the component class name.)
 -   **dependencies**: List all npm dependencies that should be installed by Mix.
 -   **register**: When your component is called, all user parameters will instantly be passed to this method.
 -   **boot**: Boot the component. This method is triggered after the user's webpack.mix.js file has fully loaded.
--   **webpackEntry**: Append to the master Mix webpack entry object.
--   **webpackRules**: Rules to be merged with the master webpack loaders.
--   **webpackPlugins**: Plugins to be merged with the master webpack config.
--   **webpackConfig**: Override the generated webpack configuration.
--   **babelConfig**: Extra Babel config that should be merged with Mix's defaults.
+-   **webpackEntry**: Append to Mix's webpack entry object.
+-   **webpackRules**: Rules to be merged with the underlying webpack rules.
+-   **webpackPlugins**: Plugins to be merged with the underlying webpack plugins array.
+-   **webpackConfig**: Override the underlying webpack configuration.
+-   **babelConfig**: Additional Babel configuration that should be merged with Mix's defaults.
 
-Here's an example/dummy component that will give you a better idea of how you'll construct your own components. For more examples, [refer to the very
+Below is a dummy component that will give you a better idea of how you'll construct your own components. For more examples, [refer to the very
 components that Mix uses behind the scenes](https://github.com/JeffreyWay/laravel-mix/tree/master/src/components).
 
 ```js
@@ -82,7 +107,7 @@ class Example {
     }
 
     /**
-     * All dependencies that should be installed by Mix.
+     * All npm dependencies that should be installed by Mix.
      *
      * @return {Array}
      */
@@ -111,7 +136,7 @@ class Example {
 
     /**
      * Boot the component. This method is triggered after the
-     * user's webpack.mix.js file has executed.
+     * user's webpack.mix.js file has processed.
      */
     boot() {
         // Example:
@@ -119,7 +144,7 @@ class Example {
     }
 
     /**
-     * Append to the master Mix webpack entry object.
+     * Append to the underlying webpack entry object.
      *
      * @param  {Entry} entry
      * @return {void}
@@ -130,7 +155,7 @@ class Example {
     }
 
     /**
-     * Rules to be merged with the master webpack loaders.
+     * Rules to be merged with the underlying webpack rules.
      *
      * @return {Array|Object}
      */
@@ -143,7 +168,7 @@ class Example {
     }
 
     /*
-     * Plugins to be merged with the master webpack config.
+     * Plugins to be merged with the underlying webpack plugins array.
      *
      * @return {Array|Object}
      */
@@ -153,7 +178,7 @@ class Example {
     }
 
     /**
-     * Override the generated webpack configuration.
+     * Override the underlying webpack configuration.
      *
      * @param  {Object} webpackConfig
      * @return {void}
@@ -175,7 +200,7 @@ class Example {
 }
 ```
 
-Do note that each of the methods in the example above are optional. In certain situations, your component may only need to add a webpack loader and/or tweak the Babel configuration that Mix uses. No problem. Omit the rest of the interface.
+Note that each of the methods in the example above are optional. In certain situations, your component may only need to add a webpack loader and/or tweak the Babel configuration that Mix uses. No problem. Omit the rest of the interface.
 
 ```js
 class Example {
@@ -188,14 +213,15 @@ class Example {
 }
 ```
 
-Now, when Mix constructs the underlying webpack configuration, your rule will be included within the generated `webpackConfig.module.rules` array.
+Now, when Mix constructs the underlying webpack configuration, your `.test` rule will be included as part of the generated `webpackConfig.module.rules` array.
 
-## Usage
+### Plugin Usage
 
-Once you've constructed or installed your desired component, simply require it from your `webpack.mix.js` file, and you're all set to go.
+Once you've constructed or installed your desired component, simply require it from your `webpack.mix.js` file, 
+and you're all set to go.
 
 ```js
-// foo-component.js
+// example.js
 
 let mix = require('laravel-mix');
 
@@ -208,16 +234,16 @@ class Example {
     }
 }
 
-mix.extend('foo', new Example());
+mix.extend('example', new Example());
 ```
 
 ```js
 // webpack.mix.js
 
 let mix = require('laravel-mix');
-require('./foo-component');
+
+require('./example');
 
 mix.js('src', 'output')
-    .sass('src', 'output')
-    .foo();
+   .example();
 ```
