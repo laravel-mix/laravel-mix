@@ -30,7 +30,7 @@
 
 ### Tasks
 
--   [Copying Files](copying-files.md)
+-   [Copy Files and Directories](copying-files.md)
 -   [Concatenation and Minification](concatenation-and-minification.md)
 
 ### Helpers and Configuration
