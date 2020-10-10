@@ -11,7 +11,7 @@ test('the kitchen sink', async t => {
     new File(`test/fixtures/app/dist/file.js`).write('var foo');
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
-        .extract(['vue'])
+        .extract(['vue2'])
         .vue({ version: 2 })
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .sass(`test/fixtures/app/src/sass/app.scss`, 'css')

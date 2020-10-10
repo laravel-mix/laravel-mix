@@ -11,46 +11,48 @@ test.beforeEach(() => webpack.setupVueAliases(2));
 test('JS compilation with vendor extraction config', async t => {
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
         .vue({ version: 2 })
-        .extract(['vue'], 'js/libraries.js');
+        .extract(['vue2'], 'js/libraries.js');
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/manifest.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/libraries.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/libraries.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
-    t.true(
-        new File(`test/fixtures/app/dist/js/libraries.js`)
-            .read()
-            .includes('vue')
+    // We extracted vue to the library file
+    assert.fileContains(`test/fixtures/app/dist/js/libraries.js`, 'vue2', t);
+
+    // But not core-js
+    assert.fileContains(`test/fixtures/app/dist/js/app.js`, 'core-js', t);
+    assert.fileDoesNotContain(
+        `test/fixtures/app/dist/js/libraries.js`,
+        'core-js',
+        t
     );
 });
 
-test('vendor extraction with no requested JS compilation will still extract vendor libraries', async t => {
+test('vendor extraction with no requested JS compilation will throw an error', async t => {
     mix.extract(['vue']);
 
-    await webpack.compile();
-
-    t.true(File.exists(`test/fixtures/app/dist/manifest.js`));
-    t.true(File.exists(`test/fixtures/app/dist/vendor.js`));
-
-    t.true(new File(`test/fixtures/app/dist/vendor.js`).read().includes('vue'));
+    await t.throwsAsync(
+        webpack.compile(),
+        null,
+        'You must compile JS to extract vendor code'
+    );
 });
 
 test('JS compilation with vendor extraction with default config', async t => {
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
         .vue({ version: 2 })
-        .extract(['vue']);
+        .extract(['vue2']);
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/manifest.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/vendor.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
-    t.true(
-        new File(`test/fixtures/app/dist/js/vendor.js`).read().includes('vue')
-    );
+    assert.fileContains(`test/fixtures/app/dist/js/vendor.js`, 'vue2', t);
 });
 
 test('JS compilation with total vendor extraction', async t => {
@@ -60,9 +62,12 @@ test('JS compilation with total vendor extraction', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/manifest.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/vendor.js`));
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
+
+    assert.fileContains(`test/fixtures/app/dist/js/vendor.js`, 'vue2', t);
+    assert.fileContains(`test/fixtures/app/dist/js/vendor.js`, 'core-js', t);
 
     let fs = require('fs-extra');
     fs.removeSync('test/fixtures/app/public');
@@ -81,7 +86,7 @@ test('async chunk splitting works', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
     assert.manifestEquals(
         {
@@ -143,7 +148,7 @@ test('multiple extractions work', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
     assert.manifestEquals(
         {
@@ -152,6 +157,57 @@ test('multiple extractions work', async t => {
             '/js/vendor-core-js.js': '/js/vendor-core-js.js\\?id=\\w{20}',
             '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js\\?id=\\w{20}',
             '/js/split.js': '/js/split.js\\?id=\\w{20}'
+        },
+        t
+    );
+});
+
+test.only('configurable extractions work', async t => {
+    mix.vue({ version: 2 });
+    mix.js(`test/fixtures/app/src/extract/app.js`, 'js');
+
+    mix.extract({
+        to: 'js/vendor-vue-lodash.js',
+        libraries: /vue2|lodash/
+    });
+
+    mix.extract({
+        to: 'js/vendor-core-js.js',
+        test(mod) {
+            return /core-js/.test(mod.nameForCondition());
+        }
+    });
+
+    mix.extract(mod => /eol/.test(mod.nameForCondition()), 'js/vendor-eol.js');
+
+    await webpack.compile();
+
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-core-js.js`,
+        'core-js',
+        t
+    );
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-vue-lodash.js`,
+        'vue',
+        t
+    );
+    assert.fileContains(
+        `test/fixtures/app/dist/js/vendor-vue-lodash.js`,
+        'uniq',
+        t
+    );
+    assert.fileContains(`test/fixtures/app/dist/js/vendor-eol.js`, 'auto', t);
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/manifest.js': '/js/manifest.js',
+            '/js/vendor-core-js.js': '/js/vendor-core-js.js',
+            '/js/vendor-eol.js': '/js/vendor-eol.js',
+            '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js',
+            '/js/split.js': '/js/split.js'
         },
         t
     );

@@ -2,12 +2,19 @@ let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
 
+/** @typedef {import('../../typings/extract').Extraction} Extraction */
+/** @typedef {import('../../typings/extract').ExtractConfig} ExtractConfig */
+/** @typedef {import('../builder/Entry').Entry} Entry */
+
 class Extract {
     /**
      * Create a new component instance.
      */
     constructor() {
+        /** @type {Entry|null} */
         this.entry = null;
+
+        /** @type {Extraction[]} */
         this.extractions = [];
         this.chunks = Chunks.instance();
         this.chunks.runtime = true;
@@ -25,22 +32,11 @@ class Extract {
     /**
      * Register the component.
      *
-     * @param {*} libs
-     * @param {string} output
+     * @param {ExtractConfig} [config]
+     * @param {string} [output]
      */
-    register(libs = [], output) {
-        // If the user provides an output path as the first argument, they probably
-        // want to extract all node_module libraries to the specified file.
-        if (
-            arguments.length === 1 &&
-            typeof libs === 'string' &&
-            libs.endsWith('.js')
-        ) {
-            output = libs;
-            libs = [];
-        }
-
-        this.extractions.push({ libs, output });
+    register(config = null, output = null) {
+        this.extractions.push(this.normalizeExtraction(config, output));
     }
 
     /**
@@ -52,43 +48,26 @@ class Extract {
         this.entry = entry;
         this.chunks.entry = entry;
 
-        this.extractions.forEach(extraction => {
-            extraction.output = this.extractionPath(extraction.output);
-
-            // FIXME: This is not ideal
-            // The webpack docs state that entries should not be used for vendor extraction
-            // However if there are no uses of a library then they will not be extracted
-            // Is there a better way to handle this?
-            if (extraction.libs.length) {
-                this.entry.addExtraction(extraction);
-            } else {
-                this.addChunk(extraction);
-            }
-        });
-    }
-
-    addChunk(extraction) {
-        let pattern = '(?<!node_modules.*)[\\\\/]node_modules[\\\\/]';
-
-        /*
-        // The FIXME above means that this code should never fire when extraction.libs
-        // is empty. We'll leave this code here in case a better solution comes along
-        const libsPattern = extraction.libs.join('|');
-
-        if (libsPattern.length > 0) {
-            pattern = `${pattern}(${libsPattern})`;
+        if (!Mix.bundlingJavaScript) {
+            throw new Error('You must compile JS to extract vendor code');
         }
-        */
 
-        this.chunks.add(
-            `vendor${this.extractions.indexOf(extraction)}`,
-            extraction.output.replace(/\.js$/, ''),
-            new RegExp(pattern, 'i'),
-            {
-                chunks: 'all',
-                enforce: true
-            }
-        );
+        this.extractions.forEach(extraction => {
+            const path = this.extractionPath(extraction.to);
+            const isDefaultVendorChunk =
+                extraction.to === null || extraction.to === undefined;
+
+            this.chunks.add(
+                `vendor${this.extractions.indexOf(extraction)}`,
+                path.replace(/\.js$/, ''),
+                extraction.test,
+                {
+                    chunks: 'all',
+                    enforce: true,
+                    priority: isDefaultVendorChunk ? -10 : 0
+                }
+            );
+        });
     }
 
     extractionPath(outputPath) {
@@ -97,6 +76,58 @@ class Extract {
         }
 
         return path.join(this.entry.base, 'vendor').replace(/\\/g, '/');
+    }
+
+    /**
+     *
+     * @param {ExtractConfig|null} [config]
+     * @param {string} [output]
+     * @returns {Extraction}
+     */
+    normalizeExtraction(config = null, output = null) {
+        config = config || {};
+
+        if (typeof config === 'string') {
+            if (output !== null || !config.endsWith('.js')) {
+                throw new Error(
+                    'mix.extract(string) expects a file path as its only argument'
+                );
+            }
+
+            config = { to: config };
+        } else if (typeof config === 'function') {
+            config = { test: config };
+        } else if (Array.isArray(config)) {
+            config = { test: this.buildLibraryRegex(config) };
+        }
+
+        return {
+            to: output || null,
+            ...config,
+            test: config.test || this.buildLibraryRegex(config.libraries || [])
+        };
+    }
+
+    /**
+     *
+     * @param {string[]|RegExp} libraries
+     */
+    buildLibraryRegex(libraries = []) {
+        let pattern = '(?<!node_modules)[\\\\/]node_modules[\\\\/]';
+        let extra = '';
+
+        if (Array.isArray(libraries)) {
+            extra = libraries.map(lib => `${lib}[\\\\/]`).join('|');
+        } else if (libraries instanceof RegExp) {
+            extra = libraries.source;
+        } else {
+            throw new Error(
+                `Unexpected type [${typeof libraries}] passed to mix.extract({ libraries: … }). ` +
+                    `You may pass either an array of strings or a regular expression.`
+            );
+        }
+
+        return new RegExp(`${pattern}(${extra})`, 'i');
     }
 }
 

@@ -1,5 +1,7 @@
-import 'vue2';
 import 'core-js';
+import Vue from 'vue2';
+import { uniq } from 'lodash';
+import { auto } from 'eol';
 
 new Vue({
     components: {
