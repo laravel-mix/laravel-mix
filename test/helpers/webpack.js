@@ -13,6 +13,12 @@ export async function compile(config) {
         webpack(config, (err, stats) => {
             if (err) {
                 reject({ config, err, stats });
+            } else if (stats.hasErrors()) {
+                const { errors } = stats.toJson({ errors: true });
+
+                reject(
+                    new Error(errors.map(error => error.message).join('\n'))
+                );
             } else {
                 resolve({ config, err, stats });
             }

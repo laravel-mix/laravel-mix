@@ -53,3 +53,15 @@ test('it sets the babel config correctly', t => {
         ) !== undefined
     );
 });
+
+test('non-feature-flag use of mix.react throws an error', t => {
+    t.throws(() => mix.react('js/app.js', 'js'), {
+        message: /mix.react\(\) is now a feature flag/
+    });
+});
+
+test('non-feature-flag use of mix.preact throws an error', t => {
+    t.throws(() => mix.react('js/app.js', 'js'), {
+        message: /mix.react\(\) is now a feature flag/
+    });
+});

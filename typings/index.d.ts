@@ -58,7 +58,8 @@ interface MixConfig {
 }
 
 declare module 'laravel-mix' {
-    export = Api;
+    declare const api: Api;
+    export = api;
 
     namespace builder {
         interface Entry {}
@@ -154,7 +155,7 @@ declare module 'laravel-mix' {
         webpackRules?: () => webpack.RuleSetRule | webpack.RuleSetRule[];
     }
 
-    class Api {
+    interface Api {
         sourceMaps(
             generateForProduction?: boolean,
             devType?: string,

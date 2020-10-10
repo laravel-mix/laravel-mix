@@ -24,7 +24,7 @@ test('mix.ts()', t => {
 });
 
 test('it applies the correct extensions and aliases to the webpack config', async t => {
-    mix.ts(`test/fixtures/app/js/app.js`, 'dist');
+    mix.ts(`test/fixtures/app/src/js/app.js`, 'dist');
 
     let { config } = await webpack.compile();
 

@@ -9,8 +9,8 @@ new Vue({
             import(/* webpackChunkName: '/js/split' */ './VueSplit.vue')
     },
 
-    created() {
-        uniq(['foo', 'bar', 'foo']);
-        auto('foo\nbar');
+    async mounted() {
+        const mod = await import('./dynamic');
+        mod.default();
     }
 }).$mount('#app');
