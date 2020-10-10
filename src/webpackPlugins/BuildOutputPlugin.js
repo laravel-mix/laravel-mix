@@ -36,7 +36,9 @@ class BuildOutputPlugin {
                 chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`)
             );
 
-            console.log(this.statsTable(data));
+            if (data.assets.length) {
+                console.log(this.statsTable(data));
+            }
         });
     }
 
