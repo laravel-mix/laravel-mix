@@ -94,7 +94,7 @@ test('async chunk splitting works', async t => {
     );
 });
 
-test.only('async chunks are placed in the right directory', async t => {
+test('async chunks are placed in the right directory', async t => {
     mix.vue({ version: 2 });
     mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
     mix.extract();
