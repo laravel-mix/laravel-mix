@@ -20,6 +20,16 @@ class Vue {
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
      */
     register(options = {}) {
+        if (
+            arguments.length === 2 &&
+            typeof arguments[0] === 'string' &&
+            typeof arguments[1] === 'string'
+        ) {
+            throw new Error(
+                'mix.vue() is a feature flag. Use mix.js(source, destination).vue() instead'
+            );
+        }
+
         this.version = VueVersion.detect(options.version);
 
         this.options = Object.assign(

@@ -15,6 +15,12 @@ test('it adds the Vue 2 resolve alias', t => {
     t.is('vue/dist/vue.esm.js', webpack.buildConfig().resolve.alias.vue$);
 });
 
+test('non-feature-flag use of mix.vue throws an error', t => {
+    t.throws(() => mix.vue('js/app.js', 'js'), {
+        message: /mix.vue\(\) is a feature flag/
+    });
+});
+
 test('it adds the Vue 2 runtime resolve alias', t => {
     mix.vue({ version: 2, runtimeOnly: true });
 
