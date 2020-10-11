@@ -2,6 +2,7 @@ let File = require('../File');
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class CssWebpackConfig extends AutomaticComponent {
     /**
@@ -133,23 +134,10 @@ class CssWebpackConfig extends AutomaticComponent {
      * Fetch the appropriate postcss plugins for the compile.
      */
     postCssOptions() {
-        if (Mix.components.get('postCss')) {
-            return {
-                postcssOptions: {
-                    plugins: Mix.components.get('postCss').details[0]
-                        .postCssPlugins
-                }
-            };
-        }
-
-        // If the user has a postcss.config.js file in their project root,
-        // postcss-loader will automatically read and fetch the plugins.
-        if (File.exists(Mix.paths.root('postcss.config.js'))) {
-            return {};
-        }
-
         return {
-            postcssOptions: { plugins: Config.postCss }
+            postcssOptions: {
+                plugins: new PostCssPluginsFactory({}, Config).load()
+            }
         };
     }
 
