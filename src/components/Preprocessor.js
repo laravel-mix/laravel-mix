@@ -28,59 +28,62 @@ class Preprocessor {
      * webpack rules to be appended to the master config.
      */
     webpackRules() {
-        let rules = [];
+        return this.details.map(preprocessor => ({
+            test: preprocessor.src.path(),
+            use: this.webpackLoaders(preprocessor)
+        }));
+    }
 
-        this.details.forEach(preprocessor => {
-            let loaders = [
-                ...CssWebpackConfig.afterLoaders({ method: 'extract' }),
-                {
-                    loader: 'css-loader',
-                    options: {
-                        url: Config.processCssUrls,
-                        sourceMap: Mix.isUsing('sourcemaps'),
-                        importLoaders: 1
-                    }
+    /**
+     * Fetch all necessary webpack loaders.
+     *
+     * @param {String} preprocessor
+     */
+    webpackLoaders(preprocessor) {
+        let loaders = [
+            ...CssWebpackConfig.afterLoaders({ method: 'extract' }),
+            {
+                loader: 'css-loader',
+                options: {
+                    url: Config.processCssUrls,
+                    sourceMap: Mix.isUsing('sourcemaps'),
+                    importLoaders: 1
                 }
-            ];
-
-            if (this.postCssPlugins(preprocessor).length) {
-                loaders.push({
-                    loader: 'postcss-loader',
-                    options: this.postCssLoaderOptions(preprocessor)
-                });
             }
+        ];
 
-            if (preprocessor.type === 'sass' && Config.processCssUrls) {
-                loaders.push({
-                    loader: 'resolve-url-loader',
-                    options: {
-                        sourceMap: true,
-                        engine: 'rework'
-                    }
-                });
-            }
-
-            if (preprocessor.type !== 'postCss') {
-                loaders.push({
-                    loader: `${preprocessor.type}-loader`,
-                    options: this.loaderOptions(preprocessor)
-                });
-            }
-
-            loaders.push(
-                ...CssWebpackConfig.beforeLoaders({
-                    type: preprocessor.type,
-                    injectGlobalStyles: false
-                })
-            );
-
-            rules.push({
-                test: preprocessor.src.path(),
-                use: loaders
+        if (this.postCssPlugins(preprocessor).length) {
+            loaders.push({
+                loader: 'postcss-loader',
+                options: this.postCssLoaderOptions(preprocessor)
             });
-        });
+        }
 
-        return rules;
+        if (preprocessor.type === 'sass' && Config.processCssUrls) {
+            loaders.push({
+                loader: 'resolve-url-loader',
+                options: {
+                    sourceMap: true,
+                    engine: 'rework'
+                }
+            });
+        }
+
+        if (preprocessor.type !== 'postCss') {
+            loaders.push({
+                loader: `${preprocessor.type}-loader`,
+                options: this.loaderOptions(preprocessor)
+            });
+        }
+
+        loaders.push(
+            ...CssWebpackConfig.beforeLoaders({
+                type: preprocessor.type,
+                injectGlobalStyles: false
+            })
+        );
+
+        return loaders;
     }
 
     /**
@@ -108,11 +111,6 @@ class Preprocessor {
         };
     }
 
-    /**
-     * Generate a list of all necessary PostCSS plugins for the build.
-     *
-     * @param {string} preprocessor
-     */
     postCssPlugins(preprocessor) {
         return new PostCssPluginsFactory(preprocessor, Config).load();
     }
