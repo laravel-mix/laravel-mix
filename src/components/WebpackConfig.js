@@ -6,8 +6,7 @@ class WebpackConfig {
 
         Config.webpackConfig = require('../builder/MergeWebpackConfig')(
             Config.webpackConfig,
-            config,
-            /* shouldWarn: */ true
+            config
         );
 
         return this;
