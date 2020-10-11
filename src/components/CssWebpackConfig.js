@@ -1,4 +1,3 @@
-let File = require('../File');
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -11,110 +10,94 @@ class CssWebpackConfig extends AutomaticComponent {
     webpackRules() {
         return [
             {
-                test: /\.css$/,
-                use: [
-                    ...CssWebpackConfig.afterLoaders(),
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
-                    },
-                    ...CssWebpackConfig.beforeLoaders({
-                        type: 'css',
-                        injectGlobalStyles: true
-                    })
-                ]
+                command: 'css',
+                type: 'css',
+                test: /\.css$/
             },
-
             {
+                command: 'sass',
+                type: 'scss',
                 test: /\.scss$/,
-                exclude: this.excludePathsFor('sass'),
-                use: [
-                    ...CssWebpackConfig.afterLoaders(),
-                    { loader: 'css-loader' },
-                    {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sassOptions: {
-                                precision: 8,
-                                outputStyle: 'expanded'
-                            }
+                loader: {
+                    loader: 'sass-loader',
+                    options: {
+                        sassOptions: {
+                            precision: 8,
+                            outputStyle: 'expanded'
                         }
-                    },
-                    ...CssWebpackConfig.beforeLoaders({
-                        type: 'scss',
-                        injectGlobalStyles: true
-                    })
-                ]
+                    }
+                }
             },
-
             {
+                command: 'sass',
+                type: 'sass',
                 test: /\.sass$/,
-                exclude: this.excludePathsFor('sass'),
-                use: [
-                    ...CssWebpackConfig.afterLoaders(),
-                    { loader: 'css-loader' },
-                    {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sassOptions: {
-                                precision: 8,
-                                outputStyle: 'expanded',
-                                indentedSyntax: true
-                            }
+                loader: {
+                    loader: 'sass-loader',
+                    options: {
+                        sassOptions: {
+                            precision: 8,
+                            outputStyle: 'expanded',
+                            indentedSyntax: true
                         }
-                    },
-                    ...CssWebpackConfig.beforeLoaders({
-                        type: 'sass',
-                        injectGlobalStyles: true
-                    })
-                ]
+                    }
+                }
             },
-
             {
+                command: 'less',
+                type: 'less',
                 test: /\.less$/,
-                exclude: this.excludePathsFor('less'),
-                use: [
-                    ...CssWebpackConfig.afterLoaders(),
-                    { loader: 'css-loader' },
-                    {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
-                    },
-                    { loader: 'less-loader' },
-                    ...CssWebpackConfig.beforeLoaders({
-                        type: 'less',
-                        injectGlobalStyles: true
-                    })
-                ]
+                loader: { loader: 'less-loader' }
             },
-
             {
+                command: 'stylus',
+                type: 'stylus',
                 test: /\.styl(us)?$/,
-                exclude: this.excludePathsFor('stylus'),
-                use: [
-                    ...CssWebpackConfig.afterLoaders(),
-                    { loader: 'css-loader' },
-                    {
-                        loader: 'postcss-loader',
-                        options: this.postCssOptions()
-                    },
-                    { loader: 'stylus-loader' },
-                    ...CssWebpackConfig.beforeLoaders({
-                        type: 'stylus',
-                        injectGlobalStyles: true
-                    })
-                ]
+                loader: { loader: 'stylus-loader' }
             }
+        ].map(rule => this.getLoadersForRule(rule));
+    }
+
+    /**
+     * Build up the appropriate loaders for the given rule.
+     *
+     * @param  {Object} rule
+     * @returns {{test: *, use: *[], exclude: (*[]|[])}}
+     */
+    getLoadersForRule(rule) {
+        let loaders = [
+            ...CssWebpackConfig.afterLoaders(),
+            { loader: 'css-loader' }
         ];
+
+        tap(new PostCssPluginsFactory({}, Config).load(), plugins => {
+            if (plugins.length) {
+                loaders.push({
+                    loader: 'postcss-loader',
+                    options: {
+                        postcssOptions: { plugins }
+                    }
+                });
+            }
+        });
+
+        if (rule.loader) {
+            loaders.push(rule.loader);
+        }
+
+        loaders.push(
+            ...CssWebpackConfig.beforeLoaders({
+                type: rule.type,
+                injectGlobalStyles: true
+            })
+        );
+
+        return {
+            test: rule.test,
+            exclude:
+                rule.type === 'css' ? [] : this.excludePathsFor(rule.command),
+            use: loaders
+        };
     }
 
     /**
@@ -128,17 +111,6 @@ class CssWebpackConfig extends AutomaticComponent {
         return exclusions
             ? exclusions.details.map(preprocessor => preprocessor.src.path())
             : [];
-    }
-
-    /**
-     * Fetch the appropriate postcss plugins for the compile.
-     */
-    postCssOptions() {
-        return {
-            postcssOptions: {
-                plugins: new PostCssPluginsFactory({}, Config).load()
-            }
-        };
     }
 
     /**
