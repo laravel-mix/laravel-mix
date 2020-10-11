@@ -55,7 +55,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 test: /\.styl(us)?$/,
                 loader: { loader: 'stylus-loader' }
             }
-        ].map(rule => this.getLoadersForRule(rule));
+        ].map(rule => this.createRule(rule));
     }
 
     /**
@@ -64,51 +64,44 @@ class CssWebpackConfig extends AutomaticComponent {
      * @param  {Object} rule
      * @returns {{test: *, use: *[], exclude: (*[]|[])}}
      */
-    getLoadersForRule(rule) {
-        let loaders = [
-            ...CssWebpackConfig.afterLoaders(),
-            { loader: 'css-loader' },
-            {
-                loader: 'postcss-loader',
-                options: {
-                    postcssOptions: {
-                        plugins: new PostCssPluginsFactory({}, Config).load(),
-                        hideNothingWarning: true
-                    }
-                }
-            }
-        ];
-
-        if (rule.loader) {
-            loaders.push(rule.loader);
-        }
-
-        loaders.push(
-            ...CssWebpackConfig.beforeLoaders({
-                type: rule.type,
-                injectGlobalStyles: true
-            })
-        );
-
+    createRule(rule) {
         return {
             test: rule.test,
-            exclude:
-                rule.type === 'css' ? [] : this.excludePathsFor(rule.command),
-            use: loaders
+            exclude: this.excludePathsFor(rule.command),
+            use: [
+                ...CssWebpackConfig.afterLoaders(),
+                { loader: 'css-loader' },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        postcssOptions: {
+                            plugins: new PostCssPluginsFactory({}, Config).load(),
+                            hideNothingWarning: true
+                        }
+                    }
+                },
+                rule.loader,
+                ...CssWebpackConfig.beforeLoaders({
+                    type: rule.type,
+                    injectGlobalStyles: true
+                })
+            ].filter(Boolean)
         };
     }
 
     /**
      * Paths to be excluded from the loader.
      *
-     * @param {string} preprocessor
+     * @param {string} command
      */
-    excludePathsFor(preprocessor) {
-        let exclusions = Mix.components.get(preprocessor);
+    excludePathsFor(command) {
+        let exclusions = Mix.components.get(command);
 
-        return exclusions
-            ? exclusions.details.map(preprocessor => preprocessor.src.path())
-            : [];
+        if (command === 'css' || !exclusions) {
+            return [];
+        }
+
+        return exclusions.details.map(preprocessor => preprocessor.src.path());
     }
 
     /**
@@ -178,9 +171,7 @@ class CssWebpackConfig extends AutomaticComponent {
 
         if (Mix.globalStyles && injectGlobalStyles) {
             let resources =
-                CssWebpackConfig.normalizeGlobalStyles(Mix.globalStyles)[
-                    type
-                ] || [];
+                CssWebpackConfig.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
 
             if (resources.length) {
                 loaders.push({
