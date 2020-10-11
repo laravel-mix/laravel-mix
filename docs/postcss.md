@@ -4,7 +4,6 @@
 -   [Add PostCSS Plugins](#add-postcss-plugins)
     -   [Apply Plugins Globally](#apply-plugins-globally)
     -   [Use a PostCSS Config File](#use-a-postcss-config-file)
--   [Autoprefixer](#autoprefixer)
 
 ### Basic Usage
 
@@ -127,62 +126,3 @@ When you're ready, compile your code as usual (`npx mix`), and you'll find a `/d
 ```
 
 Perfect!
-
-### Autoprefixer
-
-By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As such, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically.
-
-##### Input
-
-```css
-@keyframes foo {
-   to {
-       background: red;
-   }
-}
-
-#selector {
-    animation: foo 2s;
-}
-```
-
-##### Output
-
-```css
-@-webkit-keyframes foo {
-   to {
-       background: red;
-   }
-}
-
-@keyframes foo {
-   to {
-       background: red;
-   }
-}
-
-#selector {
-    -webkit-animation: foo 2s;
-            animation: foo 2s;
-}
-
-```
-
-The default settings should be fine in most scenarios, however, if you need to tweak the underlying 
-Autoprefixer configuration, reach for `mix.options()`.
-
-```js
-mix.postCss('src/app.css', 'dist')
-   .options({
-       autoprefixer: { remove: false } 
-   });
-```
-
-If you instead wish to disable autoprefixing entirely, set `autoprefixer` to `false`.
-
-```js
-mix.postCss('src/app.css', 'dist')
-   .options({ autoprefixer: false });
-```
-
-All underlying Autoprefixer options [may be reviewed here](https://github.com/postcss/autoprefixer#options).

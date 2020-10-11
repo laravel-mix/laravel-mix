@@ -27,6 +27,7 @@
 -   [Sass Compilation](sass.md)
 -   [Less Compilation](less.md)
 -   [Stylus Compilation](stylus.md)
+-   [Autoprefixing](autoprefixer.md)
 -   [Relative URL Rewriting](url-rewriting.md)
 
 ### Tasks
