@@ -71,9 +71,9 @@ class PostCssPluginsFactory {
      * Add autoprefixer to the plugins list.
      */
     loadAutoprefixer() {
-        if (this.Config.autoprefixer && this.Config.autoprefixer.enabled) {
+        if (this.Config.autoprefixer) {
             this.plugins.push(
-                require('autoprefixer')(this.Config.autoprefixer.options)
+                require('autoprefixer')(this.Config.autoprefixer)
             );
         }
 

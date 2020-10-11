@@ -67,6 +67,27 @@ test('it applies autoprefixer to compiled CSS', async t => {
     t.true(file.hasCompiledContent(expected));
 });
 
+test('it applies autoprefixer with custom configuration', async t => {
+    let css = `
+        div { 
+            -webkit-box-shadow: 0 0 4px black;
+            box-shadow: 0 0 4px black;
+        }`;
+
+    let file = new Stub('css/autoprefixer.css', css);
+
+    mix.postCss(file.relativePath(), 'css');
+
+    mix.options({
+        // Don't remove outdated prefixes.
+        autoprefixer: { remove: false }
+    });
+
+    await webpack.compile();
+
+    t.true(file.hasCompiledContent(css));
+});
+
 test('it disables autoprefixer', async t => {
     let css = `
         @keyframes testing { 

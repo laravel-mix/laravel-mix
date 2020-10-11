@@ -43,10 +43,7 @@ module.exports = function() {
          *
          * @type {Boolean|Object}
          */
-        autoprefixer: {
-            enabled: true,
-            options: {}
-        },
+        autoprefixer: {},
 
         /**
          * The public path for the build.
