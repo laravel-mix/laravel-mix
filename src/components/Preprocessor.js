@@ -49,15 +49,12 @@ class Preprocessor {
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
-            }
-        ];
-
-        if (this.postCssPlugins(preprocessor).length) {
-            loaders.push({
+            },
+            {
                 loader: 'postcss-loader',
                 options: this.postCssLoaderOptions(preprocessor)
-            });
-        }
+            }
+        ];
 
         if (preprocessor.type === 'sass' && Config.processCssUrls) {
             loaders.push({
@@ -106,13 +103,10 @@ class Preprocessor {
         return {
             sourceMap: Mix.isUsing('sourcemaps'),
             postcssOptions: {
-                plugins: this.postCssPlugins(preprocessor)
+                plugins: new PostCssPluginsFactory(preprocessor, Config).load(),
+                hideNothingWarning: true
             }
         };
-    }
-
-    postCssPlugins(preprocessor) {
-        return new PostCssPluginsFactory(preprocessor, Config).load();
     }
 
     /**

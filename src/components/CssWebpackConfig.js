@@ -67,19 +67,17 @@ class CssWebpackConfig extends AutomaticComponent {
     getLoadersForRule(rule) {
         let loaders = [
             ...CssWebpackConfig.afterLoaders(),
-            { loader: 'css-loader' }
-        ];
-
-        tap(new PostCssPluginsFactory({}, Config).load(), plugins => {
-            if (plugins.length) {
-                loaders.push({
-                    loader: 'postcss-loader',
-                    options: {
-                        postcssOptions: { plugins }
+            { loader: 'css-loader' },
+            {
+                loader: 'postcss-loader',
+                options: {
+                    postcssOptions: {
+                        plugins: new PostCssPluginsFactory({}, Config).load(),
+                        hideNothingWarning: true
                     }
-                });
+                }
             }
-        });
+        ];
 
         if (rule.loader) {
             loaders.push(rule.loader);
