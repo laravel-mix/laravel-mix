@@ -1,12 +1,15 @@
 # PostCSS Preprocessing
 
 -   [Basic Usage](#basic-usage)
+-   [Add PostCSS Plugins](#add-postcss-plugins)
+    -   [Apply Plugins Globally](#apply-plugins-globally)
+    -   [Use a PostCSS Config File](#use-a-postcss-config-file)
 -   [Autoprefixer](#autoprefixer)
 
 ### Basic Usage
 
-Here's a quick example to get you started. Imagine that you have the following CSS file that needs to be compiled and piped through a series of PostCSS plugins. In the example below,
-we'll need to pull in the `postcss-custom-properties` PostCSS plugin.
+Imagine that you have the following CSS file that needs to be compiled and piped through a series of PostCSS plugins. In the example below,
+we'll need to pull in the `postcss-custom-properties` or `postcss-preset-env` PostCSS plugin.
 
 ```css
 :root {
@@ -18,21 +21,104 @@ we'll need to pull in the `postcss-custom-properties` PostCSS plugin.
 }
 ```
 
-No problem. Let's add PostCSS compilation to our `webpack.mix.js` file.
+> Tip: You can view a list of all available PostCSS plugins [here](https://github.com/postcss/postcss#plugins).
+
+No problem. First, install the PostCSS plugin through npm.
+
+```bash
+npm install postcss-custom-properties --save-dev
+```
+
+Next, add PostCSS compilation to your `webpack.mix.js` file, like so:
 
 ```js
 // webpack.mix.js
 
 let mix = require('laravel-mix');
 
-mix.postCss('src/app.css', 'dist', [require('postcss-custom-properties')]);
+mix.postCss('src/app.css', 'dist');
 ```
 
-> Tip: `mix.postCss()` and `mix.css()` are aliases. Either option works for all examples in this section.
+> Tip: `mix.postCss()` and `mix.css()` are aliases. Both commands work for all examples in this section.
 
-Notice how, as the third argument to `mix.postCss()`, we can provide an optional array of PostCSS plugins that should be included as part of the build.
+### Add PostCSS Plugins
 
-Compile this down as usual \(`npx mix`\), and you'll find a `/dist/app.css` file that contains:
+At this point, we're using PostCSS, but we haven't yet instructed Mix to pull in the `postcss-custom-properties` plugin. We can add an array 
+of plugins as the third argument to `mix.postCss()`, like so:
+
+```js
+// webpack.mix.js
+
+let mix = require('laravel-mix');
+
+mix.postCss('src/app.css', 'dist', [
+    require('postcss-custom-properties')
+]);
+```
+
+#### Apply Plugins Globally
+
+The above example will **exclusively** pipe `src/app.css` through the `postcss-custom-properties` plugin. However, if you're compiling multiple CSS entrypoints, it can be cumbersome to duplicate your PostCSS plugins array for each call.
+
+```js
+// webpack.mix.js
+
+let mix = require('laravel-mix');
+
+mix.postCss('src/one.css', 'dist', [
+    require('postcss-custom-properties')
+]);
+
+mix.postCss('src/two.css', 'dist', [
+    require('postcss-custom-properties')
+]);
+
+mix.postCss('src/three.css', 'dist', [
+    require('postcss-custom-properties')
+]);
+```
+
+Instead, you can apply your desired PostCSS plugins globally by either using `mix.options()`...
+
+~~~js
+mix.postCss('src/one.css', 'dist')
+   .postCss('src/two.css', 'dist')
+   .postCss('src/three.css', 'dist');
+
+mix.options({
+    postCss: [
+        require('postcss-custom-properties') 
+    ]
+});
+~~~
+
+...or by creating a `postcss.config.js` file.
+
+#### Use a PostCSS Config File
+
+If you create a `postcss.config.js` file within the root of your project, Mix will automatically detect and import it.
+
+~~~js
+// postcss.config.js
+
+module.exports = {
+    plugins: [
+        require('postcss-preset-env')
+    ]
+}
+~~~
+
+With this adjustment, your `webpack.mix.js` file can return to:
+
+```js
+// webpack.mix.js
+
+let mix = require('laravel-mix');
+
+mix.postCss('src/app.css', 'dist');
+```
+
+When you're ready, compile your code as usual (`npx mix`), and you'll find a `/dist/app.css` file that contains:
 
 ```css
 .example {
@@ -45,22 +131,58 @@ Perfect!
 ### Autoprefixer
 
 By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As such, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically.
-The default settings should be fine in most scenarios, however, if you need to tweak the underlying Autoprefixer configuration, here's how:
 
-```js
-mix.postCss('src/app.css', 'dist').options({
-    autoprefixer: {
-        options: {
-            browsers: ['last 6 versions']
-        }
-    }
-});
+##### Input
+
+```css
+@keyframes foo {
+   to {
+       background: red;
+   }
+}
+
+#selector {
+    animation: foo 2s;
+}
 ```
 
-Additionally, if you wish to disable it entirely, set `autoprefixer` to `false`.
+##### Output
+
+```css
+@-webkit-keyframes foo {
+   to {
+       background: red;
+   }
+}
+
+@keyframes foo {
+   to {
+       background: red;
+   }
+}
+
+#selector {
+    -webkit-animation: foo 2s;
+            animation: foo 2s;
+}
+
+```
+
+The default settings should be fine in most scenarios, however, if you need to tweak the underlying 
+Autoprefixer configuration, reach for `mix.options()`.
 
 ```js
-mix.postCss('src/app.css', 'dist').options({
-    autoprefixer: false
-});
+mix.postCss('src/app.css', 'dist')
+   .options({
+       autoprefixer: { remove: false } 
+   });
 ```
+
+If you instead wish to disable autoprefixing entirely, set `autoprefixer` to `false`.
+
+```js
+mix.postCss('src/app.css', 'dist')
+   .options({ autoprefixer: false });
+```
+
+All underlying Autoprefixer options [may be reviewed here](https://github.com/postcss/autoprefixer#options).
