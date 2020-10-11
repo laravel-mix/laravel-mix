@@ -40,13 +40,15 @@ class Preprocessor {
                         sourceMap: Mix.isUsing('sourcemaps'),
                         importLoaders: 1
                     }
-                },
-
-                {
-                    loader: 'postcss-loader',
-                    options: this.postCssLoaderOptions(preprocessor)
                 }
             ];
+
+            if (this.postCssPlugins(preprocessor).length) {
+                loaders.push({
+                    loader: 'postcss-loader',
+                    options: this.postCssLoaderOptions(preprocessor)
+                });
+            }
 
             if (preprocessor.type === 'sass' && Config.processCssUrls) {
                 loaders.push({
@@ -101,9 +103,18 @@ class Preprocessor {
         return {
             sourceMap: Mix.isUsing('sourcemaps'),
             postcssOptions: {
-                plugins: new PostCssPluginsFactory(preprocessor, Config).load()
+                plugins: this.postCssPlugins(preprocessor)
             }
         };
+    }
+
+    /**
+     * Generate a list of all necessary PostCSS plugins for the build.
+     *
+     * @param {string} preprocessor
+     */
+    postCssPlugins(preprocessor) {
+        return new PostCssPluginsFactory(preprocessor, Config).load();
     }
 
     /**
