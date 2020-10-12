@@ -5,10 +5,17 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
+/** @type {import("playwright").Browser} */
 let browser;
 
-test.before(async () => (browser = await chromium.launch()));
-test.after.always(() => browser && browser.close());
+test.before(async () => {
+    browser = await chromium.launch();
+});
+
+test.after.always(() => {
+    browser && browser.close();
+});
+
 test.beforeEach(() => {
     mix.setPublicPath('test/fixtures/integration/dist');
 });
@@ -27,7 +34,12 @@ test('compiling js and css together', async t => {
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
 
     await webpack.compile();
-    await assertProducesLogs(t, ['loaded: app.js']);
+    await assertProducesLogs(t, [
+        'loaded: app.js',
+        'run: app.js',
+        'loaded: dynamic.js',
+        'run: dynamic.js'
+    ]);
 });
 
 async function assertProducesLogs(t, logs) {
