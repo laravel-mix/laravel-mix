@@ -119,7 +119,7 @@ class Chunks {
 
         return {
             runtimeChunk: {
-                name: path.join(this.entry.base, 'manifest').replace(/\\/g, '/')
+                name: path.join(Config.manifestJsPath || this.entry.base, 'manifest').replace(/\\/g, '/')
             }
         };
     }
