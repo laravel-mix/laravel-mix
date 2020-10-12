@@ -48,7 +48,10 @@ class File {
 
         path = File.stripPublicDir(path);
 
-        return path.replace(/\.(js|css)$/, '').replace(/\\/g, '/');
+        return path
+            .replace(/\.(js|css)$/, '')
+            .replace(/\\/g, '/')
+            .replace(/^\//, '');
     }
 
     /**
