@@ -33,7 +33,7 @@ test('compiling js and css together', async t => {
 async function assertProducesLogs(t, logs) {
     const uri = `file://${path.join(
         __dirname,
-        '/../fixtures/integration/index.html'
+        '/../fixtures/integration/dist/index.html'
     )}`;
 
     // Verify in the browser
