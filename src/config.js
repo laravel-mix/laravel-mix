@@ -53,6 +53,13 @@ module.exports = function() {
         publicPath: '',
 
         /**
+         * The path for the `manifest.js`.
+         *
+         * @type {String}
+         */
+        manifestJsPath: '',
+
+        /**
          * Determine if error notifications should be displayed for each build.
          *
          * @type {Boolean}
