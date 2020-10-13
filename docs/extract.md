@@ -38,9 +38,9 @@ Once you compile your code - `npx mix` - you'll find three new files: `app.js`, 
 
 While it's true that we're now importing three scripts instead of one, the benefit is improved long-term caching of vendor code that rarely changes. Further, HTTP2 makes the cost of importing multiple scripts a non-issue.
 
-### Customizing the runtime chunk (`manifest.js`) path
+### Customizing the Runtime Chunk Path (`manifest.js`) 
 
-By default, the runtime chunk (`manifest.js`) is generated next your JS assets.
+By default, the runtime chunk (`manifest.js`) is generated next to your JS assets.
 
 However, the path can easily be customized, relative to the public path:
 
@@ -50,7 +50,8 @@ mix.options({ runtimeChunkPath: 'custom' });
 // The `manifest.js` file can now be found at `public/custom/manifest.js`
 ```
 
-If you want to use just the public path for the manifest file you may use `.`:
+If you'd prefer the public path for the manifest file, you may use `.`:
+
 ```js
 mix.js('resources/app.js', 'public/js');
 mix.options({ runtimeChunkPath: '.' });
