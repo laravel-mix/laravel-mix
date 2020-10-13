@@ -156,6 +156,31 @@ test('custom runtime chunk path can be provided', async t => {
     );
 });
 
+test('custom runtime chunk path can be placed in the public path root', async t => {
+    mix.vue({ version: 2 });
+    mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
+    mix.extract();
+    mix.options({
+        runtimeChunkPath: '.'
+    });
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/vendor.js`));
+    t.true(File.exists(`test/fixtures/app/dist/manifest.js`));
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/manifest.js': '/manifest.js',
+            '/js/vendor.js': '/js/vendor.js',
+            '/js/split.js': '/js/split.js'
+        },
+        t
+    );
+});
+
 test('multiple extractions work', async t => {
     mix.vue({ version: 2 });
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
