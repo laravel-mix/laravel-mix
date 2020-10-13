@@ -40,12 +40,22 @@ While it's true that we're now importing three scripts instead of one, the benef
 
 ### Customizing the runtime chunk (`manifest.js`) path
 
-By default, the runtime chunk (`manifest.js`) is generated to a public directory.
+By default, the runtime chunk (`manifest.js`) is generated next your JS assets.
 
-However, the path can easily be customized:
+However, the path can easily be customized, relative to the public path:
 
 ```js
-mix.options({ runtimeChunkPath: 'js' });
+mix.options({ runtimeChunkPath: 'custom' });
+
+// The `manifest.js` file can now be found at `public/custom/manifest.js`
+```
+
+If you want to use just the public path for the manifest file you may use `.`:
+```js
+mix.js('resources/app.js', 'public/js');
+mix.options({ runtimeChunkPath: '.' });
+
+// The `manifest.js` file can now be found at `public/manifest.js`
 ```
 
 ### The Manifest File
