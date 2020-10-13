@@ -1,6 +1,7 @@
 ## Upgrade to Mix 6
 
 -   [Review Your Dependencies](#review-your-dependencies)
+-   [Update Your NPM Scripts](#update-your-npm-scripts)
 -   [API for JavaScript Frameworks](#api-for-javascript-frameworks)
 -   [Vue Configuration](#vue-configuration)
 -   [Autoprefixer Options](#autoprefixer-options)
@@ -18,6 +19,36 @@ Laravel Mix 6 ships with support for the latest versions of numerous dependencie
 These are significant releases with their own sets of breaking changes. We've done our best to normalize these changes, but it's still particularly important that you take the time to fully test your build after upgrading to Mix 6.
 
 Please review your `package.json` dependencies list for any third-party tools or plugins that may not yet be compatible with webpack 5 or PostCSS 8.
+
+### Update Your NPM Scripts
+
+If your build throws an error such as `Unknown argument: --hide-modules`, the `scripts` section of your `package.json` file will need to be updated. The Webpack 5 CLI removed a number of options that your NPM scripts was likely referencing. 
+
+While you're at it, go ahead and switch over to the new Mix CLI.
+
+##### Before
+
+```js
+"scripts": {
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "npm run development -- --watch",
+    "watch-poll": "npm run watch -- --watch-poll",
+    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+}
+```
+
+##### After
+
+```js
+"scripts": {
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix --hot",
+    "production": "mix --production"
+}
+```
 
 ### API for JavaScript Frameworks
 
