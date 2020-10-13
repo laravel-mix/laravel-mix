@@ -16,10 +16,7 @@ test('the kitchen sink', async t => {
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .sass(`test/fixtures/app/src/sass/app.scss`, 'css')
         .postCss(`test/fixtures/app/src/css/app.css`, 'css/example.css')
-        .copy(
-            `test/fixtures/app/dist/js/app.js`,
-            `test/fixtures/app/dist/somewhere`
-        )
+        .copy(`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/somewhere`)
         .scripts(
             [
                 `test/fixtures/app/dist/somewhere/app.js`,
@@ -39,8 +36,8 @@ test('the kitchen sink', async t => {
             '/css/app.css': '/css/app.css\\?id=\\w{20}',
             '/css/example.css': '/css/example.css\\?id=\\w{20}',
             '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
             '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
+            '/manifest.js': '/manifest.js\\?id=\\w{20}',
             '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
             '/js/all.js': '/js/all.js\\?id=\\w{20}',
             '/file.js': '/file.js\\?id=\\w{20}'
