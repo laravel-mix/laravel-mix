@@ -15,7 +15,7 @@ test('JS compilation with vendor extraction config', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/libraries.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -44,7 +44,7 @@ test('JS compilation with vendor extraction with default config', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -58,7 +58,7 @@ test('JS compilation with total vendor extraction', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -87,7 +87,7 @@ test('async chunk splitting works', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/manifest.js': '/manifest.js\\?id=\\w{20}',
+            '/js/manifest.js': '/manifest.js\\?id=\\w{20}',
             '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
             '/js/split.js': '/js/split.js\\?id=\\w{20}'
         },
@@ -122,7 +122,7 @@ test('async chunks are placed in the right directory', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js',
-            '/manifest.js': '/manifest.js',
+            '/js/manifest.js': '/js/manifest.js',
             '/js/vendor.js': '/js/vendor.js',
             '/js/split.js': '/js/split.js'
         },
@@ -175,7 +175,7 @@ test('multiple extractions work', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/manifest.js': '/manifest.js\\?id=\\w{20}',
+            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
             '/js/vendor-core-js.js': '/js/vendor-core-js.js\\?id=\\w{20}',
             '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js\\?id=\\w{20}',
             '/js/split.js': '/js/split.js\\?id=\\w{20}'
@@ -217,7 +217,7 @@ test('configurable extractions work', async t => {
             '/js/vendor-core-js.js': '/js/vendor-core-js.js',
             '/js/vendor-eol.js': '/js/vendor-eol.js',
             '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js',
-            '/manifest.js': '/manifest.js'
+            '/js/manifest.js': '/js/manifest.js'
         },
         t
     );

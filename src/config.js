@@ -53,9 +53,11 @@ module.exports = function() {
         /**
          * The path for the runtime chunk (`manifest.js`).
          *
-         * @type {String}
+         * Defaults to being placed next to compiled JS files.
+         *
+         * @type {String|null}
          */
-        runtimeChunkPath: '',
+        runtimeChunkPath: null,
 
         /**
          * Determine if error notifications should be displayed for each build.
