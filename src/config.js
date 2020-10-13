@@ -7,9 +7,7 @@ module.exports = function() {
          *
          * @type {Boolean}
          */
-        production:
-            process.env.NODE_ENV === 'production' ||
-            process.argv.includes('-p'),
+        production: process.env.NODE_ENV === 'production' || process.argv.includes('-p'),
 
         /**
          * Determine if we should enable hot reloading.
@@ -51,6 +49,13 @@ module.exports = function() {
          * @type {String}
          */
         publicPath: '',
+
+        /**
+         * The path for the runtime chunk (`manifest.js`).
+         *
+         * @type {String}
+         */
+        runtimeChunkPath: '',
 
         /**
          * Determine if error notifications should be displayed for each build.
@@ -108,10 +113,7 @@ module.exports = function() {
         babel: function(babelRcPath) {
             babelRcPath = babelRcPath || Mix.paths.root('.babelrc');
 
-            return require('./BabelConfig').generate(
-                this.babelConfig,
-                babelRcPath
-            );
+            return require('./BabelConfig').generate(this.babelConfig, babelRcPath);
         },
 
         /**
