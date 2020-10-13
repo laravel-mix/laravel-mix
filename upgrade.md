@@ -147,6 +147,52 @@ mix.webpackConfig({
 });
 ```
 
+### Changes to `manifest.js` output path
+
+Previously, the path of the runtime chunk (`manifest.js`) depended on the latest `.js()` call in a chain.
+
+Since Laravel Mix 6 the runtime chunk generates to a public directory.
+
+##### Before
+
+```js
+// webpack.mix.js
+mix.extract(['library-1', 'library-2']);
+mix.js('resources/app.js', 'public/js');
+
+// the `manifest.js` is generated to `public/js`
+```
+
+```js
+// webpack.mix.js
+mix.extract(['library-1', 'library-2']);
+mix.js('resources/app.js', 'public/js');
+mix.js('resources/extra/form.js', 'public/js/extra');
+
+// the `manifest.js` is generated to `public/js/extra`
+```
+
+##### After
+
+```js
+// webpack.mix.js
+mix.extract(['library-1', 'library-2']);
+mix.js('resources/app.js', 'public/js');
+mix.js('resources/extra/form.js', 'public/js/extra');
+
+// the `manifest.js` is generated to `public`
+```
+
+```js
+// webpack.mix.js
+mix.extract(['library-1', 'library-2']);
+mix.js('resources/app.js', 'public/js');
+mix.js('resources/extra/form.js', 'public/js/extra');
+mix.options({ runtimeChunkPath: 'js' });
+
+// the `manifest.js` is generated to `public/js`
+```
+
 # Updates
 
 -   Support for webpack 5

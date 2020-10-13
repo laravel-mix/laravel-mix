@@ -38,6 +38,16 @@ Once you compile your code - `npx mix` - you'll find three new files: `app.js`, 
 
 While it's true that we're now importing three scripts instead of one, the benefit is improved long-term caching of vendor code that rarely changes. Further, HTTP2 makes the cost of importing multiple scripts a non-issue.
 
+### Customizing the runtime chunk (`manifest.js`) path
+
+By default, the runtime chunk (`manifest.js`) is generated to a public directory.
+
+However, the path can easily be customized:
+
+```js
+mix.options({ runtimeChunkPath: 'js' });
+```
+
 ### The Manifest File
 
 You might still be confused by that third `manifest.js` file. Webpack compiles with a small bit of run-time code to assist with its job. When not using `mix.extract()`, this code is invisible to you and lives inside your bundle file. However, if we need to split our code, that runtime code must "live" somewhere. As such, Laravel Mix will extract it to its own file.
