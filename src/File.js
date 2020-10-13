@@ -48,7 +48,10 @@ class File {
 
         path = File.stripPublicDir(path);
 
-        return path.replace(/\.(js|css)$/, '').replace(/\\/g, '/');
+        return path
+            .replace(/\.(js|css)$/, '')
+            .replace(/\\/g, '/')
+            .replace(/^\//, '');
     }
 
     /**
@@ -148,16 +151,10 @@ class File {
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
 
         // If the path starts with the public folder remove it
-        if (
-            this.filePath.startsWith(
-                `${publicPath}/${path.basename(publicPath)}`
-            )
-        ) {
+        if (this.filePath.startsWith(`${publicPath}/${path.basename(publicPath)}`)) {
             extra += `/${path.basename(publicPath)}`;
         } else if (
-            this.filePath.startsWith(
-                `${publicPath}\\${path.basename(publicPath)}`
-            )
+            this.filePath.startsWith(`${publicPath}\\${path.basename(publicPath)}`)
         ) {
             extra += `\\${path.basename(publicPath)}`;
         }
@@ -242,18 +239,13 @@ class File {
      */
     async minify() {
         if (this.extension() === '.js') {
-            const output = await Terser.minify(
-                this.read(),
-                Config.terser.terserOptions
-            );
+            const output = await Terser.minify(this.read(), Config.terser.terserOptions);
 
             this.write(output.code);
         }
 
         if (this.extension() === '.css') {
-            const output = await new UglifyCss(Config.cleanCss).minify(
-                this.read()
-            );
+            const output = await new UglifyCss(Config.cleanCss).minify(this.read());
 
             this.write(output.styles);
         }
