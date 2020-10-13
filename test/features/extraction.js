@@ -15,7 +15,7 @@ test('JS compilation with vendor extraction config', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/libraries.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -44,7 +44,7 @@ test('JS compilation with vendor extraction with default config', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -58,7 +58,7 @@ test('JS compilation with total vendor extraction', async t => {
 
     await webpack.compile();
 
-    assert.fileExists(`test/fixtures/app/dist/js/manifest.js`, t);
+    assert.fileExists(`test/fixtures/app/dist/manifest.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/vendor.js`, t);
     assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
 
@@ -87,7 +87,7 @@ test('async chunk splitting works', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+            '/manifest.js': '/manifest.js\\?id=\\w{20}',
             '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
             '/js/split.js': '/js/split.js\\?id=\\w{20}'
         },
@@ -122,7 +122,7 @@ test('async chunks are placed in the right directory', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js',
-            '/js/manifest.js': '/js/manifest.js',
+            '/manifest.js': '/manifest.js',
             '/js/vendor.js': '/js/vendor.js',
             '/js/split.js': '/js/split.js'
         },
@@ -130,33 +130,10 @@ test('async chunks are placed in the right directory', async t => {
     );
 });
 
-test('custom runtime chunk is put to the public directory by default', async t => {
-    mix.setPublicPath('dist');
-    mix.vue({ version: 2 });
-    mix.js(`test/fixtures/app/src/extract/app.js`, 'js');
-    mix.extract(['lodash'], 'dist/custom/vendor/path/vendor.js');
-
-    await webpack.compile();
-
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.true(File.exists(`test/fixtures/app/dist/custom/vendor/path/vendor.js`));
-    t.true(File.exists(`test/fixtures/app/dist/manifest.js`));
-
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/manifest.js': '/manifest.js',
-            '/custom/vendor/path/vendor.js': '/custom/vendor/path/vendor.js',
-            '/js/split.js': '/js/split.js'
-        },
-        t
-    );
-});
-
-test('custom runtime chunk path can be specified', async t => {
+test('custom runtime chunk path can be provided', async t => {
     mix.vue({ version: 2 });
     mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
-    mix.extract(['lodash'], 'dist/custom/vendor/path/vendor.js');
+    mix.extract();
     mix.options({
         runtimeChunkPath: 'custom/runtime/chunk/path'
     });
@@ -164,7 +141,7 @@ test('custom runtime chunk path can be specified', async t => {
     await webpack.compile();
 
     t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.true(File.exists(`test/fixtures/app/dist/custom/vendor/path/vendor.js`));
+    t.true(File.exists(`test/fixtures/app/dist/js/vendor.js`));
     t.true(File.exists(`test/fixtures/app/dist/custom/runtime/chunk/path/manifest.js`));
 
     assert.manifestEquals(
@@ -172,7 +149,7 @@ test('custom runtime chunk path can be specified', async t => {
             '/js/app.js': '/js/app.js',
             '/custom/runtime/chunk/path/manifest.js':
                 '/custom/runtime/chunk/path/manifest.js',
-            '/custom/vendor/path/vendor.js': '/custom/vendor/path/vendor.js',
+            '/js/vendor.js': '/js/vendor.js',
             '/js/split.js': '/js/split.js'
         },
         t
@@ -198,7 +175,7 @@ test('multiple extractions work', async t => {
     assert.manifestEquals(
         {
             '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+            '/manifest.js': '/manifest.js\\?id=\\w{20}',
             '/js/vendor-core-js.js': '/js/vendor-core-js.js\\?id=\\w{20}',
             '/js/vendor-vue-lodash.js': '/js/vendor-vue-lodash.js\\?id=\\w{20}',
             '/js/split.js': '/js/split.js\\?id=\\w{20}'
@@ -207,7 +184,7 @@ test('multiple extractions work', async t => {
     );
 });
 
-test.only('configurable extractions work', async t => {
+test('configurable extractions work', async t => {
     mix.vue({ version: 2 });
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js');
 
