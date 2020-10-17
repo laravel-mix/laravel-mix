@@ -8,27 +8,24 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.hooks.done.tapAsync(
-            this.constructor.name,
-            (stats, callback) => {
-                this.runTasks(stats).then(async () => {
-                    if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
-                        this.applyVersioning();
-                    }
+        compiler.hooks.done.tapAsync(this.constructor.name, (stats, callback) => {
+            this.runTasks(stats).then(async () => {
+                if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
+                    this.applyVersioning();
+                }
 
-                    if (Mix.inProduction()) {
-                        await this.minifyAssets();
-                    }
+                if (Mix.inProduction()) {
+                    await this.minifyAssets();
+                }
 
-                    if (Mix.isWatching()) {
-                        Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
-                    }
+                if (Mix.isWatching()) {
+                    Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                }
 
-                    Mix.manifest.refresh();
-                    callback();
-                });
-            }
-        );
+                Mix.manifest.refresh();
+                callback();
+            });
+        });
     }
 
     /**
@@ -62,9 +59,7 @@ class CustomTasksPlugin {
 
         const task = Mix.tasks[index];
 
-        return this.runTask(task, stats).then(() =>
-            this.runTasks(stats, index + 1)
-        );
+        return this.runTask(task, stats).then(() => this.runTasks(stats, index + 1));
     }
 
     /**
@@ -95,9 +90,7 @@ class CustomTasksPlugin {
      * Version all files that are present in the manifest.
      */
     applyVersioning() {
-        collect(Mix.manifest.get()).each((value, key) =>
-            Mix.manifest.hash(key)
-        );
+        collect(Mix.manifest.get()).each((value, key) => Mix.manifest.hash(key));
     }
 }
 
