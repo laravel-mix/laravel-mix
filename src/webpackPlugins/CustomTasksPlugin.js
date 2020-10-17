@@ -47,6 +47,12 @@ class CustomTasksPlugin {
      * @param {import("webpack").Stats} stats
      */
     async addAsset(asset, stats) {
+        // Skip adding directories to the manifest
+        // TODO: We should probably add the directory but skip hashing
+        if (asset.isDirectory()) {
+            return;
+        }
+
         const path = asset.pathFromPublic();
 
         // Add the asset to the manifest

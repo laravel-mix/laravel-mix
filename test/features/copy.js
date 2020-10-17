@@ -33,3 +33,46 @@ test('it compiles JavaScript and copies the output to a new location.', async t 
         t
     );
 });
+
+test('It can copy files and handle versioning.', async t => {
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+    mix.copy(
+        `test/fixtures/app/src/copy/file-1.txt`,
+        `test/fixtures/app/dist/copy/file-1.txt`
+    );
+    mix.version();
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/copy/file-1.txt`));
+
+    assert.manifestEquals(
+        {
+            '/copy/file-1.txt': '/copy/file-1.txt',
+            '/js/app.js': '/js/app.js'
+        },
+        t
+    );
+});
+
+test('It can copy directories and handle versioning.', async t => {
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+    mix.copy(`test/fixtures/app/src/copy`, `test/fixtures/app/dist/copy`);
+    mix.version();
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/copy/file-1.txt`));
+    t.true(File.exists(`test/fixtures/app/dist/copy/file-2.txt`));
+    t.true(File.exists(`test/fixtures/app/dist/copy/dir-1/file-1.txt`));
+    t.true(File.exists(`test/fixtures/app/dist/copy/dir-1/file-2.txt`));
+
+    assert.manifestEquals(
+        {
+            '/copy/file-1.txt': '/copy/file-1.txt',
+            '/copy/file-2.txt': '/copy/file-2.txt',
+            '/js/app.js': '/js/app.js'
+        },
+        t
+    );
+});
