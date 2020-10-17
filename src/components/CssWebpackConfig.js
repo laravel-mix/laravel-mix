@@ -4,6 +4,15 @@ let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class CssWebpackConfig extends AutomaticComponent {
+    dependencies() {
+        return [
+            {
+                package: 'postcss@^8.1',
+                check: postcss => postcss().version.startsWith('8.')
+            }
+        ];
+    }
+
     /**
      * webpack rules to be appended to the master config.
      */

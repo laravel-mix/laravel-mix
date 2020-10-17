@@ -33,3 +33,41 @@ test('it installs multiple dependencies', t => {
         )
     );
 });
+
+test('it can utilize custom checks for a dependency', t => {
+    const cmd = 'npm install postcss@^8.1 --save-dev --production=false';
+
+    let called = false;
+
+    new Dependencies([
+        {
+            package: 'postcss@^8.1',
+            check: () => {
+                called = true;
+
+                return true;
+            }
+        }
+    ]).install(false);
+
+    t.true(called);
+    t.false(childProcess.execSync.calledWith(cmd));
+
+    called = false;
+
+    new Dependencies([
+        {
+            package: 'postcss@^8.1',
+            check: postcss => {
+                called = true;
+
+                t.true(postcss().version.startsWith('8.1'));
+
+                return false;
+            }
+        }
+    ]).install(false);
+
+    t.true(called);
+    t.true(childProcess.execSync.calledWith(cmd));
+});
