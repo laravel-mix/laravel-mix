@@ -34,18 +34,29 @@ class CustomTasksPlugin {
      * @param {Task} task
      * @param {import("webpack").Stats} stats
      */
-    runTask(task, stats) {
-        return Promise.resolve(task.run()).then(() => {
-            task.assets.forEach(asset => {
-                Mix.manifest.add(asset.pathFromPublic());
+    async runTask(task, stats) {
+        await Promise.resolve(task.run());
 
-                // Update the Webpack assets list for better terminal output.
-                stats.compilation.assets[asset.pathFromPublic()] = {
-                    size: () => asset.size(),
-                    emitted: true
-                };
-            });
-        });
+        await Promise.allSettled(task.assets.map(asset => this.addAsset(asset, stats)));
+    }
+
+    /**
+     * Add asset to the webpack statss
+     *
+     * @param {import("../File")} asset
+     * @param {import("webpack").Stats} stats
+     */
+    async addAsset(asset, stats) {
+        const path = asset.pathFromPublic();
+
+        // Add the asset to the manifest
+        Mix.manifest.add(path);
+
+        // Update the Webpack assets list for better terminal output.
+        stats.compilation.assets[path] = {
+            size: () => asset.size(),
+            emitted: true
+        };
     }
 
     /**
