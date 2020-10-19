@@ -45,7 +45,7 @@ While you're at it, go ahead and switch over to the new Mix CLI.
     "development": "mix",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
-    "hot": "mix --hot",
+    "hot": "mix watch --hot",
     "production": "mix --production"
 }
 ```
