@@ -8,27 +8,24 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.hooks.done.tapAsync(
-            this.constructor.name,
-            (stats, callback) => {
-                this.runTasks(stats).then(async () => {
-                    if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
-                        this.applyVersioning();
-                    }
+        compiler.hooks.done.tapAsync(this.constructor.name, (stats, callback) => {
+            this.runTasks(stats).then(async () => {
+                if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
+                    this.applyVersioning();
+                }
 
-                    if (Mix.inProduction()) {
-                        await this.minifyAssets();
-                    }
+                if (Mix.inProduction()) {
+                    await this.minifyAssets();
+                }
 
-                    if (Mix.isWatching()) {
-                        Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
-                    }
+                if (Mix.isWatching()) {
+                    Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                }
 
-                    Mix.manifest.refresh();
-                    callback();
-                });
-            }
-        );
+                Mix.manifest.refresh();
+                callback();
+            });
+        });
     }
 
     /**
@@ -37,18 +34,35 @@ class CustomTasksPlugin {
      * @param {Task} task
      * @param {import("webpack").Stats} stats
      */
-    runTask(task, stats) {
-        return Promise.resolve(task.run()).then(() => {
-            task.assets.forEach(asset => {
-                Mix.manifest.add(asset.pathFromPublic());
+    async runTask(task, stats) {
+        await Promise.resolve(task.run());
 
-                // Update the Webpack assets list for better terminal output.
-                stats.compilation.assets[asset.pathFromPublic()] = {
-                    size: () => asset.size(),
-                    emitted: true
-                };
-            });
-        });
+        await Promise.allSettled(task.assets.map(asset => this.addAsset(asset, stats)));
+    }
+
+    /**
+     * Add asset to the webpack statss
+     *
+     * @param {import("../File")} asset
+     * @param {import("webpack").Stats} stats
+     */
+    async addAsset(asset, stats) {
+        // Skip adding directories to the manifest
+        // TODO: We should probably add the directory but skip hashing
+        if (asset.isDirectory()) {
+            return;
+        }
+
+        const path = asset.pathFromPublic();
+
+        // Add the asset to the manifest
+        Mix.manifest.add(path);
+
+        // Update the Webpack assets list for better terminal output.
+        stats.compilation.assets[path] = {
+            size: () => asset.size(),
+            emitted: true
+        };
     }
 
     /**
@@ -62,9 +76,7 @@ class CustomTasksPlugin {
 
         const task = Mix.tasks[index];
 
-        return this.runTask(task, stats).then(() =>
-            this.runTasks(stats, index + 1)
-        );
+        return this.runTask(task, stats).then(() => this.runTasks(stats, index + 1));
     }
 
     /**
@@ -95,9 +107,7 @@ class CustomTasksPlugin {
      * Version all files that are present in the manifest.
      */
     applyVersioning() {
-        collect(Mix.manifest.get()).each((value, key) =>
-            Mix.manifest.hash(key)
-        );
+        collect(Mix.manifest.get()).each((value, key) => Mix.manifest.hash(key));
     }
 }
 
