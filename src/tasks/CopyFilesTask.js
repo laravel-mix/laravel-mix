@@ -2,6 +2,7 @@ let Task = require('./Task');
 let FileCollection = require('../FileCollection');
 let Log = require('../Log');
 const path = require('path');
+const File = require('../File');
 
 class CopyFilesTask extends Task {
     /**
