@@ -2,6 +2,7 @@
 
 -   [Review Your Dependencies](#review-your-dependencies)
 -   [Update Your NPM Scripts](#update-your-npm-scripts)
+-   [Watch Ignores Node_Modules](#watch-ignores-node-modules)
 -   [API for JavaScript Frameworks](#api-for-javascript-frameworks)
 -   [Vue Configuration](#vue-configuration)
 -   [Autoprefixer Options](#autoprefixer-options)
@@ -22,7 +23,7 @@ Please review your `package.json` dependencies list for any third-party tools or
 
 ### Update Your NPM Scripts
 
-If your build throws an error such as `Unknown argument: --hide-modules`, the `scripts` section of your `package.json` file will need to be updated. The Webpack 5 CLI removed a number of options that your NPM scripts was likely referencing. 
+If your build throws an error such as `Unknown argument: --hide-modules`, the `scripts` section of your `package.json` file will need to be updated. The Webpack 5 CLI removed a number of options that your NPM scripts was likely referencing.
 
 While you're at it, go ahead and switch over to the new Mix CLI.
 
@@ -48,6 +49,18 @@ While you're at it, go ahead and switch over to the new Mix CLI.
     "hot": "mix watch --hot",
     "production": "mix --production"
 }
+```
+
+### Watch Ignores Node_Modules
+
+Mix will now ignore the `node_modules/` directory when watching files for changes. This allows for a nice performance boost. However, if your project depends on that functionality, you may override the generated webpack configuration, like so:
+
+```
+mix.override(webpackConfig => {
+    webpackConfig.watchOptions = {
+        ignored: [],
+    };
+});
 ```
 
 ### API for JavaScript Frameworks
