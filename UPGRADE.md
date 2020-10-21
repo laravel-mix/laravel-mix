@@ -56,10 +56,8 @@ While you're at it, go ahead and switch over to the new Mix CLI.
 Mix will now ignore the `node_modules/` directory when watching files for changes. This allows for a nice performance boost. However, if your project depends on that functionality, you may override the generated webpack configuration, like so:
 
 ```
-mix.override(webpackConfig => {
-    webpackConfig.watchOptions = {
-        ignored: [],
-    };
+mix.override((config) => {
+    delete config.watchOptions;
 });
 ```
 
