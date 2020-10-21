@@ -1,13 +1,23 @@
 let childProcess = require('child_process');
 let Log = require('./Log');
 let argv = require('yargs').argv;
-let collect = require('collect.js');
+
+/**
+ * @typedef {object} DependencyObject
+ * @property {string} package
+ * @property {string} [name]
+ * @property {(obj: any) => boolean} [check]
+ */
+
+/**
+ * @typedef {string|DependencyObject} Dependency
+ */
 
 class Dependencies {
     /**
      * Create a new Dependencies instance.
      *
-     * @param {Object} dependencies
+     * @param {Dependency[]} dependencies
      */
     constructor(dependencies) {
         this.dependencies = dependencies;
@@ -19,34 +29,26 @@ class Dependencies {
      * @param {Boolean} abortOnComplete
      */
     install(abortOnComplete = false) {
-        collect(this.dependencies)
-            .reject(dependency => {
-                try {
-                    return require.resolve(
-                        dependency.replace(/(?!^@)@.+$/, '')
-                    );
-                } catch (e) {
-                    //
-                }
-            })
-            .pipe(dependencies => {
-                if (!dependencies.count()) {
-                    return;
-                }
+        let dependencies = this.dependencies
+            .map(dep => this.normalize(dep))
+            .filter(dep => !dep.check());
 
-                this.execute(
-                    this.buildInstallCommand(dependencies.all()),
-                    dependencies.all(),
-                    abortOnComplete
-                );
-            });
+        if (!dependencies.length) {
+            return;
+        }
+
+        this.execute(
+            this.buildInstallCommand(dependencies),
+            dependencies,
+            abortOnComplete
+        );
     }
 
     /**
      * Execute the provided console command.
      *
      * @param {string}  command
-     * @param {array}   dependencies
+     * @param {DependencyObject[]}   dependencies
      * @param {Boolean} abortOnComplete
      */
     execute(command, dependencies, abortOnComplete) {
@@ -62,7 +64,7 @@ class Dependencies {
             'Okay, done. The following packages have been installed and saved to your package.json dependencies list:'
         );
 
-        dependencies.forEach(d => Log.feedback('- ' + d));
+        dependencies.forEach(d => Log.feedback('- ' + d.package));
 
         this.respond(abortOnComplete);
     }
@@ -70,10 +72,10 @@ class Dependencies {
     /**
      * Build the dependency install command.
      *
-     * @param {Object}  dependencies
+     * @param {DependencyObject[]}  dependencies
      */
     buildInstallCommand(dependencies) {
-        dependencies = [].concat(dependencies).join(' ');
+        dependencies = dependencies.map(dep => dep.package).join(' ');
 
         return `npm install ${dependencies} --save-dev --production=false`;
     }
@@ -95,6 +97,33 @@ class Dependencies {
                 process.exit();
             }
         }
+    }
+
+    /**
+     * @param {Dependency} dep
+     * @returns {DependencyObject}
+     */
+    normalize(dep) {
+        if (typeof dep === 'string') {
+            dep = { package: dep };
+        }
+
+        const name = dep.package.replace(/(?!^@)@.+$/, '');
+
+        function isInstalled() {
+            try {
+                require.resolve(name);
+
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        return {
+            ...dep,
+            check: () => isInstalled()
+        };
     }
 }
 

@@ -15,7 +15,7 @@ test.afterEach.always(() => {
 });
 
 test('it installs a single dependency', t => {
-    new Dependencies(['browser-sync']).install(false, true);
+    new Dependencies(['browser-sync']).install(false);
 
     t.true(
         childProcess.execSync.calledWith(
@@ -25,10 +25,7 @@ test('it installs a single dependency', t => {
 });
 
 test('it installs multiple dependencies', t => {
-    new Dependencies(['browser-sync', 'browser-sync-webpack-plugin']).install(
-        false,
-        true
-    );
+    new Dependencies(['browser-sync', 'browser-sync-webpack-plugin']).install(false);
 
     t.true(
         childProcess.execSync.calledWith(
