@@ -47,6 +47,7 @@ test('compiling js and css together', async t => {
 
     // Build a simple mix setup
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
 
     await webpack.compile();
@@ -54,7 +55,8 @@ test('compiling js and css together', async t => {
         'loaded: app.js',
         'run: app.js',
         'loaded: dynamic.js',
-        'run: dynamic.js'
+        'run: dynamic.js',
+        'style: rgb(255, 119, 0)'
     ]);
 });
 

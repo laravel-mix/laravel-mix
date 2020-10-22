@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import ScssModule from './ScssModule.vue';
 
 console.log('loaded: app.js');
 
@@ -11,6 +12,10 @@ async function run() {
 }
 
 const app = createApp({
+    components: {
+        ScssModule
+    },
+
     setup() {
         run();
     }
