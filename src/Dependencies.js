@@ -77,7 +77,7 @@ class Dependencies {
     buildInstallCommand(dependencies) {
         dependencies = dependencies.map(dep => dep.package).join(' ');
 
-        return `npm install ${dependencies} --save-dev --production=false`;
+        return `npm install ${dependencies} --save-dev --production=false --legacy-peer-deps`;
     }
 
     /**
