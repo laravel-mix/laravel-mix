@@ -5,6 +5,8 @@ let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class CssWebpackConfig extends AutomaticComponent {
     dependencies() {
+        this.requiresReload = true;
+
         return [
             {
                 package: 'postcss@^8.1',
