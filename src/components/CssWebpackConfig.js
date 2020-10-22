@@ -70,6 +70,11 @@ class CssWebpackConfig extends AutomaticComponent {
             exclude: this.excludePathsFor(rule.command),
             oneOf: [
                 {
+                    // Ex: foo.css?module
+                    resourceQuery: /module/,
+                    use: this.createLoaderList(rule, true)
+                },
+                {
                     // Ex: foo.css
                     // Ex: foo.module.css
                     use: this.createLoaderList(rule, { auto: true })
