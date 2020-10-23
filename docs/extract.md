@@ -19,10 +19,10 @@ This will result in a significantly smaller `app.js` file. Now, using the above 
 // 1. Extract all node_modules vendor libraries into a vendor.js file.
 mix.extract();
 
-// 2. Only extract the Vue and jQuery libraries into a vendor.js file.
+// 2. Only extract the Vue and jQuery libraries (if used) into a vendor.js file.
 mix.extract(['vue', 'jquery']);
 
-// 3. Extract Vue and jQuery to custom-vendor-name.js.
+// 3. Extract Vue and jQuery (if used) to custom-vendor-name.js.
 mix.extract(['vue', 'jquery'], 'custom-vendor-name.js');
 ```
 
@@ -38,7 +38,7 @@ Once you compile your code - `npx mix` - you'll find three new files: `app.js`, 
 
 While it's true that we're now importing three scripts instead of one, the benefit is improved long-term caching of vendor code that rarely changes. Further, HTTP2 makes the cost of importing multiple scripts a non-issue.
 
-### Customizing the Runtime Chunk Path (`manifest.js`) 
+### Customizing the Runtime Chunk Path (`manifest.js`)
 
 By default, the runtime chunk (`manifest.js`) is generated next to your JS assets.
 
@@ -57,6 +57,60 @@ mix.js('resources/app.js', 'public/js');
 mix.options({ runtimeChunkPath: '.' });
 
 // The `manifest.js` file can now be found at `public/manifest.js`
+```
+
+### Multiple extractions
+
+You may call `mix.extract(['library1', 'library2'])` multiple times with different arguments to extract different sets of libraries into separate files.
+
+```js
+mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js')
+mix.extract(['jquery', 'axios'], 'vendor~utils-2.js')
+
+// `vendor~utils-1.js` will contain Vue and Lodash
+// `vendor~utils-2.js` will contain jQuery and Axios
+```
+
+### Fallback extractions
+
+A call to `mix.extract()` may be paired with one or more calls to `mix.extract(['library1', 'library2'], 'file.js')` and all libraries not extracted into specific files will go into `vendor.js`.
+
+```js
+mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js')
+mix.extract(['jquery', 'axios'], 'vendor~utils-2.js')
+mix.extract()
+
+// `vendor~utils-1.js` will contain Vue and Lodash
+// `vendor~utils-2.js` will contain jQuery and Axios
+// `vendor.js` will contain all other used libraries from node_modules
+```
+
+### Regular expression extractions
+
+It is now possible to match libraries by a regular expression. This is useful for libraries split into many modules/packages like D3. To utilize this feature you can now pass an object to `mix.extract()`.
+
+```js
+mix.extract({
+  // If you don't specify a location it defaults to `vendor.js`
+  to: 'js/vendor-d3.js',
+
+  // This can be an array of strings
+  // Or a regular expression
+  libraries: /d3|d3-[a-z0-9-]+/
+});
+```
+
+### Custom extraction tests
+
+If you need more control over module extractions you can pass a test function which will be passed directly to webpack and you'll have access to the webpack module object directly:
+
+```js
+mix.extract({
+  to: 'js/vendor-core-js.js',
+  test(mod) {
+    return /core-js/.test(mod.nameForCondition());
+  }
+});
 ```
 
 ### The Manifest File
