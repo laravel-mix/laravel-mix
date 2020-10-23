@@ -79,25 +79,47 @@ class CssWebpackConfig extends AutomaticComponent {
         return {
             test: rule.test,
             exclude: this.excludePathsFor(rule.command),
-            use: [
-                ...CssWebpackConfig.afterLoaders(),
-                { loader: 'css-loader' },
+            oneOf: [
                 {
-                    loader: 'postcss-loader',
-                    options: {
-                        postcssOptions: {
-                            plugins: new PostCssPluginsFactory({}, Config).load(),
-                            hideNothingWarning: true
-                        }
-                    }
+                    // Ex: foo.css?module
+                    resourceQuery: /module/,
+                    use: this.createLoaderList(rule, true)
                 },
-                rule.loader,
-                ...CssWebpackConfig.beforeLoaders({
-                    type: rule.type,
-                    injectGlobalStyles: true
-                })
-            ].filter(Boolean)
+                {
+                    // Ex: foo.css
+                    // Ex: foo.module.css
+                    use: this.createLoaderList(rule, { auto: true })
+                }
+            ]
         };
+    }
+
+    /**
+     * Build up the appropriate loaders for the given rule.
+     *
+     * @param  {Object} rule
+     * @param  {string|boolean} useCssModules
+     * @returns {any[]}
+     */
+    createLoaderList(rule, useCssModules) {
+        return [
+            ...CssWebpackConfig.afterLoaders(),
+            { loader: 'css-loader', options: { modules: useCssModules } },
+            {
+                loader: 'postcss-loader',
+                options: {
+                    postcssOptions: {
+                        plugins: new PostCssPluginsFactory({}, Config).load(),
+                        hideNothingWarning: true
+                    }
+                }
+            },
+            rule.loader,
+            ...CssWebpackConfig.beforeLoaders({
+                type: rule.type,
+                injectGlobalStyles: true
+            })
+        ].filter(Boolean);
     }
 
     /**

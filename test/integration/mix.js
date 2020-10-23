@@ -1,7 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import { chromium } from 'playwright';
-import webpack from '../helpers/webpack';
+import webpack, { setupVueAliases } from '../helpers/webpack';
 import StaticServer from 'static-server';
 
 import '../helpers/mix';
@@ -34,15 +34,20 @@ test.beforeEach(() => {
 
 test('compiling just js', async t => {
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    setupVueAliases(3);
+
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
 });
 
 test('compiling js and css together', async t => {
+    setupVueAliases(3);
+
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
 
     await webpack.compile();
@@ -50,7 +55,8 @@ test('compiling js and css together', async t => {
         'loaded: app.js',
         'run: app.js',
         'loaded: dynamic.js',
-        'run: dynamic.js'
+        'run: dynamic.js',
+        'style: rgb(255, 119, 0)'
     ]);
 });
 
