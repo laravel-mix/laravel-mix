@@ -60,8 +60,7 @@ class Preprocessor {
             loaders.push({
                 loader: 'resolve-url-loader',
                 options: {
-                    sourceMap: true,
-                    engine: 'rework'
+                    sourceMap: true
                 }
             });
         }
@@ -136,11 +135,7 @@ class Preprocessor {
             postCssPlugins
         });
 
-        this._addChunks(
-            `styles-${output.relativePathWithoutExtension()}`,
-            src,
-            output
-        );
+        this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
 
         return this;
     }
