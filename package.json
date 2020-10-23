@@ -39,7 +39,8 @@
     "files": [
         "icons",
         "setup",
-        "src"
+        "src",
+        "typings"
     ],
     "dependencies": {
         "@babel/core": "^7.12.3",
