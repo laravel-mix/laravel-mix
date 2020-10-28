@@ -119,9 +119,8 @@ module.exports = function() {
         },
 
         /**
-         * Determine if CSS relative url()s should be calculated by Sass Webpack,
-         * using resolve-url-loader. Disabling this can improve performance
-         * greatly.
+         * Determine if CSS relative url()s should be resolved by webpack.
+         * Disabling this can improve performance greatly.
          *
          * @type {Boolean}
          */
