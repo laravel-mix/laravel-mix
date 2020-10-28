@@ -1,6 +1,12 @@
 # Code Splitting
 
 -   [Basic Usage](#basic-usage)
+-   [Customize the Runtime Chunk Path](#customize-the-runtime-chunk-path)
+-   [The Manifest File](#the-manifest-file)
+-   [Multiple Extractions](#multiple-extractions)
+-   [Fallback Extractions](#fallback-extractions)
+-   [Extractions Using Regular Expressions](#extractions-using-regular-expressions)
+-   [Custom Extraction Tests](#custom-extraction-tests)
 -   [The Manifest File](#the-manifest-file)
 
 Bundling your JavaScript into a single file has one big downside: each time you change a minor detail in your application code, you must bust the browser cache. Even if you only change a single variable name, users will still need to re-download that generated file.
@@ -38,7 +44,7 @@ Once you compile your code - `npx mix` - you'll find three new files: `app.js`, 
 
 While it's true that we're now importing three scripts instead of one, the benefit is improved long-term caching of vendor code that rarely changes. Further, HTTP2 makes the cost of importing multiple scripts a non-issue.
 
-### Customizing the Runtime Chunk Path (`manifest.js`)
+### Customize the Runtime Chunk Path
 
 By default, the runtime chunk (`manifest.js`) is generated next to your JS assets.
 
@@ -47,62 +53,61 @@ However, the path can easily be customized, relative to the public path:
 ```js
 mix.options({ runtimeChunkPath: 'custom' });
 
-// The `manifest.js` file can now be found at `public/custom/manifest.js`
+// The `manifest.js` file will now be saved to `public/custom/manifest.js`
 ```
 
-If you'd prefer the public path for the manifest file, you may use `.`:
+If you instead prefer the public path, use `.`.
 
 ```js
 mix.js('resources/app.js', 'public/js');
 mix.options({ runtimeChunkPath: '.' });
 
-// The `manifest.js` file can now be found at `public/manifest.js`
+// The `manifest.js` file will now be saved to `public/manifest.js`
 ```
 
-### Multiple extractions
+### Multiple Extractions
 
 You may call `mix.extract(['library1', 'library2'])` multiple times with different arguments to extract different sets of libraries into separate files.
 
 ```js
-mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js')
-mix.extract(['jquery', 'axios'], 'vendor~utils-2.js')
+mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js');
+mix.extract(['jquery', 'axios'], 'vendor~utils-2.js');
 
 // `vendor~utils-1.js` will contain Vue and Lodash
 // `vendor~utils-2.js` will contain jQuery and Axios
 ```
 
-### Fallback extractions
+### Fallback Extractions
 
-A call to `mix.extract()` may be paired with one or more calls to `mix.extract(['library1', 'library2'], 'file.js')` and all libraries not extracted into specific files will go into `vendor.js`.
+A call to `mix.extract()` may be paired with one or more calls to `mix.extract(['library1', 'library2'], 'file.js')` and all libraries not extracted into specific files will be saved to `vendor.js`.
 
 ```js
-mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js')
-mix.extract(['jquery', 'axios'], 'vendor~utils-2.js')
-mix.extract()
+mix.extract(['vue', 'lodash-es'], 'vendor~utils-1.js');
+mix.extract(['jquery', 'axios'], 'vendor~utils-2.js');
+mix.extract();
 
 // `vendor~utils-1.js` will contain Vue and Lodash
 // `vendor~utils-2.js` will contain jQuery and Axios
 // `vendor.js` will contain all other used libraries from node_modules
 ```
 
-### Regular expression extractions
+#### Extractions Using Regular Expressions
 
-It is now possible to match libraries by a regular expression. This is useful for libraries split into many modules/packages like D3. To utilize this feature you can now pass an object to `mix.extract()`.
+It is now possible to match libraries by a regular expression. This is useful for libraries split into many modules/packages, like D3. To leverage this feature, pass an object to `mix.extract()`.
 
 ```js
 mix.extract({
-  // If you don't specify a location it defaults to `vendor.js`
+  // If you don't specify a location, it defaults to `vendor.js`
   to: 'js/vendor-d3.js',
 
-  // This can be an array of strings
-  // Or a regular expression
+  // This can be an array of strings or a regular expression
   libraries: /d3|d3-[a-z0-9-]+/
 });
 ```
 
-### Custom extraction tests
+#### Custom Extraction Tests
 
-If you need more control over module extractions you can pass a test function which will be passed directly to webpack and you'll have access to the webpack module object directly:
+If you require more control over how modules are extracted, include a `test` function that receives the webpack module object and returns a boolean.
 
 ```js
 mix.extract({
