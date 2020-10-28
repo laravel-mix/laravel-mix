@@ -5,6 +5,15 @@ let { Chunks } = require('../Chunks');
 let CssWebpackConfig = require('./CssWebpackConfig');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
+/**
+ * @typedef {object} Detail
+ * @property {string} type
+ * @property {File} src
+ * @property {File} output
+ * @property {any} pluginOptions
+ * @property {any[]} postCssPlugins
+ */
+
 class Preprocessor {
     /**
      * Create a new component instance.
@@ -37,7 +46,7 @@ class Preprocessor {
     /**
      * Fetch all necessary webpack loaders.
      *
-     * @param {String} preprocessor
+     * @param {Detail} preprocessor
      */
     webpackLoaders(preprocessor) {
         let loaders = [
@@ -127,6 +136,7 @@ class Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
+        /** @type {Detail[]} */
         this.details = (this.details || []).concat({
             type: this.constructor.name.toLowerCase(),
             src,
@@ -144,8 +154,8 @@ class Preprocessor {
      * Generate a full output path, using a fallback
      * file name, if a directory is provided.
      *
-     * @param {Object} output
-     * @param {Object} fallbackName
+     * @param {File} output
+     * @param {string} fallbackName
      */
     normalizeOutput(output, fallbackName) {
         if (output.isDirectory()) {
