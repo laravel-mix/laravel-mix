@@ -42,3 +42,22 @@ With this addition to your `webpack.mix.js` file, Mix will no longer match `url(
 ```
 
 > As a bonus, when you disable url processing, your Webpack Sass compilation will be much faster.
+
+### Per-file rewrite settings
+
+Url rewriting can be controlled on a per-file basis by specifying the `processUrls` option. This option will take precedence over what has been specified via the `processCssUrls` mix option.
+
+```js
+mix.options({
+    // Don't perform any css url rewriting by default
+    processCssUrls: false,
+})
+
+mix.sass('src/app.scss', 'dist', {
+    // Rewrite CSS urls for app.scss
+    processUrls: true,
+});
+
+mix.sass('src/admin.scss', 'dist');
+mix.sass('src/other.scss', 'dist');
+```

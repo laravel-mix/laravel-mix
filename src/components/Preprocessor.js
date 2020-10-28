@@ -12,6 +12,7 @@ let PostCssPluginsFactory = require('../PostCssPluginsFactory');
  * @property {File} output
  * @property {any} pluginOptions
  * @property {any[]} postCssPlugins
+ * @property {boolean} processUrls
  */
 
 class Preprocessor {
@@ -54,7 +55,7 @@ class Preprocessor {
             {
                 loader: 'css-loader',
                 options: {
-                    url: Config.processCssUrls,
+                    url: preprocessor.processUrls,
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
@@ -65,7 +66,7 @@ class Preprocessor {
             }
         ];
 
-        if (preprocessor.type === 'sass' && Config.processCssUrls) {
+        if (preprocessor.type === 'sass' && preprocessor.processUrls) {
             loaders.push({
                 loader: 'resolve-url-loader',
                 options: {
@@ -136,13 +137,21 @@ class Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
+        const processUrls =
+            pluginOptions.processUrls !== undefined
+                ? pluginOptions.processUrls
+                : Config.processCssUrls;
+
+        delete pluginOptions.processUrls;
+
         /** @type {Detail[]} */
         this.details = (this.details || []).concat({
             type: this.constructor.name.toLowerCase(),
             src,
             output,
             pluginOptions,
-            postCssPlugins
+            postCssPlugins,
+            processUrls
         });
 
         this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
