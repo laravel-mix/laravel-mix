@@ -7,6 +7,7 @@
 -   [Examples](examples.md)
 -   [Laravel Quick Start](workflow.md)
 -   [The Full Mix API](api.md)
+-   [The Mix CLI](cli.md)
 -   [FAQ](faq.md)
 
 ## Dig Deeper

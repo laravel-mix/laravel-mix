@@ -1,35 +1,71 @@
-# The Laravel Mix CLI
+# The Mix CLI
 
-In Laravel Mix v6 you'll find a new CLI that simplifies working with mix. Now building with mix can be as simple as `npx mix` and watching `npx mix watch`. This new CLI gives mix current and future flexibility to keep your scripts working.
+- [Compiling in a Local Environment](#compiling-in-a-local-environment)
+    - [Watch Assets for Changes](#watch-assets-for-changes)
+    - [Polling](#polling)
+    - [Hot Module Replacement](#hot-module-replacement)
+- [Compiling for Production](#compiling-for-production)
+    - [Customize the Mix Configuration Path](#customize-the-mix-configuration-path)
+- [Pass Options to Webpack-CLI](#pass-options-to-webpack-cli)
+    
 
-The new CLI also offers a better experience and simplified output when building assets. Now after a finished build you'll get information on the built assets and their sizes.
+As part of Mix v6, you'll find a new CLI that simplifies your build scripts.
 
-## Building (in Development)
+### Compiling in a Local Environment
 
-To build assets for development you can run `npx mix` and Mix will read your mix config file, build, and bundle your assets.
 
-## Watching assets for changes
+To build assets for development, reach for the `npx mix` command. Mix will then read your `webpack.mix.js` configuration file, and compile your assets.
 
-Typically during development you want to make changes repeatedly and then update your files. However running `npx mix` over-and-over again would be time consuming and not as efficient if we did it for you when you changed your assets. This is precisely what the watch command does! When you update a file mix will automatically recompile that file and rebuild your bundle. You can run the watch command using `npx mix watch`.
+```
+npx mix
+```
 
-### Polling
+#### Watch Assets for Changes
 
-In certain situations webpack cannot automatically pick up changes (like when on an NFS volume inside virtualbox). If this is a problem you can pass the `--watch-options-poll` option directly to webpack-cli to turn on polling to work around this. To do so you run the mix CLI like so: `npx mix watch -- --watch-options-poll=1000`
+Particularly for larger projects, compilation can take a bit of time. For this reason, it's highly recommended that you instead leverage webpack's ability to watch your filesystem for changes. The `npx mix watch` command will handle this for you. Now, each time you update a file, Mix will automatically recompile the file and rebuild your bundle. 
 
-### Hot Module Replacement
+```
+npx mix watch
+```
 
-Webpack offers something called hot module replacement. This gives supporting modules the ability to "live update" in certain situations . In fact this is what powers Vue's live updates when developing. If you want to watch your assets and have modules (like Vue components) automatically reflect your changes without a page load you can pass the `--hot` flag when watching like so: `npx mix watch --hot`
+#### Polling
 
-## Building for production
+In certain situations, webpack may not automatically detect changes. An example of this is when you're on an NFS volume inside virtualbox. If this is a problem, pass the `--watch-options-poll` option directly to webpack-cli to turn on manual polling. 
+ 
+ ```
+ npx mix watch -- --watch-options-poll=1000
+```
 
-When it comes time to build assets for production Mix will set the appropriate webpack options, minify your source code, and optionally version your assets based on your mix configuration file. To build assets for production you pass the `-p` flag to the Mix CLI and it'll take care of the rest.
+Of course, you can add this to a build script within your `package.json` file.
 
-`npx mix -p`
+#### Hot Module Replacement
 
-## Customizing the location of `webpack.mix.js`
+Hot module replacement is a webpack featured that gives supporting modules the ability to "live update" in certain situations. A live-update is when your application refreshes without requiring a page reload. In fact, this is what powers Vue's live updates when developing. To turn this feature on, include the `--hot` flag. 
 
-You can customise the location of your `webpack.mix.js` file by using the `--mix-config` option. For example if you wanted to load your `webpack.mix.js` file from separte `build` directory you could write that like so: `npx mix --mix-config=build/webpack.mix.js -p`
+```
+npx mix watch --hot
+```
 
-## Passing arbitrary options to webpack
+### Compiling for Production
 
-You can end a call to mix with `--` and anything after that will be passed directly to webpack-cli. For example you can pass environment variables using webpack-cli's `--env` option, for example: `npx mix -- --env foo=bar`
+When it comes time to build your assets for a production environment, Mix will set the appropriate webpack options, minify your source code, and optionally version your assets based on your Mix configuration file (`webpack.mix.js`). To build assets for production, include the `--production` flag - or the alias `-p` - to the Mix CLI. Mix will take care of the rest!
+
+```
+npx mix --production
+```
+
+#### Customize the Mix Configuration Path
+
+You may customise the location of your `webpack.mix.js` file by using the `--mix-config` option. For example, if you wish to load your `webpack.mix.js` file from a nested `build` directory, here's how:
+ 
+ ```
+ npx mix --mix-config=build/webpack.mix.js --production
+```
+
+### Pass Options to Webpack-CLI
+
+If you end any `mix` call with two dashes (`--`), anything after it will be passed through to webpack-cli. For example, you can pass environment variables using webpack-cli's `--env` option: 
+
+```
+npx mix -- --env foo=bar
+```
