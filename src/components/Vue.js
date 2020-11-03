@@ -3,6 +3,8 @@ let File = require('../File');
 let VueVersion = require('../VueVersion');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 
+/** @typedef {import("vue").VueLoaderOptions} VueLoaderOptions */
+
 class Vue {
     /**
      * Create a new component instance.
@@ -18,6 +20,7 @@ class Vue {
      * @param {number} [options.version] Which version of Vue to support. Detected automatically if not given.
      * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
+     * @param {VueLoaderOptions} [options.options] Options to pass to Vue Loader
      */
     register(options = {}) {
         if (
@@ -34,6 +37,7 @@ class Vue {
 
         this.options = Object.assign(
             {
+                options: null,
                 globalStyles: null,
                 extractStyles: false
             },
@@ -74,7 +78,7 @@ class Vue {
             use: [
                 {
                     loader: 'vue-loader',
-                    options: Config.vue || {}
+                    options: this.options.options || Config.vue || {}
                 }
             ]
         });

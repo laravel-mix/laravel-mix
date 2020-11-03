@@ -15,6 +15,7 @@ import { TransformOptions as BabelConfig } from 'babel-core';
 import { Options as BrowserSyncConfig } from 'browser-sync';
 import { TerserPluginOptions } from 'terser-webpack-plugin';
 import * as ExtractTypes from './extract';
+import { VueLoaderOptions } from 'vue-loader';
 
 interface MixConfig {
     production?: boolean;
@@ -54,6 +55,8 @@ interface MixConfig {
     webpackConfig?: webpack.Configuration;
     babelConfig?: BabelConfig;
     clearConsole?: boolean;
+    /** @deprecated Use `mix.vue({options: {…}})` instead */
+    vue?: any;
     merge?: (options: MixConfig) => void;
 }
 
@@ -76,20 +79,13 @@ declare module 'laravel-mix' {
             name: string,
             component:
                 | Component
-                | ((
-                      mix: Api,
-                      config: webpack.Configuration,
-                      ...args: any[]
-                  ) => void)
+                | ((mix: Api, config: webpack.Configuration, ...args: any[]) => void)
         ) => Api;
         type Extract =
             | ((output?: string) => Api)
             | ((libs: string[], output?: string) => Api)
             | ((test: ExtractTypes.ExtractTestCallback, output?: string) => Api)
-            | ((
-                  config: Partial<ExtractTypes.Extraction>,
-                  output?: string
-              ) => Api);
+            | ((config: Partial<ExtractTypes.Extraction>, output?: string) => Api);
         type Notifications = () => Api;
         type Version = (files?: string | string[]) => Api;
 
@@ -112,11 +108,7 @@ declare module 'laravel-mix' {
         type Typescript = Javascript;
 
         // File-related
-        type Combine = (
-            src: string | string[],
-            output?: string,
-            babel?: boolean
-        ) => Api;
+        type Combine = (src: string | string[], output?: string, babel?: boolean) => Api;
         type Babel = Combine;
         type Minify = Combine;
         type Scripts = Combine;
@@ -130,6 +122,7 @@ declare module 'laravel-mix' {
         type React = () => Api;
         type Vue = (
             options: {
+                options: VueLoaderOptions;
                 version: number;
                 extractStyles?: boolean;
                 globalStyles?:
