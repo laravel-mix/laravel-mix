@@ -1,31 +1,28 @@
 import test from 'ava';
-import path from 'path';
+import Koa from 'koa';
+import serveFilesFrom from 'koa-static';
 import { chromium } from 'playwright';
 import webpack, { setupVueAliases } from '../helpers/webpack';
-import StaticServer from 'static-server';
 
 import '../helpers/mix';
 
 /** @type {import("playwright").Browser} */
 let browser;
 
-/** @type {StaticServer} */
+/** @type {import("http").Server} */
 let server;
 
 test.before(async () => {
     browser = await chromium.launch();
 
-    server = new StaticServer({
-        rootPath: 'test/fixtures/integration/dist',
-        port: 1337
-    });
-
-    await new Promise(resolve => server.start(resolve()));
+    const app = new Koa();
+    app.use(serveFilesFrom('test/fixtures/integration/dist'));
+    server = app.listen(1337);
 });
 
 test.after.always(() => {
     browser && browser.close();
-    server && server.stop();
+    server && server.close();
 });
 
 test.beforeEach(() => {
