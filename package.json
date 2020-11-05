@@ -1,6 +1,6 @@
 {
     "name": "laravel-mix",
-    "version": "6.0.0-beta.11",
+    "version": "6.0.0-beta.12",
     "description": "The power of webpack, distilled for the rest of us.",
     "main": "src/index.js",
     "types": "typings/index.d.ts",
