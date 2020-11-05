@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const { Command, command } = require('commander');
+const { Command } = require('commander');
 const { spawn } = require('child_process');
 
 run();
 
 /**
- * Run the progran.
+ * Run the program.
  */
 async function run() {
     const program = new Command();
@@ -24,11 +24,7 @@ async function run() {
         .description('Build and watch files for changes.')
         .option('--hot', 'Enable hot reloading.', false)
         .action(cmd =>
-            executeScript(
-                'watch',
-                { ...program.opts(), ...cmd.opts() },
-                cmd.args
-            )
+            executeScript('watch', { ...program.opts(), ...cmd.opts() }, cmd.args)
         );
 
     program
@@ -36,11 +32,7 @@ async function run() {
         .description('Compile Mix.')
         .option('-p, --production', 'Run Mix in production mode.', false)
         .action(cmd =>
-            executeScript(
-                'build',
-                { ...program.opts(), ...cmd.opts() },
-                cmd.args
-            )
+            executeScript('build', { ...program.opts(), ...cmd.opts() }, cmd.args)
         );
 
     await program.parseAsync(process.argv);
