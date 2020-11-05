@@ -13,6 +13,7 @@
 -   New `mix.vue()` and `mix.react()` commands
 -   New `mix.alias()` command ([Learn More](https://github.com/JeffreyWay/laravel-mix/blob/master/docs/aliases.md))
 -   Support for changing the webpack manifest output path ([Learn More](https://github.com/JeffreyWay/laravel-mix/blob/master/docs/extract.md#customizing-the-runtime-chunk-manifestjs-path))
+-   New `mix.before()` hook ([Learn More](https://github.com/JeffreyWay/laravel-mix/blob/master/docs/event-hooks.md#run-a-function-before-webpack-compiles))
 -   Improved `mix.combine()` wildcard support
 -   Improved `mix.extract()` priority and tree-shaking logic
 
