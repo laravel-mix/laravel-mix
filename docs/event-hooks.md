@@ -1,5 +1,6 @@
 # Event Hooks
 
+- [Run a Function Before Webpack Compiles](#run-a-function-before-webpack-compiles)
 - [Run a Function After Webpack Compiles](#run-a-function-after-webpack-compiles)
 
 ### Run a Function Before Webpack Compiles
