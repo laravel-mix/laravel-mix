@@ -31,14 +31,14 @@ test('it compiles React and a preprocessor properly', async t => {
     t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
 });
 
-test('it sets the webpack entry correctly', t => {
+test('it sets the webpack entry correctly', async t => {
     mix.js('js/app.js', 'js').react();
 
     t.deepEqual(
         {
             '/js/app': [path.resolve('js/app.js')]
         },
-        webpack.buildConfig().entry
+        (await webpack.buildConfig()).entry
     );
 });
 

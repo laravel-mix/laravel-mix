@@ -35,7 +35,8 @@ let components = [
     'SetResourceRoot',
     'Options',
     'When',
-    'BabelConfig'
+    'BabelConfig',
+    'Before'
 ];
 
 class ComponentRegistrar {
@@ -47,9 +48,7 @@ class ComponentRegistrar {
      * Install all default components.
      */
     installAll() {
-        components
-            .map(name => require(`./${name}`))
-            .forEach(this.install.bind(this));
+        components.map(name => require(`./${name}`)).forEach(this.install.bind(this));
 
         return this.components;
     }
@@ -60,8 +59,7 @@ class ComponentRegistrar {
      * @param {Component} Component
      */
     install(Component) {
-        let component =
-            typeof Component === 'function' ? new Component() : Component;
+        let component = typeof Component === 'function' ? new Component() : Component;
 
         this.registerComponent(component);
 
@@ -85,8 +83,7 @@ class ComponentRegistrar {
             });
 
             Mix.listen('loading-plugins', plugins => {
-                component.webpackPlugins &&
-                    this.applyPlugins(plugins, component);
+                component.webpackPlugins && this.applyPlugins(plugins, component);
             });
 
             Mix.listen('configReady', config => {

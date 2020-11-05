@@ -6,10 +6,10 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
-test('it applies a rule for js, cjs, mjs, and tsx extensions', t => {
+test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
     mix.js('js/app.js', 'dist/js');
 
-    let rules = webpack.buildConfig().module.rules;
+    let rules = (await webpack.buildConfig()).module.rules;
 
     t.true(rules.some(rule => rule.test.test('file.js')));
     t.true(rules.some(rule => rule.test.test('file.cjs')));
@@ -70,10 +70,10 @@ test('it compiles JavaScript and Sass', async t => {
     );
 });
 
-test('basic JS compilation config.', t => {
+test('basic JS compilation config.', async t => {
     mix.js('js/app.js', 'js');
 
-    let webpackConfig = webpack.buildConfig();
+    let webpackConfig = await webpack.buildConfig();
 
     t.deepEqual(
         {
@@ -93,21 +93,21 @@ test('basic JS compilation config.', t => {
     );
 });
 
-test('basic JS compilation with output dist directory omitted config.', t => {
+test('basic JS compilation with output dist directory omitted config.', async t => {
     mix.js('js/app.js', 'js');
 
     t.deepEqual(
         {
             '/js/app': [path.resolve('js/app.js')]
         },
-        webpack.buildConfig().entry
+        (await webpack.buildConfig()).entry
     );
 });
 
-test('basic JS compilation with a different dist path', t => {
+test('basic JS compilation with a different dist path', async t => {
     mix.js('js/app.js', 'dist/js').setPublicPath('dist-html');
 
-    let webpackConfig = webpack.buildConfig();
+    let webpackConfig = await webpack.buildConfig();
 
     t.deepEqual(
         {
@@ -120,14 +120,14 @@ test('basic JS compilation with a different dist path', t => {
     );
 });
 
-test('basic JS compilation with a specific output path config.', t => {
+test('basic JS compilation with a specific output path config.', async t => {
     mix.js('js/app.js', 'js/output.js');
 
     t.deepEqual(
         {
             '/js/output': [path.resolve('js/app.js')]
         },
-        webpack.buildConfig().entry
+        (await webpack.buildConfig()).entry
     );
 });
 

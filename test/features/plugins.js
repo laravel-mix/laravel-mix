@@ -6,14 +6,16 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
-test('mix can be extended with new functionality as a callback', t => {
+test('mix can be extended with new functionality as a callback', async t => {
     let registration = sinon.spy();
 
     mix.extend('foobar', registration);
 
     mix.foobar('baz', 'buzz');
 
-    t.true(registration.calledWith(webpack.buildConfig(), 'baz', 'buzz'));
+    let config = await webpack.buildConfig();
+
+    t.true(registration.calledWith(config, 'baz', 'buzz'));
 });
 
 test('mix can be extended with new functionality as a class', t => {

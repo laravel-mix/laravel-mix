@@ -1,13 +1,13 @@
 import webpack from 'webpack';
 
-export function buildConfig() {
-    Mix.dispatch('init');
+export async function buildConfig() {
+    await Mix.dispatch('init');
 
     return webpackConfig.build();
 }
 
 export async function compile(config) {
-    config = config || buildConfig();
+    config = config || (await buildConfig());
 
     return new Promise((resolve, reject) => {
         webpack(config, (err, stats) => {
@@ -16,9 +16,7 @@ export async function compile(config) {
             } else if (stats.hasErrors()) {
                 const { errors } = stats.toJson({ errors: true });
 
-                reject(
-                    new Error(errors.map(error => error.message).join('\n'))
-                );
+                reject(new Error(errors.map(error => error.message).join('\n')));
             } else {
                 resolve({ config, err, stats });
             }

@@ -9,13 +9,13 @@ test('it returns the mix instance', t => {
     t.deepEqual(mix, mix.coffee('resources/assets/js/app.coffee', 'dist/js'));
 });
 
-test('it applies the correct webpack rules', t => {
+test('it applies the correct webpack rules', async t => {
     mix.coffee('resources/assets/js/app.coffee', 'dist/js');
 
     t.truthy(
-        webpack
-            .buildConfig()
-            .module.rules.find(rule => rule.test.toString() === '/\\.coffee$/')
+        (await webpack.buildConfig()).module.rules.find(
+            rule => rule.test.toString() === '/\\.coffee$/'
+        )
     );
 });
 

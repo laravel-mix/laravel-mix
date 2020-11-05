@@ -37,9 +37,7 @@ class Mix {
      * Determine if Mix should watch files for changes.
      */
     isWatching() {
-        return (
-            process.argv.includes('--watch') || process.argv.includes('--hot')
-        );
+        return process.argv.includes('--watch') || process.argv.includes('--hot');
     }
 
     /**
@@ -107,7 +105,7 @@ class Mix {
             data = data();
         }
 
-        this.dispatcher.fire(event, data);
+        return this.dispatcher.fire(event, data);
     }
 }
 

@@ -1,7 +1,6 @@
 import test from 'ava';
 import webpack from '../helpers/webpack';
 import assert from '../helpers/assertions';
-import WebpackConfig from '../../src/builder/WebpackConfig';
 import File from '../../src/File';
 import path from 'path';
 
@@ -11,21 +10,18 @@ test.beforeEach(() => {
     webpack.setupVueAliases(3);
 });
 
-test('it adds the Vue 3 resolve alias', t => {
+test('it adds the Vue 3 resolve alias', async t => {
     mix.vue({ version: 3, extractStyles: true });
 
-    t.is(
-        'vue/dist/vue.esm-bundler.js',
-        webpack.buildConfig().resolve.alias.vue$
-    );
+    t.is('vue/dist/vue.esm-bundler.js', (await webpack.buildConfig()).resolve.alias.vue$);
 });
 
-test('it adds the Vue 3 runtime resolve alias', t => {
+test('it adds the Vue 3 runtime resolve alias', async t => {
     mix.vue({ version: 3, runtimeOnly: true });
 
     t.is(
         'vue/dist/vue.runtime.esm-bundler.js',
-        webpack.buildConfig().resolve.alias.vue$
+        (await webpack.buildConfig()).resolve.alias.vue$
     );
 });
 
@@ -40,10 +36,10 @@ test('it knows the Vue 3 compiler name', t => {
 test('it appends vue styles to your sass compiled file', async t => {
     mix.vue({ version: 3, extractStyles: true });
 
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-scss.js`,
-        'js/app.js'
-    ).sass(`test/fixtures/app/src/sass/app.scss`, 'css/app.css');
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-scss.js`, 'js/app.js').sass(
+        `test/fixtures/app/src/sass/app.scss`,
+        'css/app.css'
+    );
 
     await webpack.compile();
 
@@ -65,10 +61,10 @@ test('it appends vue styles to your sass compiled file', async t => {
 
 test('it appends vue styles to your less compiled file', async t => {
     mix.vue({ version: 3, extractStyles: true });
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-scss.js`,
-        'js/app.js'
-    ).less(`test/fixtures/app/src/less/main.less`, 'css/app.css');
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-scss.js`, 'js/app.js').less(
+        `test/fixtures/app/src/less/main.less`,
+        'css/app.css'
+    );
 
     await webpack.compile();
 
@@ -101,10 +97,7 @@ test('it appends vue styles to a vue-styles.css file, if no preprocessor is used
 }
 `;
 
-    t.is(
-        expected,
-        File.find(`test/fixtures/app/dist/css/vue-styles.css`).read()
-    );
+    t.is(expected, File.find(`test/fixtures/app/dist/css/vue-styles.css`).read());
 });
 
 test('it extracts vue vanilla CSS styles to a dedicated file', async t => {
@@ -122,18 +115,12 @@ test('it extracts vue vanilla CSS styles to a dedicated file', async t => {
 
 `;
 
-    t.is(
-        expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
-    );
+    t.is(expected, File.find(`test/fixtures/app/dist/css/components.css`).read());
 });
 
 test('it extracts vue Stylus styles to a dedicated file', async t => {
     mix.vue({ version: 3, extractStyles: 'css/components.css' });
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-stylus.js`,
-        'js/app.js'
-    );
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-stylus.js`, 'js/app.js');
 
     await webpack.compile();
 
@@ -145,29 +132,24 @@ test('it extracts vue Stylus styles to a dedicated file', async t => {
 
 `;
 
-    t.is(
-        expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
-    );
+    t.is(expected, File.find(`test/fixtures/app/dist/css/components.css`).read());
 });
 
-test('it does also add the vue webpack rules with typescript component', t => {
+test('it does also add the vue webpack rules with typescript component', async t => {
     mix.vue({ version: 3 });
     mix.ts('js/app.ts', 'public');
 
-    t.truthy(
-        webpack
-            .buildConfig()
-            .module.rules.find(rule => rule.test.toString() === '/\\.vue$/')
-    );
+    let config = await webpack.buildConfig();
+
+    t.truthy(config.module.rules.find(rule => rule.test.toString() === '/\\.vue$/'));
 });
 
 test('it extracts vue .scss styles to a dedicated file', async t => {
     mix.vue({ version: 3, extractStyles: 'css/components.css' });
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-scss.js`,
-        'js/app.js'
-    ).sass(`test/fixtures/app/src/sass/app.scss`, 'css/app.css');
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-scss.js`, 'js/app.js').sass(
+        `test/fixtures/app/src/sass/app.scss`,
+        'css/app.css'
+    );
 
     await webpack.compile();
 
@@ -189,11 +171,7 @@ test('it extracts vue .scss styles to a dedicated file', async t => {
 }
 `;
 
-    assert.fileMatchesCss(
-        `test/fixtures/app/dist/css/components.css`,
-        expected,
-        t
-    );
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
 });
 
 test('it extracts vue .sass styles to a dedicated file', async t => {
@@ -223,11 +201,7 @@ test('it extracts vue .sass styles to a dedicated file', async t => {
 }
 `;
 
-    assert.fileMatchesCss(
-        `test/fixtures/app/dist/css/components.css`,
-        expected,
-        t
-    );
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
 });
 
 test('it extracts vue PostCSS styles to a dedicated file', async t => {
@@ -237,10 +211,7 @@ test('it extracts vue PostCSS styles to a dedicated file', async t => {
     );
 
     mix.vue({ version: 3, extractStyles: 'css/components.css' });
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-postcss.js`,
-        'js/app.js'
-    );
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-postcss.js`, 'js/app.js');
 
     await webpack.compile();
 
@@ -256,10 +227,7 @@ test('it extracts vue PostCSS styles to a dedicated file', async t => {
 
 `;
 
-    t.is(
-        expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
-    );
+    t.is(expected, File.find(`test/fixtures/app/dist/css/components.css`).read());
 
     // Clean up
     postCssConfigFile.delete();
@@ -279,10 +247,7 @@ test('it extracts vue Less styles to a dedicated file', async t => {
 
 `;
 
-    t.is(
-        expected,
-        File.find(`test/fixtures/app/dist/css/components.css`).read()
-    );
+    t.is(expected, File.find(`test/fixtures/app/dist/css/components.css`).read());
 });
 
 test('it supports global Vue styles for sass', async t => {
@@ -302,10 +267,7 @@ test('it supports global Vue styles for sass', async t => {
             stylus: [`test/fixtures/app/src/stylus/global.styl`]
         }
     });
-    mix.js(
-        `test/fixtures/app/src/vue3/app-with-vue-and-global-styles.js`,
-        'js/app.js'
-    );
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-and-global-styles.js`, 'js/app.js');
     mix.sass(`test/fixtures/app/src/sass/app.scss`, 'css/app.css');
 
     await webpack.compile();

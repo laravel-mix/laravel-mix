@@ -21,18 +21,18 @@ test('mix.webpackConfig()', t => {
     t.deepEqual(config, Config.webpackConfig);
 });
 
-test('Custom user config can be merged', t => {
+test('Custom user config can be merged', async t => {
     mix.webpackConfig({ context: 'changed' });
 
-    t.is('changed', buildConfig().context);
+    t.is('changed', (await buildConfig()).context);
 });
 
-test('Custom user config can be merged as a callback function', t => {
+test('Custom user config can be merged as a callback function', async t => {
     mix.webpackConfig(webpack => {
         return {
             context: 'changed'
         };
     });
 
-    t.is('changed', buildConfig().context);
+    t.is('changed', (await buildConfig()).context);
 });

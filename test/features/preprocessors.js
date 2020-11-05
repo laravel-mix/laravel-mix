@@ -22,7 +22,7 @@ test('it compiles Sass without JS', async t => {
     );
 });
 
-test('JS and Sass + Less + Stylus compilation config', t => {
+test('JS and Sass + Less + Stylus compilation config', async t => {
     mix.js('js/app.js', 'js')
         .sass('src/sass.scss', 'css')
         .less('src/less.less', 'css')
@@ -37,51 +37,51 @@ test('JS and Sass + Less + Stylus compilation config', t => {
                 path.resolve('src/stylus.styl')
             ]
         },
-        webpack.buildConfig().entry
+        (await webpack.buildConfig()).entry
     );
 });
 
-test('Generic Sass rules are applied', t => {
+test('Generic Sass rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
     t.truthy(
-        webpack.buildConfig().module.rules.find(rule => {
+        (await webpack.buildConfig()).module.rules.find(rule => {
             return rule.test.toString() === '/\\.scss$/';
         })
     );
 });
 
-test('Generic Less rules are applied', t => {
+test('Generic Less rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
     t.truthy(
-        webpack.buildConfig().module.rules.find(rule => {
+        (await webpack.buildConfig()).module.rules.find(rule => {
             return rule.test.toString() === '/\\.less$/';
         })
     );
 });
 
-test('Generic CSS rules are applied', t => {
+test('Generic CSS rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
     t.truthy(
-        webpack.buildConfig().module.rules.find(rule => {
+        (await webpack.buildConfig()).module.rules.find(rule => {
             return rule.test.toString() === '/\\.css$/';
         })
     );
 });
 
-test('Generic Stylus rules are applied', t => {
+test('Generic Stylus rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
     t.truthy(
-        webpack.buildConfig().module.rules.find(rule => {
+        (await webpack.buildConfig()).module.rules.find(rule => {
             return rule.test.toString() === '/\\.styl(us)?$/';
         })
     );
 });
 
-test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.', t => {
+test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.', async t => {
     mix.sass(`test/fixtures/app/src/sass/app.scss`, 'css', {}, [
         { postcssPlugin: 'postcss-plugin-stub' }
     ]);
@@ -90,11 +90,12 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
         { postcssPlugin: 'second-postcss-plugin-stub' }
     ]);
 
+    let config = await webpack.buildConfig();
+
     let seePostCssPluginFor = (file, pluginName) => {
         t.true(
-            webpack
-                .buildConfig()
-                .module.rules.find(rule => rule.test.toString().includes(file))
+            config.module.rules
+                .find(rule => rule.test.toString().includes(file))
                 .use.find(loader => loader.loader === 'postcss-loader')
                 .options.postcssOptions.plugins.find(
                     plugin => plugin.postcssPlugin === pluginName

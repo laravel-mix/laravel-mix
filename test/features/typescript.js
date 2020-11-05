@@ -32,26 +32,24 @@ test('it applies the correct extensions and aliases to the webpack config', asyn
     t.true(config.resolve.extensions.includes('.tsx'));
 });
 
-test('it applies Babel transformation', t => {
+test('it applies Babel transformation', async t => {
     mix.ts('js/app.js', 'dist');
 
     t.true(
-        webpack
-            .buildConfig()
-            .module.rules.find(rule => {
+        (await webpack.buildConfig()).module.rules
+            .find(rule => {
                 return rule.test.test('foo.tsx');
             })
             .use.some(loader => loader.loader === 'babel-loader')
     );
 });
 
-test('it is able to apply options to ts-loader', t => {
+test('it is able to apply options to ts-loader', async t => {
     mix.ts('js/app.js', 'dist', { transpileOnly: true });
 
     t.truthy(
-        webpack
-            .buildConfig()
-            .module.rules.find(rule => rule.loader === 'ts-loader').options
-            .transpileOnly
+        (await webpack.buildConfig()).module.rules.find(
+            rule => rule.loader === 'ts-loader'
+        ).options.transpileOnly
     );
 });
