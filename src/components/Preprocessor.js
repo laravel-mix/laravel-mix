@@ -5,6 +5,16 @@ let { Chunks } = require('../Chunks');
 let CssWebpackConfig = require('./CssWebpackConfig');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
+/**
+ * @typedef {object} Detail
+ * @property {string} type
+ * @property {File} src
+ * @property {File} output
+ * @property {any} pluginOptions
+ * @property {any[]} postCssPlugins
+ * @property {boolean} processUrls
+ */
+
 class Preprocessor {
     /**
      * Create a new component instance.
@@ -37,7 +47,7 @@ class Preprocessor {
     /**
      * Fetch all necessary webpack loaders.
      *
-     * @param {String} preprocessor
+     * @param {Detail} preprocessor
      */
     webpackLoaders(preprocessor) {
         let loaders = [
@@ -45,7 +55,7 @@ class Preprocessor {
             {
                 loader: 'css-loader',
                 options: {
-                    url: Config.processCssUrls,
+                    url: preprocessor.processUrls,
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
@@ -56,7 +66,7 @@ class Preprocessor {
             }
         ];
 
-        if (preprocessor.type === 'sass' && Config.processCssUrls) {
+        if (preprocessor.type === 'sass' && preprocessor.processUrls) {
             loaders.push({
                 loader: 'resolve-url-loader',
                 options: {
@@ -127,12 +137,21 @@ class Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
+        const processUrls =
+            pluginOptions.processUrls !== undefined
+                ? pluginOptions.processUrls
+                : Config.processCssUrls;
+
+        delete pluginOptions.processUrls;
+
+        /** @type {Detail[]} */
         this.details = (this.details || []).concat({
             type: this.constructor.name.toLowerCase(),
             src,
             output,
             pluginOptions,
-            postCssPlugins
+            postCssPlugins,
+            processUrls
         });
 
         this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
@@ -144,8 +163,8 @@ class Preprocessor {
      * Generate a full output path, using a fallback
      * file name, if a directory is provided.
      *
-     * @param {Object} output
-     * @param {Object} fallbackName
+     * @param {File} output
+     * @param {string} fallbackName
      */
     normalizeOutput(output, fallbackName) {
         if (output.isDirectory()) {
