@@ -308,3 +308,59 @@ test('it supports global Vue styles for sass', async t => {
 
     postCssConfigFile.delete();
 });
+
+test('Vue-loader options via mix.options.vue', async t => {
+    const compiler = compilerSpy();
+
+    mix.vue({ version: 3 });
+    mix.options({ vue: { compiler } });
+
+    mix.js(`test/fixtures/app/src/vue/app-with-vue-and-css.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    t.truthy(compiler.called);
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+});
+
+test('Vue-loader options via mix.vue', async t => {
+    const compiler = compilerSpy();
+
+    mix.vue({
+        version: 3,
+        options: { compiler }
+    });
+
+    mix.js(`test/fixtures/app/src/vue/app-with-vue-and-css.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    t.true(compiler.called);
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+});
+
+function compilerSpy() {
+    const compiler = require('@vue/compiler-dom');
+    let called = false;
+
+    // We don't use sinon.spy here because if you create a spy of
+    // `require("@vue/compiler-dom")` it will always be true
+    // as that modifies the global object that's used by default.
+    // Since we want to ensure that passing loader options works
+    // we need to do that by ensuring our "custom" compiler is used
+    return {
+        ...compiler,
+
+        compile(...args) {
+            called = true;
+
+            return compiler.compile(...args);
+        },
+
+        get called() {
+            return called;
+        }
+    };
+}

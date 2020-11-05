@@ -189,6 +189,15 @@ module.exports = function() {
         clearConsole: true,
 
         /**
+         * Options to pass to vue-loader
+         *
+         * @deprecated Use `.vue({options: {…}})` instead
+         *
+         * @type {any}
+         */
+        vue: {},
+
+        /**
          * Merge the given options with the current defaults.
          *
          * @param {object} options

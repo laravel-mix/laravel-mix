@@ -3,6 +3,8 @@ let File = require('../File');
 let VueVersion = require('../VueVersion');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 
+/** @typedef {import("vue").VueLoaderOptions} VueLoaderOptions */
+
 class Vue {
     /**
      * Create a new component instance.
@@ -18,6 +20,7 @@ class Vue {
      * @param {number} [options.version] Which version of Vue to support. Detected automatically if not given.
      * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
+     * @param {VueLoaderOptions} [options.options] Options to pass to Vue Loader
      */
     register(options = {}) {
         if (
@@ -34,6 +37,7 @@ class Vue {
 
         this.options = Object.assign(
             {
+                options: null,
                 globalStyles: null,
                 extractStyles: false
             },
@@ -52,9 +56,7 @@ class Vue {
 
         let dependencies = [
             this.version === 2 ? 'vue-template-compiler' : '@vue/compiler-sfc',
-            this.version === 2
-                ? 'vue-loader@^15.9.1'
-                : 'vue-loader@^16.0.0-beta.8'
+            this.version === 2 ? 'vue-loader@^15.9.5' : 'vue-loader@^16.0.0-beta.9'
         ];
 
         if (this.options.extractStyles && this.options.globalStyles) {
@@ -76,7 +78,7 @@ class Vue {
             use: [
                 {
                     loader: 'vue-loader',
-                    options: Config.vue || {}
+                    options: this.options.options || Config.vue || {}
                 }
             ]
         });
@@ -143,9 +145,7 @@ class Vue {
         // If the user set extractStyles: true, we'll try
         // to append the Vue styles to an existing CSS chunk.
         if (this.options.extractStyles === true) {
-            let chunk = this.chunks.find((chunk, id) =>
-                id.startsWith('styles-')
-            );
+            let chunk = this.chunks.find((chunk, id) => id.startsWith('styles-'));
 
             if (chunk) {
                 return chunk.name;
