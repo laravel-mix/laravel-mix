@@ -125,6 +125,14 @@ If using Laravel, refer to its global `mix()` helper function for dynamically ac
 <script src="{{ mix('js/app.js') }}"></script>
 ```
 
+### `.sourceMaps(generateForProduction?, devType?, productionType?)`
+
+Generate JavaScript source maps.
+
+```js
+mix.js('src/file.js', 'dist/file.js').sourceMaps();
+```
+
 ### `.browserSync(domain)`
 
 Monitor files for changes and update the browser without requiring a manual page refresh.
@@ -179,6 +187,36 @@ Make a module available as a variable in every other module required by webpack.
 ```js
 mix.autoload({
     jquery: ['$', 'window.jQuery']
+});
+```
+
+### `.before(callback)`
+
+Run the given callback function before the webpack compilation begins. 
+
+```js
+mix.before(() => {
+    fs.copySync('path/from', 'path/to');
+});
+```
+
+If your script is asynchronous, you must return a promise to ensure that Mix waits for it to complete before beginning the compilation.
+
+```js
+mix.before(() => {
+    return new Promise(resolve => {
+        setTimeout(resolve, 2000); 
+    });
+});
+```
+
+### `.after(callback)`
+
+Run the given callback function after the webpack compilation has completed.
+
+```js
+mix.after(webpackStats => {
+    console.log('Compilation complete');
 });
 ```
 
