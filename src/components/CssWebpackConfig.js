@@ -144,8 +144,7 @@ class CssWebpackConfig extends AutomaticComponent {
         return [
             new MiniCssExtractPlugin({
                 filename: '[name].css',
-                chunkFilename: '[name].css',
-                esModule: true
+                chunkFilename: '[name].css'
             })
         ];
     }
