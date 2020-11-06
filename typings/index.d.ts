@@ -34,7 +34,7 @@ interface MixConfig {
         onSuccess?: boolean;
         onFailure?: boolean;
     };
-    sourceMaps?: boolean;
+    sourcemaps?: false | string;
     resourceRoot?: string;
     imgLoaderOptions?: {
         enabled?: boolean;
