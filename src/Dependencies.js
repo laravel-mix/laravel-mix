@@ -6,7 +6,6 @@ let PackageManager = require('./PackageManager');
 /**
  * @typedef {object} DependencyObject
  * @property {string} package
- * @property {string} [name]
  * @property {(obj: any) => boolean} [check]
  */
 
