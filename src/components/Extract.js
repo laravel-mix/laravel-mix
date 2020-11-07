@@ -2,8 +2,8 @@ let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
 
-/** @typedef {import('../../typings/extract').Extraction} Extraction */
-/** @typedef {import('../../typings/extract').ExtractConfig} ExtractConfig */
+/** @typedef {import('../../types/extract').Extraction} Extraction */
+/** @typedef {import('../../types/extract').ExtractConfig} ExtractConfig */
 /** @typedef {import('../builder/Entry').Entry} Entry */
 
 class Extract {
