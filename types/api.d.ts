@@ -16,6 +16,9 @@ import { AcceptedPlugin } from 'postcss';
 // @ts-ignore - May not be installed initially
 import { VueLoaderOptions } from 'vue-loader';
 
+// @ts-ignore - May not be installed initially
+import MixHelpers from '../src/Mix';
+
 // General API
 export interface Api {
     /** Set the public path */
@@ -34,13 +37,16 @@ export interface Api {
     extend(name: string, component: Component): Api;
 
     /** Wait for a callback before starting the build */
-    before(callback: (data: any) => void | Promise<void>): Api;
+    before(callback: (Mix: MixHelpers) => void | Promise<void>): Api;
 
     /** Run a callback after the build has completed */
-    after(callback: (data: any) => void | Promise<void>): Api;
+    after(callback: (stats: webpack.Stats) => void | Promise<void>): Api;
 
     /** Run a callback after the build has completed */
-    then(callback: (data: any) => void | Promise<void>): Api;
+    then(callback: (stats: webpack.Stats) => void | Promise<void>): Api;
+
+    /** Run a callback after the build has completed */
+    when(callback: () => void | Promise<void>): Api;
 }
 
 // Webpack config related abilities
