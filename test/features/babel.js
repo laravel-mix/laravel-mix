@@ -20,9 +20,7 @@ test('Default Babel plugins includes plugin-proposal-object-rest-spread', t => {
 test('Default Babel presets includes env', t => {
     t.true(
         Config.babel().presets.find(preset => {
-            return preset.find(p =>
-                p.includes(path.normalize('@babel/preset-env'))
-            );
+            return preset.find(p => p.includes(path.normalize('@babel/preset-env')));
         }) !== undefined
     );
 });
@@ -35,9 +33,7 @@ test('Babel reads the project .babelrc file', t => {
 
     t.true(
         Config.babel(__dirname + '/.testbabelrc').plugins.find(plugin =>
-            plugin.includes(
-                path.normalize('@babel/plugin-syntax-dynamic-import')
-            )
+            plugin.includes(path.normalize('@babel/plugin-syntax-dynamic-import'))
         ) !== undefined
     );
 
@@ -63,7 +59,7 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
     File.find(babelRcPath).delete();
 });
 
-test('Babel config from Mix extensions is merged with the defaults', t => {
+test('Babel config from Mix extensions is merged with the defaults', async t => {
     mix.extend(
         'extensionWithBabelConfig',
         new class {
@@ -77,16 +73,19 @@ test('Babel config from Mix extensions is merged with the defaults', t => {
 
     mix.extensionWithBabelConfig();
 
-    webpack.buildConfig();
+    await webpack.buildConfig();
 
     t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
     t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
 
+/**
+ *
+ * @param {string} name
+ */
 let seeBabelPlugin = name => {
     return (
-        Config.babel().plugins.find(plugin =>
-            plugin.includes(path.normalize(name))
-        ) !== undefined
+        Config.babel().plugins.find(plugin => plugin.includes(path.normalize(name))) !==
+        undefined
     );
 };

@@ -54,7 +54,7 @@ test('dependencies can be requested for download', t => {
     t.true(Assert.dependencies.calledWith(['npm-package']));
 });
 
-test('webpack entry may be appended to', t => {
+test('webpack entry may be appended to', async t => {
     mix.extend(
         'foobar',
         new class {
@@ -70,10 +70,12 @@ test('webpack entry may be appended to', t => {
 
     Mix.dispatch('init');
 
-    t.deepEqual(['path'], new WebpackConfig().build().entry.foo);
+    const config = await new WebpackConfig().build();
+
+    t.deepEqual(['path'], config.entry.foo);
 });
 
-test('webpack rules may be added', t => {
+test('webpack rules may be added', async t => {
     let rule = {
         test: /\.ext/,
         loaders: ['example-loader']
@@ -94,12 +96,12 @@ test('webpack rules may be added', t => {
 
     Mix.dispatch('init');
 
-    let config = new WebpackConfig().build();
+    let config = await new WebpackConfig().build();
 
     t.deepEqual(config.module.rules.pop(), rule);
 });
 
-test('webpack plugins may be added', t => {
+test('webpack plugins may be added', async t => {
     let plugin = sinon.stub();
 
     mix.extend(
@@ -117,12 +119,12 @@ test('webpack plugins may be added', t => {
 
     Mix.dispatch('init');
 
-    let config = new WebpackConfig().build();
+    let config = await new WebpackConfig().build();
 
     t.is(plugin, config.plugins.pop());
 });
 
-test('custom Babel config may be merged', t => {
+test('custom Babel config may be merged', async t => {
     mix.extend(
         'reactNext',
         new class {
@@ -136,7 +138,7 @@ test('custom Babel config may be merged', t => {
 
     mix.reactNext();
 
-    webpack.buildConfig();
+    await webpack.buildConfig();
 
     t.true(
         Config.babel().plugins.find(plugin =>
@@ -147,7 +149,7 @@ test('custom Babel config may be merged', t => {
     );
 });
 
-test('the fully constructed webpack config object is available for modification, if needed', t => {
+test('the fully constructed webpack config object is available for modification, if needed', async t => {
     mix.extend(
         'extension',
         new class {
@@ -159,13 +161,13 @@ test('the fully constructed webpack config object is available for modification,
         }()
     );
 
-    t.false(new WebpackConfig().build().stats.performance);
+    t.false((await new WebpackConfig().build()).stats.performance);
 
     mix.extension();
 
-    Mix.dispatch('init');
+    await Mix.dispatch('init');
 
-    t.true(new WebpackConfig().build().stats.performance);
+    t.true((await new WebpackConfig().build()).stats.performance);
 });
 
 test('prior Mix components can be overwritten', t => {
@@ -236,7 +238,7 @@ test('components can manually hook into the mix API', t => {
     mix.baz('anotherValue');
 });
 
-test('components can be booted, after the webpack.mix.js configuration file has processed', t => {
+test('components can be booted, after the webpack.mix.js configuration file has processed', async t => {
     let stub = sinon.spy();
 
     let component = new class {
@@ -251,7 +253,7 @@ test('components can be booted, after the webpack.mix.js configuration file has 
 
     t.false(stub.called);
 
-    Mix.dispatch('init');
+    await Mix.dispatch('init');
 
     t.true(stub.called);
 });

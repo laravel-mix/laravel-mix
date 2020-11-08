@@ -14,7 +14,9 @@ class BuildCallbackPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        compiler.hooks.done.tap('BuildCallbackPlugin', this.callback);
+        compiler.hooks.done.tapPromise('BuildCallbackPlugin', async stats => {
+            return await this.callback(stats);
+        });
     }
 }
 

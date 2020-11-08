@@ -42,10 +42,10 @@ test('it sets the webpack entry correctly', async t => {
     );
 });
 
-test('it sets the babel config correctly', t => {
+test('it sets the babel config correctly', async t => {
     mix.react().js('js/app.js', 'js');
 
-    webpack.buildConfig();
+    await webpack.buildConfig();
 
     t.true(
         Config.babel().presets.find(p =>
