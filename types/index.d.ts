@@ -4,10 +4,9 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 import { Api as MixApi } from './api';
-import { Api as ComponentApi } from './api';
 
 declare namespace mix {
-    interface Api extends MixApi, ComponentApi {
+    interface Api extends MixApi {
         //
     }
 }
