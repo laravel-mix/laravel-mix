@@ -5,9 +5,7 @@ import path from 'path';
 function mix(args = []) {
     return new Promise(resolve => {
         exec(
-            `cross-env TESTING=true node ${path.resolve(
-                './bin/cli'
-            )} ${args.join(' ')}`,
+            `cross-env TESTING=true node ${path.resolve('./bin/cli')} ${args.join(' ')}`,
             { cwd: '.' },
             (error, stdout, stderr) => {
                 resolve({
@@ -25,7 +23,7 @@ test('it calls webpack in development mode', async t => {
     let { stdout } = await mix();
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --config=' +
+        'npx webpack --progress --env MIX_FILE=webpack.mix --env NODE_ENV=development --config=' +
             require.resolve('../../setup/webpack.config.js'),
         stdout
     );
@@ -35,7 +33,7 @@ test('it calls webpack in production mode', async t => {
     let { stdout } = await mix(['--production']);
 
     t.is(
-        'cross-env NODE_ENV=production MIX_FILE=webpack.mix npx webpack --progress --config=' +
+        'npx webpack --progress --env MIX_FILE=webpack.mix --env NODE_ENV=production --config=' +
             require.resolve('../../setup/webpack.config.js'),
         stdout
     );
@@ -45,7 +43,7 @@ test('it calls webpack with watch mode', async t => {
     let { stdout } = await mix(['watch']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
+        'npx webpack --progress --watch --env MIX_FILE=webpack.mix --env NODE_ENV=development --config=' +
             require.resolve('../../setup/webpack.config.js'),
         stdout
     );
@@ -55,7 +53,7 @@ test('it calls webpack with watch mode using polling', async t => {
     let { stdout } = await mix(['watch', '--', '--watch-poll']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack --progress --watch --config=' +
+        'npx webpack --progress --watch --env MIX_FILE=webpack.mix --env NODE_ENV=development --config=' +
             require.resolve('../../setup/webpack.config.js') +
             ' --watch-poll',
         stdout
@@ -66,7 +64,7 @@ test('it calls webpack with hot reloading', async t => {
     let { stdout } = await mix(['watch', '--hot']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
+        'npx webpack serve --hot --inline --disable-host-check --env MIX_FILE=webpack.mix --env NODE_ENV=development --config=' +
             require.resolve('../../setup/webpack.config.js'),
         stdout
     );
@@ -76,7 +74,7 @@ test('it calls webpack with hot reloading using polling', async t => {
     let { stdout } = await mix(['watch', '--hot', '--', '--watch-poll']);
 
     t.is(
-        'cross-env NODE_ENV=development MIX_FILE=webpack.mix npx webpack serve --hot --inline --disable-host-check --config=' +
+        'npx webpack serve --hot --inline --disable-host-check --env MIX_FILE=webpack.mix --env NODE_ENV=development --config=' +
             require.resolve('../../setup/webpack.config.js') +
             ' --watch-poll',
         stdout
