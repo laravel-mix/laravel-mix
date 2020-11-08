@@ -1,9 +1,8 @@
-require('../src/index');
+module.exports = async () => {
+    require('../src/index');
+    require(Mix.paths.mix());
 
-require(Mix.paths.mix());
-
-module.exports = (async () => {
     await Mix.dispatch('init', Mix);
 
-    return webpackConfig.build();
-})();
+    return await webpackConfig.build();
+};
