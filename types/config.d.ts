@@ -1,7 +1,4 @@
 // Type definitions for laravel-mix 6.0
-// Project: https://github.com/JeffreyWay/laravel-mix#readme
-// Definitions by: Geoff Garbers <https://github.com/garbetjie>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 import * as webpack from 'webpack';
 import { Options as AutoprefixerConfig } from 'autoprefixer';
