@@ -83,7 +83,7 @@ function commandScript(cmd, opts) {
 /**
  * Get the command arguments with quoted values.
  *
- * @param {array} args
+ * @param {string[]} args
  */
 function commandArgs(args) {
     return args

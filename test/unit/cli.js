@@ -93,8 +93,8 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
             require.resolve('../../setup/webpack.config.js') +
-            '"',
-        ' --env foo="bar baz"',
+            '"' +
+            ' --env foo="bar baz"',
         stdout
     );
 });
