@@ -51,7 +51,7 @@ async function executeScript(cmd, opts, args = []) {
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
         `--config="${require.resolve('../setup/webpack.config.js')}"`,
-        commandArgs(args)
+        ...commandArgs(args)
     ].join(' ');
 
     if (process.env.TESTING) {
@@ -86,15 +86,13 @@ function commandScript(cmd, opts) {
  * @param {string[]} args
  */
 function commandArgs(args) {
-    return args
-        .map(arg => {
-            const keyValue = arg.split('=');
+    return args.map(arg => {
+        const keyValue = arg.split('=');
 
-            if (typeof keyValue[1] !== 'undefined') {
-                arg = `${keyValue[0]}="${keyValue[1]}"`;
-            }
+        if (typeof keyValue[1] !== 'undefined') {
+            arg = `${keyValue[0]}="${keyValue[1]}"`;
+        }
 
-            return arg;
-        })
-        .join(' ');
+        return arg;
+    });
 }
