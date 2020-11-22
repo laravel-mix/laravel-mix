@@ -51,7 +51,7 @@ async function executeScript(cmd, opts, args = []) {
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
         `--config="${require.resolve('../setup/webpack.config.js')}"`,
-        ...args
+        commandArgs(args)
     ].join(' ');
 
     if (process.env.TESTING) {
@@ -78,4 +78,23 @@ function commandScript(cmd, opts) {
     } else if (cmd === 'watch' && opts.hot) {
         return 'npx webpack serve --hot --inline --disable-host-check';
     }
+}
+
+/**
+ * Get the command arguments with quoted values.
+ *
+ * @param {array} args
+ */
+function commandArgs(args) {
+    return args
+        .map(arg => {
+            const keyValue = arg.split('=');
+
+            if (typeof keyValue[1] !== 'undefined') {
+                arg = `${keyValue[0]}="${keyValue[1]}"`;
+            }
+
+            return arg;
+        })
+        .join(' ');
 }

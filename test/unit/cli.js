@@ -86,3 +86,15 @@ test('it calls webpack with hot reloading using polling', async t => {
         stdout
     );
 });
+
+test('it calls webpack with quoted key value pair command arguments', async t => {
+    let { stdout } = await mix(['--', '--env', 'foo="bar baz"']);
+
+    t.is(
+        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
+            require.resolve('../../setup/webpack.config.js') +
+            '"',
+        ' --env foo="bar baz"',
+        stdout
+    );
+});
