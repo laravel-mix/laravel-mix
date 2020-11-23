@@ -22,7 +22,7 @@ declare global {
         wrap<T>(val: T | T[] | ArrayLike<T>): T[];
     }
 
-    interface Array<T> {
+    interface Array {
         tap(callback: (arr: this) => void): this;
     }
 }
