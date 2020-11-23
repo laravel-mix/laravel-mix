@@ -11,6 +11,7 @@ class Notifications extends AutomaticComponent {
             return new WebpackNotifierPlugin({
                 title: 'Laravel Mix',
                 alwaysNotify: Config.notifications.onSuccess,
+                timeout: false,
                 hint:
                     process.platform === 'linux'
                         ? 'int:transient:1'
