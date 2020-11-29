@@ -87,10 +87,12 @@ function commandScript(cmd, opts) {
  */
 function commandArgs(args) {
     return args.map(arg => {
-        const keyValue = arg.split('=');
+        // Split string at first = only
+        const pattern = /^([^=]+)=(.*)$/;
+        const keyValue = arg.includes('=') ? pattern.exec(arg).slice(1) : [];
 
-        if (typeof keyValue[1] !== 'undefined') {
-            arg = `${keyValue[0]}="${keyValue[1]}"`;
+        if (keyValue.length === 2) {
+            return `${keyValue[0]}="${keyValue[1]}"`;
         }
 
         return arg;
