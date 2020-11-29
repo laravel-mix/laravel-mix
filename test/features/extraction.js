@@ -245,3 +245,27 @@ test('configurable extractions work', async t => {
         t
     );
 });
+
+test('default vendor extractions are handled after normal extractions when given a custom name', async t => {
+    mix.vue({ version: 2 });
+    mix.js('test/fixtures/app/src/extract/app.js', 'js');
+    mix.extract(['core-js'], 'js/vendor-backend.js');
+    mix.extract({ to: 'js/vendor-frontend.js' });
+
+    await webpack.compile();
+
+    assert.fileExists(`test/fixtures/app/dist/js/app.js`, t);
+    assert.fileContains(`test/fixtures/app/dist/js/vendor-backend.js`, 'core-js', t);
+    assert.fileContains(`test/fixtures/app/dist/js/vendor-frontend.js`, 'uniq', t);
+
+    assert.manifestEquals(
+        {
+            '/js/app.js': '/js/app.js',
+            '/js/split.js': '/js/split.js',
+            '/js/vendor-backend.js': '/js/vendor-backend.js',
+            '/js/vendor-frontend.js': '/js/vendor-frontend.js',
+            '/js/manifest.js': '/js/manifest.js'
+        },
+        t
+    );
+});
