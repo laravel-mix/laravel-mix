@@ -9,7 +9,8 @@ import { Options as MozjpegConfig } from 'imagemin-mozjpeg';
 import { Options as OptipngConfig } from 'imagemin-optipng';
 import { Options as SvgoConfig } from 'imagemin-svgo';
 import { TransformOptions as BabelConfig } from 'babel-core';
-import { TerserPluginOptions } from 'terser-webpack-plugin';
+// import { TerserPluginOptions } from 'terser-webpack-plugin';
+import { TerserPluginOptions } from './terser';
 import { AcceptedPlugin } from 'postcss';
 
 interface MixConfig {
