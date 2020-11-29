@@ -51,7 +51,7 @@ async function executeScript(cmd, opts, args = []) {
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
         `--config="${require.resolve('../setup/webpack.config.js')}"`,
-        ...commandArgs(args)
+        ...quoteArgs(args)
     ].join(' ');
 
     if (process.env.TESTING) {
@@ -85,7 +85,7 @@ function commandScript(cmd, opts) {
  *
  * @param {string[]} args
  */
-function commandArgs(args) {
+function quoteArgs(args) {
     return args.map(arg => {
         // Split string at first = only
         const pattern = /^([^=]+)=(.*)$/;
