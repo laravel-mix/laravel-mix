@@ -54,7 +54,7 @@ async function executeScript(cmd, opts, args = []) {
         ...quoteArgs(args)
     ].join(' ');
 
-    if (process.env.TESTING) {
+    if (isTesting()) {
         return process.stdout.write(script);
     }
 
@@ -97,4 +97,8 @@ function quoteArgs(args) {
 
         return arg;
     });
+}
+
+function isTesting() {
+    return process.env.TESTING;
 }
