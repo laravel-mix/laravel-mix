@@ -100,7 +100,7 @@ class Mix {
      * @param {string} event
      * @param {*}      data
      */
-    dispatch(event, data) {
+    async dispatch(event, data) {
         if (typeof data === 'function') {
             data = data();
         }
