@@ -48,10 +48,10 @@ async function run() {
 async function executeScript(cmd, opts, args = []) {
     let script = [
         `cross-env NODE_ENV=${opts.production ? 'production' : 'development'}`,
-        `MIX_FILE=${opts.mixConfig}`,
+        `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
-        `--config=${require.resolve('../setup/webpack.config.js')}`,
-        ...args
+        `--config="${require.resolve('../setup/webpack.config.js')}"`,
+        ...quoteArgs(args)
     ].join(' ');
 
     if (process.env.TESTING) {
@@ -78,4 +78,23 @@ function commandScript(cmd, opts) {
     } else if (cmd === 'watch' && opts.hot) {
         return 'npx webpack serve --hot --inline --disable-host-check';
     }
+}
+
+/**
+ * Get the command arguments with quoted values.
+ *
+ * @param {string[]} args
+ */
+function quoteArgs(args) {
+    return args.map(arg => {
+        // Split string at first = only
+        const pattern = /^([^=]+)=(.*)$/;
+        const keyValue = arg.includes('=') ? pattern.exec(arg).slice(1) : [];
+
+        if (keyValue.length === 2) {
+            return `${keyValue[0]}="${keyValue[1]}"`;
+        }
+
+        return arg;
+    });
 }
