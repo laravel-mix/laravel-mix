@@ -118,6 +118,7 @@ function isTesting() {
     return process.env.TESTING;
 }
 
+
 function isTTY() {
     if (isTesting() && process.env.IS_TTY !== undefined) {
         return process.env.IS_TTY === 'true';

@@ -101,6 +101,7 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
 
 test('it calls webpack with custom node_env', async t => {
     const oldEnv = process.env.NODE_ENV;
+
     process.env.NODE_ENV = 'foobar';
 
     let { stdout } = await mix();
