@@ -79,9 +79,17 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     if (cmd === 'build') {
-        return 'npx webpack --progress';
+        if (isTTY()) {
+            return 'npx webpack --progress';
+        }
+
+        return 'npx webpack';
     } else if (cmd === 'watch' && !opts.hot) {
-        return 'npx webpack --progress --watch';
+        if (isTTY()) {
+            return 'npx webpack --progress --watch';
+        }
+
+        return 'npx webpack --watch';
     } else if (cmd === 'watch' && opts.hot) {
         return 'npx webpack serve --hot --inline --disable-host-check';
     }
@@ -108,4 +116,17 @@ function quoteArgs(args) {
 
 function isTesting() {
     return process.env.TESTING;
+}
+
+
+function isTTY() {
+    if (isTesting() && process.env.IS_TTY !== undefined) {
+        return process.env.IS_TTY === 'true';
+    }
+
+    if (isTesting() && process.stdout.isTTY === undefined) {
+        return true;
+    }
+
+    return process.stdout.isTTY;
 }

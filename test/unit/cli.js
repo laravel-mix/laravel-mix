@@ -100,12 +100,29 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
 });
 
 test('it calls webpack with custom node_env', async t => {
+    const oldEnv = process.env.NODE_ENV;
+
     process.env.NODE_ENV = 'foobar';
 
     let { stdout } = await mix();
 
+    process.env.NODE_ENV = oldEnv;
+
     t.is(
         'cross-env NODE_ENV=foobar MIX_FILE="webpack.mix" npx webpack --progress --config="' +
+            require.resolve('../../setup/webpack.config.js') +
+            '"',
+        stdout
+    );
+});
+
+test('it disables progress reporting when not using a terminal', async t => {
+    process.env.IS_TTY = false;
+
+    let { stdout } = await mix();
+
+    t.is(
+        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --config="' +
             require.resolve('../../setup/webpack.config.js') +
             '"',
         stdout
