@@ -98,3 +98,16 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
         stdout
     );
 });
+
+test('it calls webpack with custom node_env', async t => {
+    process.env.NODE_ENV = 'foobar';
+
+    let { stdout } = await mix();
+
+    t.is(
+        'cross-env NODE_ENV=foobar MIX_FILE="webpack.mix" npx webpack --progress --config="' +
+            require.resolve('../../setup/webpack.config.js') +
+            '"',
+        stdout
+    );
+});
