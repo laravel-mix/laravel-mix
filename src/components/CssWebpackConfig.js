@@ -107,6 +107,7 @@ class CssWebpackConfig extends AutomaticComponent {
             {
                 loader: 'css-loader',
                 options: {
+                    url: Config.processCssUrls,
                     modules: useCssModules
                 }
             },
