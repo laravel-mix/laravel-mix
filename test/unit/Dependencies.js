@@ -37,6 +37,14 @@ test('it installs multiple dependencies', t => {
     );
 });
 
+test('it can install dependencies using yarn', t => {
+    PackageManager.detect = () => 'yarn';
+
+    new Dependencies(['browser-sync']).install(false);
+
+    t.true(childProcess.execSync.calledWith('yarn add browser-sync --dev'));
+});
+
 test('it can utilize custom checks for a dependency', t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 

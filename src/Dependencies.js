@@ -81,6 +81,9 @@ class Dependencies {
         switch (PackageManager.detect()) {
             case 'npm':
                 return `npm install ${dependencies} --save-dev --legacy-peer-deps`;
+
+            case 'yarn':
+                return `yarn add ${dependencies} --dev`;
         }
     }
 
