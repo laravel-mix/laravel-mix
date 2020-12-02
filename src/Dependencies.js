@@ -1,6 +1,7 @@
 let childProcess = require('child_process');
 let Log = require('./Log');
 let argv = require('yargs').argv;
+let PackageManager = require('./PackageManager');
 
 /**
  * @typedef {object} DependencyObject
@@ -77,7 +78,10 @@ class Dependencies {
     buildInstallCommand(dependencies) {
         dependencies = dependencies.map(dep => dep.package).join(' ');
 
-        return `npm install ${dependencies} --save-dev --production=false --legacy-peer-deps`;
+        switch (PackageManager.detect()) {
+            case 'npm':
+                return `npm install ${dependencies} --save-dev --progress=false --legacy-peer-deps`;
+        }
     }
 
     /**

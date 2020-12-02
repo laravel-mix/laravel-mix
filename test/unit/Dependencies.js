@@ -3,11 +3,14 @@ import test from 'ava';
 import childProcess from 'child_process';
 import sinon from 'sinon';
 import Dependencies from '../../src/Dependencies';
+import PackageManager from '../../src/PackageManager';
 
 test.beforeEach(() => {
     console.log = () => {};
 
     sinon.stub(childProcess, 'execSync');
+
+    PackageManager.detect = () => 'npm';
 });
 
 test.afterEach.always(() => {
