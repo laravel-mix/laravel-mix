@@ -7,7 +7,9 @@ import assert from '../helpers/assertions';
 
 import '../helpers/mix';
 
-test.beforeEach(() => webpack.setupVueAliases(2));
+test.beforeEach(() => {
+    webpack.setupVueAliases(2);
+});
 
 test('it adds the Vue 2 resolve alias', async t => {
     mix.vue({ version: 2, extractStyles: true });
