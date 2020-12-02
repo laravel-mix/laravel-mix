@@ -80,7 +80,7 @@ class Dependencies {
 
         switch (PackageManager.detect()) {
             case 'npm':
-                return `npm install ${dependencies} --save-dev --progress=false --legacy-peer-deps`;
+                return `npm install ${dependencies} --save-dev --legacy-peer-deps`;
         }
     }
 
