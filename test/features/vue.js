@@ -312,6 +312,15 @@ test('it supports global Vue styles for sass', async t => {
     postCssConfigFile.delete();
 });
 
+test('it supports Vue SFCs with separate files', async t => {
+    mix.vue({ version: 2 });
+    mix.js(`test/fixtures/app/src/vue/app-with-vue-separate-files.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+});
+
 test('Vue-loader options via mix.options.vue', async t => {
     const compiler = compilerSpy();
 
