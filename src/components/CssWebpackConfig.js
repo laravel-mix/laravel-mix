@@ -23,7 +23,7 @@ class CssWebpackConfig extends AutomaticComponent {
             {
                 command: 'css',
                 type: 'css',
-                test: /\.css$/
+                test: /\.p?css$/
             },
             {
                 command: 'sass',

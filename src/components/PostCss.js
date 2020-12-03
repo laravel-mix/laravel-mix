@@ -37,11 +37,7 @@ class PostCss extends Preprocessor {
         // Register a split chunk that takes everything generated
         // by this file and puts it in a separate file
         // We use a output-specific chunk name so we don't accidentally merge multiple files
-        this._addChunks(
-            `styles-${output.relativePathWithoutExtension()}`,
-            src,
-            output
-        );
+        this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
     }
 
     /**
@@ -51,7 +47,7 @@ class PostCss extends Preprocessor {
      */
     webpackConfig(config) {
         config.module.rules.find(
-            rule => rule.test.toString() === '/\\.css$/'
+            rule => rule.test.toString() === '/\\.p?css$/'
         ).exclude = this.details.map(postCss => postCss.src.path());
     }
 }
