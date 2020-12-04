@@ -15,5 +15,6 @@ module.exports = {
 <style lang="scss">
 .hello {
     color: blue;
+    background: url(./does-not-exist.png);
 }
 </style>

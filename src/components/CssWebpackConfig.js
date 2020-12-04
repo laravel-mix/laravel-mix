@@ -104,7 +104,13 @@ class CssWebpackConfig extends AutomaticComponent {
     createLoaderList(rule, useCssModules) {
         return [
             ...CssWebpackConfig.afterLoaders(),
-            { loader: 'css-loader', options: { modules: useCssModules } },
+            {
+                loader: 'css-loader',
+                options: {
+                    url: Config.processCssUrls,
+                    modules: useCssModules
+                }
+            },
             {
                 loader: 'postcss-loader',
                 options: {

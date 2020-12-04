@@ -8,6 +8,7 @@ import '../helpers/mix';
 
 test.beforeEach(() => {
     webpack.setupVueAliases(3);
+    mix.options({ processCssUrls: false });
 });
 
 test('it adds the Vue 3 resolve alias', async t => {
@@ -53,6 +54,7 @@ test('it appends vue styles to your sass compiled file', async t => {
 
 .hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -77,6 +79,7 @@ test('it appends vue styles to your less compiled file', async t => {
 
 .hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -94,6 +97,7 @@ test('it appends vue styles to a vue-styles.css file, if no preprocessor is used
 
     let expected = `.hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -168,6 +172,7 @@ test('it extracts vue .scss styles to a dedicated file', async t => {
 
     expected = `.hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
