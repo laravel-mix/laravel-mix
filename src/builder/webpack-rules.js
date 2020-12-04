@@ -4,6 +4,7 @@ module.exports = function() {
     // Add support for loading HTML files.
     rules.push({
         test: /\.html$/,
+        resourceQuery: { not: [/\?vue/i] },
         use: [{ loader: 'html-loader' }]
     });
 
@@ -17,10 +18,7 @@ module.exports = function() {
                 options: {
                     name: path => {
                         if (!/node_modules|bower_components/.test(path)) {
-                            return (
-                                Config.fileLoaderDirs.images +
-                                '/[name].[ext]?[hash]'
-                            );
+                            return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
                         }
 
                         return (
@@ -55,10 +53,7 @@ module.exports = function() {
                 options: {
                     name: path => {
                         if (!/node_modules|bower_components/.test(path)) {
-                            return (
-                                Config.fileLoaderDirs.fonts +
-                                '/[name].[ext]?[hash]'
-                            );
+                            return Config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
                         }
 
                         return (
