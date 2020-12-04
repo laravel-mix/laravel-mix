@@ -175,7 +175,7 @@ class Preprocessor {
     }
 
     chunkRegex() {
-        return /\.css$/;
+        return /\.p?css$/;
     }
 
     /**

@@ -7,6 +7,36 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
+test('it compiles PostCSS without JS', async t => {
+    mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+
+    assert.manifestEquals(
+        {
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
+});
+
+test('it compiles .pcss files without JS', async t => {
+    mix.postCss(`test/fixtures/app/src/css/app.pcss`, 'css');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+
+    assert.manifestEquals(
+        {
+            '/css/app.css': '/css/app.css'
+        },
+        t
+    );
+});
+
 test('it compiles Sass without JS', async t => {
     mix.sass(`test/fixtures/app/src/sass/app.scss`, 'css');
 
@@ -66,7 +96,7 @@ test('Generic CSS rules are applied', async t => {
 
     t.truthy(
         (await webpack.buildConfig()).module.rules.find(rule => {
-            return rule.test.toString() === '/\\.css$/';
+            return rule.test.toString() === '/\\.p?css$/';
         })
     );
 });
