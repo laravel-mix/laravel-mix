@@ -163,6 +163,15 @@ class File {
     }
 
     /**
+     * Get the path to the file without query string.
+     */
+    pathWithoutQueryString() {
+        const queryStringIndex = this.path().indexOf('?');
+
+        return queryStringIndex < 0 ? this.path() : this.path().substr(0, queryStringIndex);
+    }
+
+    /**
      * Get the base directory of the file.
      */
     base() {
@@ -204,7 +213,7 @@ class File {
      * Read the file's contents.
      */
     read() {
-        return fs.readFileSync(this.path(), 'utf8');
+        return fs.readFileSync(this.pathWithoutQueryString(), 'utf8');
     }
 
     /**
