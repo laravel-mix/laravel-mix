@@ -1,6 +1,8 @@
 import test from 'ava';
 
 import '../helpers/mix';
+import webpack from '../helpers/webpack';
+import File from '../../src/File';
 
 test('mix.sourceMaps()', t => {
     t.false(Config.sourcemaps);
@@ -24,4 +26,19 @@ test('mix.sourceMaps()', t => {
     // Finally, you can override the sourcemap type for production mode.
     mix.sourceMaps(true, 'eval-source-map', 'hidden-source-map');
     t.is('hidden-source-map', Config.sourcemaps);
+});
+
+test('it works fine with cache busting chunk filenames', async t => {
+    Config.production = true;
+    mix.js(`test/fixtures/app/src/js/chunk.js`, 'js')
+        .webpackConfig({
+            output: {
+                chunkFilename: '[name].js?v=[chunkhash]'
+            }
+        })
+        .version()
+        .sourceMaps();
+
+    await t.notThrowsAsync(webpack.compile());
+    t.true(File.exists(`test/fixtures/app/dist/js/chunk.js.map`));
 });
