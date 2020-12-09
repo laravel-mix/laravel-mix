@@ -10,7 +10,7 @@ class CssWebpackConfig extends AutomaticComponent {
         return [
             {
                 package: 'postcss@^8.1',
-                check: postcss => postcss().version.startsWith('8.')
+                check: postcss => semver.satisfies(postcss().version, '^8.1')
             }
         ];
     }

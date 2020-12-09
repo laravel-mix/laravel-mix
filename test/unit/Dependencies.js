@@ -2,6 +2,7 @@ import '../../src/helpers';
 import test from 'ava';
 import childProcess from 'child_process';
 import sinon from 'sinon';
+import semver from 'semver';
 import Dependencies from '../../src/Dependencies';
 import PackageManager from '../../src/PackageManager';
 
@@ -72,7 +73,7 @@ test('it can utilize custom checks for a dependency', t => {
             check: postcss => {
                 called = true;
 
-                t.true(postcss().version.startsWith('8.1'));
+                t.true(semver.satisfies(postcss().version, '^8.1'));
 
                 return false;
             }
