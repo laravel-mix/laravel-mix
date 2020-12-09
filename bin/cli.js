@@ -91,7 +91,7 @@ function commandScript(cmd, opts) {
 
         return 'npx webpack --watch';
     } else if (cmd === 'watch' && opts.hot) {
-        return 'npx webpack serve --hot --inline --disable-host-check';
+        return 'npx webpack serve --hot';
     }
 }
 
@@ -117,7 +117,6 @@ function quoteArgs(args) {
 function isTesting() {
     return process.env.TESTING;
 }
-
 
 function isTTY() {
     if (isTesting() && process.env.IS_TTY !== undefined) {

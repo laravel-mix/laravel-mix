@@ -7,6 +7,8 @@ module.exports = function() {
 
         mode: Mix.inProduction() ? 'production' : 'development',
 
+        infrastructureLogging: Mix.isWatching() ? {} : { level: 'none' },
+
         entry: {},
 
         output: {
@@ -46,11 +48,10 @@ module.exports = function() {
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
-            contentBase: path.resolve(Config.publicPath),
+            static: path.resolve(Config.publicPath),
             historyApiFallback: true,
-            noInfo: true,
             compress: true,
-            quiet: true
+            firewall: false
         },
 
         watchOptions: {
