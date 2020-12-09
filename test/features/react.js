@@ -49,7 +49,7 @@ test('it sets the babel config correctly', async t => {
 
     t.true(
         Config.babel().presets.find(p =>
-            p.includes(path.normalize('@babel/preset-react'))
+            p[0].includes(path.normalize('@babel/preset-react'))
         ) !== undefined
     );
 });
