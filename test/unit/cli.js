@@ -1,23 +1,7 @@
 import test from 'ava';
-import { exec } from 'child_process';
-import path from 'path';
+import { cli } from '../helpers/cli';
 
-function mix(args = []) {
-    return new Promise(resolve => {
-        exec(
-            `cross-env TESTING=true node ${path.resolve('./bin/cli')} ${args.join(' ')}`,
-            { cwd: '.' },
-            (error, stdout, stderr) => {
-                resolve({
-                    code: error && error.code ? error.code : 0,
-                    error,
-                    stdout,
-                    stderr
-                });
-            }
-        );
-    });
-}
+const mix = cli({ testing: true });
 
 test('it calls webpack in development mode', async t => {
     let { stdout } = await mix();
