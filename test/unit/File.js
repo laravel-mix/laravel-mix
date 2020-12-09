@@ -200,3 +200,8 @@ test('it can append to the current file path', t => {
 
     t.true(file.append('**').contains('**'));
 });
+
+test('it knows the full path without query string', t => {
+    let filePath = path.resolve(stubsDir, 'file.js');
+    t.is(new File(filePath + '?query=string').pathWithoutQueryString(), filePath);
+});
