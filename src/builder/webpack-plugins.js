@@ -42,7 +42,11 @@ module.exports = function() {
     plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
 
     // Enable custom output when webpack builds
-    plugins.push(new BuildOutputPlugin());
+    plugins.push(
+        new BuildOutputPlugin({
+            clearConsole: Config.clearConsole
+        })
+    );
 
     return plugins;
 };
