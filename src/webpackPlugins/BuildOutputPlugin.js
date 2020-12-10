@@ -32,9 +32,7 @@ class BuildOutputPlugin {
 
             this.heading(`Laravel Mix v${version}`);
 
-            console.log(
-                chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`)
-            );
+            console.log(chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`));
 
             if (data.assets.length) {
                 console.log(this.statsTable(data));

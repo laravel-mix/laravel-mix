@@ -39,9 +39,7 @@ module.exports = function() {
     plugins.push(new CustomTasksPlugin());
 
     // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(
-        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
-    );
+    plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
 
     // Enable custom output when webpack builds
     plugins.push(new BuildOutputPlugin());
