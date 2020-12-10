@@ -1,4 +1,3 @@
-let FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 let MixDefinitionsPlugin = require('../webpackPlugins/MixDefinitionsPlugin');
 let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
@@ -15,13 +14,6 @@ module.exports = function() {
     if (!Mix.bundlingJavaScript) {
         plugins.push(new MockEntryPlugin());
     }
-
-    // Activate better error feedback in the console.
-    plugins.push(
-        new FriendlyErrorsWebpackPlugin({
-            clearConsole: Config.clearConsole
-        })
-    );
 
     // Activate support for Mix_ .env definitions.
     plugins.push(
