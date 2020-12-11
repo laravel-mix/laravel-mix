@@ -9,6 +9,8 @@ class Notifications extends AutomaticComponent {
             let WebpackNotifierPlugin = require('webpack-notifier');
 
             return new WebpackNotifierPlugin({
+                appID: 'Laravel Mix',
+
                 title: 'Laravel Mix',
                 alwaysNotify: Config.notifications.onSuccess,
                 hint:
