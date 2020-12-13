@@ -125,6 +125,24 @@ class WebpackConfig {
                 }
             },
 
+            /**
+             *
+             * @param {{app: import("express").Application}} param0
+             */
+            onBeforeSetupMiddleware({ app }) {
+                app.use(function(req, _, next) {
+                    // Something causes hot update chunks (except for the JSON payload)
+                    // to start with a double slash
+                    // e.g. GET http://localhost:8080//js/app.[hash].hot-update.js
+
+                    // This causes loading those chunks to fail so we patch it up here
+                    // This is super hacky and a proper solution should be found eventually
+                    req.url = req.url.replace(/^\/\//, '/');
+
+                    next();
+                });
+            },
+
             ...this.webpackConfig.devServer
         };
     }
