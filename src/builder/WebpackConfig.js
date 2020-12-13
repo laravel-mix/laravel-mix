@@ -108,6 +108,13 @@ class WebpackConfig {
             host,
             port,
 
+            client: {
+                host,
+                port
+            },
+
+            public: url,
+
             ...this.webpackConfig.devServer
         };
     }
