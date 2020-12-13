@@ -23,6 +23,7 @@ class WebpackConfig {
 
         await this.buildEntry();
         this.buildOutput();
+        this.configureHMR();
         await this.buildRules();
         await this.buildPlugins();
         this.buildChunks();
@@ -65,15 +66,8 @@ class WebpackConfig {
      * Build the output object.
      */
     buildOutput() {
-        let http = process.argv.includes('--https') ? 'https' : 'http';
-
-        if (Mix.isUsing('hmr')) {
-            this.webpackConfig.devServer.host = Config.hmrOptions.host;
-            this.webpackConfig.devServer.port = Config.hmrOptions.port;
-        }
-
         this.webpackConfig.output = {
-            path: Mix.isUsing('hmr') ? '/' : path.resolve(Config.publicPath),
+            path: path.resolve(Config.publicPath),
             filename: '[name].js',
 
             chunkFilename: pathData => {
@@ -89,9 +83,32 @@ class WebpackConfig {
                 return '[name].js';
             },
 
-            publicPath: Mix.isUsing('hmr')
-                ? `${http}://${Config.hmrOptions.host}:${Config.hmrOptions.port}/`
-                : '/'
+            publicPath: '/'
+        };
+    }
+
+    configureHMR() {
+        if (!Mix.isUsing('hmr')) {
+            return;
+        }
+
+        let http = process.argv.includes('--https') ? 'https' : 'http';
+        const url = `${http}://${Config.hmrOptions.host}:${Config.hmrOptions.port}/`;
+
+        this.webpackConfig.output = {
+            ...this.webpackConfig.output,
+
+            path: '/',
+            publicPath: url
+        };
+
+        const { host, port } = Config.hmrOptions;
+
+        this.webpackConfig.devServer = {
+            host,
+            port,
+
+            ...this.webpackConfig.devServer
         };
     }
 
