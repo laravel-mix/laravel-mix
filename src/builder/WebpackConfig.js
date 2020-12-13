@@ -114,6 +114,7 @@ class WebpackConfig {
             },
 
             public: url,
+            liveReload: false,
 
             ...this.webpackConfig.devServer
         };
