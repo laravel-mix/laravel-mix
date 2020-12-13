@@ -116,6 +116,15 @@ class WebpackConfig {
             public: url,
             liveReload: false,
 
+            dev: {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+                    'Access-Control-Allow-Headers':
+                        'X-Requested-With, Content-Type, Authorization'
+                }
+            },
+
             ...this.webpackConfig.devServer
         };
     }
