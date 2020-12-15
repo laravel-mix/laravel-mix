@@ -23,6 +23,7 @@ class WebpackConfig {
 
         await this.buildEntry();
         this.buildOutput();
+        this.configureHMR();
         await this.buildRules();
         await this.buildPlugins();
         this.buildChunks();
@@ -65,15 +66,8 @@ class WebpackConfig {
      * Build the output object.
      */
     buildOutput() {
-        let http = process.argv.includes('--https') ? 'https' : 'http';
-
-        if (Mix.isUsing('hmr')) {
-            this.webpackConfig.devServer.host = Config.hmrOptions.host;
-            this.webpackConfig.devServer.port = Config.hmrOptions.port;
-        }
-
         this.webpackConfig.output = {
-            path: Mix.isUsing('hmr') ? '/' : path.resolve(Config.publicPath),
+            path: path.resolve(Config.publicPath),
             filename: '[name].js',
 
             chunkFilename: pathData => {
@@ -89,9 +83,67 @@ class WebpackConfig {
                 return '[name].js';
             },
 
-            publicPath: Mix.isUsing('hmr')
-                ? `${http}://${Config.hmrOptions.host}:${Config.hmrOptions.port}/`
-                : '/'
+            publicPath: '/'
+        };
+    }
+
+    configureHMR() {
+        if (!Mix.isUsing('hmr')) {
+            return;
+        }
+
+        let http = process.argv.includes('--https') ? 'https' : 'http';
+        const url = `${http}://${Config.hmrOptions.host}:${Config.hmrOptions.port}/`;
+
+        this.webpackConfig.output = {
+            ...this.webpackConfig.output,
+
+            path: '/',
+            publicPath: url
+        };
+
+        const { host, port } = Config.hmrOptions;
+
+        this.webpackConfig.devServer = {
+            host,
+            port,
+
+            client: {
+                host,
+                port
+            },
+
+            public: url,
+            liveReload: false,
+
+            dev: {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+                    'Access-Control-Allow-Headers':
+                        'X-Requested-With, Content-Type, Authorization'
+                }
+            },
+
+            /**
+             *
+             * @param {{app: import("express").Application}} param0
+             */
+            onBeforeSetupMiddleware({ app }) {
+                app.use(function(req, _, next) {
+                    // Something causes hot update chunks (except for the JSON payload)
+                    // to start with a double slash
+                    // e.g. GET http://localhost:8080//js/app.[hash].hot-update.js
+
+                    // This causes loading those chunks to fail so we patch it up here
+                    // This is super hacky and a proper solution should be found eventually
+                    req.url = req.url.replace(/^\/\//, '/');
+
+                    next();
+                });
+            },
+
+            ...this.webpackConfig.devServer
         };
     }
 
