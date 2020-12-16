@@ -189,7 +189,23 @@ declare namespace mix {
         css(src: string, output: string, plugins?: AcceptedPlugin[]): Api;
 
         /** Compile CSS via PostCSS */
+        css(
+            src: string,
+            output: string,
+            pluginOptions?: object,
+            plugins?: AcceptedPlugin[]
+        ): Api;
+
+        /** Compile CSS via PostCSS */
         postCss(src: string, output: string, plugins?: AcceptedPlugin[]): Api;
+
+        /** Compile CSS via PostCSS */
+        postCss(
+            src: string,
+            output: string,
+            pluginOptions?: object,
+            plugins?: AcceptedPlugin[]
+        ): Api;
 
         /** Compile Stylus into CSS */
         stylus(
