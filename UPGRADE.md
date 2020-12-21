@@ -11,7 +11,7 @@
 -   [Did We Miss Something?](#did-we-miss-something)
 
 ```bash
-npm install laravel-mix@next
+npm install laravel-mix@latest
 ```
 
 ### Review Your Dependencies
