@@ -13,6 +13,7 @@ class Notifications extends AutomaticComponent {
 
                 title: 'Laravel Mix',
                 alwaysNotify: Config.notifications.onSuccess,
+                timeout: false,
                 hint: process.platform === 'linux' ? 'int:transient:1' : undefined,
                 contentImage: Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
             });
