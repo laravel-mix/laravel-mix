@@ -24,7 +24,7 @@ module.exports = function() {
         })
     );
 
-    // Handle all custom, non-webpack tasks.
+    // Handle the creation of the mix-manifest.json file.
     plugins.push(new ManifestPlugin());
 
     // Handle all custom, non-webpack tasks.
@@ -33,7 +33,7 @@ module.exports = function() {
     // Notify the rest of our app when Webpack has finished its build.
     plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
 
-    // Enable custom output when webpack builds
+    // Enable custom output when the Webpack build completes.
     plugins.push(
         new BuildOutputPlugin({
             clearConsole: Config.clearConsole
