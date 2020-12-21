@@ -1,3 +1,4 @@
+let semver = require('semver');
 let mapValues = require('lodash').mapValues;
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,7 +11,7 @@ class CssWebpackConfig extends AutomaticComponent {
         return [
             {
                 package: 'postcss@^8.1',
-                check: postcss => postcss().version.startsWith('8.')
+                check: postcss => semver.satisfies(postcss().version, '^8.1')
             }
         ];
     }
@@ -23,7 +24,7 @@ class CssWebpackConfig extends AutomaticComponent {
             {
                 command: 'css',
                 type: 'css',
-                test: /\.css$/
+                test: /\.p?css$/
             },
             {
                 command: 'sass',
@@ -104,7 +105,13 @@ class CssWebpackConfig extends AutomaticComponent {
     createLoaderList(rule, useCssModules) {
         return [
             ...CssWebpackConfig.afterLoaders(),
-            { loader: 'css-loader', options: { modules: useCssModules } },
+            {
+                loader: 'css-loader',
+                options: {
+                    url: Config.processCssUrls,
+                    modules: useCssModules
+                }
+            },
             {
                 loader: 'postcss-loader',
                 options: {

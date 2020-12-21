@@ -8,6 +8,7 @@ import '../helpers/mix';
 
 test.beforeEach(() => {
     webpack.setupVueAliases(3);
+    mix.options({ processCssUrls: false });
 });
 
 test('it adds the Vue 3 resolve alias', async t => {
@@ -53,6 +54,7 @@ test('it appends vue styles to your sass compiled file', async t => {
 
 .hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -77,6 +79,7 @@ test('it appends vue styles to your less compiled file', async t => {
 
 .hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -94,6 +97,7 @@ test('it appends vue styles to a vue-styles.css file, if no preprocessor is used
 
     let expected = `.hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -168,6 +172,7 @@ test('it extracts vue .scss styles to a dedicated file', async t => {
 
     expected = `.hello {
   color: blue;
+  background: url(./does-not-exist.png);
 }
 `;
 
@@ -307,6 +312,15 @@ test('it supports global Vue styles for sass', async t => {
     );
 
     postCssConfigFile.delete();
+});
+
+test('it supports Vue SFCs with separate files', async t => {
+    mix.vue({ version: 3 });
+    mix.js(`test/fixtures/app/src/vue3/app-with-vue-separate-files.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
 });
 
 test('Vue-loader options via mix.options.vue', async t => {

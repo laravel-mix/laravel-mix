@@ -15,9 +15,16 @@ class PostCss extends Preprocessor {
      *
      * @param {*} src
      * @param {string} output
+     * @param {Array|Object} pluginOptions
      * @param {Array} postCssPlugins
      */
-    register(src, output, postCssPlugins = []) {
+    register(src, output, pluginOptions = {}, postCssPlugins = []) {
+        // Backwards compat with earlier versions of Mix
+        if (Array.isArray(pluginOptions) && postCssPlugins.length === 0) {
+            postCssPlugins = pluginOptions;
+            pluginOptions = {};
+        }
+
         Assert.preprocessor('postCss', src, output);
 
         src = new File(src);
@@ -27,21 +34,27 @@ class PostCss extends Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
+        // TODO: Unify this w/ Preprocessor.preprocess
+        // Much of the code is the same
+        const processUrls =
+            pluginOptions.processUrls !== undefined
+                ? pluginOptions.processUrls
+                : Config.processCssUrls;
+
+        delete pluginOptions.processUrls;
+
         this.details = (this.details || []).concat({
             type: 'postCss',
             src,
             output,
-            postCssPlugins: [].concat(postCssPlugins)
+            postCssPlugins: [].concat(postCssPlugins),
+            processUrls
         });
 
         // Register a split chunk that takes everything generated
         // by this file and puts it in a separate file
         // We use a output-specific chunk name so we don't accidentally merge multiple files
-        this._addChunks(
-            `styles-${output.relativePathWithoutExtension()}`,
-            src,
-            output
-        );
+        this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
     }
 
     /**
@@ -51,7 +64,7 @@ class PostCss extends Preprocessor {
      */
     webpackConfig(config) {
         config.module.rules.find(
-            rule => rule.test.toString() === '/\\.css$/'
+            rule => rule.test.toString() === '/\\.p?css$/'
         ).exclude = this.details.map(postCss => postCss.src.path());
     }
 }

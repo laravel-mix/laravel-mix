@@ -23,7 +23,7 @@ class React {
      */
     babelConfig() {
         return {
-            presets: ['@babel/preset-react']
+            presets: [['@babel/preset-react', { runtime: 'automatic' }]]
         };
     }
 }

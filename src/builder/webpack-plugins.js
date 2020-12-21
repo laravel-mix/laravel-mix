@@ -1,4 +1,3 @@
-let FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 let MixDefinitionsPlugin = require('../webpackPlugins/MixDefinitionsPlugin');
 let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
@@ -16,13 +15,6 @@ module.exports = function() {
         plugins.push(new MockEntryPlugin());
     }
 
-    // Activate better error feedback in the console.
-    plugins.push(
-        new FriendlyErrorsWebpackPlugin({
-            clearConsole: Config.clearConsole
-        })
-    );
-
     // Activate support for Mix_ .env definitions.
     plugins.push(
         MixDefinitionsPlugin.build({
@@ -32,19 +24,21 @@ module.exports = function() {
         })
     );
 
-    // Handle all custom, non-webpack tasks.
+    // Handle the creation of the mix-manifest.json file.
     plugins.push(new ManifestPlugin());
 
     // Handle all custom, non-webpack tasks.
     plugins.push(new CustomTasksPlugin());
 
     // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(
-        new BuildCallbackPlugin(stats => Mix.dispatch('build', stats))
-    );
+    plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
 
-    // Enable custom output when webpack builds
-    plugins.push(new BuildOutputPlugin());
+    // Enable custom output when the Webpack build completes.
+    plugins.push(
+        new BuildOutputPlugin({
+            clearConsole: Config.clearConsole
+        })
+    );
 
     return plugins;
 };

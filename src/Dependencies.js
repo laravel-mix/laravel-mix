@@ -1,11 +1,11 @@
 let childProcess = require('child_process');
 let Log = require('./Log');
 let argv = require('yargs').argv;
+let PackageManager = require('./PackageManager');
 
 /**
  * @typedef {object} DependencyObject
  * @property {string} package
- * @property {string} [name]
  * @property {(obj: any) => boolean} [check]
  */
 
@@ -77,7 +77,13 @@ class Dependencies {
     buildInstallCommand(dependencies) {
         dependencies = dependencies.map(dep => dep.package).join(' ');
 
-        return `npm install ${dependencies} --save-dev --production=false --legacy-peer-deps`;
+        switch (PackageManager.detect()) {
+            case 'npm':
+                return `npm install ${dependencies} --save-dev --legacy-peer-deps`;
+
+            case 'yarn':
+                return `yarn add ${dependencies} --dev`;
+        }
     }
 
     /**

@@ -9,16 +9,13 @@ class Notifications extends AutomaticComponent {
             let WebpackNotifierPlugin = require('webpack-notifier');
 
             return new WebpackNotifierPlugin({
+                appID: 'Laravel Mix',
+
                 title: 'Laravel Mix',
                 alwaysNotify: Config.notifications.onSuccess,
                 timeout: false,
-                hint:
-                    process.platform === 'linux'
-                        ? 'int:transient:1'
-                        : undefined,
-                contentImage: Mix.paths.root(
-                    'node_modules/laravel-mix/icons/laravel.png'
-                )
+                hint: process.platform === 'linux' ? 'int:transient:1' : undefined,
+                contentImage: Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
             });
         }
     }

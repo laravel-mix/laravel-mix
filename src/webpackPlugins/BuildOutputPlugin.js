@@ -5,7 +5,20 @@ const readline = require('readline');
 const { formatSize } = require('webpack/lib/SizeFormatHelpers');
 const { version } = require('../../package.json');
 
+/**
+ * @typedef {object} BuildOutputOptions
+ * @property {boolean} clearConsole
+ **/
+
 class BuildOutputPlugin {
+    /**
+     *
+     * @param {BuildOutputOptions} options
+     */
+    constructor(options) {
+        this.options = options;
+    }
+
     /**
      * Apply the plugin.
      *
@@ -21,7 +34,9 @@ class BuildOutputPlugin {
                 return false;
             }
 
-            this.clearConsole();
+            if (this.options.clearConsole) {
+                this.clearConsole();
+            }
 
             let data = stats.toJson({
                 assets: true,
@@ -32,9 +47,7 @@ class BuildOutputPlugin {
 
             this.heading(`Laravel Mix v${version}`);
 
-            console.log(
-                chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`)
-            );
+            console.log(chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`));
 
             if (data.assets.length) {
                 console.log(this.statsTable(data));

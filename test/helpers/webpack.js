@@ -3,7 +3,7 @@ import webpack from 'webpack';
 export async function buildConfig() {
     await Mix.dispatch('init');
 
-    return webpackConfig.build();
+    return await webpackConfig.build();
 }
 
 export async function compile(config) {

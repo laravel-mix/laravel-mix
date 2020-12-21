@@ -46,15 +46,22 @@ async function run() {
  * @param {string[]} args
  */
 async function executeScript(cmd, opts, args = []) {
+    const env =
+        (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
+            ? opts.production
+                ? 'production'
+                : 'development'
+            : process.env.NODE_ENV;
+
     let script = [
-        `cross-env NODE_ENV=${opts.production ? 'production' : 'development'}`,
-        `MIX_FILE=${opts.mixConfig}`,
+        `cross-env NODE_ENV=${env}`,
+        `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
-        `--config=${require.resolve('../setup/webpack.config.js')}`,
-        ...args
+        `--config="${require.resolve('../setup/webpack.config.js')}"`,
+        ...quoteArgs(args)
     ].join(' ');
 
-    if (process.env.TESTING) {
+    if (isTesting()) {
         return process.stdout.write(script);
     }
 
@@ -72,10 +79,53 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     if (cmd === 'build') {
-        return 'npx webpack --progress';
+        if (isTTY()) {
+            return 'npx webpack --progress';
+        }
+
+        return 'npx webpack';
     } else if (cmd === 'watch' && !opts.hot) {
-        return 'npx webpack --progress --watch';
+        if (isTTY()) {
+            return 'npx webpack --progress --watch';
+        }
+
+        return 'npx webpack --watch';
     } else if (cmd === 'watch' && opts.hot) {
-        return 'npx webpack serve --hot --inline --disable-host-check';
+        return 'npx webpack serve --hot';
     }
+}
+
+/**
+ * Get the command arguments with quoted values.
+ *
+ * @param {string[]} args
+ */
+function quoteArgs(args) {
+    return args.map(arg => {
+        // Split string at first = only
+        const pattern = /^([^=]+)=(.*)$/;
+        const keyValue = arg.includes('=') ? pattern.exec(arg).slice(1) : [];
+
+        if (keyValue.length === 2) {
+            return `${keyValue[0]}="${keyValue[1]}"`;
+        }
+
+        return arg;
+    });
+}
+
+function isTesting() {
+    return process.env.TESTING;
+}
+
+function isTTY() {
+    if (isTesting() && process.env.IS_TTY !== undefined) {
+        return process.env.IS_TTY === 'true';
+    }
+
+    if (isTesting() && process.stdout.isTTY === undefined) {
+        return true;
+    }
+
+    return process.stdout.isTTY;
 }

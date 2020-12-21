@@ -1,0 +1,1 @@
+() => import(/* webpackChunkName: "test" */ './another');

@@ -2,8 +2,8 @@ let path = require('path');
 let File = require('../File');
 let { Chunks } = require('../Chunks');
 
-/** @typedef {import('../../typings/extract').Extraction} Extraction */
-/** @typedef {import('../../typings/extract').ExtractConfig} ExtractConfig */
+/** @typedef {import('../../types/extract').Extraction} Extraction */
+/** @typedef {import('../../types/extract').ExtractConfig} ExtractConfig */
 /** @typedef {import('../builder/Entry').Entry} Entry */
 
 class Extract {
@@ -55,7 +55,10 @@ class Extract {
         this.extractions.forEach(extraction => {
             const path = this.extractionPath(extraction.to);
             const isDefaultVendorChunk =
-                extraction.to === null || extraction.to === undefined;
+                extraction.to === null ||
+                extraction.to === undefined ||
+                extraction.test.source ===
+                    '(?<!node_modules)[\\\\/]node_modules[\\\\/]()';
 
             this.chunks.add(
                 `vendor${this.extractions.indexOf(extraction)}`,
