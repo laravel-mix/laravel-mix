@@ -229,7 +229,7 @@ test('SASS/SCSS with imports does not place files in the wrong output dir', asyn
     assert.fileNotEmpty(`test/fixtures/app/dist/css/import.css`, t);
 });
 
-test('CSS url resolution can be configured per-file', async t => {
+test('Sass url resolution can be configured per-file', async t => {
     mix.sass(`test/fixtures/app/src/sass/font-and-image.scss`, 'css', {
         processUrls: false
     });
@@ -250,6 +250,26 @@ test('CSS url resolution can be configured per-file', async t => {
     t.false(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
 });
 
+test('Sass url resolution can be disabled: globally (before)', async t => {
+    mix.options({ processCssUrls: false });
+    mix.sass(`test/fixtures/app/src/sass/image.scss`, 'css');
+
+    await webpack.compile();
+
+    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+});
+
+test('Sass url resolution can be disabled: globally (after)', async t => {
+    mix.sass(`test/fixtures/app/src/sass/image.scss`, 'css');
+    mix.options({ processCssUrls: false });
+
+    await webpack.compile();
+
+    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+});
+
 test('CSS url resolution can be disabled for PostCSS: individually', async t => {
     mix.postCss(`test/fixtures/app/src/css/app-and-image.css`, 'css', {
         processUrls: false
@@ -262,9 +282,20 @@ test('CSS url resolution can be disabled for PostCSS: individually', async t => 
     t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
 });
 
-test('CSS url resolution can be disabled for PostCSS: globally', async t => {
+test('CSS url resolution can be disabled for PostCSS: globally (before)', async t => {
     mix.options({ processCssUrls: false });
     mix.postCss(`test/fixtures/app/src/css/app-and-image.css`, 'css');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
+    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+});
+
+test('CSS url resolution can be disabled for PostCSS: globally (after)', async t => {
+    mix.postCss(`test/fixtures/app/src/css/app-and-image.css`, 'css');
+    mix.options({ processCssUrls: false });
 
     await webpack.compile();
 

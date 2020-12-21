@@ -34,21 +34,12 @@ class PostCss extends Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
-        // TODO: Unify this w/ Preprocessor.preprocess
-        // Much of the code is the same
-        const processUrls =
-            pluginOptions.processUrls !== undefined
-                ? pluginOptions.processUrls
-                : Config.processCssUrls;
-
-        delete pluginOptions.processUrls;
-
         this.details = (this.details || []).concat({
             type: 'postCss',
             src,
             output,
-            postCssPlugins: [].concat(postCssPlugins),
-            processUrls
+            pluginOptions,
+            postCssPlugins: [].concat(postCssPlugins)
         });
 
         // Register a split chunk that takes everything generated

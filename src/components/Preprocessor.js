@@ -50,12 +50,14 @@ class Preprocessor {
      * @param {Detail} preprocessor
      */
     webpackLoaders(preprocessor) {
+        let processUrls = this.shouldProcessUrls(preprocessor);
+
         let loaders = [
             ...CssWebpackConfig.afterLoaders({ method: 'extract' }),
             {
                 loader: 'css-loader',
                 options: {
-                    url: preprocessor.processUrls,
+                    url: processUrls,
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
@@ -66,7 +68,7 @@ class Preprocessor {
             }
         ];
 
-        if (preprocessor.type === 'sass' && preprocessor.processUrls) {
+        if (preprocessor.type === 'sass' && processUrls) {
             loaders.push({
                 loader: 'resolve-url-loader',
                 options: {
@@ -137,26 +139,34 @@ class Preprocessor {
             src.nameWithoutExtension() + '.css'
         );
 
-        const processUrls =
-            pluginOptions.processUrls !== undefined
-                ? pluginOptions.processUrls
-                : Config.processCssUrls;
-
-        delete pluginOptions.processUrls;
-
         /** @type {Detail[]} */
         this.details = (this.details || []).concat({
             type: this.constructor.name.toLowerCase(),
             src,
             output,
             pluginOptions,
-            postCssPlugins,
-            processUrls
+            postCssPlugins
         });
 
         this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
 
         return this;
+    }
+
+    /**
+     * Determine whether to apply url preprocessing.
+     *
+     * @param {Detail} preprocessor
+     */
+    shouldProcessUrls(preprocessor) {
+        const processUrls =
+            preprocessor.pluginOptions.processUrls !== undefined
+                ? preprocessor.pluginOptions.processUrls
+                : Config.processCssUrls;
+
+        delete preprocessor.pluginOptions.processUrls;
+
+        return processUrls;
     }
 
     /**
