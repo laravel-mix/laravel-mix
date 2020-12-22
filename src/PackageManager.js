@@ -2,7 +2,7 @@ class PackageManager {
     static detect() {
         const execPath = process.env.npm_execpath || '';
 
-        if (execPath.endsWith('bin/yarn.js')) {
+        if (execPath.endsWith('yarn.js')) {
             return 'yarn';
         }
 
