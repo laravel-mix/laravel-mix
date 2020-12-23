@@ -189,6 +189,13 @@ module.exports = function() {
         clearConsole: true,
 
         /**
+         * Enable legacy node -> browser polyfills for things like `process` and `Buffer`.
+         *
+         * @type {Boolean}
+         */
+        legacyNodePolyfills: true,
+
+        /**
          * Options to pass to vue-loader
          *
          * @deprecated Use `.vue({options: {…}})` instead

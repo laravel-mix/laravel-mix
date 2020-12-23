@@ -26,6 +26,7 @@ let components = [
     'Notifications',
     'DisableNotifications',
     'PurifyCss',
+    'LegacyNodePolyfills',
     'WebpackConfig',
     'DumpWebpackConfig',
     'Then',

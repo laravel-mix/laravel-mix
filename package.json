@@ -82,6 +82,7 @@
         "lodash": "^4.17.20",
         "md5": "^2.3.0",
         "mini-css-extract-plugin": "^1.1.0",
+        "node-libs-browser": "^2.2.1",
         "postcss-load-config": "^3.0.0",
         "postcss-loader": "^4.0.4",
         "semver": "^5.7.1",
