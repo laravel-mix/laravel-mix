@@ -37,21 +37,16 @@ class Dependencies {
             return;
         }
 
-        this.execute(
-            this.buildInstallCommand(dependencies),
-            dependencies,
-            abortOnComplete
-        );
+        this.execute(this.buildInstallCommand(dependencies), abortOnComplete);
     }
 
     /**
      * Execute the provided console command.
      *
      * @param {string}  command
-     * @param {DependencyObject[]}   dependencies
      * @param {Boolean} abortOnComplete
      */
-    execute(command, dependencies, abortOnComplete) {
+    execute(command, abortOnComplete) {
         Log.feedback(
             'Additional dependencies must be installed. This will only take a moment.'
         );
@@ -59,12 +54,6 @@ class Dependencies {
         Log.feedback(`Running: ${command}`);
 
         childProcess.execSync(command);
-
-        Log.feedback(
-            'Okay, done. The following packages have been installed and saved to your package.json dependencies list:'
-        );
-
-        dependencies.forEach(d => Log.feedback('- ' + d.package));
 
         this.respond(abortOnComplete);
     }
