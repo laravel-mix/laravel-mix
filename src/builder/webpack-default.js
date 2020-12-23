@@ -25,7 +25,7 @@ module.exports = function() {
         },
 
         stats: {
-            preset: 'none',
+            preset: 'errors-warnings',
             performance: Mix.inProduction()
         },
 
