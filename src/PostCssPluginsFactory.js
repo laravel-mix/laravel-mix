@@ -54,14 +54,8 @@ class PostCssPluginsFactory {
      * Load any postcss plugins that were passed to the Mix command.
      */
     loadLocalPlugins() {
-        if (
-            this.preprocessor.postCssPlugins &&
-            this.preprocessor.postCssPlugins.length
-        ) {
-            this.plugins = [
-                ...this.plugins,
-                ...this.preprocessor.postCssPlugins
-            ];
+        if (this.preprocessor.postCssPlugins && this.preprocessor.postCssPlugins.length) {
+            this.plugins = [...this.plugins, ...this.preprocessor.postCssPlugins];
         }
 
         return this;
@@ -72,9 +66,7 @@ class PostCssPluginsFactory {
      */
     loadAutoprefixer() {
         if (this.Config.autoprefixer) {
-            this.plugins.push(
-                require('autoprefixer')(this.Config.autoprefixer)
-            );
+            this.plugins.push(require('autoprefixer')(this.Config.autoprefixer));
         }
 
         return this;

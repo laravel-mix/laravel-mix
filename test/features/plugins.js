@@ -21,11 +21,11 @@ test('mix can be extended with new functionality as a callback', async t => {
 test('mix can be extended with new functionality as a class', t => {
     mix.extend(
         'foobar',
-        new class {
+        new (class {
             register(val) {
                 t.is('baz', val);
             }
-        }()
+        })()
     );
 
     mix.foobar('baz');
@@ -38,13 +38,13 @@ test('dependencies can be requested for download', t => {
 
     mix.extend(
         'foobar',
-        new class {
+        new (class {
             dependencies() {
                 return ['npm-package'];
             }
 
             register() {}
-        }()
+        })()
     );
 
     mix.foobar();
@@ -57,13 +57,13 @@ test('dependencies can be requested for download', t => {
 test('webpack entry may be appended to', async t => {
     mix.extend(
         'foobar',
-        new class {
+        new (class {
             register() {}
 
             webpackEntry(entry) {
                 entry.add('foo', 'path');
             }
-        }()
+        })()
     );
 
     mix.foobar();
@@ -83,13 +83,13 @@ test('webpack rules may be added', async t => {
 
     mix.extend(
         'foobar',
-        new class {
+        new (class {
             register() {}
 
             webpackRules() {
                 return rule;
             }
-        }()
+        })()
     );
 
     mix.foobar();
@@ -106,13 +106,13 @@ test('webpack plugins may be added', async t => {
 
     mix.extend(
         'foobar',
-        new class {
+        new (class {
             register() {}
 
             webpackPlugins() {
                 return plugin;
             }
-        }()
+        })()
     );
 
     mix.foobar();
@@ -127,13 +127,13 @@ test('webpack plugins may be added', async t => {
 test('custom Babel config may be merged', async t => {
     mix.extend(
         'reactNext',
-        new class {
+        new (class {
             babelConfig() {
                 return {
                     plugins: ['@babel/plugin-proposal-unicode-property-regex']
                 };
             }
-        }()
+        })()
     );
 
     mix.reactNext();
@@ -152,13 +152,13 @@ test('custom Babel config may be merged', async t => {
 test('the fully constructed webpack config object is available for modification, if needed', async t => {
     mix.extend(
         'extension',
-        new class {
+        new (class {
             register() {}
 
             webpackConfig(config) {
                 config.stats.performance = true;
             }
-        }()
+        })()
     );
 
     t.false((await new WebpackConfig().build()).stats.performance);
@@ -192,17 +192,17 @@ test('prior Mix components can be overwritten', t => {
 test('components can be passive', t => {
     let stub = sinon.spy();
 
-    let component = new class {
+    let component = new (class {
         register() {
             stub();
         }
-    }();
+    })();
 
     mix.extend('example', component);
 
     t.true(stub.notCalled);
 
-    component = new class {
+    component = new (class {
         constructor() {
             this.passive = true;
         }
@@ -210,7 +210,7 @@ test('components can be passive', t => {
         register() {
             stub();
         }
-    }();
+    })();
 
     mix.extend('example', component);
 
@@ -218,7 +218,7 @@ test('components can be passive', t => {
 });
 
 test('components can manually hook into the mix API', t => {
-    let component = new class {
+    let component = new (class {
         mix() {
             return {
                 foo: arg => {
@@ -230,7 +230,7 @@ test('components can manually hook into the mix API', t => {
                 }
             };
         }
-    }();
+    })();
 
     mix.extend('example', component);
 
@@ -241,11 +241,11 @@ test('components can manually hook into the mix API', t => {
 test('components can be booted, after the webpack.mix.js configuration file has processed', async t => {
     let stub = sinon.spy();
 
-    let component = new class {
+    let component = new (class {
         boot() {
             stub();
         }
-    }();
+    })();
 
     mix.extend('example', component);
 

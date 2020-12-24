@@ -57,10 +57,7 @@ test('it compiles JS and then combines the bundles files.', async t => {
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .scripts(
-            [
-                `test/fixtures/app/dist/js/app.js`,
-                `test/fixtures/app/dist/js/another.js`
-            ],
+            [`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/js/another.js`],
             `test/fixtures/app/dist/js/all.js`
         );
 
@@ -89,10 +86,7 @@ test('it concatenates a directory of files, copies the output to a new location,
         'test/fixtures/app/dist/output/combined-scripts.js'
     );
 
-    mix.copyDirectory(
-        'test/fixtures/app/dist/output',
-        'test/fixtures/app/dist/js'
-    );
+    mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
 
     await webpack.compile();
 

@@ -17,8 +17,7 @@ class BabelConfig {
                 mixBabelConfig
             ],
             {
-                arrayMerge: (destinationArray, sourceArray, options) =>
-                    sourceArray
+                arrayMerge: (destinationArray, sourceArray, options) => sourceArray
             }
         );
     }

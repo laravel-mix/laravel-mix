@@ -168,7 +168,9 @@ class File {
     pathWithoutQueryString() {
         const queryStringIndex = this.path().indexOf('?');
 
-        return queryStringIndex < 0 ? this.path() : this.path().substr(0, queryStringIndex);
+        return queryStringIndex < 0
+            ? this.path()
+            : this.path().substr(0, queryStringIndex);
     }
 
     /**

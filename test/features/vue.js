@@ -311,9 +311,7 @@ test('it supports global Vue styles for sass', async t => {
 
     t.is(
         expected.trim(),
-        File.find(`test/fixtures/app/dist/css/components.css`)
-            .read()
-            .trim()
+        File.find(`test/fixtures/app/dist/css/components.css`).read().trim()
     );
 
     postCssConfigFile.delete();

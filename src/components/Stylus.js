@@ -17,13 +17,7 @@ class Stylus extends Preprocessor {
      * @param {Array}  postCssPlugins
      */
     register(src, output, pluginOptions = {}, postCssPlugins = []) {
-        return this.preprocess(
-            'stylus',
-            src,
-            output,
-            pluginOptions,
-            postCssPlugins
-        );
+        return this.preprocess('stylus', src, output, pluginOptions, postCssPlugins);
     }
 
     chunkRegex() {

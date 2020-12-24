@@ -62,13 +62,13 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
 test('Babel config from Mix extensions is merged with the defaults', async t => {
     mix.extend(
         'extensionWithBabelConfig',
-        new class {
+        new (class {
             babelConfig() {
                 return {
                     plugins: ['@babel/plugin-proposal-unicode-property-regex']
                 };
             }
-        }()
+        })()
     );
 
     mix.extensionWithBabelConfig();
