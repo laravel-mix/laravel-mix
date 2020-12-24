@@ -94,7 +94,6 @@
         "webpack-dev-server": "^4.0.0-beta.0",
         "webpack-merge": "^5.2.0",
         "webpack-notifier": "^1.8.0",
-        "webpackbar": "^5.0.0-3",
         "yargs": "^16.1.0"
     },
     "devDependencies": {

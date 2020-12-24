@@ -1,11 +1,9 @@
-let argv = require('yargs');
 let MixDefinitionsPlugin = require('../webpackPlugins/MixDefinitionsPlugin');
 let BuildCallbackPlugin = require('../webpackPlugins/BuildCallbackPlugin');
 let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
-let WebpackBar = require('webpackbar');
 
 module.exports = function() {
     let plugins = [];
@@ -41,10 +39,6 @@ module.exports = function() {
             clearConsole: Config.clearConsole
         })
     );
-
-    if (!argv['$0'].includes('ava')) {
-        plugins.push(new WebpackBar({ name: 'Laravel Mix' }));
-    }
 
     return plugins;
 };
