@@ -7,7 +7,7 @@ module.exports = function() {
 
         mode: Mix.inProduction() ? 'production' : 'development',
 
-        infrastructureLogging: Mix.isWatching() ? {} : { level: 'none' },
+        infrastructureLogging: Mix.isWatching() ? { level: 'none' } : {},
 
         entry: {},
 

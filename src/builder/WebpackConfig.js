@@ -98,7 +98,6 @@ class WebpackConfig {
         this.webpackConfig.output = {
             ...this.webpackConfig.output,
 
-            path: '/',
             publicPath: url
         };
 
