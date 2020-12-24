@@ -35,16 +35,16 @@ module.exports = function() {
     // Notify the rest of our app when Webpack has finished its build.
     plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
 
+    if (!argv['$0'].includes('ava')) {
+        plugins.push(new WebpackBar({ name: 'Laravel Mix' }));
+    }
+
     // Enable custom output when the Webpack build completes.
     plugins.push(
         new BuildOutputPlugin({
             clearConsole: Config.clearConsole
         })
     );
-
-    if (!argv['$0'].includes('ava')) {
-        plugins.push(new WebpackBar({ name: 'Laravel Mix' }));
-    }
 
     return plugins;
 };
