@@ -232,6 +232,6 @@ mix.options({
     postCss: [],
     terser: {},
     autoprefixer: {},
-    cssName: {}
+    legacyNodePolyfills: false
 });
 ```
