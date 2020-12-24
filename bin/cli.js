@@ -65,9 +65,13 @@ async function executeScript(cmd, opts, args = []) {
         return process.stdout.write(script);
     }
 
-    spawn(script, {
+    const child = spawn(script, {
         stdio: 'inherit',
         shell: true
+    });
+
+    child.on('exit', code => {
+        process.exitCode = code;
     });
 }
 
