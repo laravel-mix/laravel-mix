@@ -57,6 +57,35 @@ test('compiling js and css together', async t => {
     ]);
 });
 
+test('node browser polyfills: enabled', async t => {
+    setupVueAliases(3);
+
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer object',
+        'node-polyfill: process object',
+        'node-polyfill: process.env object',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
+
+test('node browser polyfills: disabled', async t => {
+    setupVueAliases(3);
+
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.options({ legacyNodePolyfills: false });
+
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer undefined',
+        'node-polyfill: process undefined',
+        'node-polyfill: process.env undefined',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
+
 async function assertProducesLogs(t, logs) {
     const uri = `http://localhost:1337/index.html`;
 

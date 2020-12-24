@@ -130,6 +130,11 @@ interface MixConfig {
     clearConsole?: boolean;
 
     /**
+     * Enable legacy node -> browser polyfills for things like `process` and `Buffer`.
+     */
+    legacyNodePolyfills?: boolean;
+
+    /**
      * Options to pass to vue-loader
      *
      * @deprecated Use `.vue({options: {…}})` instead

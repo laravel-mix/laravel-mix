@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import ScssModule from './ScssModule.vue';
+import './node-browser-polyfills';
 
 console.log('loaded: app.js');
 
