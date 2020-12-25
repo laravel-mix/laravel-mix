@@ -9,7 +9,7 @@ class LegacyNodePolyfills extends AutomaticComponent {
 
         return [
             new webpack.ProvidePlugin({
-                Buffer: 'buffer',
+                Buffer: ['buffer', 'Buffer'],
                 process: 'process/browser'
             })
         ];
