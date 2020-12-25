@@ -64,7 +64,8 @@ test('node browser polyfills: enabled', async t => {
 
     await webpack.compile();
     await assertProducesLogs(t, [
-        'node-polyfill: Buffer object',
+        'node-polyfill: Buffer function',
+        'node-polyfill: Buffer.from function',
         'node-polyfill: process object',
         'node-polyfill: process.env object',
         'node-polyfill: process.env.NODE_ENV string = test'
@@ -80,6 +81,7 @@ test('node browser polyfills: disabled', async t => {
     await webpack.compile();
     await assertProducesLogs(t, [
         'node-polyfill: Buffer undefined',
+        'node-polyfill: Buffer.from undefined',
         'node-polyfill: process undefined',
         'node-polyfill: process.env undefined',
         'node-polyfill: process.env.NODE_ENV string = test'
