@@ -20,8 +20,8 @@ test.before(async () => {
     server = app.listen(1337);
 });
 
-test.after.always(() => {
-    browser && browser.close();
+test.after.always(async () => {
+    browser && (await browser.close());
     server && server.close();
 });
 
