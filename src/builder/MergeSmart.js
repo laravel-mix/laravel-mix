@@ -158,8 +158,10 @@ function uniteEntries(newEntry, entry) {
     if (areEqualEntries(newEntry, entry)) {
         // Replace query values with newer ones
         mergeWith(entry, newEntry);
+        
         return true;
     }
+    
     return false;
 }
 
@@ -271,6 +273,7 @@ function findLastIndexUsingComparinator(
             return i;
         }
     }
+        
     return -1;
 }
 
