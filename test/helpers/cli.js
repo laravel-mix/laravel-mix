@@ -29,13 +29,24 @@ export function cli(opts) {
             ...args
         ];
 
-        const { error, stdout, stderr } = await execAsync(cmd.join(' '), { cwd });
+        try {
+            const { stdout, stderr } = await execAsync(cmd.join(' '), { cwd });
 
-        return {
-            code: error && error.code ? error.code : 0,
-            error,
-            stdout,
-            stderr
-        };
+            return {
+                error: null,
+                code: 0,
+                stdout,
+                stderr
+            };
+        } catch (error) {
+            const { code, stdout, stderr } = error;
+
+            return {
+                error,
+                code,
+                stdout,
+                stderr
+            };
+        }
     };
 }
