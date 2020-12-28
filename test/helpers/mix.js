@@ -1,7 +1,10 @@
+import SegfaultHandler from 'segfault-handler';
 import test from 'ava';
 import bootstrap from '../../src/bootstrap';
 import Stub from './Stub';
 import fs from 'fs-extra';
+
+SegfaultHandler.registerHandler();
 
 global.Stub = Stub;
 
