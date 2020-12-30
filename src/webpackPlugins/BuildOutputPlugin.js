@@ -17,6 +17,7 @@ class BuildOutputPlugin {
      */
     constructor(options) {
         this.options = options;
+        this.patched = false;
     }
 
     /**
@@ -105,6 +106,8 @@ class BuildOutputPlugin {
             table.push([chalk.green(asset.name), formatSize(asset.size)]);
         }
 
+        this.monkeyPatchTruncate();
+
         return table.toString();
     }
 
@@ -117,6 +120,38 @@ class BuildOutputPlugin {
 
         readline.cursorTo(process.stdout, 0, 0);
         readline.clearScreenDown(process.stdout);
+    }
+
+    // Yeah, I know.
+    monkeyPatchTruncate() {
+        if (this.patched) {
+            return;
+        }
+
+        this.patched = true;
+
+        // @ts-ignore
+        const utils = require('cli-table3/src/utils');
+        const oldTruncate = utils.truncate;
+
+        // cli-table3 can only do truncation at the end
+        // We want the asset name to be truncated at the beginning if it's too long
+        // FIXME: We really should set truncation location via a paramter or something
+        // (or PR support for alignment-based truncation)
+
+        /**
+         *
+         * @param {string} str
+         * @param {number} desiredLength
+         * @param {string} truncateChar
+         */
+        utils.truncate = (str, desiredLength, truncateChar) => {
+            if (str.length > desiredLength) {
+                str = `…${str.substr(-desiredLength + 2)}`;
+            }
+
+            return oldTruncate(str, desiredLength, truncateChar);
+        };
     }
 }
 
