@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const argv = require('yargs');
 const chalk = require('chalk');
 const Table = require('cli-table3');
@@ -93,6 +94,8 @@ class BuildOutputPlugin {
      * @returns {string}
      */
     statsTable(data) {
+        data = this.sortAssets(data);
+
         const table = new Table({
             head: [chalk.bold('File'), chalk.bold('Size')],
             colWidths: [35],
@@ -111,6 +114,16 @@ class BuildOutputPlugin {
         this.monkeyPatchTruncate();
 
         return table.toString();
+    }
+
+    /**
+     *
+     * @param {any} data
+     */
+    sortAssets(data) {
+        data.assets = _.orderBy(data.assets, ['name', 'size'], ['asc', 'asc']);
+
+        return data;
     }
 
     /**
