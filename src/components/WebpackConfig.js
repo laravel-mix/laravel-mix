@@ -1,15 +1,12 @@
-let webpack = require('webpack');
+let merge = require('../builder/MergeWebpackConfig');
 
 class WebpackConfig {
     register(config) {
-        config = typeof config == 'function' ? config(webpack) : config;
+        mix.override(webpackConfig => {
+            config = typeof config == 'function' ? config(webpackConfig) : config;
 
-        Config.webpackConfig = require('../builder/MergeWebpackConfig')(
-            Config.webpackConfig,
-            config
-        );
-
-        return this;
+            Object.assign(webpackConfig, merge(webpackConfig, config));
+        });
     }
 }
 
