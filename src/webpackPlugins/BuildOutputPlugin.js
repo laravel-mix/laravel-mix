@@ -2,6 +2,7 @@ const argv = require('yargs');
 const chalk = require('chalk');
 const Table = require('cli-table3');
 const readline = require('readline');
+const stripAnsi = require('strip-ansi');
 const { formatSize } = require('webpack/lib/SizeFormatHelpers');
 const { version } = require('../../package.json');
 
@@ -106,6 +107,7 @@ class BuildOutputPlugin {
             table.push([chalk.green(asset.name), formatSize(asset.size)]);
         }
 
+        this.extendTableWidth(table);
         this.monkeyPatchTruncate();
 
         return table.toString();
@@ -120,6 +122,33 @@ class BuildOutputPlugin {
 
         readline.cursorTo(process.stdout, 0, 0);
         readline.clearScreenDown(process.stdout);
+    }
+
+    /**
+     * Extend the width of the table
+     *
+     * Currently only increases the file column size
+     *
+     * @param {import("cli-table3").Table} table
+     * @param {number|null} targetWidth
+     * @param {number} maxWidth
+     */
+    extendTableWidth(table, targetWidth = null, maxWidth = Infinity) {
+        targetWidth = targetWidth === null ? process.stdout.columns : targetWidth;
+
+        if (!targetWidth) {
+            return;
+        }
+
+        const tableWidth = this.calculateTableWidth(table);
+        const fileColIncrease = Math.min(targetWidth - tableWidth, maxWidth - tableWidth);
+
+        if (fileColIncrease <= 0) {
+            return;
+        }
+
+        // @ts-ignore
+        table.options.colWidths[0] += fileColIncrease;
     }
 
     // Yeah, I know.
@@ -152,6 +181,21 @@ class BuildOutputPlugin {
 
             return oldTruncate(str, desiredLength, truncateChar);
         };
+    }
+
+    /**
+     * Calculate the width of the CLI Table
+     *
+     * `table.width` does not report the correct width
+     * because it includes ANSI control characters
+     *
+     * @internal
+     * @param {import("cli-table3").Table} table
+     */
+    calculateTableWidth(table) {
+        const firstRow = table.toString().split('\n')[0];
+
+        return stripAnsi(firstRow).length;
     }
 }
 
