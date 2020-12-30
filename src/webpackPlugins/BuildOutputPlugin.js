@@ -94,6 +94,7 @@ class BuildOutputPlugin {
         const table = new Table({
             head: [chalk.bold('File'), chalk.bold('Size')],
             colWidths: [35],
+            colAligns: ['right'],
             style: {
                 head: []
             }
