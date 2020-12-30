@@ -96,7 +96,8 @@ class BuildOutputPlugin {
             colWidths: [35],
             colAligns: ['right'],
             style: {
-                head: []
+                head: [],
+                compact: true
             }
         });
 
