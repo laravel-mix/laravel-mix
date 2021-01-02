@@ -91,6 +91,15 @@ class Mix {
     /**
      * @internal
      */
+    async installDependencies() {
+        await this.dispatch('internal:gather-dependencies');
+
+        Dependencies.installQueued();
+    }
+
+    /**
+     * @internal
+     */
     init() {
         if (this.initialized) {
             return;

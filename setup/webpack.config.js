@@ -3,6 +3,7 @@ module.exports = async () => {
 
     require(mix.paths.mix());
 
+    await mix.installDependencies();
     await mix.init();
 
     return mix.build();

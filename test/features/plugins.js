@@ -31,10 +31,11 @@ test('mix can be extended with new functionality as a class', t => {
     mix.foobar('baz');
 });
 
-test('dependencies can be requested for download', t => {
-    let Assert = require('../../src/Assert');
+test('dependencies can be requested for download', async t => {
+    let Dependencies = require('../../src/Dependencies');
 
-    Assert.dependencies = sinon.spy();
+    Dependencies.queue = sinon.spy();
+    Dependencies.installQueued = sinon.spy();
 
     mix.extend(
         'foobar',
@@ -47,11 +48,28 @@ test('dependencies can be requested for download', t => {
         }()
     );
 
+    mix.extend(
+        'foobar2',
+        new class {
+            dependencies() {
+                this.requiresReload = true;
+
+                return ['npm-package2'];
+            }
+
+            register() {}
+        }()
+    );
+
     mix.foobar();
+    mix.foobar2();
 
-    Mix.dispatch('init');
+    await Mix.installDependencies();
+    await Mix.init();
 
-    t.true(Assert.dependencies.calledWith(['npm-package']));
+    t.true(Dependencies.queue.calledWith(['npm-package'], false));
+    t.true(Dependencies.queue.calledWith(['npm-package2'], true));
+    t.true(Dependencies.installQueued.calledWith());
 });
 
 test('webpack entry may be appended to', async t => {
