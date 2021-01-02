@@ -61,7 +61,7 @@ class BuildOutputPlugin {
     /**
      * Print a block section heading.
      *
-     * @param text
+     * @param {string} text
      */
     heading(text) {
         console.log();
