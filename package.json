@@ -97,11 +97,14 @@
         "yargs": "^16.1.0"
     },
     "devDependencies": {
+        "@babel/eslint-parser": "^7.12.1",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-react": "^7.12.1",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@vue/compiler-sfc": "^3.0.1",
         "ava": "^3.13.0",
+        "browserslist": "^4.16.0",
         "coffee-loader": "^2.0.0",
         "coffeescript": "^2.5.1",
         "core-js": "^3.6.5",
