@@ -23,7 +23,12 @@ class Chunks {
         this.runtime = false;
     }
 
+    makeCurrent() {
+        Chunks._instance = this;
+    }
+
     /**
+     * @deprecated
      * @return {Chunks}
      */
     static instance() {
@@ -31,6 +36,7 @@ class Chunks {
     }
 
     /**
+     * @deprecated
      * @return {Chunks}
      */
     static reset() {

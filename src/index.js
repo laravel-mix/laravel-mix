@@ -1,3 +1,7 @@
+const Mix = require('./Mix');
+
+require('./helpers');
+
 /*
  |--------------------------------------------------------------------------
  | Welcome to Laravel Mix!
@@ -9,15 +13,8 @@
  |
  */
 
-let mix = require('./bootstrap')();
+let mix = Mix.primary;
 
-if (Mix.sees('laravel')) {
-    Config.publicPath = 'public';
-}
+mix.boot();
 
-Mix.listen('init', () => require('./HotReloading').record());
-
-module.exports = tap(mix, mix => {
-    // Legacy.
-    mix.inProduction = () => Config.production;
-});
+module.exports = mix.api;

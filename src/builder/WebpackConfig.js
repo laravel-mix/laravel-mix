@@ -10,9 +10,11 @@ process.noDeprecation = true;
 class WebpackConfig {
     /**
      * Create a new instance.
+     *
+     * @param {import("../Mix")} mix
      */
-    constructor() {
-        this.chunks = Chunks.instance();
+    constructor(mix) {
+        this.chunks = mix.chunks;
     }
 
     /**
