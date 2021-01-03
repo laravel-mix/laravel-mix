@@ -1,4 +1,3 @@
-let instance;
 let path = require('path');
 
 /** @typedef {import("webpack/declarations/WebpackOptions").OptimizationSplitChunksCacheGroup} CacheGroup */
@@ -13,6 +12,9 @@ let path = require('path');
  */
 
 class Chunks {
+    /** @type {Chunks|null} */
+    static _instance = null;
+
     constructor() {
         /** @type {{[key: string]: CacheGroup}} */
         this.chunks = {};
@@ -25,14 +27,14 @@ class Chunks {
      * @return {Chunks}
      */
     static instance() {
-        return instance || this.reset();
+        return Chunks._instance || this.reset();
     }
 
     /**
      * @return {Chunks}
      */
     static reset() {
-        return (instance = new Chunks());
+        return (Chunks._instance = new Chunks());
     }
 
     /**

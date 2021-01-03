@@ -1,20 +1,25 @@
-let File = require('./File');
-let Paths = require('./Paths');
-let Manifest = require('./Manifest');
-let Dispatcher = require('./Dispatcher');
 let Components = require('./components/Components');
+let Dispatcher = require('./Dispatcher');
+let File = require('./File');
+let Manifest = require('./Manifest');
+let Paths = require('./Paths');
+
+/** @typedef {import("./tasks/Task")} Task */
 
 class Mix {
     /**
      * Create a new instance.
      */
     constructor() {
-        this.paths = new Paths();
-        this.manifest = new Manifest();
-        this.dispatcher = new Dispatcher();
-        this.tasks = [];
-        this.bundlingJavaScript = false;
         this.components = new Components();
+        this.dispatcher = new Dispatcher();
+        this.manifest = new Manifest();
+        this.paths = new Paths();
+
+        /** @type {Task[]} */
+        this.tasks = [];
+
+        this.bundlingJavaScript = false;
 
         /**
          * @internal

@@ -2,6 +2,7 @@ import test from 'ava';
 import path from 'path';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
+import Stub from '../helpers/Stub';
 
 import '../helpers/mix';
 

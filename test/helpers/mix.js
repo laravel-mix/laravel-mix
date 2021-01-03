@@ -1,9 +1,6 @@
 import test from 'ava';
 import bootstrap from '../../src/bootstrap';
-import Stub from './Stub';
 import fs from 'fs-extra';
-
-global.Stub = Stub;
 
 test.beforeEach(() => {
     global.mix = bootstrap();
