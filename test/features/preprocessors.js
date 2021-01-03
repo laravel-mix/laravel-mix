@@ -303,3 +303,12 @@ test('CSS url resolution can be disabled for PostCSS: globally (after)', async t
     t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
     t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
 });
+
+test.only('CSS imported in JS does not result in separate files by default', async t => {
+    mix.js('test/fixtures/app/src/js/import-css-module.js', 'js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/import-css-module.js`));
+    t.false(File.exists(`test/fixtures/app/dist/js/import-css-module.css`));
+});

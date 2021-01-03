@@ -15,6 +15,18 @@ class Mix {
         this.tasks = [];
         this.bundlingJavaScript = false;
         this.components = new Components();
+
+        /**
+         * @internal
+         * @type {string|null}
+         */
+        this.globalStyles = null;
+
+        /**
+         * @internal
+         * @type {boolean|string}
+         **/
+        this.extractingStyles = false;
     }
 
     /**
