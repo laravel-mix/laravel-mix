@@ -47,11 +47,11 @@ async function run() {
  */
 async function executeScript(cmd, opts, args = []) {
     const env =
-        (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
-            ? opts.production
-                ? 'production'
-                : 'development'
-            : process.env.NODE_ENV;
+        opts.production
+            ? 'production'
+            : (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
+                ? 'development'
+                : process.env.NODE_ENV;
 
     let script = [
         `cross-env NODE_ENV=${env}`,
