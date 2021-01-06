@@ -1,8 +1,10 @@
 module.exports = async () => {
-    require('../src/index');
-    require(Mix.paths.mix());
+    const mix = require('../src/Mix').primary;
 
-    await Mix.dispatch('init', Mix);
+    require(mix.paths.mix());
 
-    return await webpackConfig.build();
+    await mix.installDependencies();
+    await mix.init();
+
+    return mix.build();
 };

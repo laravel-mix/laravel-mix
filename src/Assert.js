@@ -75,6 +75,7 @@ class Assert {
     /**
      * Assert that the necessary dependencies are available.
      *
+     * @deprecated
      * @param {Array}  list
      * @param {Boolean} abortOnComplete
      */

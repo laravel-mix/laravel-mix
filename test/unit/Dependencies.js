@@ -46,6 +46,20 @@ test('it can install dependencies using yarn', t => {
     t.true(childProcess.execSync.calledWith('yarn add browser-sync --dev'));
 });
 
+test('it can install all queued dependencies at once', t => {
+    Dependencies.queue(['pkg1', 'pkg2']);
+    Dependencies.queue(['pkg3']);
+    Dependencies.queue(['pkg4'], true);
+    Dependencies.queue('pkg5', true);
+    Dependencies.installQueued();
+
+    t.true(
+        childProcess.execSync.calledWith(
+            'npm install pkg1 pkg2 pkg3 pkg4 pkg5 --save-dev --legacy-peer-deps'
+        )
+    );
+});
+
 test('it can utilize custom checks for a dependency', t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 

@@ -1,12 +1,13 @@
 import test from 'ava';
-import bootstrap from '../../src/bootstrap';
-import Stub from './Stub';
+import Mix from '../../src/Mix';
 import fs from 'fs-extra';
-
-global.Stub = Stub;
+import '../../src/helpers';
 
 test.beforeEach(() => {
-    global.mix = bootstrap();
+    let mix = new Mix().boot().api;
+
+    // @ts-ignore
+    global.mix = mix;
 
     fs.ensureDirSync(`test/fixtures/app/dist`);
     mix.setPublicPath(`test/fixtures/app/dist`);
