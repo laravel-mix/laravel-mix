@@ -57,7 +57,13 @@ class Preprocessor {
             {
                 loader: 'css-loader',
                 options: {
-                    url: processUrls,
+                    url: (url, resourcePath) => {
+                        if (url.startsWith('/')) {
+                            return false;
+                        }
+
+                        return processUrls;
+                    },
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
