@@ -86,7 +86,7 @@ class Preprocessor {
         if (preprocessor.type !== 'postCss') {
             loaders.push({
                 loader: `${preprocessor.type}-loader`,
-                options: this.loaderOptions(preprocessor)
+                options: this.loaderOptions(preprocessor, processUrls)
             });
         }
 
