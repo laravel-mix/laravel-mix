@@ -188,7 +188,7 @@ class BuildOutputPlugin {
          * @param {string} truncateChar
          */
         utils.truncate = (str, desiredLength, truncateChar) => {
-            if (str.length > desiredLength) {
+            if (stripAnsi(str).length > desiredLength) {
                 str = `…${str.substr(-desiredLength + 2)}`;
             }
 
