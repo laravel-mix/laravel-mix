@@ -104,10 +104,14 @@ class Preprocessor {
      * Prepare the preprocessor plugin options.
      *
      * @param {Object} preprocessor
+     * @param {Boolean} processUrls
      */
-    loaderOptions(preprocessor) {
+    loaderOptions(preprocessor, processUrls) {
         return Object.assign(preprocessor.pluginOptions, {
-            sourceMap: Mix.isUsing('sourcemaps')
+            sourceMap:
+                preprocessor.type === 'sass' && processUrls
+                    ? true
+                    : Mix.isUsing('sourcemaps')
         });
     }
 
