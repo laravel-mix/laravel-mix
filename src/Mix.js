@@ -143,10 +143,17 @@ class Mix {
     }
 
     /**
+     * Determine if Mix should use HMR.
+     */
+    isHot() {
+        return process.argv.includes('--hot');
+    }
+
+    /**
      * Determine if Mix should watch files for changes.
      */
     isWatching() {
-        return process.argv.includes('--watch') || process.argv.includes('--hot');
+        return this.isHot() || process.argv.includes('--watch');
     }
 
     /**
