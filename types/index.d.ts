@@ -57,7 +57,10 @@ declare namespace mix {
 
         /** Merge custom webpack config */
         webpackConfig(
-            callback: (webpack: typeof import('webpack')) => webpack.Configuration
+            callback: (
+                webpack: typeof import('webpack'),
+                config: webpack.Configuration
+            ) => webpack.Configuration
         ): Api;
 
         /** Override the webpack config after it is built */

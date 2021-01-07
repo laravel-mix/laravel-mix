@@ -108,7 +108,13 @@ class CssWebpackConfig extends AutomaticComponent {
             {
                 loader: 'css-loader',
                 options: {
-                    url: Config.processCssUrls,
+                    url: (url, resourcePath) => {
+                        if (url.startsWith('/')) {
+                            return false;
+                        }
+
+                        return Config.processCssUrls;
+                    },
                     modules: useCssModules
                 }
             },

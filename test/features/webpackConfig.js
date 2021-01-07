@@ -3,31 +3,13 @@ import test from 'ava';
 import '../helpers/mix';
 import { buildConfig } from '../helpers/webpack';
 
-test('mix.webpackConfig()', t => {
-    // Test config passed as an object.
-    let config = { context: 'changed' };
-    let response = mix.webpackConfig(config);
-
-    t.deepEqual(mix, response);
-
-    t.deepEqual(config, Config.webpackConfig);
-
-    // Test config passed via a callback.
-    config = { context: 'changed again' };
-    response = mix.webpackConfig(webpack => config);
-
-    t.deepEqual(mix, response);
-
-    t.deepEqual(config, Config.webpackConfig);
-});
-
-test('Custom user config can be merged', async t => {
+test('Custom webpack config can be merged', async t => {
     mix.webpackConfig({ context: 'changed' });
 
     t.is('changed', (await buildConfig()).context);
 });
 
-test('Custom user config can be merged as a callback function', async t => {
+test('Custom webpack config can be merged as a callback function', async t => {
     mix.webpackConfig(webpack => {
         return {
             context: 'changed'
@@ -35,4 +17,20 @@ test('Custom user config can be merged as a callback function', async t => {
     });
 
     t.is('changed', (await buildConfig()).context);
+});
+
+test('Custom webpack config is called and merged *after* all plugins and extensions', async t => {
+    mix.extend('extension', {
+        webpackConfig(config) {
+            config.foo = 'extension foo';
+        }
+    });
+
+    mix.extension().webpackConfig(() => {
+        return {
+            foo: 'webpackConfig foo'
+        };
+    });
+
+    t.is('webpackConfig foo', (await buildConfig()).foo);
 });

@@ -57,7 +57,13 @@ class Preprocessor {
             {
                 loader: 'css-loader',
                 options: {
-                    url: processUrls,
+                    url: (url, resourcePath) => {
+                        if (url.startsWith('/')) {
+                            return false;
+                        }
+
+                        return processUrls;
+                    },
                     sourceMap: Mix.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
@@ -80,7 +86,7 @@ class Preprocessor {
         if (preprocessor.type !== 'postCss') {
             loaders.push({
                 loader: `${preprocessor.type}-loader`,
-                options: this.loaderOptions(preprocessor)
+                options: this.loaderOptions(preprocessor, processUrls)
             });
         }
 
@@ -98,10 +104,14 @@ class Preprocessor {
      * Prepare the preprocessor plugin options.
      *
      * @param {Object} preprocessor
+     * @param {Boolean} processUrls
      */
-    loaderOptions(preprocessor) {
+    loaderOptions(preprocessor, processUrls) {
         return Object.assign(preprocessor.pluginOptions, {
-            sourceMap: Mix.isUsing('sourcemaps')
+            sourceMap:
+                preprocessor.type === 'sass' && processUrls
+                    ? true
+                    : Mix.isUsing('sourcemaps')
         });
     }
 

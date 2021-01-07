@@ -5,7 +5,7 @@ let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
 
-module.exports = function() {
+module.exports = function () {
     let plugins = [];
 
     // If the user didn't declare any JS compilation, we still need to

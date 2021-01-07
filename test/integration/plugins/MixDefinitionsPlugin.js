@@ -3,9 +3,7 @@ import MixDefinitionsPlugin from '../../../src/webpackPlugins/MixDefinitionsPlug
 import path from 'path';
 
 test('it fetches the MIX_ definitions properly', t => {
-    let plugin = new MixDefinitionsPlugin(
-        path.resolve(__dirname, 'testing.env')
-    );
+    let plugin = new MixDefinitionsPlugin(path.resolve(__dirname, 'testing.env'));
 
     let MIX_TESTING = '"123"';
     let NODE_ENV = '"production"';

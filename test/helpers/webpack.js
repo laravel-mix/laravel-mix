@@ -1,9 +1,11 @@
 import webpack from 'webpack';
 
-export async function buildConfig() {
-    await Mix.dispatch('init');
+export async function buildConfig(shouldInit = true) {
+    if (shouldInit) {
+        await Mix.init();
+    }
 
-    return await webpackConfig.build();
+    return await Mix.build();
 }
 
 export async function compile(config) {

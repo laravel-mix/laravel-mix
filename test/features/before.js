@@ -16,7 +16,7 @@ test('it waits for all before/init hooks to complete', async t => {
 
     t.false(called);
 
-    await Mix.dispatch('init');
+    await Mix.init();
 
     t.true(called);
 });

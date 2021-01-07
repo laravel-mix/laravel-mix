@@ -20,8 +20,8 @@ test.before(async () => {
     server = app.listen(1337);
 });
 
-test.after.always(() => {
-    browser && browser.close();
+test.after.always(async () => {
+    browser && (await browser.close());
     server && server.close();
 });
 
@@ -34,6 +34,7 @@ test('compiling just js', async t => {
     setupVueAliases(3);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.react();
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
@@ -44,6 +45,7 @@ test('compiling js and css together', async t => {
 
     // Build a simple mix setup
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.react();
     mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
 
@@ -53,10 +55,48 @@ test('compiling js and css together', async t => {
         'run: app.js',
         'loaded: dynamic.js',
         'run: dynamic.js',
-        'style: rgb(255, 119, 0)'
+        'style: rgb(255, 119, 0)',
+        'style: rgb(119, 204, 51)'
     ]);
 });
 
+test('node browser polyfills: enabled', async t => {
+    setupVueAliases(3);
+
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.react();
+
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer function',
+        'node-polyfill: Buffer.from function',
+        'node-polyfill: process object',
+        'node-polyfill: process.env object',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
+
+test('node browser polyfills: disabled', async t => {
+    setupVueAliases(3);
+
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.react();
+    mix.options({ legacyNodePolyfills: false });
+
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer undefined',
+        'node-polyfill: Buffer.from undefined',
+        'node-polyfill: process undefined',
+        'node-polyfill: process.env undefined',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
+
+/**
+ * @param {import('ava').Assertions} t
+ * @param {string[]} logs
+ **/
 async function assertProducesLogs(t, logs) {
     const uri = `http://localhost:1337/index.html`;
 

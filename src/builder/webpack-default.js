@@ -1,13 +1,13 @@
 let path = require('path');
 let TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = function() {
+module.exports = function () {
     return {
         context: Mix.paths.root(),
 
         mode: Mix.inProduction() ? 'production' : 'development',
 
-        infrastructureLogging: Mix.isWatching() ? {} : { level: 'none' },
+        infrastructureLogging: Mix.isWatching() ? { level: 'none' } : {},
 
         entry: {},
 

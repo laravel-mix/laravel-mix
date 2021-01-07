@@ -6,7 +6,7 @@ import * as webpack from 'webpack';
  * Specify a custom extraction test
  * Equivalent to providing a function to webpack's split chunks
  */
-export type ExtractTestCallback = ((module: webpack.Module, context: any) => boolean);
+export type ExtractTestCallback = (module: webpack.Module, context: any) => boolean;
 
 /**
  * Specify a custom extraction test

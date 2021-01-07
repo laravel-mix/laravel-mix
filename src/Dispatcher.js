@@ -26,7 +26,7 @@ class Dispatcher {
      * Trigger all handlers for the given event.
      *
      * @param {string} event
-     * @param {*} data
+     * @param {*} [data]
      */
     async fire(event, data) {
         if (!this.events[event]) return false;

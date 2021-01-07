@@ -1,6 +1,6 @@
 const argv = require('yargs').argv;
 
-module.exports = function() {
+module.exports = function () {
     return {
         /**
          * Determine if webpack should be triggered in a production environment.
@@ -112,7 +112,7 @@ module.exports = function() {
          *
          * @type {String} babelRcPath
          */
-        babel: function(babelRcPath) {
+        babel: function (babelRcPath) {
             babelRcPath = babelRcPath || Mix.paths.root('.babelrc');
 
             return require('./BabelConfig').generate(this.babelConfig, babelRcPath);
@@ -187,6 +187,13 @@ module.exports = function() {
          * @type {Boolean}
          */
         clearConsole: true,
+
+        /**
+         * Enable legacy node -> browser polyfills for things like `process` and `Buffer`.
+         *
+         * @type {Boolean}
+         */
+        legacyNodePolyfills: true,
 
         /**
          * Options to pass to vue-loader

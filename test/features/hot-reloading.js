@@ -4,7 +4,7 @@ import path from 'path';
 import mix from '../../src/index';
 import File from '../../src/File';
 
-test('it creates a file to mark a request for hot reloading', t => {
+test('it creates a file to mark a request for hot reloading', async t => {
     mix.setPublicPath(__dirname).options({ hmr: true });
 
     let hotFilePath = path.join(__dirname, 'hot');
@@ -13,7 +13,7 @@ test('it creates a file to mark a request for hot reloading', t => {
 
     // Mix should listen for the "init" event before checking
     // if the user desires hot reloading.
-    Mix.dispatch('init');
+    await Mix.init();
 
     t.true(File.exists(hotFilePath));
 

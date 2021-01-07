@@ -7,6 +7,15 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
+test('it does not process absolute urls', async t => {
+    mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
+
+    await t.notThrowsAsync(
+        webpack.compile(),
+        'CSS failed to compile due to incorrect URL processing.'
+    );
+});
+
 test('it compiles PostCSS without JS', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
 
@@ -201,7 +210,7 @@ test('Compiling multiple CSS assets places CSS in the correct location', async t
 
     assert.fileMatchesCss(
         `test/fixtures/app/dist/css/app.css`,
-        `body{color:red;}.app{color:red;}`,
+        `body{color:red;}.app{color:red;background:url('/absolute/image.jpg');}`,
         t
     );
 });
@@ -302,4 +311,13 @@ test('CSS url resolution can be disabled for PostCSS: globally (after)', async t
     t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
     t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
     t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+});
+
+test('CSS imported in JS does not result in separate files by default', async t => {
+    mix.js('test/fixtures/app/src/js/import-css-module.js', 'js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/js/import-css-module.js`));
+    t.false(File.exists(`test/fixtures/app/dist/js/import-css-module.css`));
 });

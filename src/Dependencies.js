@@ -14,13 +14,44 @@ let PackageManager = require('./PackageManager');
  */
 
 class Dependencies {
+    static _queue = {
+        /** @type {Dependency[]} */
+        items: [],
+
+        /** @type {boolean} */
+        requiresReload: false
+    };
+
     /**
      * Create a new Dependencies instance.
      *
      * @param {Dependency[]} dependencies
      */
     constructor(dependencies) {
-        this.dependencies = dependencies;
+        this.dependencies = dependencies
+            .filter(dep => dep)
+            .map(dep => this.normalize(dep));
+    }
+
+    /**
+     * Create a new Dependencies instance.
+     *
+     * @param {Dependency|Dependency[]} dependencies
+     */
+    static queue(dependencies, requiresReload = false) {
+        Dependencies._queue.items = Dependencies._queue.items.concat(dependencies);
+
+        Dependencies._queue.requiresReload =
+            Dependencies._queue.requiresReload || requiresReload;
+    }
+
+    /**
+     * Create a new Dependencies instance.
+     */
+    static installQueued() {
+        new Dependencies(Dependencies._queue.items).install(
+            Dependencies._queue.requiresReload
+        );
     }
 
     /**
@@ -29,9 +60,7 @@ class Dependencies {
      * @param {Boolean} abortOnComplete
      */
     install(abortOnComplete = false) {
-        let dependencies = this.dependencies
-            .map(dep => this.normalize(dep))
-            .filter(dep => !dep.check());
+        let dependencies = this.dependencies.filter(dep => !dep.check());
 
         if (!dependencies.length) {
             return;

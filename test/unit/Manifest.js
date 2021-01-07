@@ -43,19 +43,14 @@ test('it can get the underlying manifest object', t => {
 });
 
 test('it knows the path to the underlying file', t => {
-    t.is(
-        path.join(Config.publicPath, 'mix-manifest.json'),
-        Mix.manifest.path()
-    );
+    t.is(path.join(Config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
 });
 
 test('it can be refreshed', t => {
     mix.setPublicPath(__dirname);
 
     new File(Mix.manifest.path()).write('{}');
-    new File(path.resolve(__dirname, 'js/app.js'))
-        .makeDirectories()
-        .write('var foo;');
+    new File(path.resolve(__dirname, 'js/app.js')).makeDirectories().write('var foo;');
 
     // The initial state of the manifest file should be an empty object.
     t.deepEqual({}, Mix.manifest.read());

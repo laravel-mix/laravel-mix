@@ -1,4 +1,5 @@
 let Assert = require('../Assert');
+let Dependencies = require('../Dependencies');
 let mergeWebpackConfig = require('../builder/MergeWebpackConfig');
 
 let components = [
@@ -26,6 +27,7 @@ let components = [
     'Notifications',
     'DisableNotifications',
     'PurifyCss',
+    'LegacyNodePolyfills',
     'WebpackConfig',
     'DumpWebpackConfig',
     'Then',
@@ -63,12 +65,26 @@ class ComponentRegistrar {
 
         this.registerComponent(component);
 
+        Mix.listen('internal:gather-dependencies', () => {
+            if (!component.activated && !component.passive) {
+                return;
+            }
+
+            if (!component.dependencies) {
+                return;
+            }
+
+            Dependencies.queue(
+                component.dependencies(),
+                component.requiresReload || false
+            );
+        });
+
         Mix.listen('init', () => {
             if (!component.activated && !component.passive) {
                 return;
             }
 
-            component.dependencies && this.installDependencies(component);
             component.boot && component.boot();
             component.babelConfig && this.applyBabelConfig(component);
 
@@ -140,6 +156,7 @@ class ComponentRegistrar {
     /**
      * Install the component's dependencies.
      *
+     * @deprecated
      * @param {Object} component
      */
     installDependencies(component) {

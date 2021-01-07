@@ -53,16 +53,11 @@ class Entry {
      * Add a default entry script to the structure.
      */
     addDefault() {
-        this.add(
-            'mix',
-            new File(path.resolve(__dirname, 'mock-entry.js')).path()
-        );
+        this.add('mix', new File(path.resolve(__dirname, 'mock-entry.js')).path());
     }
 
     hasDefault() {
-        return (this.structure.mix || []).some(path =>
-            path.includes('mock-entry.js')
-        );
+        return (this.structure.mix || []).some(path => path.includes('mock-entry.js'));
     }
 
     /**
@@ -94,18 +89,13 @@ class Entry {
             !pathFromPublicDir.startsWith('/' + Config.publicPath) &&
             !pathFromPublicDir.startsWith('\\' + Config.publicPath)
         ) {
-            output = new File(
-                path.join(Config.publicPath, output.pathFromPublic())
-            );
+            output = new File(path.join(Config.publicPath, output.pathFromPublic()));
         }
 
         // If the output points to a directory, we'll grab a file name from the fallback src.
         if (output.isDirectory()) {
             output = new File(
-                path.join(
-                    output.filePath,
-                    fallback.nameWithoutExtension() + '.js'
-                )
+                path.join(output.filePath, fallback.nameWithoutExtension() + '.js')
             );
         }
 
