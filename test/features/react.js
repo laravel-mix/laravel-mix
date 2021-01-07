@@ -1,9 +1,11 @@
 import test from 'ava';
 import path from 'path';
 import File from '../../src/File';
+import sinon from 'sinon';
+import ReactComponent from '../../src/components/React';
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 import webpack from '../helpers/webpack';
-
 import '../helpers/mix';
 
 test('mix.react()', t => {
@@ -64,4 +66,52 @@ test('non-feature-flag use of mix.preact throws an error', t => {
     t.throws(() => mix.react('js/app.js', 'js'), {
         message: /mix.react\(\) is now a feature flag/
     });
+});
+
+test('fast refreshing is disabled when not in hot mode', t => {
+    t.false(new ReactComponent().supportsFastRefreshing());
+});
+
+test('it supports fast refreshing in hot mode if the React version is 16.9.0 or higher', t => {
+    // Fake hot mode.
+    process.argv.push('--hot');
+
+    let react = new ReactComponent();
+    let library = sinon.stub(react, 'library');
+
+    library.onFirstCall().returns({ version: '15.0.0' });
+    t.false(react.supportsFastRefreshing());
+
+    library.onSecondCall().returns({ version: '16.9.0' });
+    t.true(react.supportsFastRefreshing());
+});
+
+test('it adds the necessary fast refreshing dependencies', t => {
+    let react = new ReactComponent();
+
+    sinon.stub(react, 'supportsFastRefreshing').returns(true);
+
+    let dependencies = react.dependencies();
+
+    t.true(dependencies.includes('@pmmmwh/react-refresh-webpack-plugin'));
+    t.true(dependencies.includes('react-refresh'));
+});
+
+test('it adds the necessary fast refreshing webpack plugins', t => {
+    let react = new ReactComponent();
+
+    sinon.stub(react, 'supportsFastRefreshing').returns(true);
+
+    t.true(react.webpackPlugins() instanceof ReactRefreshPlugin);
+});
+
+test('it adds the necessary babel config', t => {
+    let react = new ReactComponent();
+
+    sinon.stub(react, 'supportsFastRefreshing').returns(true);
+
+    let babelConfig = react.babelConfig();
+
+    t.true(babelConfig.presets[0].includes('@babel/preset-react'));
+    t.true(babelConfig.plugins[0].includes(require.resolve('react-refresh/babel')));
 });

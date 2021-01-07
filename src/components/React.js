@@ -2,22 +2,10 @@ class React {
     /**
      * Required dependencies for the component.
      */
-
-    supportFastRefresh() {
-        try {
-            const semver = require('semver');
-            const react = require('react');
-
-            return Mix.isHot() && semver.satisfies(react.version, '>=16.9.0');
-        } catch {
-            return false;
-        }
-    }
-
     dependencies() {
         const dependencies = ['@babel/preset-react'];
 
-        if (this.supportFastRefresh()) {
+        if (this.supportsFastRefreshing()) {
             return dependencies.concat([
                 '@pmmmwh/react-refresh-webpack-plugin',
                 'react-refresh'
@@ -27,6 +15,9 @@ class React {
         return dependencies;
     }
 
+    /**
+     * Register the component.
+     */
     register() {
         if (
             arguments.length === 2 &&
@@ -39,8 +30,11 @@ class React {
         }
     }
 
+    /**
+     * webpack plugins to be appended to the master config.
+     */
     webpackPlugins() {
-        if (!this.supportFastRefresh()) {
+        if (!this.supportsFastRefreshing()) {
             return [];
         }
 
@@ -53,7 +47,7 @@ class React {
      * Babel config to be merged with Mix's defaults.
      */
     babelConfig() {
-        const plugins = this.supportFastRefresh()
+        const plugins = this.supportsFastRefreshing()
             ? [require.resolve('react-refresh/babel')]
             : [];
 
@@ -61,6 +55,26 @@ class React {
             presets: [['@babel/preset-react', { runtime: 'automatic' }]],
             plugins
         };
+    }
+
+    /**
+     * Determine if the React version supports fast refreshing.
+     */
+    supportsFastRefreshing() {
+        try {
+            const semver = require('semver');
+
+            return Mix.isHot() && semver.satisfies(this.library().version, '>=16.9.0');
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Load the currently installed React library.
+     */
+    library() {
+        return require('react');
     }
 }
 
