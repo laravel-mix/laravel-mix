@@ -20,10 +20,8 @@ function MixDefinitionsPlugin(envPath) {
  *
  * @param {Object|null} merge
  */
-MixDefinitionsPlugin.build = function(merge = {}) {
-    return new webpack.DefinePlugin(
-        new MixDefinitionsPlugin().getDefinitions(merge)
-    );
+MixDefinitionsPlugin.build = function (merge = {}) {
+    return new webpack.DefinePlugin(new MixDefinitionsPlugin().getDefinitions(merge));
 };
 
 /**
@@ -31,7 +29,7 @@ MixDefinitionsPlugin.build = function(merge = {}) {
  *
  * @param {object} merge
  */
-MixDefinitionsPlugin.prototype.getDefinitions = function(merge) {
+MixDefinitionsPlugin.prototype.getDefinitions = function (merge) {
     let regex = /^MIX_/i;
 
     // Filter out env vars that don't begin with MIX_.

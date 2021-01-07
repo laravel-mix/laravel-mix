@@ -5,8 +5,7 @@ import { auto } from 'eol';
 
 new Vue({
     components: {
-        VueSplit: () =>
-            import(/* webpackChunkName: '/js/split' */ './VueSplit.vue')
+        VueSplit: () => import(/* webpackChunkName: '/js/split' */ './VueSplit.vue')
     },
 
     async mounted() {

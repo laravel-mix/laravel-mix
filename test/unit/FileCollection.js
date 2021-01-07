@@ -23,10 +23,7 @@ test('that it can get the underlying files', t => {
 });
 
 test.cb('that it can merge multiple files into one.', t => {
-    let files = [
-        path.resolve(stubsDir, 'one.js'),
-        path.resolve(stubsDir, 'two.js')
-    ];
+    let files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
 
     new File(files[0]).write('class Foo {}');
     new File(files[1]).write('class Bar {}');
@@ -41,10 +38,7 @@ test.cb('that it can merge multiple files into one.', t => {
 });
 
 test.cb('that it can merge JS files and apply Babel compilation.', t => {
-    let files = [
-        path.resolve(stubsDir, 'one.js'),
-        path.resolve(stubsDir, 'two.js')
-    ];
+    let files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
 
     new File(files[0]).write('class Foo {}');
     new File(files[1]).write('class Bar {}');

@@ -19,10 +19,9 @@ class Version {
 
                 if (!filePath.includes('*')) return filePath;
 
-                return glob.sync(
-                    new File(filePath).forceFromPublic().relativePath(),
-                    { nodir: true }
-                );
+                return glob.sync(new File(filePath).forceFromPublic().relativePath(), {
+                    nodir: true
+                });
             })
         );
 

@@ -50,9 +50,7 @@ test('JS compilation with vendor extraction with default config', async t => {
 });
 
 test('JS compilation with total vendor extraction', async t => {
-    mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
-        .vue({ version: 2 })
-        .extract();
+    mix.js(`test/fixtures/app/src/extract/app.js`, 'js').vue({ version: 2 }).extract();
 
     await webpack.compile();
 
