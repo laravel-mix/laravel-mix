@@ -1,6 +1,6 @@
 const argv = require('yargs').argv;
 
-module.exports = function() {
+module.exports = function () {
     return {
         /**
          * Determine if webpack should be triggered in a production environment.
@@ -112,7 +112,7 @@ module.exports = function() {
          *
          * @type {String} babelRcPath
          */
-        babel: function(babelRcPath) {
+        babel: function (babelRcPath) {
             babelRcPath = babelRcPath || Mix.paths.root('.babelrc');
 
             return require('./BabelConfig').generate(this.babelConfig, babelRcPath);

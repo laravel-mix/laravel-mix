@@ -21,7 +21,7 @@ export function cli(opts) {
      *
      * @param {string[]} args
      */
-    return async function(args = []) {
+    return async function (args = []) {
         let cmd = [
             `cross-env`,
             testing ? 'TESTING=1' : '',

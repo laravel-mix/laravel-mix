@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function () {
     let rules = [];
 
     // Add support for loading HTML files.

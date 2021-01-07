@@ -15,8 +15,7 @@ const isArray = Array.isArray;
 function uniteRules(rules, key, newRule, rule) {
     if (
         String(rule.test) !== String(newRule.test) ||
-        ((newRule.enforce || rule.enforce) &&
-            rule.enforce !== newRule.enforce) ||
+        ((newRule.enforce || rule.enforce) && rule.enforce !== newRule.enforce) ||
         (newRule.include && !isSameValue(rule.include, newRule.include)) ||
         (newRule.exclude && !isSameValue(rule.exclude, newRule.exclude))
     ) {
@@ -30,10 +29,7 @@ function uniteRules(rules, key, newRule, rule) {
     ) {
         // Don't merge the rule if there isn't any identifying fields and the loaders don't match
         return false;
-    } else if (
-        (rule.include || rule.exclude) &&
-        (!newRule.include && !newRule.exclude)
-    ) {
+    } else if ((rule.include || rule.exclude) && !newRule.include && !newRule.exclude) {
         // Don't merge child without include/exclude to parent that has either
         return false;
     }
@@ -51,9 +47,7 @@ function uniteRules(rules, key, newRule, rule) {
 
     // newRule.loader should always override use, loaders and oneOf
     if (newRule.loader) {
-        const optionsKey = newRule.options
-            ? 'options'
-            : newRule.query && 'query';
+        const optionsKey = newRule.options ? 'options' : newRule.query && 'query';
 
         delete rule.use;
         delete rule.loaders;
@@ -74,8 +68,7 @@ function uniteRules(rules, key, newRule, rule) {
         (rule.use || rule.loaders || rule.loader) &&
         (newRule.use || newRule.loaders)
     ) {
-        const expandEntry = loader =>
-            typeof loader === 'string' ? { loader } : loader;
+        const expandEntry = loader => (typeof loader === 'string' ? { loader } : loader);
         // this is only here to avoid breaking existing tests
         const unwrapEntry = entry =>
             !entry.options && !entry.query ? entry.loader : entry;
@@ -97,9 +90,7 @@ function uniteRules(rules, key, newRule, rule) {
         } else {
             entries = [].concat(rule.use || rule.loaders).map(expandEntry);
         }
-        const newEntries = []
-            .concat(newRule.use || newRule.loaders)
-            .map(expandEntry);
+        const newEntries = [].concat(newRule.use || newRule.loaders).map(expandEntry);
 
         const loadersKey = rule.use || newRule.use ? 'use' : 'loaders';
         const resolvedKey = `${key}.${loadersKey}`;
@@ -115,9 +106,7 @@ function uniteRules(rules, key, newRule, rule) {
                 rule[loadersKey] = newRule.use || newRule.loaders;
                 break;
             default:
-                rule[loadersKey] = combineEntries(newEntries, entries).map(
-                    unwrapEntry
-                );
+                rule[loadersKey] = combineEntries(newEntries, entries).map(unwrapEntry);
         }
     }
 
@@ -158,10 +147,10 @@ function uniteEntries(newEntry, entry) {
     if (areEqualEntries(newEntry, entry)) {
         // Replace query values with newer ones
         mergeWith(entry, newEntry);
-        
+
         return true;
     }
-    
+
     return false;
 }
 
@@ -187,8 +176,7 @@ function combineEntries(newEntries, existingEntries) {
             areEqualEntries,
             existingEntriesIteratorIndex
         );
-        const hasEquivalentEntryInExistingEntries =
-            indexInExistingEntries !== -1;
+        const hasEquivalentEntryInExistingEntries = indexInExistingEntries !== -1;
 
         if (hasEquivalentEntryInExistingEntries) {
             // If the same entry exists in existing entries, we should add all of the entries that
@@ -217,10 +205,7 @@ function combineEntries(newEntries, existingEntries) {
                 existingEntriesIteratorIndex -= 1;
             }
 
-            uniteEntries(
-                currentEntry,
-                existingEntries[existingEntriesIteratorIndex]
-            );
+            uniteEntries(currentEntry, existingEntries[existingEntriesIteratorIndex]);
             // uniteEntries mutates the second parameter to be a merged version, so that's what's pushed
             resultSet.unshift(existingEntries[existingEntriesIteratorIndex]);
 
@@ -247,11 +232,8 @@ function combineEntries(newEntries, existingEntries) {
     ) {
         const existingEntry = existingEntries[existingEntriesIteratorIndex];
         const alreadyHasMatchingEntryInResultSet =
-            findLastIndexUsingComparinator(
-                resultSet,
-                existingEntry,
-                areEqualEntries
-            ) !== -1;
+            findLastIndexUsingComparinator(resultSet, existingEntry, areEqualEntries) !==
+            -1;
 
         if (!alreadyHasMatchingEntryInResultSet) {
             resultSet.unshift(existingEntry);
@@ -273,7 +255,7 @@ function findLastIndexUsingComparinator(
             return i;
         }
     }
-        
+
     return -1;
 }
 

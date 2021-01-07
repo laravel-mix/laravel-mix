@@ -6,7 +6,7 @@ let objectValues = require('lodash').values;
  * @param {*}    val
  * @param {Function} callback
  */
-global.tap = function(val, callback) {
+global.tap = function (val, callback) {
     callback(val);
 
     return val;
@@ -19,7 +19,7 @@ global.tap = function(val, callback) {
  * @param {Function} callback
  */
 Object.defineProperty(Array.prototype, 'tap', {
-    value: function(callback) {
+    value: function (callback) {
         if (this.length) {
             callback(this);
         }
@@ -49,6 +49,6 @@ Object.defineProperty(Array, 'wrap', {
  *
  * @param {Array} arr
  */
-global.flatten = function(arr) {
+global.flatten = function (arr) {
     return [].concat.apply([], objectValues(arr));
 };

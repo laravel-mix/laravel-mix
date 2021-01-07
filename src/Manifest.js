@@ -24,9 +24,7 @@ class Manifest {
             );
         }
 
-        return collect(this.manifest)
-            .sortKeys()
-            .all();
+        return collect(this.manifest).sortKeys().all();
     }
 
     /**
@@ -74,9 +72,7 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
-        File.find(this.path())
-            .makeDirectories()
-            .write(this.manifest);
+        File.find(this.path()).makeDirectories().write(this.manifest);
     }
 
     /**
@@ -103,9 +99,7 @@ class Manifest {
 
         // If there's a temporary mix.js chunk, we can safely remove it.
         if (assets.mix) {
-            assets.mix = collect(assets.mix)
-                .except('mix.js')
-                .all();
+            assets.mix = collect(assets.mix).except('mix.js').all();
         }
 
         return (

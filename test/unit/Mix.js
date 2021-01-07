@@ -58,9 +58,9 @@ test('that it can add a task', t => {
 });
 
 test('that it can fetch a registered component', t => {
-    let component = new class {
+    let component = new (class {
         register() {}
-    }();
+    })();
 
     mix.extend('foo', component);
 

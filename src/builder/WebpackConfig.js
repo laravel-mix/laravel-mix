@@ -130,7 +130,7 @@ class WebpackConfig {
              * @param {{app: import("express").Application}} param0
              */
             onBeforeSetupMiddleware({ app }) {
-                app.use(function(req, _, next) {
+                app.use(function (req, _, next) {
                     // Something causes hot update chunks (except for the JSON payload)
                     // to start with a double slash
                     // e.g. GET http://localhost:8080//js/app.[hash].hot-update.js

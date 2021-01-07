@@ -28,10 +28,7 @@ class AppendVueStylesPlugin {
         let largestIndex = 0;
 
         for (const { module, group } of queue) {
-            largestIndex = Math.max(
-                largestIndex,
-                group.getModulePostOrderIndex(module)
-            );
+            largestIndex = Math.max(largestIndex, group.getModulePostOrderIndex(module));
         }
 
         // Push all vue assets after it in their original order

@@ -52,7 +52,7 @@ class BrowserSync {
             snippetOptions: {
                 rule: {
                     match: this.regex(),
-                    fn: function(snippet, match) {
+                    fn: function (snippet, match) {
                         return snippet + match;
                     }
                 }

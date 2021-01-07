@@ -40,12 +40,7 @@ export default {
      * @param {import("ava").Assertions} t
      */
     fileNotEmpty: (path, t) => {
-        t.not(
-            File.find(path)
-                .read()
-                .replace(/\s/g, ''),
-            ''
-        );
+        t.not(File.find(path).read().replace(/\s/g, ''), '');
     },
 
     /**
@@ -56,12 +51,7 @@ export default {
      * @param {import("ava").Assertions} t
      */
     fileMatchesCss: (path, expected, t) => {
-        t.is(
-            File.find(path)
-                .read()
-                .replace(/\s/g, ''),
-            expected.replace(/\s/g, '')
-        );
+        t.is(File.find(path).read().replace(/\s/g, ''), expected.replace(/\s/g, ''));
     },
 
     /**

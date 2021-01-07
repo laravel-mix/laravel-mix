@@ -20,9 +20,7 @@ test('it handles Browsersync reloading', async t => {
     let { config } = await webpack.compile();
 
     t.truthy(
-        config.plugins.find(
-            plugin => plugin.constructor.name === 'BrowserSyncPluginStub'
-        )
+        config.plugins.find(plugin => plugin.constructor.name === 'BrowserSyncPluginStub')
     );
 });
 
@@ -64,11 +62,7 @@ test('it configures Browsersync server', t => {
     let config = browserSyncConfig({ server: './app' });
 
     t.is(config.server, './app', 'sets server from user Browsersync config');
-    t.is(
-        config.proxy,
-        undefined,
-        'does not set default proxy when using server'
-    );
+    t.is(config.proxy, undefined, 'does not set default proxy when using server');
 });
 
 let browserSyncConfig = userConfig => {
