@@ -5,7 +5,12 @@ const { spawn } = require('child_process');
 const path = require('path');
 const pkg = require('../package.json');
 
-run();
+run().catch(err => {
+    console.error(err);
+
+    process.exitCode = process.exitCode || 1;
+    process.exit();
+});
 
 /**
  * Run the program.
