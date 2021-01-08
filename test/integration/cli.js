@@ -4,6 +4,7 @@ import { cli } from '../helpers/cli';
 
 const mix = cli({
     testing: false,
+    env: { NODE_ENV: 'development' },
     cwd: path.resolve(__dirname, './fixture')
 });
 

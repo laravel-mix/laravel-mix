@@ -80,7 +80,9 @@ class Assert {
      * @param {Boolean} abortOnComplete
      */
     static dependencies(dependencies, abortOnComplete = false) {
-        if (argv['$0'].includes('ava')) return;
+        if (process.env.NODE_ENV === 'test') {
+            return;
+        }
 
         new Dependencies(dependencies).install(abortOnComplete);
     }

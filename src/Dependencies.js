@@ -117,7 +117,7 @@ class Dependencies {
                     : 'Finished. Please run Mix again.'
             );
 
-            if (!argv['$0'].includes('ava')) {
+            if (process.env.NODE_ENV !== 'test') {
                 process.exit();
             }
         }

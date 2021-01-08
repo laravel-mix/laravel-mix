@@ -28,7 +28,8 @@ class BuildOutputPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        if (argv['$0'].includes('ava')) {
+        // TODO: Refactor setup to allow removing this check
+        if (process.env.NODE_ENV === 'test') {
             return;
         }
 

@@ -6,7 +6,8 @@ class Paths {
      * Create a new Paths instance.
      */
     constructor() {
-        if (argv['$0'].includes('ava')) {
+        // TODO: Refactor setup to allow removing this check
+        if (process.env.NODE_ENV === 'test') {
             this.rootPath = path.resolve(__dirname, '../');
         } else {
             this.rootPath = process.cwd();
