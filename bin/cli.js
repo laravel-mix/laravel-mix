@@ -4,6 +4,7 @@ const { Command } = require('commander');
 const { spawn } = require('child_process');
 const path = require('path');
 const pkg = require('../package.json');
+const { assertSupportedNodeVersion } = require('../src/Engine.js');
 
 run().catch(err => {
     console.error(err);
@@ -54,6 +55,8 @@ async function run() {
  * @param {string[]} args
  */
 async function executeScript(cmd, opts, args = []) {
+    assertSupportedNodeVersion();
+
     const env = getEffectiveEnv(opts);
 
     // We MUST use a relative path because the files
