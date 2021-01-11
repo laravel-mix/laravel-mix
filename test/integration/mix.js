@@ -34,7 +34,7 @@ test('compiling just js', async t => {
     setupVueAliases(3);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-    mix.vue();
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
     mix.extract();
 
@@ -50,7 +50,7 @@ test('compiling js and css together', async t => {
     mix.react();
     mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
-    mix.vue();
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.extract();
 
     await webpack.compile();
@@ -68,7 +68,7 @@ test('node browser polyfills: enabled', async t => {
     setupVueAliases(3);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-    mix.vue();
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
     mix.extract();
 
@@ -86,7 +86,7 @@ test('node browser polyfills: disabled', async t => {
     setupVueAliases(3);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-    mix.vue();
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
     mix.extract();
     mix.options({ legacyNodePolyfills: false });
