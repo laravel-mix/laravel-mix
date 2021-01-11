@@ -60,7 +60,8 @@ test('compiling js and css together', async t => {
         'loaded: dynamic.js',
         'run: dynamic.js',
         'style: rgb(255, 119, 0)',
-        'style: rgb(119, 204, 51)'
+        'style: rgb(119, 204, 51)',
+        'async component style: rgb(255, 119, 0) rgb(255, 119, 0)'
     ]);
 });
 
