@@ -103,7 +103,7 @@ class Preprocessor {
     /**
      * Prepare the preprocessor plugin options.
      *
-     * @param {Object} preprocessor
+     * @param {Detail} preprocessor
      * @param {Boolean} processUrls
      */
     loaderOptions(preprocessor, processUrls) {
