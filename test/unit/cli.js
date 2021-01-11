@@ -1,14 +1,25 @@
 import test from 'ava';
+import path from 'path';
 import { cli } from '../helpers/cli';
 
 const mix = cli({ testing: true });
+
+/** @type {string} */
+let configPath = '';
+
+test.before(() => {
+    configPath = path.relative(
+        process.cwd(),
+        require.resolve('../../setup/webpack.config.js')
+    );
+});
 
 test('it calls webpack in development mode', async t => {
     let { stdout } = await mix();
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );
@@ -19,7 +30,7 @@ test('it calls webpack in production mode', async t => {
 
     t.is(
         'cross-env NODE_ENV=production MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );
@@ -30,7 +41,7 @@ test('it calls webpack with watch mode', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --watch --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );
@@ -41,7 +52,7 @@ test('it calls webpack with watch mode using polling', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --watch --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"' +
             ' --watch-poll',
         stdout
@@ -53,7 +64,7 @@ test('it calls webpack with hot reloading', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack serve --hot --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );
@@ -64,7 +75,7 @@ test('it calls webpack with hot reloading using polling', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack serve --hot --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"' +
             ' --watch-poll',
         stdout
@@ -76,7 +87,7 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"' +
             ' --env foo="bar baz" foo="bar=baz"',
         stdout
@@ -94,7 +105,7 @@ test('it calls webpack with custom node_env', async t => {
 
     t.is(
         'cross-env NODE_ENV=foobar MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );
@@ -107,7 +118,7 @@ test('it disables progress reporting when not using a terminal', async t => {
 
     t.is(
         'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --config="' +
-            require.resolve('../../setup/webpack.config.js') +
+            configPath +
             '"',
         stdout
     );

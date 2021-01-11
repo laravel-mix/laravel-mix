@@ -2,6 +2,7 @@
 
 const { Command } = require('commander');
 const { spawn } = require('child_process');
+const path = require('path');
 
 run();
 
@@ -46,18 +47,25 @@ async function run() {
  * @param {string[]} args
  */
 async function executeScript(cmd, opts, args = []) {
-    const env =
-        opts.production
-            ? 'production'
-            : (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
-                ? 'development'
-                : process.env.NODE_ENV;
+    const env = opts.production
+        ? 'production'
+        : (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
+        ? 'development'
+        : process.env.NODE_ENV;
+
+    // We MUST use a relative path because the files
+    // created by npm dont correctly handle paths
+    // containg spaces on Windows (yarn does)
+    const configPath = path.relative(
+        process.cwd(),
+        require.resolve('../setup/webpack.config.js')
+    );
 
     let script = [
         `cross-env NODE_ENV=${env}`,
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
-        `--config="${require.resolve('../setup/webpack.config.js')}"`,
+        `--config="${configPath}"`,
         ...quoteArgs(args)
     ].join(' ');
 
