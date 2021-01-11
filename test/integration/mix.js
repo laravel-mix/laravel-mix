@@ -33,8 +33,10 @@ test('compiling just js', async t => {
     // Build a simple mix setup
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue();
     mix.react();
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
@@ -44,10 +46,12 @@ test('compiling js and css together', async t => {
     setupVueAliases(3);
 
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
     mix.react();
     mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
+    mix.vue();
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, [
@@ -63,8 +67,10 @@ test('compiling js and css together', async t => {
 test('node browser polyfills: enabled', async t => {
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue();
     mix.react();
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, [
@@ -79,8 +85,10 @@ test('node browser polyfills: enabled', async t => {
 test('node browser polyfills: disabled', async t => {
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue();
     mix.react();
+    mix.extract();
     mix.options({ legacyNodePolyfills: false });
 
     await webpack.compile();
