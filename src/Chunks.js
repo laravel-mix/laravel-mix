@@ -210,8 +210,10 @@ class Chunks {
             return true;
         }
 
-        if (module.issuer) {
-            return this._checkTest(test, module.issuer, context);
+        const issuer = context.moduleGraph.getIssuer(module);
+
+        if (issuer) {
+            return this._checkTest(test, issuer, context);
         }
 
         return false;
