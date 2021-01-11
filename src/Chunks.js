@@ -1,14 +1,23 @@
 let path = require('path');
 
-/** @typedef {import("webpack/declarations/WebpackOptions").OptimizationSplitChunksCacheGroup} CacheGroup */
+/** @typedef {import("webpack").Module} Module */
+/** @typedef {object} OptimizationSplitChunksCacheGroup */
 
 /**
- * @typedef {(module: import("webpack").Module, chunks: import("webpack").ChunkData[]) => bool} ChunkTestCallback
+ * @typedef {Object} CacheGroupsContext
+ * @property {import("webpack").ModuleGraph} moduleGraph
+ * @property {import("webpack").ChunkGraph} chunkGraph
+ */
+
+/** @typedef {any} CacheGroup */
+
+/**
+ * @typedef {(module: import("webpack").Module, context: CacheGroupsContext) => boolean} ChunkTestCallback
  * @typedef {undefined|boolean|string|RegExp|ChunkTestCallback} ChunkTest
  */
 
 /**
- * @typedef {(chunk: CacheGroup, id: string) => bool} ChunkFindCallback
+ * @typedef {(chunk: CacheGroup, id: string) => boolean} ChunkFindCallback
  */
 
 class Chunks {
@@ -19,6 +28,7 @@ class Chunks {
         /** @type {{[key: string]: CacheGroup}} */
         this.chunks = {};
 
+        /** @type {import("./builder/Entry.js")|null} */
         this.entry = null;
         this.runtime = false;
     }
@@ -58,7 +68,7 @@ class Chunks {
      *
      * @param {string} id A unique identifier for this chunk. Multiple chunks with the same ID are merged.
      * @param {string} path The output path for this chunk
-     * @param {Partial<CacheGroups>} attrs
+     * @param {Partial<OptimizationSplitChunksCacheGroup>} attrs
      */
     create(id, path, attrs = {}) {
         this.chunks[id] = this.chunks[id] || {
@@ -160,8 +170,7 @@ class Chunks {
      * @internal
      *
      * @param {(undefined|boolean|string|RegExp|Function)[]} tests
-     * @param {Module} module the module
-     * @param {CacheGroupsContext} context context object
+     * @returns {ChunkTestCallback}
      */
     _checkAllTests(tests) {
         return (module, context) =>
@@ -176,8 +185,7 @@ class Chunks {
      * @internal
      *
      * @param {(undefined|boolean|string|RegExp|Function)[]} tests
-     * @param {Module} module the module
-     * @param {CacheGroupsContext} context context object
+     * @returns {ChunkTestCallback}
      */
     _checkAnyTests(tests) {
         return (module, context) =>
@@ -194,7 +202,7 @@ class Chunks {
      *
      * @param {undefined|boolean|string|RegExp|Function} test test option
      * @param {import("webpack").Module} module the module
-     * @param {any} context context object
+     * @param {CacheGroupsContext} context context object
      * @returns {boolean} true, if the module should be selected
      */
     _checkTest(test, module, context) {
@@ -202,8 +210,10 @@ class Chunks {
             return true;
         }
 
-        if (module.issuer) {
-            return this._checkTest(test, module.issuer, context);
+        const issuer = context.moduleGraph.getIssuer(module);
+
+        if (issuer) {
+            return this._checkTest(test, issuer, context);
         }
 
         return false;
