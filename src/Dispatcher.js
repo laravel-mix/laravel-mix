@@ -34,7 +34,7 @@ class Dispatcher {
     async fire(event, data) {
         if (!this.events[event]) return false;
 
-        return Promise.allSettled(this.events[event].map(handler => handler(data)));
+        return Promise.all(this.events[event].map(handler => handler(data)));
     }
 
     /**
