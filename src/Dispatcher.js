@@ -1,16 +1,19 @@
+/** @typedef {(...args: any) => void|Promise<void>} Handler */
+
 class Dispatcher {
     /**
      * Create a new Dispatcher instance.
      */
     constructor() {
+        /** @type {Record<string, Handler[]>} */
         this.events = {};
     }
 
     /**
      * Listen for the given event.
      *
-     * @param {string|Array}   events
-     * @param {Function}       handler
+     * @param {string|string[]}   events
+     * @param {Handler}       handler
      */
     listen(events, handler) {
         events = [].concat(events);

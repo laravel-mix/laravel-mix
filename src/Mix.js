@@ -203,8 +203,8 @@ class Mix {
     /**
      * Listen for the given event.
      *
-     * @param {string}   event
-     * @param {Function} callback
+     * @param {string|string}   event
+     * @param {import('./Dispatcher').Handler} callback
      */
     listen(event, callback) {
         this.dispatcher.listen(event, callback);
@@ -214,7 +214,7 @@ class Mix {
      * Dispatch the given event.
      *
      * @param {string} event
-     * @param {*}      [data]
+     * @param {any | (() => any)}      [data]
      */
     async dispatch(event, data) {
         if (typeof data === 'function') {
