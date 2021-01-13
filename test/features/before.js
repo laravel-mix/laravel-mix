@@ -20,3 +20,11 @@ test('it waits for all before/init hooks to complete', async t => {
 
     t.true(called);
 });
+
+test('a throwing before hook stops the build', async t => {
+    mix.before(async () => {
+        throw new Error('error 123');
+    });
+
+    await t.throwsAsync(() => Mix.init(), { message: 'error 123' });
+});

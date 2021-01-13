@@ -25,3 +25,23 @@ test('that it attach multiple event listeners at once', t => {
 
     t.truthy(handler.withArgs('foo').calledTwice);
 });
+
+test('that it errors when sync listners error', async t => {
+    let events = new Dispatcher();
+
+    events.listen('foo', () => {
+        throw new Error('error');
+    });
+
+    await t.throwsAsync(() => events.fire('foo'));
+});
+
+test('that it errors when async listners error', async t => {
+    let events = new Dispatcher();
+
+    events.listen('foo', async () => {
+        throw new Error('error 123');
+    });
+
+    await t.throwsAsync(() => events.fire('foo'), { message: 'error 123' });
+});

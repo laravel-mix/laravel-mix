@@ -1,16 +1,19 @@
+/** @typedef {(...args: any) => void|Promise<void>} Handler */
+
 class Dispatcher {
     /**
      * Create a new Dispatcher instance.
      */
     constructor() {
+        /** @type {Record<string, Handler[]>} */
         this.events = {};
     }
 
     /**
      * Listen for the given event.
      *
-     * @param {string|Array}   events
-     * @param {Function}       handler
+     * @param {string|string[]}   events
+     * @param {Handler}       handler
      */
     listen(events, handler) {
         events = [].concat(events);
@@ -31,7 +34,7 @@ class Dispatcher {
     async fire(event, data) {
         if (!this.events[event]) return false;
 
-        return Promise.allSettled(this.events[event].map(handler => handler(data)));
+        return Promise.all(this.events[event].map(handler => handler(data)));
     }
 
     /**
