@@ -23,7 +23,7 @@ This allows one to write `import { useFoo } from "@/Hooks` and it'll be expanded
 
 In addition to aliasing paths you can also alias the definition of an entire module. For example, when importing Vue 3.x we'd prefer to import the ESM bundler version which is more suitable for tree-shaking.
 
-This is acheieved by the following snippet:
+This is achieved by the following snippet:
 
 ```js
 mix.alias({
