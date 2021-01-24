@@ -11,8 +11,8 @@ class BabelConfig {
         return merge.all(
             [
                 BabelConfig.default(),
-                new BabelConfig().fetchBabelRc(Config.babelConfigPath),
-                mixBabelConfig
+                mixBabelConfig,
+                new BabelConfig().fetchBabelRc(Config.babelConfigPath)
             ],
             {
                 arrayMerge: (destinationArray, sourceArray, options) => sourceArray
