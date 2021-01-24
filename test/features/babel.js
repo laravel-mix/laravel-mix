@@ -45,11 +45,13 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
     // Setup a test .babelrc file.
     let babelRcPath = __dirname + '/.testbabelrc';
 
+    Config.babelConfigPath = babelRcPath;
+
     new File(babelRcPath).write(
         '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage"}] ] }'
     );
 
-    let babelConfig = Config.babel(babelRcPath);
+    let babelConfig = Config.babel();
 
     t.is(1, babelConfig.presets.length);
 

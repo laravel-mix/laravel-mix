@@ -112,11 +112,11 @@ module.exports = function () {
          *
          * @type {String} babelRcPath
          */
-        babel: function (babelRcPath) {
-            babelRcPath = babelRcPath || Mix.paths.root('.babelrc');
-
-            return require('./BabelConfig').generate(this.babelConfig, babelRcPath);
+        babel: function () {
+            return require('./BabelConfig').generate(this.babelConfig);
         },
+
+        babelConfigFile: '.babelrc',
 
         /**
          * Determine if CSS relative url()s should be resolved by webpack.

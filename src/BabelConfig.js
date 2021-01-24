@@ -1,19 +1,17 @@
-let merge = require('babel-merge');
-let path = require('path');
-let File = require('./File');
+const merge = require('babel-merge');
+const File = require('./File');
 
 class BabelConfig {
     /**
      * Generate the appropriate Babel configuration for the build.
      *
      * @param {Object} mixBabelConfig
-     * @param {String} babelRcPath
      */
-    static generate(mixBabelConfig, babelRcPath) {
+    static generate(mixBabelConfig) {
         return merge.all(
             [
                 BabelConfig.default(),
-                new BabelConfig().fetchBabelRc(babelRcPath),
+                new BabelConfig().fetchBabelRc(Config.babelConfigPath),
                 mixBabelConfig
             ],
             {
