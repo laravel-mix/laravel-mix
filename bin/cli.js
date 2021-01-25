@@ -3,6 +3,7 @@
 const { Command } = require('commander');
 const { spawn } = require('child_process');
 const path = require('path');
+const pkg = require('../package.json');
 
 run();
 
@@ -13,7 +14,7 @@ async function run() {
     const program = new Command();
 
     program.name('mix');
-    program.version('0.0.1');
+    program.version(pkg.version);
     program.option(
         '--mix-config <path>',
         'The path to your Mix configuration file.',
