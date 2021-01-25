@@ -90,14 +90,16 @@ async function executeScript(cmd, opts, args = []) {
  * @param {{[key: string]: any}} opts
  */
 function commandScript(cmd, opts) {
+    const showProgress = isTTY();
+
     if (cmd === 'build') {
-        if (isTTY()) {
+        if (showProgress) {
             return 'npx webpack --progress';
         }
 
         return 'npx webpack';
     } else if (cmd === 'watch' && !opts.hot) {
-        if (isTTY()) {
+        if (showProgress) {
             return 'npx webpack --progress --watch';
         }
 
