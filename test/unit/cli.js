@@ -123,3 +123,14 @@ test('it disables progress reporting when not using a terminal', async t => {
         stdout
     );
 });
+
+test('it disables progress reporting when requested', async t => {
+    let { stdout } = await mix(['--no-progress']);
+
+    t.is(
+        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --config="' +
+            configPath +
+            '"',
+        stdout
+    );
+});

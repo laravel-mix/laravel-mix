@@ -19,6 +19,7 @@ async function run() {
         'The path to your Mix configuration file.',
         'webpack.mix'
     );
+    program.option('--no-progress', 'Disable progress reporting', false);
 
     program
         .command('watch')
@@ -90,7 +91,7 @@ async function executeScript(cmd, opts, args = []) {
  * @param {{[key: string]: any}} opts
  */
 function commandScript(cmd, opts) {
-    const showProgress = isTTY();
+    const showProgress = isTTY() && opts.progress;
 
     if (cmd === 'build') {
         if (showProgress) {
