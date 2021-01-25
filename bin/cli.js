@@ -49,11 +49,7 @@ async function run() {
  * @param {string[]} args
  */
 async function executeScript(cmd, opts, args = []) {
-    const env = opts.production
-        ? 'production'
-        : (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
-        ? 'development'
-        : process.env.NODE_ENV;
+    const env = getEffectiveEnv(opts);
 
     // We MUST use a relative path because the files
     // created by npm dont correctly handle paths
@@ -64,7 +60,8 @@ async function executeScript(cmd, opts, args = []) {
     );
 
     let script = [
-        `cross-env NODE_ENV=${env}`,
+        `cross-env`,
+        `NODE_ENV=${env}`,
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
         `--config="${configPath}"`,
@@ -128,6 +125,27 @@ function quoteArgs(args) {
 
         return arg;
     });
+}
+
+/**
+ * Get the effective envirnoment to run in
+ *
+ ** @param {{[key: string]: any}} opts
+ */
+function getEffectiveEnv(opts) {
+    // If we've requested a production compile we enforce use of the production env
+    // If we don't a user's global NODE_ENV may override and prevent minification of assets
+    if (opts.production) {
+        return 'production';
+    }
+
+    // We use `development` by default or under certain specific conditions when testing
+    if (!process.env.NODE_ENV || (isTesting() && process.env.NODE_ENV === 'test')) {
+        return 'development';
+    }
+
+    // Otherwsise defer to the current value of NODE_ENV
+    return process.env.NODE_ENV;
 }
 
 function isTesting() {
