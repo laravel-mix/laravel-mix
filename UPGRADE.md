@@ -1,6 +1,7 @@
 ## Upgrade to Mix 6
 
 -   [Review Your Dependencies](#review-your-dependencies)
+-   [Check Your Node Version](#check-your-node-version)
 -   [Update Your NPM Scripts](#update-your-npm-scripts)
 -   [Watch Ignores Node_Modules](#watch-ignores-node-modules)
 -   [API for JavaScript Frameworks](#api-for-javascript-frameworks)
@@ -24,6 +25,10 @@ upgrading to Mix 6.
 
 Please review your `package.json` dependencies list for any third-party tools or plugins that may not yet be compatible
 with webpack 5 or PostCSS 8.
+
+### Check Your Node Version
+
+Mix has bumped its minimum Node requirement from version 8 to 12.14.0. Please check which version you have installed (`node -v`) and ensure that it meets this requirement.
 
 ### Update Your NPM Scripts
 
