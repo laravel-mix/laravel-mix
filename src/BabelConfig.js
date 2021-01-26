@@ -1,5 +1,5 @@
+const babel = require('@babel/core');
 const merge = require('babel-merge');
-const File = require('./File');
 
 class BabelConfig {
     /**
@@ -8,25 +8,60 @@ class BabelConfig {
      * @param {Object} mixBabelConfig
      */
     static generate(mixBabelConfig) {
-        return merge.all(
-            [
-                BabelConfig.default(),
-                mixBabelConfig,
-                new BabelConfig().fetchBabelRc(Config.babelConfigPath)
-            ],
-            {
-                arrayMerge: (destinationArray, sourceArray, options) => sourceArray
-            }
-        );
+        return BabelConfig.mergeAll([
+            BabelConfig.default(),
+            BabelConfig.getUserConfig(mixBabelConfig)
+        ]);
     }
 
     /**
      * Fetch the user's .babelrc config file, if any.
      *
-     * @param {String} path
+     * @param {Object} customOptions
      */
-    fetchBabelRc(path) {
-        return File.exists(path) ? JSON.parse(File.find(path).read()) : {};
+    static getUserConfig(customOptions) {
+        const { options } = babel.loadPartialConfig({
+            filename: '.babelrc',
+            ...customOptions
+        });
+
+        return options;
+    }
+
+    static mergeAll(configs) {
+        return configs.reduce((prev, current) => {
+            const presets = BabelConfig.filterConfigItems(
+                [...(prev.presets || []), ...(current.presets || [])].map(preset =>
+                    babel.createConfigItem(preset, { type: 'preset' })
+                )
+            );
+
+            const plugins = BabelConfig.filterConfigItems(
+                [...(prev.plugins || []), ...(current.plugins || [])].map(plugin =>
+                    babel.createConfigItem(plugin, { type: 'plugin' })
+                )
+            );
+
+            return Object.assign(prev, current, { presets, plugins });
+        });
+    }
+
+    static filterConfigItems(configItems) {
+        return configItems
+            .reduce((unique, configItem) => {
+                if (configItem.file != null) {
+                    delete unique[
+                        unique.findIndex(
+                            element =>
+                                element.file &&
+                                element.file.resolved === configItem.file.resolved
+                        )
+                    ];
+                }
+
+                return [...unique, configItem];
+            }, [])
+            .filter(Boolean);
     }
 
     /**
@@ -35,15 +70,7 @@ class BabelConfig {
     static default() {
         return {
             cacheDirectory: true,
-            presets: [
-                [
-                    '@babel/preset-env',
-                    {
-                        modules: false,
-                        forceAllTransforms: true
-                    }
-                ]
-            ],
+            presets: ['@babel/preset-env'],
             plugins: [
                 '@babel/plugin-syntax-dynamic-import',
                 '@babel/plugin-proposal-object-rest-spread',

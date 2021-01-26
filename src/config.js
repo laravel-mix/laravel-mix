@@ -109,14 +109,10 @@ module.exports = function () {
 
         /**
          * The default Babel configuration.
-         *
-         * @type {String} babelRcPath
          */
         babel: function () {
             return require('./BabelConfig').generate(this.babelConfig);
         },
-
-        babelConfigFile: '.babelrc',
 
         /**
          * Determine if CSS relative url()s should be resolved by webpack.

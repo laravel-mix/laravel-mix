@@ -18,47 +18,43 @@ test('Default Babel plugins includes plugin-proposal-object-rest-spread', t => {
 });
 
 test('Default Babel presets includes env', t => {
-    t.true(
-        Config.babel().presets.find(preset => {
-            return preset.find(p => p.includes(path.normalize('@babel/preset-env')));
-        }) !== undefined
-    );
+    t.true(seeBabelPreset('@babel/preset-env'));
 });
 
 test('Babel reads the project .babelrc file', t => {
     // Setup a test .babelrc file.
-    new File(__dirname + '/.testbabelrc').write(
-        '{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }'
-    );
+    const configFile = __dirname + '/.testbabelrc';
 
-    t.true(
-        Config.babel(__dirname + '/.testbabelrc').plugins.find(plugin =>
-            plugin.includes(path.normalize('@babel/plugin-syntax-dynamic-import'))
-        ) !== undefined
-    );
+    new File(configFile).write('{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }');
+
+    Config.babelConfig = { configFile };
+
+    t.true(seeBabelPlugin('@babel/plugin-syntax-dynamic-import'));
 
     // Cleanup.
-    File.find(__dirname + '/.testbabelrc').delete();
+    File.find(configFile).delete();
 });
 
 test('Values from duplicate keys in the .babelrc file override the defaults entirely.', t => {
+    Config.babelConfig = { configFile: false };
+
     // Setup a test .babelrc file.
-    let babelRcPath = __dirname + '/.testbabelrc';
+    const configFile = __dirname + '/.testbabelrc';
 
-    Config.babelConfigPath = babelRcPath;
+    Config.babelConfig = { configFile };
 
-    new File(babelRcPath).write(
+    new File(configFile).write(
         '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage"}] ] }'
     );
 
-    let babelConfig = Config.babel();
+    const babelConfig = Config.babel();
 
     t.is(1, babelConfig.presets.length);
 
     t.deepEqual({ useBuiltIns: 'usage' }, babelConfig.presets[0][1]);
 
     // Cleanup.
-    File.find(babelRcPath).delete();
+    File.find(configFile).delete();
 });
 
 test('Babel config from Mix extensions is merged with the defaults', async t => {
@@ -85,9 +81,18 @@ test('Babel config from Mix extensions is merged with the defaults', async t => 
  *
  * @param {string} name
  */
-let seeBabelPlugin = name => {
-    return (
-        Config.babel().plugins.find(plugin => plugin.includes(path.normalize(name))) !==
-        undefined
+const seeBabelPlugin = name => {
+    return !!Config.babel().plugins.find(
+        plugin => plugin.file && plugin.file.request === name
+    );
+};
+
+/**
+ *
+ * @param {string} name
+ */
+const seeBabelPreset = name => {
+    return !!Config.babel().presets.find(
+        plugin => plugin.file && plugin.file.request === name
     );
 };
