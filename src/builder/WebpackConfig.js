@@ -94,7 +94,7 @@ class WebpackConfig {
         }
 
         const {isHttps, host, port} = Config.hmrOptions;
-        const protocol = isHttps ? 'https' : 'http';
+        const protocol = https ? 'https' : 'http';
         const url = `${protocol}://${host}:${port}/`;
 
         this.webpackConfig.output = {
@@ -115,7 +115,7 @@ class WebpackConfig {
             public: url,
             liveReload: false,
             
-            https: isHttps,
+            https,
 
             dev: {
                 headers: {
