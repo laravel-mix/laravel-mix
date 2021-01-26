@@ -3,8 +3,15 @@
 const { Command } = require('commander');
 const { spawn } = require('child_process');
 const path = require('path');
+const pkg = require('../package.json');
+const { assertSupportedNodeVersion } = require('../src/Engine.js');
 
-run();
+run().catch(err => {
+    console.error(err);
+
+    process.exitCode = process.exitCode || 1;
+    process.exit();
+});
 
 /**
  * Run the program.
@@ -13,12 +20,13 @@ async function run() {
     const program = new Command();
 
     program.name('mix');
-    program.version('0.0.1');
+    program.version(pkg.version);
     program.option(
         '--mix-config <path>',
         'The path to your Mix configuration file.',
         'webpack.mix'
     );
+    program.option('--no-progress', 'Disable progress reporting', false);
 
     program
         .command('watch')
@@ -47,11 +55,9 @@ async function run() {
  * @param {string[]} args
  */
 async function executeScript(cmd, opts, args = []) {
-    const env = opts.production
-        ? 'production'
-        : (isTesting() && process.env.NODE_ENV === 'test') || !process.env.NODE_ENV
-        ? 'development'
-        : process.env.NODE_ENV;
+    assertSupportedNodeVersion();
+
+    const env = getEffectiveEnv(opts);
 
     // We MUST use a relative path because the files
     // created by npm dont correctly handle paths
@@ -62,7 +68,8 @@ async function executeScript(cmd, opts, args = []) {
     );
 
     let script = [
-        `cross-env NODE_ENV=${env}`,
+        `cross-env`,
+        `NODE_ENV=${env}`,
         `MIX_FILE="${opts.mixConfig}"`,
         commandScript(cmd, opts),
         `--config="${configPath}"`,
@@ -90,14 +97,16 @@ async function executeScript(cmd, opts, args = []) {
  * @param {{[key: string]: any}} opts
  */
 function commandScript(cmd, opts) {
+    const showProgress = isTTY() && opts.progress;
+
     if (cmd === 'build') {
-        if (isTTY()) {
+        if (showProgress) {
             return 'npx webpack --progress';
         }
 
         return 'npx webpack';
     } else if (cmd === 'watch' && !opts.hot) {
-        if (isTTY()) {
+        if (showProgress) {
             return 'npx webpack --progress --watch';
         }
 
@@ -124,6 +133,27 @@ function quoteArgs(args) {
 
         return arg;
     });
+}
+
+/**
+ * Get the effective envirnoment to run in
+ *
+ ** @param {{[key: string]: any}} opts
+ */
+function getEffectiveEnv(opts) {
+    // If we've requested a production compile we enforce use of the production env
+    // If we don't a user's global NODE_ENV may override and prevent minification of assets
+    if (opts.production) {
+        return 'production';
+    }
+
+    // We use `development` by default or under certain specific conditions when testing
+    if (!process.env.NODE_ENV || (isTesting() && process.env.NODE_ENV === 'test')) {
+        return 'development';
+    }
+
+    // Otherwsise defer to the current value of NODE_ENV
+    return process.env.NODE_ENV;
 }
 
 function isTesting() {
