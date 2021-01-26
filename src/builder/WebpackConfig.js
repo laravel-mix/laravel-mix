@@ -93,7 +93,7 @@ class WebpackConfig {
             return;
         }
 
-        const {isHttps, host, port} = Config.hmrOptions;
+        const {https, host, port} = Config.hmrOptions;
         const protocol = https ? 'https' : 'http';
         const url = `${protocol}://${host}:${port}/`;
 
