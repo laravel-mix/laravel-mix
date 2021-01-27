@@ -153,10 +153,10 @@ test('custom Babel config may be merged', async t => {
     await webpack.buildConfig();
 
     t.true(
-        Config.babel().plugins.find(plugin =>
-            plugin.includes(
-                path.normalize('@babel/plugin-proposal-unicode-property-regex')
-            )
+        Config.babel().plugins.find(
+            plugin =>
+                plugin.file &&
+                plugin.file.request === '@babel/plugin-proposal-unicode-property-regex'
         ) !== undefined
     );
 });

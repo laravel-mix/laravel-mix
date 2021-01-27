@@ -1,6 +1,5 @@
 import test from 'ava';
 import File from '../../src/File';
-import path from 'path';
 import webpack from '../helpers/webpack';
 
 import '../helpers/mix';

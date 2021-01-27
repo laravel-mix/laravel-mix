@@ -50,8 +50,8 @@ test('it sets the babel config correctly', async t => {
     await webpack.buildConfig();
 
     t.true(
-        Config.babel().presets.find(p =>
-            p[0].includes(path.normalize('@babel/preset-react'))
+        Config.babel().presets.find(
+            p => p.file && p.file.request === '@babel/preset-react'
         ) !== undefined
     );
 });
