@@ -47,21 +47,19 @@ class BabelConfig {
     }
 
     static filterConfigItems(configItems) {
-        return configItems
-            .reduce((unique, configItem) => {
-                if (configItem.file != null) {
-                    delete unique[
-                        unique.findIndex(
-                            element =>
-                                element.file &&
-                                element.file.resolved === configItem.file.resolved
-                        )
-                    ];
-                }
+        return configItems.reduce((unique, configItem) => {
+            if (configItem.file != null) {
+                unique.splice(
+                    unique.findIndex(
+                        element =>
+                            element.file &&
+                            element.file.resolved === configItem.file.resolved
+                    )
+                );
+            }
 
-                return [...unique, configItem];
-            }, [])
-            .filter(Boolean);
+            return [...unique, configItem];
+        }, []);
     }
 
     /**
