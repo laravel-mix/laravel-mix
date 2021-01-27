@@ -48,13 +48,14 @@ class BabelConfig {
     static filterConfigItems(configItems) {
         return configItems.reduce((unique, configItem) => {
             if (configItem.file != null) {
-                unique.splice(
-                    unique.findIndex(
-                        element =>
-                            element.file &&
-                            element.file.resolved === configItem.file.resolved
-                    )
+                const toDeleteIndex = unique.findIndex(
+                    element =>
+                        element.file && element.file.resolved === configItem.file.resolved
                 );
+
+                if (toDeleteIndex >= 0) {
+                    unique.slice(toDeleteIndex, 1);
+                }
             }
 
             return [...unique, configItem];
