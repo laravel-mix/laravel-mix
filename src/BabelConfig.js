@@ -27,6 +27,11 @@ class BabelConfig {
         return options;
     }
 
+    /**
+     * Merge babel configs
+     *
+     * @param {Array<String|Object|Array>} configs
+     */
     static mergeAll(configs) {
         return configs.reduce((prev, current) => {
             const presets = BabelConfig.filterConfigItems(
@@ -45,6 +50,11 @@ class BabelConfig {
         });
     }
 
+    /**
+     * Filter merged presets or plugins
+     *
+     * @param {Array<Object>} configItems
+     */
     static filterConfigItems(configItems) {
         return configItems.reduce((unique, configItem) => {
             if (configItem.file != null) {
