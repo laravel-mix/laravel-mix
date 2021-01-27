@@ -40,7 +40,7 @@ class React {
 
         const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-        return new ReactRefreshWebpackPlugin();
+        return new ReactRefreshWebpackPlugin({ overlay: false });
     }
 
     /**
