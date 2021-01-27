@@ -64,7 +64,7 @@ class BabelConfig {
                 );
 
                 if (toDeleteIndex >= 0) {
-                    unique.slice(toDeleteIndex, 1);
+                    unique.splice(toDeleteIndex, 1);
                 }
             }
 

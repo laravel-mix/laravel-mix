@@ -50,7 +50,7 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
 
     t.is(1, babelConfig.presets.length);
 
-    t.deepEqual({ useBuiltIns: 'usage' }, babelConfig.presets[0][1]);
+    t.deepEqual({ useBuiltIns: 'usage' }, babelConfig.presets[0].options);
 
     // Cleanup.
     File.find(configFile).delete();
