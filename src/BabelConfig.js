@@ -1,5 +1,4 @@
 const babel = require('@babel/core');
-const merge = require('babel-merge');
 
 class BabelConfig {
     /**
