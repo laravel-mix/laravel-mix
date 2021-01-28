@@ -118,7 +118,7 @@ class Dependencies {
             );
 
             if (process.env.NODE_ENV !== 'test') {
-                process.exit(126);
+                process.exit(1);
             }
         }
     }
