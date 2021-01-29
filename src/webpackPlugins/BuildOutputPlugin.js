@@ -10,6 +10,7 @@ const { version } = require('../../package.json');
 /**
  * @typedef {object} BuildOutputOptions
  * @property {boolean} clearConsole
+ * @property {boolean} showRelated
  **/
 
 /**
@@ -58,7 +59,8 @@ class BuildOutputPlugin {
                 assets: true,
                 builtAt: true,
                 hash: true,
-                performance: true
+                performance: true,
+                relatedAssets: this.options.showRelated
             });
 
             this.heading(`Laravel Mix v${version}`);
@@ -135,6 +137,11 @@ class BuildOutputPlugin {
      */
     sortAssets(data) {
         let assets = data.assets;
+
+        assets = _.flatMap(assets, asset => [
+            asset,
+            ...(Array.isArray(asset.related) ? asset.related : [])
+        ]);
 
         assets = _.orderBy(assets, ['name', 'size'], ['asc', 'asc']);
 
