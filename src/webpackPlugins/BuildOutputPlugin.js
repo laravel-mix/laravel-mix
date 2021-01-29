@@ -12,6 +12,18 @@ const { version } = require('../../package.json');
  * @property {boolean} clearConsole
  **/
 
+/**
+ * @typedef {object} StatsAsset
+ * @property {string} name
+ * @property {number} size
+ * @property {StatsAsset[]|{}} related
+ **/
+
+/**
+ * @typedef {object} StatsData
+ * @property {StatsAsset[]} assets
+ **/
+
 class BuildOutputPlugin {
     /**
      *
@@ -91,11 +103,11 @@ class BuildOutputPlugin {
     /**
      * Generate the stats table.
      *
-     * @param {any} data
+     * @param {StatsData} data
      * @returns {string}
      */
     statsTable(data) {
-        data = this.sortAssets(data);
+        const assets = this.sortAssets(data);
 
         const table = new Table({
             head: [chalk.bold('File'), chalk.bold('Size')],
@@ -107,7 +119,7 @@ class BuildOutputPlugin {
             }
         });
 
-        for (const asset of data.assets) {
+        for (const asset of assets) {
             table.push([chalk.green(asset.name), formatSize(asset.size)]);
         }
 
@@ -119,12 +131,14 @@ class BuildOutputPlugin {
 
     /**
      *
-     * @param {any} data
+     * @param {StatsData} data
      */
     sortAssets(data) {
-        data.assets = _.orderBy(data.assets, ['name', 'size'], ['asc', 'asc']);
+        let assets = data.assets;
 
-        return data;
+        assets = _.orderBy(assets, ['name', 'size'], ['asc', 'asc']);
+
+        return assets;
     }
 
     /**

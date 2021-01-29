@@ -101,6 +101,7 @@
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-react": "^7.12.1",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+        "@types/lodash": "^4.14.168",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@vue/compiler-sfc": "^3.0.1",
