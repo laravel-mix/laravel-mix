@@ -93,7 +93,13 @@ test('it adds the necessary fast refreshing dependencies', t => {
 
     let dependencies = react.dependencies();
 
-    t.true(dependencies.includes('@pmmmwh/react-refresh-webpack-plugin'));
+    t.truthy(
+        dependencies.find(
+            dependency =>
+                dependency.package ===
+                '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.0'
+        )
+    );
     t.true(dependencies.includes('react-refresh'));
 });
 
