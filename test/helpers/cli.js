@@ -69,9 +69,26 @@ export function cli(opts) {
      */
     async function testRun(args = []) {
         const result = await run(args);
+        const stdout = testing ? JSON.parse(result.stdout) : { script: null, env: {} };
 
         return {
-            ...result
+            ...result,
+
+            /**
+             * @param {import("ava").Assertions} t
+             * @param {string} script
+             **/
+            assertScript(t, script) {
+                t.is(stdout.script, script);
+            },
+
+            /**
+             * @param {import("ava").Assertions} t
+             * @param {Record<string, string>} env
+             **/
+            assertEnv(t, env) {
+                t.deepEqual(stdout.env, env);
+            }
         };
     }
 

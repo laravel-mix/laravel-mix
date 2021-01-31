@@ -81,7 +81,12 @@ async function executeScript(cmd, opts, args = []) {
     };
 
     if (isTesting()) {
-        process.stdout.write(script);
+        process.stdout.write(
+            JSON.stringify({
+                script,
+                env: scriptEnv
+            })
+        );
 
         return;
     }
