@@ -67,27 +67,35 @@ async function executeScript(cmd, opts, args = []) {
         require.resolve('../setup/webpack.config.js')
     );
 
-    let script = [
-        `cross-env`,
-        `NODE_ENV=${env}`,
-        `MIX_FILE="${opts.mixConfig}"`,
+    const script = [
         commandScript(cmd, opts),
         `--config="${configPath}"`,
         ...quoteArgs(args)
     ].join(' ');
 
+    const scriptEnv = {
+        NODE_ENV: env,
+        MIX_FILE: opts.mixConfig
+    };
+
     if (isTesting()) {
         return process.stdout.write(script);
     }
 
-    const child = spawn(script, {
-        stdio: 'inherit',
-        shell: true
-    });
+    function restart() {
+        let child = spawn(script, {
+            stdio: 'inherit',
+            shell: true,
+            env: {
+                ...process.env,
+                ...scriptEnv
+            }
+        });
 
-    child.on('exit', code => {
-        process.exitCode = code;
-    });
+        child.on('exit', code => (process.exitCode = code));
+    }
+
+    restart();
 }
 
 /**
