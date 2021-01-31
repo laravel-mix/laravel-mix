@@ -101,7 +101,19 @@ async function executeScript(cmd, opts, args = []) {
             }
         });
 
-        child.on('exit', code => (process.exitCode = code));
+        child.on('exit', (code, signal) => {
+            // Note adapted from cross-env:
+            // https://github.com/kentcdodds/cross-env/blob/3edefc7b450fe273655664f902fd03d9712177fe/src/index.js#L30-L31
+
+            // The process exit code can be null when killed by the OS (like an out of memory error) or sometimes by node
+            // SIGINT means the _user_ pressed Ctrl-C to interrupt the process execution
+            // Return the appropriate error code in that case
+            if (code === null) {
+                code = signal === 'SIGINT' ? 130 : 1;
+            }
+
+            process.exitCode = code;
+        });
     }
 
     restart();
