@@ -84,10 +84,10 @@ test('it can utilize custom checks for a dependency', t => {
     new Dependencies([
         {
             package: 'postcss@^8.1',
-            check: postcss => {
+            check: name => {
                 called = true;
 
-                t.true(semver.satisfies(postcss().version, '^8.1'));
+                t.true(semver.satisfies(require(`${name}/package.json`).version, '^8.1'));
 
                 return false;
             }
