@@ -11,8 +11,11 @@ class React {
             return dependencies.concat([
                 {
                     package: '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.0',
-                    check: dependency =>
-                        semver.satisfies(dependency.version, '^0.5.0-beta.0')
+                    check: name =>
+                        semver.satisfies(
+                            require(`${name}/package.json`).version,
+                            '^0.5.0-beta.0'
+                        )
                 },
                 'react-refresh'
             ]);
