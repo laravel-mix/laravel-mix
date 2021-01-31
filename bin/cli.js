@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// @ts-check
+
 const { Command } = require('commander');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -79,7 +81,9 @@ async function executeScript(cmd, opts, args = []) {
     };
 
     if (isTesting()) {
-        return process.stdout.write(script);
+        process.stdout.write(script);
+
+        return;
     }
 
     function restart() {
