@@ -50,7 +50,7 @@ module.exports = function () {
 
     // Add support for loading fonts.
     rules.push({
-        test: /(\.(woff2?|ttf|eot|otf)$|font.$)/,
+        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
         use: [
             {
                 loader: 'file-loader',
