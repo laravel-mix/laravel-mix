@@ -145,7 +145,7 @@ class Dependencies {
         }
 
         function isValid() {
-            return dep.check ? dep.check(require(name)) : true;
+            return dep.check ? dep.check(name) : true;
         }
 
         return {
