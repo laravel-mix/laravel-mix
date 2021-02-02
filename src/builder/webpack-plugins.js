@@ -36,7 +36,8 @@ module.exports = function () {
     // Enable custom output when the Webpack build completes.
     plugins.push(
         new BuildOutputPlugin({
-            clearConsole: Config.clearConsole
+            clearConsole: Config.clearConsole,
+            showRelated: true
         })
     );
 
