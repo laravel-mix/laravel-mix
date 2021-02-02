@@ -22,6 +22,7 @@ module.exports = function () {
          * @type {Object}
          */
         hmrOptions: {
+            https: !!argv.https,
             host: 'localhost',
             port: !!argv.hmrPort ? argv.hmrPort : '8080'
         },

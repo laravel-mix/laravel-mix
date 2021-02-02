@@ -32,6 +32,7 @@ async function run() {
         .command('watch')
         .description('Build and watch files for changes.')
         .option('--hot', 'Enable hot reloading.', false)
+        .option('--https', 'Enable https.', false)
         .action(cmd =>
             executeScript('watch', { ...program.opts(), ...cmd.opts() }, cmd.args)
         );
