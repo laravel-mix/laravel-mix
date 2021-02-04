@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 
 import { context } from '../helpers/test.js';
 import { setupVueAliases } from '../features/vue.js';
+import assert from '../helpers/assertions';
 
 /**
  * @template  MetadataType
@@ -90,6 +91,45 @@ test.serial('compiling just js', async t => {
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
+});
+
+test('compiling css into relative directory', async t => {
+    setupVueAliases(3);
+
+    // Build a simple mix setup
+    mix.sass(
+        'test/fixtures/integration/src/css/app.scss',
+        '../../../integration/fixture/public/css/app.css'
+    );
+
+    await webpack.compile();
+    assert.fileExists(`test/integration/fixture/public/css/app.css`, t);
+    await assertProducesLogs(t, [
+        'loaded: app.js',
+        'run: app.js',
+        'loaded: dynamic.js',
+        'run: dynamic.js',
+        'style: rgb(255, 119, 0)',
+        'style: rgb(119, 204, 51)'
+    ]);
+});
+
+test('compiling css using public directory in destination', async t => {
+    setupVueAliases(3);
+
+    // Build a simple mix setup
+    mix.sass('test/fixtures/integration/src/css/app.scss', 'dist/css/app.css');
+
+    await webpack.compile();
+    assert.fileExists(`test/fixtures/integration/dist/css/app.css`, t);
+    await assertProducesLogs(t, [
+        'loaded: app.js',
+        'run: app.js',
+        'loaded: dynamic.js',
+        'run: dynamic.js',
+        'style: rgb(255, 119, 0)',
+        'style: rgb(119, 204, 51)'
+    ]);
 });
 
 test.serial('compiling js and css together', async t => {
