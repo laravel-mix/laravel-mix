@@ -1,5 +1,6 @@
 let path = require('path');
 let File = require('./File');
+let argv = require('yargs').argv;
 
 module.exports = {
     record() {
@@ -10,7 +11,7 @@ module.exports = {
         }
 
         this.hotFile().write(
-            `${this.http()}://${Config.hmrOptions.host}:${this.port()}/`
+            `${this.http()}://${this.host()}:${this.port()}/`
         );
     },
 
@@ -23,9 +24,11 @@ module.exports = {
     },
 
     port() {
-        return process.argv.includes('--port')
-            ? process.argv[process.argv.indexOf('--port') + 1]
-            : Config.hmrOptions.port;
+        return argv.port || Config.hmrOptions.port;
+    },
+
+    host() {
+	return argv.public || argv.host || Config.hmrOptions.host;
     },
 
     clean() {
