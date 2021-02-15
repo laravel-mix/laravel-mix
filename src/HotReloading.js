@@ -19,7 +19,7 @@ module.exports = {
     },
 
     http() {
-        return process.argv.includes('--https') ? 'https' : 'http';
+        return process.argv.includes('--https') ? 'https' : (Config.hmrOptions.https === true ? 'https' : 'http');
     },
 
     port() {
