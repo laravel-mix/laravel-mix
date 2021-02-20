@@ -192,7 +192,7 @@ mix.autoload({
 
 ### `.before(callback)`
 
-Run the given callback function before the webpack compilation begins. 
+Run the given callback function before the webpack compilation begins.
 
 ```js
 mix.before(() => {
@@ -205,7 +205,7 @@ If your script is asynchronous, you must return a promise to ensure that Mix wai
 ```js
 mix.before(() => {
     return new Promise(resolve => {
-        setTimeout(resolve, 2000); 
+        setTimeout(resolve, 2000);
     });
 });
 ```
@@ -234,4 +234,16 @@ mix.options({
     autoprefixer: {},
     legacyNodePolyfills: false
 });
+```
+
+### `.inProduction()`
+
+Determine if mix is building for production.
+
+```js
+if (mix.inProduction()) {
+  // do production stuff
+} else {
+  // do development stuff
+}
 ```
