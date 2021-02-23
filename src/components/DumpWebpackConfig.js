@@ -17,8 +17,32 @@ class DumpWebpackConfig {
                 return this.toString();
             };
 
-            Log.info(JSON.stringify(config, null, 2));
+            Log.info(this.circularStringify(config));
         });
+    }
+
+    /**
+     *
+     * @param {any} item
+     */
+    circularStringify(item) {
+        const cache = new Set();
+
+        return JSON.stringify(
+            item,
+            (_, value) => {
+                if (typeof value === 'object' && value !== null) {
+                    if (cache.has(value)) {
+                        return undefined;
+                    }
+
+                    cache.add(value);
+                }
+
+                return value;
+            },
+            2
+        );
     }
 }
 
