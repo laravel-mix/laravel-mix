@@ -26,3 +26,10 @@ test('Webpack errors result in non-zero exit code', async t => {
 
     t.not(0, code);
 });
+
+test.only('An empty mix file results in a successful build with a warning', async t => {
+    const { code, stderr } = await mix(['--mix-config=webpack.mix.empty']);
+
+    t.is(0, code);
+    t.regex(stderr, /not set up correctly/i);
+});
