@@ -35,6 +35,8 @@ class Mix {
         /** @type {Task[]} */
         this.tasks = [];
 
+        this.booted = false;
+
         this.bundlingJavaScript = false;
 
         /**
@@ -67,6 +69,14 @@ class Mix {
      * @internal
      */
     async build() {
+        if (!this.booted) {
+            console.warn(
+                'Mix was not set up correctly. Please ensure you import or require laravel-mix in your mix config.'
+            );
+
+            this.boot();
+        }
+
         return this.webpackConfig.build();
     }
 
@@ -74,6 +84,12 @@ class Mix {
      * @internal
      */
     boot() {
+        if (this.booted) {
+            return;
+        }
+
+        this.booted = true;
+
         // Load .env
         Dotenv.config();
 
