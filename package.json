@@ -125,8 +125,8 @@
         "pretty-quick": "^3.1.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
-        "resolve-url-loader": "^3.1.1",
         "react-refresh": "^0.9.0",
+        "resolve-url-loader": "^3.1.1",
         "sass": "^1.27.0",
         "sass-loader": "^10.0.3",
         "sass-resources-loader": "^2.1.1",
@@ -138,7 +138,8 @@
         "vue-loader16": "npm:vue-loader@^16.1.0",
         "vue-template-compiler": "^2.6.12",
         "vue2": "npm:vue@^2.6.12",
-        "vue3": "npm:vue@^3.0.1"
+        "vue3": "npm:vue@^3.0.1",
+        "webpackbar": "^5.0.0-3"
     },
     "peerDependencies": {
         "postcss": "^8.1.2"
