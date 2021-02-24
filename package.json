@@ -92,7 +92,8 @@
         "webpack-dev-server": "^4.0.0-beta.0",
         "webpack-merge": "^5.2.0",
         "webpack-notifier": "^1.8.0",
-        "yargs": "^16.1.0"
+        "yargs": "^16.1.0",
+        "webpackbar": "^5.0.0-3"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.12.1",
@@ -138,8 +139,7 @@
         "vue-loader16": "npm:vue-loader@^16.1.0",
         "vue-template-compiler": "^2.6.12",
         "vue2": "npm:vue@^2.6.12",
-        "vue3": "npm:vue@^3.0.1",
-        "webpackbar": "^5.0.0-3"
+        "vue3": "npm:vue@^3.0.1"
     },
     "peerDependencies": {
         "postcss": "^8.1.2"
