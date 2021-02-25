@@ -142,7 +142,7 @@ function commandScript(cmd, opts) {
 
         return 'npx webpack --watch';
     } else if (cmd === 'watch' && opts.hot) {
-        return 'npx webpack serve --hot';
+        return 'npx webpack serve --hot' + (opts.https ? ' --https' : '');
     }
 }
 
