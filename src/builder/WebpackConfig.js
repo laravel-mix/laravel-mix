@@ -93,16 +93,15 @@ class WebpackConfig {
             return;
         }
 
-        let http = process.argv.includes('--https') ? 'https' : 'http';
-        const url = `${http}://${Config.hmrOptions.host}:${Config.hmrOptions.port}/`;
+        const {https, host, port} = Config.hmrOptions;
+        const protocol = https ? 'https' : 'http';
+        const url = `${protocol}://${host}:${port}/`;
 
         this.webpackConfig.output = {
             ...this.webpackConfig.output,
 
             publicPath: url
         };
-
-        const { host, port } = Config.hmrOptions;
 
         this.webpackConfig.devServer = {
             host,
@@ -115,6 +114,8 @@ class WebpackConfig {
 
             public: url,
             liveReload: false,
+            
+            https,
 
             dev: {
                 headers: {

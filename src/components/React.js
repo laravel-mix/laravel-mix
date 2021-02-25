@@ -1,3 +1,5 @@
+const semver = require('semver');
+
 class React {
     /**
      * Required dependencies for the component.
@@ -7,7 +9,14 @@ class React {
 
         if (this.supportsFastRefreshing()) {
             return dependencies.concat([
-                '@pmmmwh/react-refresh-webpack-plugin',
+                {
+                    package: '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.0',
+                    check: name =>
+                        semver.satisfies(
+                            require(`${name}/package.json`).version,
+                            '^0.5.0-beta.0'
+                        )
+                },
                 'react-refresh'
             ]);
         }
@@ -38,9 +47,9 @@ class React {
             return [];
         }
 
-        const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+        const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-        return new ReactRefreshWebpackPlugin();
+        return new ReactRefreshPlugin({ overlay: { sockPath: 'ws' } });
     }
 
     /**
@@ -61,13 +70,7 @@ class React {
      * Determine if the React version supports fast refreshing.
      */
     supportsFastRefreshing() {
-        try {
-            const semver = require('semver');
-
-            return Mix.isHot() && semver.satisfies(this.library().version, '>=16.9.0');
-        } catch {
-            return false;
-        }
+        return Mix.isHot() && semver.satisfies(this.library().version, '>=16.9.0');
     }
 
     /**

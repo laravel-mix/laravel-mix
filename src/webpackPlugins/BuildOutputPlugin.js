@@ -10,6 +10,19 @@ const { version } = require('../../package.json');
 /**
  * @typedef {object} BuildOutputOptions
  * @property {boolean} clearConsole
+ * @property {boolean} showRelated
+ **/
+
+/**
+ * @typedef {object} StatsAsset
+ * @property {string} name
+ * @property {number} size
+ * @property {StatsAsset[]|{}} related
+ **/
+
+/**
+ * @typedef {object} StatsData
+ * @property {StatsAsset[]} assets
  **/
 
 class BuildOutputPlugin {
@@ -46,7 +59,8 @@ class BuildOutputPlugin {
                 assets: true,
                 builtAt: true,
                 hash: true,
-                performance: true
+                performance: true,
+                relatedAssets: this.options.showRelated
             });
 
             this.heading(`Laravel Mix v${version}`);
@@ -91,11 +105,11 @@ class BuildOutputPlugin {
     /**
      * Generate the stats table.
      *
-     * @param {any} data
+     * @param {StatsData} data
      * @returns {string}
      */
     statsTable(data) {
-        data = this.sortAssets(data);
+        const assets = this.sortAssets(data);
 
         const table = new Table({
             head: [chalk.bold('File'), chalk.bold('Size')],
@@ -107,7 +121,7 @@ class BuildOutputPlugin {
             }
         });
 
-        for (const asset of data.assets) {
+        for (const asset of assets) {
             table.push([chalk.green(asset.name), formatSize(asset.size)]);
         }
 
@@ -119,12 +133,19 @@ class BuildOutputPlugin {
 
     /**
      *
-     * @param {any} data
+     * @param {StatsData} data
      */
     sortAssets(data) {
-        data.assets = _.orderBy(data.assets, ['name', 'size'], ['asc', 'asc']);
+        let assets = data.assets;
 
-        return data;
+        assets = _.flatMap(assets, asset => [
+            asset,
+            ...(Array.isArray(asset.related) ? asset.related : [])
+        ]);
+
+        assets = _.orderBy(assets, ['name', 'size'], ['asc', 'asc']);
+
+        return assets;
     }
 
     /**

@@ -118,7 +118,7 @@ class Dependencies {
             );
 
             if (process.env.NODE_ENV !== 'test') {
-                process.exit();
+                process.exit(1);
             }
         }
     }
@@ -145,7 +145,7 @@ class Dependencies {
         }
 
         function isValid() {
-            return dep.check ? dep.check(require(name)) : true;
+            return dep.check ? dep.check(name) : true;
         }
 
         return {

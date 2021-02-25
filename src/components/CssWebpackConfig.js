@@ -11,7 +11,8 @@ class CssWebpackConfig extends AutomaticComponent {
         return [
             {
                 package: 'postcss@^8.1',
-                check: postcss => semver.satisfies(postcss().version, '^8.1')
+                check: name =>
+                    semver.satisfies(require(`${name}/package.json`).version, '^8.1')
             }
         ];
     }

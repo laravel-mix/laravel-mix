@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// @ts-check
+
 const { Command } = require('commander');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -32,6 +34,7 @@ async function run() {
         .command('watch')
         .description('Build and watch files for changes.')
         .option('--hot', 'Enable hot reloading.', false)
+        .option('--https', 'Enable https.', false)
         .action(cmd =>
             executeScript('watch', { ...program.opts(), ...cmd.opts() }, cmd.args)
         );
@@ -67,27 +70,54 @@ async function executeScript(cmd, opts, args = []) {
         require.resolve('../setup/webpack.config.js')
     );
 
-    let script = [
-        `cross-env`,
-        `NODE_ENV=${env}`,
-        `MIX_FILE="${opts.mixConfig}"`,
+    const script = [
         commandScript(cmd, opts),
         `--config="${configPath}"`,
         ...quoteArgs(args)
     ].join(' ');
 
+    const scriptEnv = {
+        NODE_ENV: env,
+        MIX_FILE: opts.mixConfig
+    };
+
     if (isTesting()) {
-        return process.stdout.write(script);
+        process.stdout.write(
+            JSON.stringify({
+                script,
+                env: scriptEnv
+            })
+        );
+
+        return;
     }
 
-    const child = spawn(script, {
-        stdio: 'inherit',
-        shell: true
-    });
+    function restart() {
+        let child = spawn(script, {
+            stdio: 'inherit',
+            shell: true,
+            env: {
+                ...process.env,
+                ...scriptEnv
+            }
+        });
 
-    child.on('exit', code => {
-        process.exitCode = code;
-    });
+        child.on('exit', (code, signal) => {
+            // Note adapted from cross-env:
+            // https://github.com/kentcdodds/cross-env/blob/3edefc7b450fe273655664f902fd03d9712177fe/src/index.js#L30-L31
+
+            // The process exit code can be null when killed by the OS (like an out of memory error) or sometimes by node
+            // SIGINT means the _user_ pressed Ctrl-C to interrupt the process execution
+            // Return the appropriate error code in that case
+            if (code === null) {
+                code = signal === 'SIGINT' ? 130 : 1;
+            }
+
+            process.exitCode = code;
+        });
+    }
+
+    restart();
 }
 
 /**

@@ -15,83 +15,61 @@ test.before(() => {
 });
 
 test('it calls webpack in development mode', async t => {
-    let { stdout } = await mix();
+    const result = await mix();
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --progress --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack in production mode', async t => {
-    let { stdout } = await mix(['--production']);
+    const result = await mix(['--production']);
 
-    t.is(
-        'cross-env NODE_ENV=production MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --progress --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'production' });
 });
 
 test('it calls webpack with watch mode', async t => {
-    let { stdout } = await mix(['watch']);
+    const result = await mix(['watch']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --watch --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --progress --watch --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack with watch mode using polling', async t => {
-    let { stdout } = await mix(['watch', '--', '--watch-poll']);
+    const result = await mix(['watch', '--', '--watch-poll']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --watch --config="' +
-            configPath +
-            '"' +
-            ' --watch-poll',
-        stdout
+    result.assertScript(
+        t,
+        `npx webpack --progress --watch --config="${configPath}" --watch-poll`
     );
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack with hot reloading', async t => {
-    let { stdout } = await mix(['watch', '--hot']);
+    const result = await mix(['watch', '--hot']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack serve --hot --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack serve --hot --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack with hot reloading using polling', async t => {
-    let { stdout } = await mix(['watch', '--hot', '--', '--watch-poll']);
+    const result = await mix(['watch', '--hot', '--', '--watch-poll']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack serve --hot --config="' +
-            configPath +
-            '"' +
-            ' --watch-poll',
-        stdout
+    result.assertScript(
+        t,
+        `npx webpack serve --hot --config="${configPath}" --watch-poll`
     );
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack with quoted key value pair command arguments', async t => {
-    let { stdout } = await mix(['--', '--env', 'foo="bar baz"', 'foo="bar=baz"']);
+    const result = await mix(['--', '--env', 'foo="bar baz"', 'foo="bar=baz"']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            configPath +
-            '"' +
-            ' --env foo="bar baz" foo="bar=baz"',
-        stdout
+    result.assertScript(
+        t,
+        `npx webpack --progress --config="${configPath}" --env foo="bar baz" foo="bar=baz"`
     );
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it calls webpack with custom node_env', async t => {
@@ -99,40 +77,28 @@ test('it calls webpack with custom node_env', async t => {
 
     process.env.NODE_ENV = 'foobar';
 
-    let { stdout } = await mix();
+    const result = await mix();
 
     process.env.NODE_ENV = oldEnv;
 
-    t.is(
-        'cross-env NODE_ENV=foobar MIX_FILE="webpack.mix" npx webpack --progress --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --progress --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'foobar' });
 });
 
 test('it disables progress reporting when not using a terminal', async t => {
-    process.env.IS_TTY = false;
+    process.env.IS_TTY = '0';
 
-    let { stdout } = await mix();
+    const result = await mix();
 
     delete process.env.IS_TTY;
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
 test('it disables progress reporting when requested', async t => {
-    let { stdout } = await mix(['--no-progress']);
+    const result = await mix(['--no-progress']);
 
-    t.is(
-        'cross-env NODE_ENV=development MIX_FILE="webpack.mix" npx webpack --config="' +
-            configPath +
-            '"',
-        stdout
-    );
+    result.assertScript(t, `npx webpack --config="${configPath}"`);
+    result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });

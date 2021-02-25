@@ -4,6 +4,7 @@ let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
+let WebpackBar = require('webpackbar');
 
 module.exports = function () {
     let plugins = [];
@@ -36,9 +37,14 @@ module.exports = function () {
     // Enable custom output when the Webpack build completes.
     plugins.push(
         new BuildOutputPlugin({
-            clearConsole: Config.clearConsole
+            clearConsole: Config.clearConsole,
+            showRelated: true
         })
     );
+
+    if (process.env.NODE_ENV !== 'test') {
+        plugins.push(new WebpackBar({ name: 'Mix' }));
+    }
 
     return plugins;
 };

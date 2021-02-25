@@ -255,7 +255,7 @@ declare namespace mix {
         version?: number;
 
         /** A file to include w/ every vue style block. */
-        globalStyles?: boolean | string | string[] | Record<string, string | string[]>;
+        globalStyles?: false | string | string[] | Record<string, string | string[]>;
 
         /** Whether or not to extract vue styles. If given a string the name of the file to extract to. */
         extractStyles?: boolean | string;

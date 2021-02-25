@@ -26,6 +26,9 @@ interface MixConfig {
         port: string;
     };
 
+    /** Determine if we should enable https on hot reloading. */
+    https?: boolean;
+
     /**
      * PostCSS plugins to be applied to compiled CSS.
      *
