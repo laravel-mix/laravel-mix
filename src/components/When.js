@@ -1,10 +1,8 @@
 class When {
     register(condition, callback) {
         if (condition) {
-            callback(this);
+            callback(Mix.api);
         }
-
-        return this;
     }
 }
 
