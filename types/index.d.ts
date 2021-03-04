@@ -46,8 +46,8 @@ declare namespace mix {
         /** Run a callback after the build has completed */
         then(callback: (stats: webpack.Stats) => void | Promise<void>): Api;
 
-        /** Run a callback after the build has completed */
-        when(callback: () => void | Promise<void>): Api;
+        /** Run a callback if a condition is true */
+        when(condition: boolean, callback: (mix: Api) => void | Promise<void>): Api;
     }
 
     // Webpack config related abilities
