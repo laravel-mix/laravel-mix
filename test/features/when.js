@@ -17,10 +17,3 @@ test('it executes the callback based on the condition', t => {
 test('it passes the mix instance to the callback', t => {
     mix.when(true, _mix => t.deepEqual(mix, _mix));
 });
-
-test('it returns the mix instance', t => {
-    t.deepEqual(
-        mix,
-        mix.when(true, () => {})
-    );
-});
