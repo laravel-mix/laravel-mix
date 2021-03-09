@@ -10,7 +10,7 @@ module.exports = {
         }
 
         this.hotFile().write(
-            `${this.http()}://${Config.hmrOptions.host}:${this.port()}/`
+            `${this.http()}://${Config.hmrOptions.host}:${this.port()}`
         );
     },
 
