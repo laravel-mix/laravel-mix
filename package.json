@@ -133,7 +133,7 @@
         "sass-resources-loader": "^2.1.1",
         "sinon": "^9.2.0",
         "stylus": "^0.54.8",
-        "stylus-loader": "^4.1.1",
+        "stylus-loader": "^5.0.0",
         "temp-sandbox": "^4.0.1",
         "vue-loader15": "npm:vue-loader@^15.9.1",
         "vue-loader16": "npm:vue-loader@^16.1.0",
