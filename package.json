@@ -116,7 +116,7 @@
         "koa": "^2.13.0",
         "koa-static": "^5.0.0",
         "less": "^3.12.2 || ^4.0.0",
-        "less-loader": "^7.2.0",
+        "less-loader": "^8.0.0",
         "mock-require": "^3.0.3",
         "normalize.css": "^8.0.1",
         "playwright": "^1.7.0",
