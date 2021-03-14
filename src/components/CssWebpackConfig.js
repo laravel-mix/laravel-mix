@@ -171,8 +171,9 @@ class CssWebpackConfig extends AutomaticComponent {
      *
      * @param {object} [options]
      * @param {"auto" | "inline" | "extract"} options.method The method to use when handling CSS.
+     * @param {"default" | "per-file"} options.location Where these loaders are applied. The `default` set or on a per-file basis (used by preprocessors).
      */
-    static afterLoaders({ method = 'auto' } = {}) {
+    static afterLoaders({ method = 'auto', location = 'default' } = {}) {
         const loaders = [];
 
         if (method === 'auto') {
@@ -185,7 +186,11 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         if (method === 'inline') {
-            loaders.push({ loader: 'style-loader' });
+            if (Mix.components.get('vue') && location === 'default') {
+                loaders.push({ loader: 'vue-style-loader' });
+            } else {
+                loaders.push({ loader: 'style-loader' });
+            }
         } else if (method === 'extract') {
             loaders.push({
                 loader: MiniCssExtractPlugin.loader,
