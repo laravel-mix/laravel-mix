@@ -134,6 +134,17 @@ class Vue {
                 type: 'css/mini-extract'
             }
         );
+
+        this.chunks.add(
+            'styles-jsx',
+            this.styleChunkName(),
+            [/.jsx$/, module => module.type === 'css/mini-extract'],
+            {
+                chunks: 'all',
+                enforce: true,
+                type: 'css/mini-extract'
+            }
+        );
     }
 
     /**

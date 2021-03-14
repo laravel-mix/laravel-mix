@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, defineAsyncComponent } from 'vue';
 import ScssModule from './ScssModule.vue';
 
 async function run() {
@@ -12,7 +12,8 @@ async function run() {
 export function setupVueApp() {
     const app = createApp({
         components: {
-            ScssModule
+            ScssModule,
+            AsyncComponent: defineAsyncComponent(() => import('./AsyncComponent.vue'))
         },
 
         setup() {

@@ -33,8 +33,10 @@ test('compiling just js', async t => {
     // Build a simple mix setup
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, ['loaded: app.js']);
@@ -44,10 +46,12 @@ test('compiling js and css together', async t => {
     setupVueAliases(3);
 
     // Build a simple mix setup
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
     mix.react();
     mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, [
@@ -56,15 +60,18 @@ test('compiling js and css together', async t => {
         'loaded: dynamic.js',
         'run: dynamic.js',
         'style: rgb(255, 119, 0)',
-        'style: rgb(119, 204, 51)'
+        'style: rgb(119, 204, 51)',
+        'async component style: rgb(255, 119, 0) rgb(255, 119, 0)'
     ]);
 });
 
 test('node browser polyfills: enabled', async t => {
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
+    mix.extract();
 
     await webpack.compile();
     await assertProducesLogs(t, [
@@ -79,8 +86,10 @@ test('node browser polyfills: enabled', async t => {
 test('node browser polyfills: disabled', async t => {
     setupVueAliases(3);
 
-    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js').vue();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
+    mix.extract();
     mix.options({ legacyNodePolyfills: false });
 
     await webpack.compile();
