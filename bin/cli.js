@@ -35,16 +35,16 @@ async function run() {
         .description('Build and watch files for changes.')
         .option('--hot', 'Enable hot reloading.', false)
         .option('--https', 'Enable https.', false)
-        .action(cmd =>
-            executeScript('watch', { ...program.opts(), ...cmd.opts() }, cmd.args)
+        .action((opts, cmd) =>
+            executeScript('watch', { ...program.opts(), ...opts }, cmd.args)
         );
 
     program
         .command('build', { isDefault: true })
         .description('Compile Mix.')
         .option('-p, --production', 'Run Mix in production mode.', false)
-        .action(cmd =>
-            executeScript('build', { ...program.opts(), ...cmd.opts() }, cmd.args)
+        .action((opts, cmd) =>
+            executeScript('build', { ...program.opts(), ...opts }, cmd.args)
         );
 
     await program.parseAsync(process.argv);
