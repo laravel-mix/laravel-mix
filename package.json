@@ -65,7 +65,7 @@
         "clean-css": "^4.2.3",
         "cli-table3": "^0.6.0",
         "collect.js": "^4.28.4",
-        "commander": "^6.1.0",
+        "commander": "^7.1.0",
         "concat": "^1.0.3",
         "css-loader": "^5.0.0",
         "cssnano": "^4.1.10",
