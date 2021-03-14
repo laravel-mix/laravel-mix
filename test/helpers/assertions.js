@@ -1,6 +1,73 @@
 import File from '../../src/File';
 
+/**
+ * Check that a matching webpack rule can be found
+ *
+ * @param {import("ava").Assertions} t
+ * @param {import("webpack").Configuration} config
+ * @param {(rule: import("webpack").RuleSetRule) => boolean} test
+ */
+function hasWebpackRule(config, test) {
+    /** @param {import("webpack").RuleSetRule} rule */
+    const checkRule = rule =>
+        test(rule) ||
+        (rule.oneOf || []).find(checkRule) ||
+        (rule.rules || []).find(checkRule);
+
+    return !!config.module.rules.find(checkRule);
+}
+
+/**
+ * Check that a matching rule with the given loader can be found
+ *
+ * @param {import("webpack").Configuration} config
+ * @param {string|RegExp|((loader: string) => boolean)} loader
+ */
+function hasWebpackLoader(config, loader) {
+    const checkLoader =
+        typeof loader === 'string'
+            ? str => str === loader
+            : loader instanceof RegExp
+            ? str => loader.test(str)
+            : loader;
+
+    return hasWebpackRule(
+        config,
+        rule =>
+            (rule.loader && checkLoader(rule.loader)) ||
+            (rule.use || []).find(use => checkLoader(use.loader))
+    );
+}
+
 export default {
+    /**
+     * Assert that a matching webpack rule can be found
+     *
+     * @param {import("ava").Assertions} t
+     * @param {import("webpack").Configuration} config
+     * @param {(rule: import("webpack").RuleSetRule) => boolean} test
+     */
+    hasWebpackRule: (t, config, test) => t.true(hasWebpackRule(config, test)),
+
+    /**
+     * Assert that a rule with the given loader can be found
+     *
+     * @param {import("ava").Assertions} t
+     * @param {import("webpack").Configuration} config
+     * @param {string|RegExp|((loader: string) => boolean)} loader
+     */
+    hasWebpackLoader: (t, config, loader) => t.true(hasWebpackLoader(config, loader)),
+
+    /**
+     * Assert that a rule with the given loader cannot be found
+     *
+     * @param {import("ava").Assertions} t
+     * @param {import("webpack").Configuration} config
+     * @param {string|RegExp|((loader: string) => boolean)} loader
+     */
+    doesNotHaveWebpackLoader: (t, config, loader) =>
+        t.false(hasWebpackLoader(config, loader)),
+
     manifestEquals: (expected, t) => {
         let manifest = JSON.parse(
             File.find(`test/fixtures/app/dist/mix-manifest.json`).read()

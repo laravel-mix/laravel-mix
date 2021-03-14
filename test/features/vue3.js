@@ -34,6 +34,34 @@ test('it knows the Vue 3 compiler name', t => {
     t.true(dependencies.includes('@vue/compiler-sfc'));
 });
 
+test('it switches to vue-style-loader when not extracting styles', async t => {
+    mix.vue({ version: 3, extractStyles: false });
+
+    const config = await webpack.buildConfig();
+
+    assert.hasWebpackLoader(t, config, 'vue-style-loader');
+    assert.doesNotHaveWebpackLoader(t, config, 'style-loader');
+    assert.doesNotHaveWebpackLoader(t, config, loader =>
+        loader.includes('mini-css-extract-plugin')
+    );
+});
+
+test('it does not switch to vue-style-loader when extracting styles', async t => {
+    mix.vue({ version: 3, extractStyles: true });
+
+    const config = await webpack.buildConfig();
+
+    assert.doesNotHaveWebpackLoader(t, config, 'vue-style-loader');
+    assert.hasWebpackLoader(t, config, /mini-css-extract-plugin/);
+});
+
+test('it does not use vue-style-loader when not using .vue', async t => {
+    const config = await webpack.buildConfig();
+
+    assert.doesNotHaveWebpackLoader(t, config, 'vue-style-loader');
+    assert.hasWebpackLoader(t, config, 'style-loader');
+});
+
 test('it appends vue styles to your sass compiled file', async t => {
     mix.vue({ version: 3, extractStyles: true });
 

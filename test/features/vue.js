@@ -38,6 +38,32 @@ test('it knows the Vue 2 compiler name', t => {
     t.true(dependencies.includes('vue-template-compiler'));
 });
 
+test('it switches to vue-style-loader when not extracting styles', async t => {
+    mix.vue({ version: 2, extractStyles: false });
+
+    const config = await webpack.buildConfig();
+
+    assert.hasWebpackLoader(t, config, 'vue-style-loader');
+    assert.doesNotHaveWebpackLoader(t, config, 'style-loader');
+    assert.doesNotHaveWebpackLoader(t, config, /mini-css-extract-plugin/);
+});
+
+test('it does not switch to vue-style-loader when extracting styles', async t => {
+    mix.vue({ version: 2, extractStyles: true });
+
+    const config = await webpack.buildConfig();
+
+    assert.doesNotHaveWebpackLoader(t, config, 'vue-style-loader');
+    assert.hasWebpackLoader(t, config, /mini-css-extract-plugin/);
+});
+
+test('it does not use vue-style-loader when not using .vue', async t => {
+    const config = await webpack.buildConfig();
+
+    assert.doesNotHaveWebpackLoader(t, config, 'vue-style-loader');
+    assert.hasWebpackLoader(t, config, 'style-loader');
+});
+
 test('it appends vue styles to your sass compiled file', async t => {
     mix.vue({ version: 2, extractStyles: true });
     mix.js(`test/fixtures/app/src/vue/app-with-vue-and-scss.js`, 'js/app.js').sass(

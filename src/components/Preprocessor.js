@@ -53,7 +53,7 @@ class Preprocessor {
         let processUrls = this.shouldProcessUrls(preprocessor);
 
         let loaders = [
-            ...CssWebpackConfig.afterLoaders({ method: 'extract' }),
+            ...CssWebpackConfig.afterLoaders({ method: 'extract', location: 'per-file' }),
             {
                 loader: 'css-loader',
                 options: {
