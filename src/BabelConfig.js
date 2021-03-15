@@ -1,10 +1,24 @@
 const babel = require('@babel/core');
 
+/**
+ * @typedef {string|string[]} BabelTargetsBrowserslist
+ * @typedef {Record<string,string> & {browsers: BabelTargetsBrowserslist}} BabelTargetsPerEngine
+ * @typedef {BabelTargetsBrowserslist | BabelTargetsPerEngine} BabelTargets
+ */
+
+/**
+ * @typedef {object} AdditionalBabelOptions
+ * @property {boolean} [cacheDirectory]
+ * @property {BabelTargets} [targets]
+ */
+
+/** @typedef {import("@babel/core").TransformOptions & AdditionalBabelOptions} BabelOptions */
+
 class BabelConfig {
     /**
      * Generate the appropriate Babel configuration for the build.
      *
-     * @param {Object} mixBabelConfig
+     * @param {BabelOptions} mixBabelConfig
      */
     static generate(mixBabelConfig) {
         return BabelConfig.mergeAll([
@@ -16,21 +30,21 @@ class BabelConfig {
     /**
      * Fetch the user's .babelrc config file, if any.
      *
-     * @param {Object} customOptions
+     * @param {BabelOptions} customOptions
      */
     static getUserConfig(customOptions) {
-        const { options } = babel.loadPartialConfig({
+        const config = babel.loadPartialConfig({
             filename: '.babelrc',
             ...customOptions
         });
 
-        return options;
+        return config ? config.options : {};
     }
 
     /**
      * Merge babel configs
      *
-     * @param {Array<String|Object|Array>} configs
+     * @param {BabelOptions[]} configs
      */
     static mergeAll(configs) {
         return configs.reduce((prev, current) => {
@@ -53,7 +67,8 @@ class BabelConfig {
     /**
      * Filter merged presets or plugins
      *
-     * @param {Array<Object>} configItems
+     * @param {import("@babel/core").PluginItem[]} items
+     * @returns {import("@babel/core").PluginItem[]}
      */
     static filterConfigItems(configItems) {
         return configItems.reduce((unique, configItem) => {
@@ -74,6 +89,8 @@ class BabelConfig {
 
     /**
      * Fetch the default Babel configuration.
+     *
+     * @returns {BabelOptions}
      */
     static default() {
         return {
