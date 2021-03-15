@@ -47,21 +47,24 @@ class BabelConfig {
      * @param {BabelOptions[]} configs
      */
     static mergeAll(configs) {
-        return configs.reduce((prev, current) => {
-            const presets = BabelConfig.filterConfigItems(
-                [...(prev.presets || []), ...(current.presets || [])].map(preset =>
-                    babel.createConfigItem(preset, { type: 'preset' })
-                )
-            );
+        const options = configs.reduce((prev, current) => {
+            const presets = [
+                ...(prev.presets || []),
+                ...(current.presets || [])
+            ].map(preset => babel.createConfigItem(preset, { type: 'preset' }));
 
-            const plugins = BabelConfig.filterConfigItems(
-                [...(prev.plugins || []), ...(current.plugins || [])].map(plugin =>
-                    babel.createConfigItem(plugin, { type: 'plugin' })
-                )
-            );
+            const plugins = [
+                ...(prev.plugins || []),
+                ...(current.plugins || [])
+            ].map(preset => babel.createConfigItem(preset, { type: 'plugin' }));
 
             return Object.assign(prev, current, { presets, plugins });
         });
+
+        options.plugins = this.filterConfigItems(options.plugins || []);
+        options.presets = this.filterConfigItems(options.presets || []);
+
+        return options;
     }
 
     /**
