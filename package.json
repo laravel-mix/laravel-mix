@@ -135,6 +135,8 @@
         "stylus": "^0.54.8",
         "stylus-loader": "^5.0.0",
         "temp-sandbox": "^4.0.1",
+        "ts-loader": "^8.0.18",
+        "typescript": "^4.2.3",
         "vue-loader15": "npm:vue-loader@^15.9.1",
         "vue-loader16": "npm:vue-loader@^16.1.0",
         "vue-template-compiler": "^2.6.12",
