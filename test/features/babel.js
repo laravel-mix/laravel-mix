@@ -48,31 +48,31 @@ test('Babel reads the project .babelrc / config files', async t => {
 });
 
 test.only('Babel config files can be read from the project root', async t => {
+    // .babelrc files are relative-location based on the location / ancestor of the compiled source file
+    // As such the root path needs to be the tests directory as it is an ancestor of the file being compiled
+    // The config file doesn't have this restriction but we'll treat it the same for simplicity
     Mix.paths.setRootPath(__dirname + '/../');
 
-    const configs = {
-        [Mix.paths.root(
-            'babel.config.js'
-        )]: 'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }'
+    const configs = [
+        {
+            path: Mix.paths.root('babel.config.js'),
+            content:
+                'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }'
+        },
+        {
+            path: Mix.paths.root('.babelrc'),
+            content: '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
+        }
+    ];
 
-        // TODO: Figure out how to fix this
-        // [Mix.paths.root('.babelrc')]: '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
-    };
-
-    for (const [path, content] of Object.entries(configs)) {
-        new File(path).write(content);
-    }
+    configs.forEach(config => new File(config.path).write(config.content));
 
     await webpack.compile();
 
     t.true(seeBabelPlugin('@babel/plugin-syntax-json-strings'));
+    t.true(seeBabelPlugin('@babel/plugin-transform-sticky-regex'));
 
-    // TODO: Figure out how to fix this
-    // t.true(seeBabelPlugin('@babel/plugin-transform-sticky-regex'));
-
-    for (const [path, _] of Object.entries(configs)) {
-        File.find(path).delete();
-    }
+    configs.forEach(config => File.find(config.path).delete());
 });
 
 test('Values from duplicate keys in the .babelrc file override the defaults entirely.', async t => {

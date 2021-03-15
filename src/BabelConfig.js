@@ -24,7 +24,12 @@ class BabelConfig {
         return BabelConfig.mergeAll([
             BabelConfig.default(),
             BabelConfig.getUserConfig(mixBabelConfig),
-            { root: this.mix.paths.root(), configFile: true }
+            {
+                root: this.mix.paths.root(),
+                babelrc: true,
+                configFile: true,
+                babelrcRoots: ['.', this.mix.paths.root()]
+            }
         ]);
     }
 
@@ -36,7 +41,6 @@ class BabelConfig {
     static getUserConfig(customOptions) {
         const config = babel.loadPartialConfig({
             filename: '.babelrc',
-            babelrcRoots: ['.', this.mix.paths.root()],
             ...customOptions
         });
 
