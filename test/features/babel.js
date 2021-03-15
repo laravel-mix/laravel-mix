@@ -24,15 +24,10 @@ test('mix.babelConfig() can be used to merge custom Babel options.', async t => 
     t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
 
-test('Default Babel plugins includes plugin-proposal-object-rest-spread', async t => {
+test('Default Babel plugins/presets are set', async t => {
     await webpack.compile();
 
     t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
-});
-
-test('Default Babel presets includes env', async t => {
-    await webpack.compile();
-
     t.true(seeBabelPreset('@babel/preset-env'));
 });
 
