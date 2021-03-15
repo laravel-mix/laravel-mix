@@ -47,7 +47,7 @@ test('Babel reads the project .babelrc / config files', async t => {
     File.find(configFile).delete();
 });
 
-test.only('Babel config files can be read from the project root', async t => {
+test('Babel config files can be read from the project root', async t => {
     // .babelrc files are relative-location based on the location / ancestor of the compiled source file
     // As such the root path needs to be the tests directory as it is an ancestor of the file being compiled
     // The config file doesn't have this restriction but we'll treat it the same for simplicity
