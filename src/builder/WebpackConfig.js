@@ -75,8 +75,9 @@ class WebpackConfig {
                 let hasAbsolutePathChunkName =
                     pathData.chunk.name && pathData.chunk.name.startsWith('/');
 
-                if (Mix.components.get('js') && !hasAbsolutePathChunkName) {
-                    let output = Mix.components.get('js').toCompile[0].output;
+                if ((Mix.components.get('js') || Mix.components.get('ts')) && !hasAbsolutePathChunkName) {
+                    let output = Mix.components.get('ts') ?
+                        Mix.components.get('ts').toCompile[0].output : Mix.components.get('js').toCompile[0].output;
 
                     return `${output.normalizedOutputPath()}/[name].js`;
                 }
