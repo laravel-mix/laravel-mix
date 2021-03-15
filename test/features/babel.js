@@ -1,4 +1,5 @@
 import test, { beforeEach } from 'ava';
+import path from 'path';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 import { recordBabelConfigs } from '../helpers/babel';
@@ -51,7 +52,7 @@ test('Babel config files can be read from the project root', async t => {
     // .babelrc files are relative-location based on the location / ancestor of the compiled source file
     // As such the root path needs to be the tests directory as it is an ancestor of the file being compiled
     // The config file doesn't have this restriction but we'll treat it the same for simplicity
-    Mix.paths.setRootPath(__dirname + '/../');
+    Mix.paths.setRootPath(path.resolve(__dirname + '/../'));
 
     const configs = [
         {
