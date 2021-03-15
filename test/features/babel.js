@@ -48,8 +48,6 @@ test('Babel reads the project .babelrc / config files', async t => {
 });
 
 test('Values from duplicate keys in the .babelrc file override the defaults entirely.', async t => {
-    Config.babelConfig = { configFile: false };
-
     // Setup a test .babelrc file.
     const configFile = __dirname + '/.testbabelrc';
 
@@ -72,16 +70,13 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
 });
 
 test('Babel config from Mix extensions is merged with the defaults', async t => {
-    mix.extend(
-        'extensionWithBabelConfig',
-        new (class {
-            babelConfig() {
-                return {
-                    plugins: ['@babel/plugin-proposal-unicode-property-regex']
-                };
-            }
-        })()
-    );
+    mix.extend('extensionWithBabelConfig', {
+        babelConfig() {
+            return {
+                plugins: ['@babel/plugin-proposal-unicode-property-regex']
+            };
+        }
+    });
 
     mix.extensionWithBabelConfig();
 
