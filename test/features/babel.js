@@ -47,6 +47,34 @@ test('Babel reads the project .babelrc / config files', async t => {
     File.find(configFile).delete();
 });
 
+test.only('Babel config files can be read from the project root', async t => {
+    Mix.paths.setRootPath(__dirname + '/../');
+
+    const configs = {
+        [Mix.paths.root(
+            'babel.config.js'
+        )]: 'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }'
+
+        // TODO: Figure out how to fix this
+        // [Mix.paths.root('.babelrc')]: '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
+    };
+
+    for (const [path, content] of Object.entries(configs)) {
+        new File(path).write(content);
+    }
+
+    await webpack.compile();
+
+    t.true(seeBabelPlugin('@babel/plugin-syntax-json-strings'));
+
+    // TODO: Figure out how to fix this
+    // t.true(seeBabelPlugin('@babel/plugin-transform-sticky-regex'));
+
+    for (const [path, _] of Object.entries(configs)) {
+        File.find(path).delete();
+    }
+});
+
 test('Values from duplicate keys in the .babelrc file override the defaults entirely.', async t => {
     // Setup a test .babelrc file.
     const configFile = __dirname + '/.testbabelrc';

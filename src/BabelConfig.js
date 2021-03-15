@@ -23,7 +23,8 @@ class BabelConfig {
     static generate(mixBabelConfig) {
         return BabelConfig.mergeAll([
             BabelConfig.default(),
-            BabelConfig.getUserConfig(mixBabelConfig)
+            BabelConfig.getUserConfig(mixBabelConfig),
+            { root: this.mix.paths.root(), configFile: true }
         ]);
     }
 
@@ -35,6 +36,7 @@ class BabelConfig {
     static getUserConfig(customOptions) {
         const config = babel.loadPartialConfig({
             filename: '.babelrc',
+            babelrcRoots: ['.', this.mix.paths.root()],
             ...customOptions
         });
 
@@ -110,6 +112,12 @@ class BabelConfig {
                 ]
             ]
         };
+    }
+
+    /** @returns {import("./Mix.js")} */
+    static get mix() {
+        // @ts-ignore
+        return Mix;
     }
 }
 
