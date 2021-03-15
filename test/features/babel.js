@@ -4,7 +4,7 @@ import webpack from '../helpers/webpack';
 
 import '../helpers/mix';
 
-test('mix.babelConfig() can be used to merge custom Babel options.', t => {
+test('mix.babelConfig() can be used to merge custom Babel options.', async t => {
     mix.babelConfig({
         plugins: ['@babel/plugin-proposal-unicode-property-regex']
     });
@@ -12,15 +12,15 @@ test('mix.babelConfig() can be used to merge custom Babel options.', t => {
     t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
 
-test('Default Babel plugins includes plugin-proposal-object-rest-spread', t => {
+test('Default Babel plugins includes plugin-proposal-object-rest-spread', async t => {
     t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
 });
 
-test('Default Babel presets includes env', t => {
+test('Default Babel presets includes env', async t => {
     t.true(seeBabelPreset('@babel/preset-env'));
 });
 
-test('Babel reads the project .babelrc file', t => {
+test('Babel reads the project .babelrc / config files', async t => {
     // Setup a test .babelrc file.
     const configFile = __dirname + '/.testbabelrc';
 
@@ -34,7 +34,7 @@ test('Babel reads the project .babelrc file', t => {
     File.find(configFile).delete();
 });
 
-test('Values from duplicate keys in the .babelrc file override the defaults entirely.', t => {
+test('Values from duplicate keys in the .babelrc file override the defaults entirely.', async t => {
     Config.babelConfig = { configFile: false };
 
     // Setup a test .babelrc file.
