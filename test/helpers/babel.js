@@ -31,8 +31,6 @@ export function recordBabelConfigs() {
         const tmp = [];
 
         for (const config of Object.values(resolvedConfigs)) {
-            console.log(config);
-
             // @ts-ignore
             tmp.push(...config.options[key]);
         }
