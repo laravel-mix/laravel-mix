@@ -85,7 +85,7 @@ class Mix {
      */
     boot() {
         if (this.booted) {
-            return;
+            return this;
         }
 
         this.booted = true;
