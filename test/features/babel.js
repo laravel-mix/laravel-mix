@@ -1,22 +1,38 @@
-import test from 'ava';
+import test, { beforeEach } from 'ava';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
+import { recordBabelConfigs } from '../helpers/babel';
 
 import '../helpers/mix';
+
+/** @type {ReturnType<recordBabelConfigs>} */
+let babel;
+
+beforeEach(() => {
+    babel = recordBabelConfigs();
+
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+});
 
 test('mix.babelConfig() can be used to merge custom Babel options.', async t => {
     mix.babelConfig({
         plugins: ['@babel/plugin-proposal-unicode-property-regex']
     });
 
+    await webpack.compile();
+
     t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
 
 test('Default Babel plugins includes plugin-proposal-object-rest-spread', async t => {
+    await webpack.compile();
+
     t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
 });
 
 test('Default Babel presets includes env', async t => {
+    await webpack.compile();
+
     t.true(seeBabelPreset('@babel/preset-env'));
 });
 
@@ -27,6 +43,8 @@ test('Babel reads the project .babelrc / config files', async t => {
     new File(configFile).write('{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }');
 
     Config.babelConfig = { configFile };
+
+    await webpack.compile();
 
     t.true(seeBabelPlugin('@babel/plugin-syntax-dynamic-import'));
 
@@ -43,14 +61,16 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
     Config.babelConfig = { configFile };
 
     new File(configFile).write(
-        '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage"}] ] }'
+        '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage", "corejs": 3}] ] }'
     );
 
-    const babelConfig = Config.babel();
+    await webpack.compile();
 
-    t.is(1, babelConfig.presets.length);
+    const presets = babel.getPresets();
 
-    t.deepEqual({ useBuiltIns: 'usage' }, babelConfig.presets[0].options);
+    t.is(1, presets.length);
+    t.true(babel.hasPreset('@babel/preset-env'));
+    t.deepEqual({ useBuiltIns: 'usage', corejs: 3 }, presets[0].options);
 
     // Cleanup.
     File.find(configFile).delete();
@@ -70,7 +90,7 @@ test('Babel config from Mix extensions is merged with the defaults', async t => 
 
     mix.extensionWithBabelConfig();
 
-    await webpack.buildConfig();
+    await webpack.compile();
 
     t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
     t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
@@ -81,9 +101,7 @@ test('Babel config from Mix extensions is merged with the defaults', async t => 
  * @param {string} name
  */
 const seeBabelPlugin = name => {
-    return !!Config.babel().plugins.find(
-        plugin => plugin.file && plugin.file.request === name
-    );
+    return babel.hasPlugin(name);
 };
 
 /**
@@ -91,7 +109,5 @@ const seeBabelPlugin = name => {
  * @param {string} name
  */
 const seeBabelPreset = name => {
-    return !!Config.babel().presets.find(
-        plugin => plugin.file && plugin.file.request === name
-    );
+    return babel.hasPreset(name);
 };

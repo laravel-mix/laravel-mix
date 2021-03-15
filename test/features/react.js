@@ -4,6 +4,7 @@ import File from '../../src/File';
 import sinon from 'sinon';
 import ReactComponent from '../../src/components/React';
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import { recordBabelConfigs } from '../helpers/babel';
 
 import webpack from '../helpers/webpack';
 import '../helpers/mix';
@@ -45,15 +46,13 @@ test('it sets the webpack entry correctly', async t => {
 });
 
 test('it sets the babel config correctly', async t => {
-    mix.react().js('js/app.js', 'js');
+    const babel = recordBabelConfigs();
 
-    await webpack.buildConfig();
+    mix.react().js(`test/fixtures/app/src/js/app.js`, 'js');
 
-    t.true(
-        Config.babel().presets.find(
-            p => p.file && p.file.request === '@babel/preset-react'
-        ) !== undefined
-    );
+    await webpack.compile();
+
+    t.true(babel.hasPreset('@babel/preset-react'));
 });
 
 test('non-feature-flag use of mix.react throws an error', t => {
