@@ -151,15 +151,15 @@ class File {
         let extra = this.filePath.startsWith(publicPath) ? publicPath : '';
 
         // If the path starts with the public folder remove it
-        if (this.filePath.startsWith(`${publicPath}/${path.basename(publicPath)}`)) {
-            extra += `/${path.basename(publicPath)}`;
-        } else if (
-            this.filePath.startsWith(`${publicPath}\\${path.basename(publicPath)}`)
+        if (
+            this.filePath.startsWith(
+                path.normalize(`${publicPath}/${path.basename(publicPath)}`)
+            )
         ) {
-            extra += `\\${path.basename(publicPath)}`;
+            extra += `/${path.basename(publicPath)}`;
         }
 
-        return this.path().replace(Mix.paths.root(extra), '');
+        return path.normalize('/' + path.relative(Mix.paths.root(extra), this.path()));
     }
 
     /**
