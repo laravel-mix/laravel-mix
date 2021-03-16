@@ -40,7 +40,6 @@ class BabelConfig {
      */
     static getUserConfig(customOptions) {
         const config = babel.loadPartialConfig({
-            filename: '.babelrc',
             ...customOptions
         });
 
