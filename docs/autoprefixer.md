@@ -74,6 +74,17 @@ mix.postCss('src/app.css', 'dist')
 If you instead wish to disable autoprefixing entirely, set `autoprefixer` to `false`.
 
 ```js
+// Using Sass
+mix.sass('src/app.css', 'dist')
+   .options({
+      postCss: [
+         require('autoprefixer')({
+            remove: false,
+         })
+      ]
+   })
+   
+// Using postCss directly
 mix.postCss('src/app.css', 'dist')
    .options({ autoprefixer: false });
 ```
