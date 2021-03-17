@@ -1,8 +1,10 @@
 class BabelConfig {
+    /**
+     *
+     * @param {BabelConfig} config
+     */
     register(config) {
         Config.babelConfig = config;
-
-        return this;
     }
 }
 

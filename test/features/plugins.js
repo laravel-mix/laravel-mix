@@ -136,31 +136,6 @@ test('webpack plugins may be added', async t => {
     t.is(plugin, config.plugins.pop());
 });
 
-test('custom Babel config may be merged', async t => {
-    mix.extend(
-        'reactNext',
-        new (class {
-            babelConfig() {
-                return {
-                    plugins: ['@babel/plugin-proposal-unicode-property-regex']
-                };
-            }
-        })()
-    );
-
-    mix.reactNext();
-
-    await webpack.buildConfig();
-
-    t.true(
-        Config.babel().plugins.find(plugin =>
-            plugin.includes(
-                path.normalize('@babel/plugin-proposal-unicode-property-regex')
-            )
-        ) !== undefined
-    );
-});
-
 test('the fully constructed webpack config object is available for modification, if needed', async t => {
     mix.extend(
         'extension',

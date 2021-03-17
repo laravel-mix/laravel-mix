@@ -4,7 +4,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 import * as webpack from 'webpack';
-import { TransformOptions as BabelConfig } from 'babel-core';
+import { TransformOptions as BabelConfig } from '@babel/core';
 import { Options as BrowserSyncConfig } from 'browser-sync';
 import * as ExtractTypes from './extract';
 import { MixConfig } from './config';
