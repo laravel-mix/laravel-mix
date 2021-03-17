@@ -33,7 +33,8 @@ module.exports = function () {
                             '?[hash]'
                         );
                     },
-                    publicPath: Config.resourceRoot
+                    publicPath: Config.resourceRoot,
+                    esModule: false
                 }
             },
 
