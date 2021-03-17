@@ -52,6 +52,15 @@ class BabelConfig {
     }
 
     /**
+     * Fetch the user's .babelrc config file, if any.
+     *
+     * @deprecated
+     */
+    fetchBabelRc(path) {
+        return File.exists(path) ? JSON.parse(File.find(path).read()) : {};
+    }
+
+    /**
      * Get the babel config setup when using mix.babelConfig()
      *
      * @internal
@@ -127,7 +136,9 @@ class BabelConfig {
     default() {
         return {
             cacheDirectory: true,
-            presets: ['@babel/preset-env'],
+            presets: [
+                ['@babel/preset-env', { modules: false, forceAllTransforms: true }]
+            ],
             plugins: [
                 '@babel/plugin-syntax-dynamic-import',
                 '@babel/plugin-proposal-object-rest-spread',
