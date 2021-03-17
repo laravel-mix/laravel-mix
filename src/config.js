@@ -1,5 +1,7 @@
 const argv = require('yargs').argv;
 
+/** @typedef {import("@babel/core").TransformOptions} BabelConfig */
+
 module.exports = function () {
     return {
         /**
@@ -109,10 +111,12 @@ module.exports = function () {
         },
 
         /**
-         * The default Babel configuration.
+         * The Babel configuration to use when compiling
          */
         babel: function () {
-            return require('./BabelConfig').generate(this.babelConfig);
+            const BabelConfig = require('./BabelConfig');
+
+            return new BabelConfig().generate();
         },
 
         /**
@@ -171,7 +175,7 @@ module.exports = function () {
         /**
          * Custom Babel configuration to be merged with Mix's defaults.
          *
-         * @type {Object}
+         * @type {BabelConfig}
          */
         babelConfig: {},
 

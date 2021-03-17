@@ -16,14 +16,32 @@ const babel = require('@babel/core');
 
 class BabelConfig {
     /**
+     *
+     * @param {import("./Mix")} mix
+     */
+    constructor(mix) {
+        this.mix = mix || global.Mix;
+    }
+
+    /**
+     * Generate the appropriate Babel configuration for the build.
+     *
+     * @param {BabelOptions} mixBabelConfig
+     * @deprecated
+     */
+    static generate() {
+        return new BabelConfig().generate();
+    }
+
+    /**
      * Generate the appropriate Babel configuration for the build.
      *
      * @param {BabelOptions} mixBabelConfig
      */
-    static generate(mixBabelConfig) {
-        return BabelConfig.mergeAll([
-            BabelConfig.default(),
-            BabelConfig.getUserConfig(mixBabelConfig),
+    generate() {
+        return this.mergeAll([
+            this.default(),
+            this.getCustomConfig(this.mix.config.babelConfig),
             {
                 root: this.mix.paths.root(),
                 babelrc: true,
@@ -34,14 +52,13 @@ class BabelConfig {
     }
 
     /**
-     * Fetch the user's .babelrc config file, if any.
+     * Get the babel config setup when using mix.babelConfig()
      *
-     * @param {BabelOptions} customOptions
+     * @internal
+     * @param {import('@babel/core').TransformOptions} customOptions
      */
-    static getUserConfig(customOptions) {
-        const config = babel.loadPartialConfig({
-            ...customOptions
-        });
+    getCustomConfig(customOptions) {
+        const config = babel.loadPartialConfig(customOptions);
 
         return config ? config.options : {};
     }
@@ -51,7 +68,7 @@ class BabelConfig {
      *
      * @param {BabelOptions[]} configs
      */
-    static mergeAll(configs) {
+    mergeAll(configs) {
         const options = configs.reduce((prev, current) => {
             const presets = [
                 ...(prev.presets || []),
@@ -75,10 +92,11 @@ class BabelConfig {
     /**
      * Filter merged presets or plugins
      *
+     * @internal
      * @param {import("@babel/core").PluginItem[]} items
      * @returns {import("@babel/core").PluginItem[]}
      */
-    static filterConfigItems(configItems) {
+    filterConfigItems(configItems) {
         return configItems.reduce((unique, configItem) => {
             if (configItem.file != null) {
                 const toDeleteIndex = unique.findIndex(
@@ -95,12 +113,18 @@ class BabelConfig {
         }, []);
     }
 
+    /** @deprecated */
+    static default() {
+        return new BabelConfig().default();
+    }
+
     /**
      * Fetch the default Babel configuration.
      *
+     * @internal
      * @returns {BabelOptions}
      */
-    static default() {
+    default() {
         return {
             cacheDirectory: true,
             presets: ['@babel/preset-env'],
@@ -115,12 +139,6 @@ class BabelConfig {
                 ]
             ]
         };
-    }
-
-    /** @returns {import("./Mix.js")} */
-    static get mix() {
-        // @ts-ignore
-        return Mix;
     }
 }
 
