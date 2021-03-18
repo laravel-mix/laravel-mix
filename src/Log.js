@@ -1,3 +1,11 @@
+const chalk = require('chalk');
+
+/**
+ * @typedef {object} LogMessage
+ * @property {string} text
+ * @property {'info' | 'warn' | 'error'} type
+ **/
+
 /**
  * @typedef {'default' | 'green' | 'red'} LogColor
  **/
@@ -31,6 +39,39 @@ class Log {
         console.log(Log.colors()[color], message);
 
         Log.reset();
+    }
+
+    /**
+     *
+     * @param {LogMessage} message
+     */
+    static message(message) {
+        if (Log.testing) {
+            Log.fakedLogs.push(message.text);
+
+            return;
+        }
+
+        /** @type {string} */
+        let prefix = '';
+
+        if (message.type === 'info') {
+            prefix = ' INFO ';
+        } else if (message.type === 'warn') {
+            prefix = ' WARN ';
+        } else if (message.type === 'error') {
+            prefix = ' ERR ';
+        }
+
+        const line = message.text.replace(/\n/g, '\n' + ' '.repeat(prefix.length + 1));
+
+        if (message.type === 'info') {
+            console.warn(`${chalk.bgBlue.white(prefix)} ${chalk.white(line)}`);
+        } else if (message.type === 'warn') {
+            console.warn(`${chalk.bgYellow.black(prefix)} ${chalk.yellow(line)}`);
+        } else if (message.type === 'error') {
+            console.warn(`${chalk.bgRed.white(prefix)} ${chalk.red(line)}`);
+        }
     }
 
     /**
