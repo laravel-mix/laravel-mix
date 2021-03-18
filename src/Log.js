@@ -1,3 +1,15 @@
+const chalk = require('chalk');
+
+/**
+ * @typedef {object} LogMessage
+ * @property {string} text
+ * @property {'info' | 'warn' | 'error'} type
+ **/
+
+/**
+ * @typedef {'default' | 'green' | 'red'} LogColor
+ **/
+
 class Log {
     /**
      * Determine if we are in test mode.
@@ -7,17 +19,16 @@ class Log {
     /**
      * All logged messages.
      *
-     * @var {Array}
+     * @type {string[]}
      */
     static fakedLogs = [];
 
     /**
      * Log basic info to the console.
      *
-     * @param  {String} message
-     * @param  {String} color
+     * @param  {string} message
+     * @param  {LogColor} color
      */
-
     static info(message, color = 'default') {
         if (Log.testing) {
             Log.fakedLogs.push(message);
@@ -31,10 +42,43 @@ class Log {
     }
 
     /**
+     *
+     * @param {LogMessage} message
+     */
+    static message(message) {
+        if (Log.testing) {
+            Log.fakedLogs.push(message.text);
+
+            return;
+        }
+
+        /** @type {string} */
+        let prefix = '';
+
+        if (message.type === 'info') {
+            prefix = ' INFO ';
+        } else if (message.type === 'warn') {
+            prefix = ' WARN ';
+        } else if (message.type === 'error') {
+            prefix = ' ERR ';
+        }
+
+        const line = message.text.replace(/\n/g, '\n' + ' '.repeat(prefix.length + 1));
+
+        if (message.type === 'info') {
+            console.warn(`${chalk.bgBlue.white(prefix)} ${chalk.white(line)}`);
+        } else if (message.type === 'warn') {
+            console.warn(`${chalk.bgYellow.black(prefix)} ${chalk.yellow(line)}`);
+        } else if (message.type === 'error') {
+            console.warn(`${chalk.bgRed.white(prefix)} ${chalk.red(line)}`);
+        }
+    }
+
+    /**
      * Log feedback info to the console.
      *
-     * @param  {String} message
-     * @param  {String} color
+     * @param  {string} message
+     * @param  {LogColor} color
      */
     static feedback(message, color = 'green') {
         Log.line('\t' + message, color);
@@ -43,8 +87,8 @@ class Log {
     /**
      * Log error info to the console.
      *
-     * @param  {String} message
-     * @param  {String} color
+     * @param  {string} message
+     * @param  {LogColor} color
      */
     static error(message, color = 'red') {
         Log.line(message, color);
@@ -53,8 +97,8 @@ class Log {
     /**
      * Log a new line of info to the console.
      *
-     * @param  {String} message
-     * @param  {String} color
+     * @param  {string} message
+     * @param  {LogColor} color
      */
     static line(message, color = 'default') {
         Log.info(message, color);
@@ -62,9 +106,6 @@ class Log {
 
     /**
      * Reset the default color for future console.logs.
-     *
-     * @param  {String} message
-     * @param  {String} color
      */
     static reset() {
         console.log(Log.colors()['default'], '');
@@ -88,7 +129,7 @@ class Log {
     /**
      * Determine if the given message was logged.
      *
-     * @param  {String} message
+     * @param  {string} message
      */
     static received(message) {
         let result = Log.fakedLogs.some(log => log.includes(message));
