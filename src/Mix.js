@@ -266,8 +266,13 @@ class Mix {
     makeCurrent() {
         // Set up some globals
 
+        // @ts-ignore
         global.Config = this.config;
+
+        // @ts-ignore
         global.Mix = this;
+
+        // @ts-ignore
         global.webpackConfig = this.webpackConfig;
 
         this.chunks.makeCurrent();

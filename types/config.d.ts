@@ -63,7 +63,7 @@ interface MixConfig {
      *
      * @deprecated Please use mix.sourceMaps() instead
      **/
-    sourcemaps: false | string;
+    sourcemaps?: false | string;
 
     /** The resource root for the build. */
     resourceRoot?: string;
