@@ -1,6 +1,7 @@
 import test from 'ava';
-import MixDefinitionsPlugin from '../../../src/webpackPlugins/MixDefinitionsPlugin';
 import path from 'path';
+
+import MixDefinitionsPlugin from '../../../src/webpackPlugins/MixDefinitionsPlugin.js';
 
 test('it fetches the MIX_ definitions properly', t => {
     let plugin = new MixDefinitionsPlugin(path.resolve(__dirname, 'testing.env'));

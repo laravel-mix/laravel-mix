@@ -1,15 +1,19 @@
-import config from '../../src/config';
 import test from 'ava';
-import Mix from '../../src/Mix';
+
+import buildConfig from '../../src/config.js';
+import Mix from '../../src/Mix.js';
 
 test('that it can merge config', t => {
-    let Config = config(new Mix());
+    let config = buildConfig(new Mix());
 
-    Config.merge({
+    config.merge({
         versioning: true,
         foo: 'bar'
     });
 
-    t.is('bar', Config.foo);
-    t.true(Config.versioning);
+    // @ts-ignore
+    t.is('bar', config.foo);
+
+    // @ts-ignore
+    t.true(config.versioning);
 });

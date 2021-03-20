@@ -4,7 +4,7 @@ import ScssModule from './ScssModule.vue';
 async function run() {
     console.log('run: app.js');
 
-    const mod = await import('./dynamic');
+    const mod = await import('./dynamic.js');
 
     mod.default();
 }

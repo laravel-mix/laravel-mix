@@ -1,7 +1,7 @@
 import test from 'ava';
 
-import { mix } from '../helpers/mix';
-import { buildConfig } from '../helpers/webpack';
+import { mix } from '../helpers/mix.js';
+import { buildConfig } from '../helpers/webpack.js';
 
 test('Custom webpack config can be merged', async t => {
     mix.webpackConfig({ context: 'changed' });
@@ -10,7 +10,7 @@ test('Custom webpack config can be merged', async t => {
 });
 
 test('Custom webpack config can be merged as a callback function', async t => {
-    mix.webpackConfig(webpack => {
+    mix.webpackConfig(() => {
         return {
             context: 'changed'
         };

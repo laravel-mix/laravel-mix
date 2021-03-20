@@ -1,7 +1,7 @@
 import test from 'ava';
 
-import { mix } from '../helpers/mix';
-import webpack from '../helpers/webpack';
+import { mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('it returns the mix instance', t => {
     t.deepEqual(mix, mix.disableNotifications());

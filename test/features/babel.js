@@ -1,10 +1,10 @@
 import test, { beforeEach } from 'ava';
 import path from 'path';
-import File from '../../src/File';
-import webpack from '../helpers/webpack';
-import { recordBabelConfigs } from '../helpers/babel';
 
-import { mix, Mix } from '../helpers/mix';
+import { recordBabelConfigs } from '../helpers/babel.js';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 /** @type {ReturnType<recordBabelConfigs>} */
 let babel;

@@ -1,9 +1,8 @@
-import File from '../../src/File';
+import File from '../../src/File.js';
 
 /**
  * Check that a matching webpack rule can be found
  *
- * @param {import("ava").Assertions} t
  * @param {import("webpack").Configuration} config
  * @param {(rule: import("webpack").RuleSetRule) => boolean} test
  */
@@ -68,6 +67,12 @@ export default {
     doesNotHaveWebpackLoader: (t, config, loader) =>
         t.false(hasWebpackLoader(config, loader)),
 
+    /**
+     * Verify that the mix manifest is the same as `expected`
+     *
+     * @param {Record<string, string>} expected
+     * @param {import("ava").Assertions} t
+     */
     manifestEquals: (expected, t) => {
         let manifest = JSON.parse(
             File.find(`test/fixtures/app/dist/mix-manifest.json`).read()
@@ -125,7 +130,7 @@ export default {
      * Assert that a file contains the given string
      *
      * @param {string} path
-     * @param {string} expected
+     * @param {string} str
      * @param {import("ava").Assertions} t
      */
     fileContains: (path, str, t) => {
@@ -136,7 +141,7 @@ export default {
      * Assert that a file does not contain the given string
      *
      * @param {string} path
-     * @param {string} expected
+     * @param {string} str
      * @param {import("ava").Assertions} t
      */
     fileDoesNotContain: (path, str, t) => {

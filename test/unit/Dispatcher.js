@@ -1,6 +1,7 @@
 import test from 'ava';
-import Dispatcher from '../../src/Dispatcher';
 import sinon from 'sinon';
+
+import Dispatcher from '../../src/Dispatcher.js';
 
 test('that it can dispatch events', t => {
     let events = new Dispatcher();

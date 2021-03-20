@@ -1,15 +1,19 @@
 import test from 'ava';
 
-import { mix } from '../helpers/mix';
+import { mix } from '../helpers/mix.js';
 
 test('it executes the callback based on the condition', t => {
     let called = false;
 
-    mix.when(false, () => (called = true));
+    mix.when(false, () => {
+        called = true;
+    });
 
     t.false(called);
 
-    mix.when(true, () => (called = true));
+    mix.when(true, () => {
+        called = true;
+    });
 
     t.true(called);
 });

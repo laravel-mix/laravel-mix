@@ -1,6 +1,6 @@
-import './node-browser-polyfills';
-import { setupVueApp } from './app-vue';
-import { setupReactApp } from './app-react';
+import './node-browser-polyfills.js';
+import { setupVueApp } from './app-vue.js';
+import { setupReactApp } from './app-react.js';
 
 console.log('loaded: app.js');
 

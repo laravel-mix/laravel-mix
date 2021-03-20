@@ -1,7 +1,13 @@
 import mockRequire from 'mock-require';
 import webpack from 'webpack';
+
 import { mix, Mix } from './mix.js';
 
+/**
+ *
+ * @param {*} shouldInit
+ * @returns {Promise<import('webpack').Configuration>}
+ */
 export async function buildConfig(shouldInit = true) {
     if (shouldInit) {
         await Mix.init();
@@ -10,17 +16,26 @@ export async function buildConfig(shouldInit = true) {
     return await Mix.build();
 }
 
-export async function compile(config) {
-    config = config || (await buildConfig());
+/**
+ *
+ * @param {import('webpack').Configuration} [override]
+ * @returns {Promise<{config: import('webpack').Configuration, err: Error | undefined, stats: import('webpack').Stats | undefined}>}
+ */
+export async function compile(override) {
+    const config = override || (await buildConfig());
 
     return new Promise((resolve, reject) => {
         webpack(config, (err, stats) => {
             if (err) {
                 reject({ config, err, stats });
-            } else if (stats.hasErrors()) {
+            } else if (stats && stats.hasErrors()) {
                 const { errors } = stats.toJson({ errors: true });
 
-                reject(new Error(errors.map(error => error.message).join('\n')));
+                reject({
+                    config,
+                    err: new Error((errors || []).map(error => error.message).join('\n')),
+                    stats
+                });
             } else {
                 resolve({ config, err, stats });
             }
@@ -28,6 +43,10 @@ export async function compile(config) {
     });
 }
 
+/**
+ *
+ * @param {string|number} version
+ */
 export function setupVueAliases(version) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';

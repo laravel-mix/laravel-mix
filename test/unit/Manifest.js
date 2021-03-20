@@ -1,12 +1,14 @@
 import test from 'ava';
-import path from 'path';
-import Manifest from '../../src/Manifest';
-import File from '../../src/File';
 import fs from 'fs-extra';
+import path from 'path';
 
-import { mix, Mix } from '../helpers/mix';
+import File from '../../src/File.js';
+import Manifest from '../../src/Manifest.js';
+import { mix, Mix } from '../helpers/mix.js';
 
-test.beforeEach(() => (Mix.manifest = new Manifest()));
+test.beforeEach(() => {
+    Mix.manifest = new Manifest();
+});
 
 test('that it can fetch the underlying manifest object', t => {
     Mix.manifest.add('file/path.js');

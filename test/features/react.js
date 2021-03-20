@@ -1,13 +1,13 @@
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import test from 'ava';
 import path from 'path';
-import File from '../../src/File';
 import sinon from 'sinon';
-import ReactComponent from '../../src/components/React';
-import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import { recordBabelConfigs } from '../helpers/babel';
 
-import webpack from '../helpers/webpack';
-import { mix, Mix } from '../helpers/mix';
+import { recordBabelConfigs } from '../helpers/babel.js';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import ReactComponent from '../../src/components/React.js';
+import webpack from '../helpers/webpack.js';
 
 test('mix.react()', t => {
     mix.react().js('src/app.js', 'dist');
@@ -56,12 +56,14 @@ test('it sets the babel config correctly', async t => {
 });
 
 test('non-feature-flag use of mix.react throws an error', t => {
+    // @ts-expect-error
     t.throws(() => mix.react('js/app.js', 'js'), {
         message: /mix.react\(\) is now a feature flag/
     });
 });
 
 test('non-feature-flag use of mix.preact throws an error', t => {
+    // @ts-expect-error
     t.throws(() => mix.react('js/app.js', 'js'), {
         message: /mix.react\(\) is now a feature flag/
     });

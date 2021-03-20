@@ -1,11 +1,10 @@
 import test from 'ava';
 import path from 'path';
-import File from '../../src/File';
 
-import webpack from '../helpers/webpack';
-import assert from '../helpers/assertions';
-
-import { mix, Mix } from '../helpers/mix';
+import assert from '../helpers/assertions.js';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test.beforeEach(() => {
     webpack.setupVueAliases(2);
@@ -19,6 +18,7 @@ test('it adds the Vue 2 resolve alias', async t => {
 });
 
 test('non-feature-flag use of mix.vue throws an error', t => {
+    // @ts-expect-error
     t.throws(() => mix.vue('js/app.js', 'js'), {
         message: /mix.vue\(\) is a feature flag/
     });

@@ -1,9 +1,9 @@
 import test from 'ava';
-import File from '../../src/File';
-import assert from '../helpers/assertions';
-import webpack from '../helpers/webpack';
 
-import { mix, Mix } from '../helpers/mix';
+import assert from '../helpers/assertions.js';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('it accepts a src directory', async t => {
     mix.scripts(

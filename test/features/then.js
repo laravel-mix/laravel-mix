@@ -1,12 +1,14 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix';
+import { mix, Mix } from '../helpers/mix.js';
 
 test('mix.then()', t => {
     let called = false;
 
     // mix.then() registers a "build" event listener.
-    let response = mix.then(() => (called = true));
+    let response = mix.then(() => {
+        called = true;
+    });
 
     t.deepEqual(mix, response);
 

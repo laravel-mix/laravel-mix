@@ -1,5 +1,6 @@
 import test from 'ava';
-import { mix, Mix } from '../helpers/mix';
+
+import { mix, Mix } from '../helpers/mix.js';
 
 test('it waits for all before/init hooks to complete', async t => {
     let called = false;

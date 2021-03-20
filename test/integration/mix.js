@@ -2,9 +2,9 @@ import test from 'ava';
 import Koa from 'koa';
 import serveFilesFrom from 'koa-static';
 import { chromium } from 'playwright';
-import webpack, { setupVueAliases } from '../helpers/webpack';
 
-import { mix } from '../helpers/mix';
+import { mix } from '../helpers/mix.js';
+import webpack, { setupVueAliases } from '../helpers/webpack.js';
 
 /** @type {import("playwright").Browser} */
 let browser;
