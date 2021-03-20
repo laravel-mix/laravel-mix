@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 import webpack from '../helpers/webpack';
 
 test('it returns the mix instance', t => {

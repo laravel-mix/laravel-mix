@@ -1,6 +1,6 @@
 import test from 'ava';
 import webpack from '../helpers/webpack';
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('it configures hot reloading dev server options', async t => {
     mix.options({

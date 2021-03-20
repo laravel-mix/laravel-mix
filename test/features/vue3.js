@@ -4,7 +4,7 @@ import assert from '../helpers/assertions';
 import File from '../../src/File';
 import path from 'path';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test.beforeEach(() => {
     webpack.setupVueAliases(3);

@@ -4,7 +4,7 @@ import File from '../../src/File';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
     mix.js('js/app.js', 'dist/js');

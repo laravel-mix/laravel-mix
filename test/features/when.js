@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('it executes the callback based on the condition', t => {
     let called = false;

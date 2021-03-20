@@ -5,7 +5,7 @@ import File from '../../src/File';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('it does not process absolute urls', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');

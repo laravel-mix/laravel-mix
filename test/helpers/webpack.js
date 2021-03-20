@@ -1,4 +1,6 @@
+import mockRequire from 'mock-require';
 import webpack from 'webpack';
+import { mix, Mix } from './mix.js';
 
 export async function buildConfig(shouldInit = true) {
     if (shouldInit) {
@@ -27,8 +29,6 @@ export async function compile(config) {
 }
 
 export function setupVueAliases(version) {
-    let mockRequire = require('mock-require');
-
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
 

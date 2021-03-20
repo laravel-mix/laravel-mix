@@ -1,13 +1,17 @@
 import test from 'ava';
-import Mix from '../../src/Mix';
+import MixClass from '../../src/Mix';
 import fs from 'fs-extra';
 import '../../src/helpers';
 
-test.beforeEach(() => {
-    let mix = new Mix().boot().api;
+/** @type {import('../../src/Mix')} */
+export let Mix;
 
-    // @ts-ignore
-    global.mix = mix;
+/** @type {import('../../src/Mix')['api']} */
+export let mix;
+
+test.beforeEach(() => {
+    Mix = new MixClass().boot();
+    mix = Mix.api;
 
     fs.ensureDirSync(`test/fixtures/app/dist`);
     mix.setPublicPath(`test/fixtures/app/dist`);

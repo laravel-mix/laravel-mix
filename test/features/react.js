@@ -7,7 +7,7 @@ import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { recordBabelConfigs } from '../helpers/babel';
 
 import webpack from '../helpers/webpack';
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('mix.react()', t => {
     mix.react().js('src/app.js', 'dist');

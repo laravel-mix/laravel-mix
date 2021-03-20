@@ -1,35 +1,35 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 import webpack from '../helpers/webpack';
 import File from '../../src/File';
 
 test('mix.sourceMaps()', t => {
-    t.false(Config.sourcemaps);
+    t.false(Mix.config.sourcemaps);
 
     let response = mix.sourceMaps();
 
     // Sourcemaps should use a sensible type as the default for dev.
     t.deepEqual(mix, response);
-    t.is('eval-source-map', Config.sourcemaps);
+    t.is('eval-source-map', Mix.config.sourcemaps);
 
     // For production builds, we should use a more performant type.
-    Config.production = true;
+    Mix.config.production = true;
     mix.sourceMaps();
-    t.is('source-map', Config.sourcemaps);
+    t.is('source-map', Mix.config.sourcemaps);
 
     // But if the user specifies that sourcemaps shouldn't be built for
     // production, then we should disable it.
     mix.sourceMaps(false);
-    t.false(Config.sourcemaps);
+    t.false(Mix.config.sourcemaps);
 
     // Finally, you can override the sourcemap type for production mode.
     mix.sourceMaps(true, 'eval-source-map', 'hidden-source-map');
-    t.is('hidden-source-map', Config.sourcemaps);
+    t.is('hidden-source-map', Mix.config.sourcemaps);
 });
 
 test('it works fine with cache busting chunk filenames', async t => {
-    Config.production = true;
+    Mix.config.production = true;
     mix.js(`test/fixtures/app/src/js/chunk.js`, 'js')
         .webpackConfig({
             output: {

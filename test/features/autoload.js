@@ -1,7 +1,6 @@
 import test from 'ava';
 import webpack from '../helpers/webpack';
-
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('it handles library autoloading', async t => {
     mix.autoload({

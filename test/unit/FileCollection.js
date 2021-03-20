@@ -6,7 +6,7 @@ import FileCollection from '../../src/FileCollection';
 import fs from 'fs-extra';
 import eol from 'eol';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 

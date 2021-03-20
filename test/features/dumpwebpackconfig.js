@@ -2,7 +2,7 @@ import test from 'ava';
 import Log from '../../src/Log';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('mix.dumpWebpackConfig()', async t => {
     let config;

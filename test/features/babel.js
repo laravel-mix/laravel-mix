@@ -4,7 +4,7 @@ import File from '../../src/File';
 import webpack from '../helpers/webpack';
 import { recordBabelConfigs } from '../helpers/babel';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 /** @type {ReturnType<recordBabelConfigs>} */
 let babel;
@@ -38,7 +38,7 @@ test('Babel reads the project .babelrc / config files', async t => {
 
     new File(configFile).write('{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }');
 
-    Config.babelConfig = { configFile };
+    Mix.config.babelConfig = { configFile };
 
     await webpack.compile();
 
@@ -80,7 +80,7 @@ test('Values from duplicate keys in the .babelrc file override the defaults enti
     // Setup a test .babelrc file.
     const configFile = __dirname + '/.testbabelrc';
 
-    Config.babelConfig = { configFile };
+    Mix.config.babelConfig = { configFile };
 
     new File(configFile).write(
         '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage", "corejs": 3}] ] }'

@@ -1,10 +1,8 @@
 import test from 'ava';
-import path from 'path';
-import WebpackConfig from '../../src/builder/WebpackConfig';
 import sinon from 'sinon';
 import webpack, { buildConfig } from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('mix can be extended with new functionality as a callback', async t => {
     let registration = sinon.spy();

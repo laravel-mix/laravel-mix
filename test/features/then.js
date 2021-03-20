@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('mix.then()', t => {
     let called = false;

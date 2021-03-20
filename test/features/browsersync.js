@@ -3,7 +3,7 @@ import mockRequire from 'mock-require';
 import BrowserSync from '../../src/components/BrowserSync';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 mockRequire(
     'browser-sync-webpack-plugin',

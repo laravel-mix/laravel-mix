@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 import { buildConfig } from '../helpers/webpack';
 
 test('Custom webpack config can be merged', async t => {

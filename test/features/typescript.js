@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 import assert from '../helpers/assertions';

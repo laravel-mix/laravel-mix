@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import eol from 'eol';
 import File from '../../src/File';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 
@@ -95,11 +95,11 @@ test('it can force the file to begin from the public path for the project.', t =
 test('it knows the path to the file starting from the project public directory', t => {
     let file = new File('public/js/file.js');
 
-    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Config.publicPath));
+    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Mix.config.publicPath));
 
     file = new File('js/file.js');
 
-    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Config.publicPath));
+    t.is(path.normalize('/js/file.js'), file.pathFromPublic(Mix.config.publicPath));
 });
 
 test('it knows the full path to the file without the extension', t => {
