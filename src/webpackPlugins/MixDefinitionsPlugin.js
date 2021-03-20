@@ -2,56 +2,81 @@ let webpack = require('webpack');
 let dotenv = require('dotenv');
 let expand = require('dotenv-expand');
 
-/**
- * Create a new plugin instance.
- *
- * @param {string} envPath
- */
-function MixDefinitionsPlugin(envPath) {
-    expand(
-        dotenv.config({
-            path: envPath || Mix.paths.root('.env')
-        })
-    );
+/** @internal */
+class MixDefinitionsPlugin {
+    /**
+     *
+     * @param {string} [envPath]
+     * @param {Record<string, string>} [additionalEnv]
+     */
+    constructor(envPath = undefined, additionalEnv = {}) {
+        this.envPath = envPath || global.Mix.paths.root('.env');
+        this.additionalEnv = additionalEnv;
+    }
+
+    /**
+     *
+     * @param {import('webpack').Compiler} compiler
+     */
+    apply(compiler) {
+        this.plugin.apply(compiler);
+    }
+
+    /**
+     * Build all MIX_ definitions for Webpack's DefinePlugin.
+     */
+    get env() {
+        // Load .env, if it exists, into process.env
+        expand(dotenv.config({ path: this.envPath }));
+
+        // Take everything from process.env that beings with MIX_
+        const regex = /^MIX_/i;
+        const existing = Object.fromEntries(
+            Object.entries(process.env).filter(([key]) => regex.test(key))
+        );
+
+        // Merge in env vaiues from:
+        // - process.env
+        // - the .env file
+        // - the additional env provided to the plugin
+        return {
+            ...existing,
+            ...this.additionalEnv
+        };
+    }
+
+    /**
+     * Build up the necessary definitions and add them to the DefinePlugin.
+     */
+    get plugin() {
+        return new webpack.EnvironmentPlugin(this.env);
+    }
+
+    /**
+     * Build all MIX_ definitions for Webpack's DefinePlugin.
+     * This is no longer used but here for backwards compat.
+     *
+     * @deprecated
+     * @param {Record<string, string>} additionalEnv
+     */
+    getDefinitions(additionalEnv) {
+        return Object.fromEntries(
+            Object.entries({ ...this.env, ...additionalEnv }).map(([key, value]) => {
+                return [`process.env.${key}`, JSON.stringify(value)];
+            })
+        );
+    }
+
+    /**
+     * Build up the necessary definitions and add them to the DefinePlugin.
+     *
+     * Here for backwards compat only
+     * @deprecated
+     * @param {Record<string, string>} additionalEnv
+     */
+    static build(additionalEnv) {
+        return new MixDefinitionsPlugin(undefined, additionalEnv).plugin;
+    }
 }
-
-/**
- * Build up the necessary definitions and add them to the DefinePlugin.
- *
- * @param {Object|null} merge
- */
-MixDefinitionsPlugin.build = function (merge = {}) {
-    return new webpack.DefinePlugin(new MixDefinitionsPlugin().getDefinitions(merge));
-};
-
-/**
- * Build all MIX_ definitions for Webpack's DefinePlugin.
- *
- * @param {object} merge
- */
-MixDefinitionsPlugin.prototype.getDefinitions = function (merge) {
-    let regex = /^MIX_/i;
-
-    // Filter out env vars that don't begin with MIX_.
-    let env = Object.keys(process.env)
-        .filter(key => regex.test(key))
-        .reduce((value, key) => {
-            value[key] = process.env[key];
-
-            return value;
-        }, {});
-
-    let values = Object.assign(env, merge);
-
-    return (
-        Object.keys(values)
-            // Stringify all values so they can be fed into Webpack's DefinePlugin.
-            .reduce((value, key) => {
-                value[`process.env.${key}`] = JSON.stringify(values[key]);
-
-                return value;
-            }, {})
-    );
-};
 
 module.exports = MixDefinitionsPlugin;

@@ -25,7 +25,7 @@ module.exports = function (mix) {
 
     // Activate support for Mix_ .env definitions.
     plugins.push(
-        MixDefinitionsPlugin.build({
+        new MixDefinitionsPlugin(mix.paths.root('.env'), {
             NODE_ENV: mix.inProduction()
                 ? 'production'
                 : process.env.NODE_ENV || 'development'
