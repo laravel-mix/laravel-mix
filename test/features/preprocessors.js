@@ -253,7 +253,7 @@ test('Sass url resolution can be configured per-file', async t => {
     t.true(File.exists(`test/fixtures/app/dist/css/image.css`));
 
     t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.true(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img2.66162863.svg`));
 
     t.false(File.exists(`test/fixtures/app/dist/fonts/font.svg`));
     t.false(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
