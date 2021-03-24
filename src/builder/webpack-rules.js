@@ -18,7 +18,10 @@ module.exports = function () {
                 options: {
                     name: path => {
                         if (!/node_modules|bower_components/.test(path)) {
-                            return Config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
+                            return (
+                                Config.fileLoaderDirs.images +
+                                '/[name].[hash:8].[ext]?[hash]'
+                            );
                         }
 
                         return (
