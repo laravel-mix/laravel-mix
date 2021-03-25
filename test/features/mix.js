@@ -55,13 +55,13 @@ test('it resolves image- and font-urls and distinguishes between them even if we
     // Then we expect the css to be built
     t.true(File.exists(`test/fixtures/app/dist/css/font-and-image.css`));
     // Along with the referred image in the images folder
-    t.true(File.exists(`test/fixtures/app/dist/images/img.66162863.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img.66162.svg`));
     // And the referred fonts in the fonts folder
     t.true(File.exists(`test/fixtures/app/dist/fonts/font.svg`));
     t.true(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
     // And we expect the image NOT to be in the fonts folder:
     t.false(File.exists(`test/fixtures/app/dist/fonts/img.svg`));
     // And the fonts NOT to be in the image folder
-    t.false(File.exists(`test/fixtures/app/dist/images/font.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/awesome.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/font.66162.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/awesome.66162.svg`));
 });

@@ -20,7 +20,7 @@ module.exports = function () {
                         if (!/node_modules|bower_components/.test(path)) {
                             return (
                                 Config.fileLoaderDirs.images +
-                                '/[name].[hash:8].[ext]?[hash]'
+                                '/[name].[hash:5].[ext]?[hash]'
                             );
                         }
 
