@@ -32,7 +32,7 @@ module.exports = function (mix) {
                             if (!/node_modules|bower_components/.test(path)) {
                                 return (
                                     mix.config.fileLoaderDirs.images +
-                                    '/[name].[ext]?[hash]'
+                                    '/[name].[hash:8].[ext]?[hash:8]'
                                 );
                             }
 

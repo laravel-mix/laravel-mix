@@ -20,7 +20,7 @@ test('mix.setResourceRoot() rewrites processed asset urls', async t => {
     await webpack.compile();
 
     t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
-    t.true(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img.66162.svg`));
 
     assert.fileMatchesCss(
         `test/fixtures/app/dist/css/app-and-image.css`,
