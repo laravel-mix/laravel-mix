@@ -90,7 +90,7 @@ module.exports = function () {
          * Image Loader defaults.
          * See: https://github.com/thetalecrafter/img-loader#options
          *
-         * @type {Object}
+         * @type {Boolean|Object}
          */
         imgLoaderOptions: {
             enabled: true,
