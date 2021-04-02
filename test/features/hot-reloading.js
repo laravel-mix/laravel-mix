@@ -1,8 +1,9 @@
 import test from 'ava';
 import fs from 'fs-extra';
 import path from 'path';
-import File from '../../src/File';
-import { mix, Mix } from '../helpers/mix';
+
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
 
 test('it creates a file to mark a request for hot reloading', async t => {
     mix.setPublicPath(__dirname).options({ hmr: true });

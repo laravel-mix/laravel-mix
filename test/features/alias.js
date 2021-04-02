@@ -1,7 +1,8 @@
 import test from 'ava';
 import path from 'path';
-import webpack from '../helpers/webpack';
-import { mix } from '../helpers/mix';
+
+import { mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('it handles resolution aliases', async t => {
     mix.alias({
@@ -10,10 +11,7 @@ test('it handles resolution aliases', async t => {
 
     let { config } = await webpack.compile();
 
-    t.deepEqual(
-        {
-            '@': path.resolve(__dirname, '../../foobar')
-        },
-        config.resolve.alias
-    );
+    t.deepEqual(config.resolve && config.resolve.alias, {
+        '@': path.resolve(__dirname, '../../foobar')
+    });
 });

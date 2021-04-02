@@ -1,8 +1,8 @@
 import test from 'ava';
 import sinon from 'sinon';
-import webpack, { buildConfig } from '../helpers/webpack';
 
-import { mix, Mix } from '../helpers/mix';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('mix can be extended with new functionality as a callback', async t => {
     let registration = sinon.spy();
@@ -84,7 +84,7 @@ test('webpack entry may be appended to', async t => {
 
     mix.foobar();
 
-    const config = await buildConfig();
+    const config = await webpack.buildConfig();
 
     t.deepEqual(['path'], config.entry.foo);
 });
@@ -108,7 +108,7 @@ test('webpack rules may be added', async t => {
 
     mix.foobar();
 
-    const config = await buildConfig();
+    const config = await webpack.buildConfig();
 
     t.deepEqual(config.module.rules.pop(), rule);
 });
@@ -129,7 +129,7 @@ test('webpack plugins may be added', async t => {
 
     mix.foobar();
 
-    const config = await buildConfig();
+    const config = await webpack.buildConfig();
 
     t.is(plugin, config.plugins.pop());
 });
@@ -146,11 +146,11 @@ test('the fully constructed webpack config object is available for modification,
         })()
     );
 
-    t.false((await buildConfig(false)).stats.performance);
+    t.false((await webpack.buildConfig(false)).stats.performance);
 
     mix.extension();
 
-    t.true((await buildConfig(true)).stats.performance);
+    t.true((await webpack.buildConfig(true)).stats.performance);
 });
 
 test('prior Mix components can be overwritten', t => {

@@ -1,8 +1,8 @@
 import test from 'ava';
 import sinon from 'sinon';
-import File from '../../src/File';
 
-import { mix, Mix } from '../helpers/mix';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
 
 test('that it knows if it is being executed in a production environment', t => {
     Mix.config.production = true;
@@ -79,7 +79,9 @@ test('that it can check for an installed npm package', t => {
 test('that it listens for when the webpack configuration object has been fully generated', t => {
     let called = false;
 
-    mix.override(config => (called = true));
+    mix.override(() => {
+        called = true;
+    });
 
     Mix.dispatch('build');
     Mix.dispatch('configReadyForUser');

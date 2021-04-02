@@ -1,12 +1,12 @@
 import test from 'ava';
+import eol from 'eol';
+import fs from 'fs-extra';
 import path from 'path';
 import sinon from 'sinon';
-import File from '../../src/File';
-import FileCollection from '../../src/FileCollection';
-import fs from 'fs-extra';
-import eol from 'eol';
 
-import { mix, Mix } from '../helpers/mix';
+import File from '../../src/File.js';
+import FileCollection from '../../src/FileCollection.js';
+import '../helpers/mix.js';
 
 let stubsDir = path.resolve(__dirname, 'stubs');
 

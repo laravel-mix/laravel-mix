@@ -1,6 +1,7 @@
 import test, { beforeEach } from 'ava';
 import colors from 'colors/safe';
-import BuildOutputPlugin from '../../../src/webpackPlugins/BuildOutputPlugin';
+
+import BuildOutputPlugin from '../../../src/webpackPlugins/BuildOutputPlugin.js';
 
 beforeEach(() => colors.disable());
 

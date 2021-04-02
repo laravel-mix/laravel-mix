@@ -1,7 +1,8 @@
 import test from 'ava';
-import MixClass from '../../src/Mix';
 import fs from 'fs-extra';
-import '../../src/helpers';
+
+import MixClass from '../../src/Mix.js';
+import '../../src/helpers.js';
 
 /** @type {import('../../src/Mix')} */
 export let Mix;
@@ -17,6 +18,6 @@ test.beforeEach(() => {
     mix.setPublicPath(`test/fixtures/app/dist`);
 });
 
-test.afterEach.always(t => {
+test.afterEach.always(() => {
     fs.removeSync(`test/fixtures/app/dist`);
 });

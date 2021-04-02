@@ -1,8 +1,8 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix';
-import webpack from '../helpers/webpack';
-import File from '../../src/File';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('mix.sourceMaps()', t => {
     t.false(Mix.config.sourcemaps);

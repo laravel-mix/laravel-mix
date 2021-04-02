@@ -1,11 +1,12 @@
 import test from 'ava';
 import path from 'path';
-import File from '../../src/File';
-import webpack from '../helpers/webpack';
-import Stub from '../helpers/Stub';
 
-import { mix, Mix } from '../helpers/mix';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import Stub from '../helpers/Stub.js';
+import webpack from '../helpers/webpack.js';
 
+/** @type {File} */
 let postCssConfigFile;
 
 test.beforeEach(() => {
@@ -47,15 +48,15 @@ test('mix.css() is an alias for mix.postCss()', async t => {
 
 test('it applies autoprefixer to compiled CSS', async t => {
     let css = `
-        @keyframes testing { 
+        @keyframes testing {
             to { color: red; }
         }`;
 
     let expected = `
-        @-webkit-keyframes testing { 
+        @-webkit-keyframes testing {
             to { color: red; }
-        } 
-        @keyframes testing { 
+        }
+        @keyframes testing {
             to { color: red; }
         }`;
 
@@ -70,7 +71,7 @@ test('it applies autoprefixer to compiled CSS', async t => {
 
 test('it applies autoprefixer with custom configuration', async t => {
     let css = `
-        div { 
+        div {
             -webkit-box-shadow: 0 0 4px black;
             box-shadow: 0 0 4px black;
         }`;
@@ -91,12 +92,12 @@ test('it applies autoprefixer with custom configuration', async t => {
 
 test('it disables autoprefixer', async t => {
     let css = `
-        @keyframes testing { 
+        @keyframes testing {
             to { color: red; }
         }`;
 
     let expected = `
-        @keyframes testing { 
+        @keyframes testing {
             to { color: red; }
         }`;
 
@@ -119,7 +120,7 @@ test('it disables autoprefixer but still loads postcss.config.js', async t => {
 
         .test {
             color: var(--some-color);
-            
+
         }
 
         @keyframes testing {
@@ -134,7 +135,7 @@ test('it disables autoprefixer but still loads postcss.config.js', async t => {
         .test {
             color: red;
             color: var(--some-color);
-            
+
         }
 
         @keyframes testing {
@@ -157,7 +158,7 @@ test('it applies CSSNano minification during production', async t => {
 
     let css = `
         body {
-            color: red; 
+            color: red;
         }`;
 
     let expected = `body{color:red}`;
@@ -175,7 +176,7 @@ test('it disables CSSNano minification', async t => {
     Mix.config.production = true;
 
     let css = `
-        @keyframes testing { 
+        @keyframes testing {
             to { color: red; }
         }`;
 
@@ -183,10 +184,10 @@ test('it disables CSSNano minification', async t => {
     // but this test will disable that. When we do so, we still
     // expect any postcss.config.js plugin to be loaded.
     let expected = `
-        @-webkit-keyframes testing { 
+        @-webkit-keyframes testing {
             to { color: red; }
-        } 
-        @keyframes testing { 
+        }
+        @keyframes testing {
             to { color: red; }
         }`;
 
@@ -208,7 +209,7 @@ test('it applies CSSNano minification with configuration options', async t => {
 
     let css = `
         #empty {
-            
+
         }`;
 
     let expected = `#empty{}`;
@@ -238,7 +239,7 @@ test("it merge Mix's default postcss plugins with any found in the user's postcs
 
         .test {
             color: var(--some-color);
-            
+
         }
 
         @keyframes testing {

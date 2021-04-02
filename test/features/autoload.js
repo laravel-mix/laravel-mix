@@ -1,6 +1,7 @@
 import test from 'ava';
-import webpack from '../helpers/webpack';
-import { mix } from '../helpers/mix';
+
+import { mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('it handles library autoloading', async t => {
     mix.autoload({
@@ -10,16 +11,13 @@ test('it handles library autoloading', async t => {
 
     let { config } = await webpack.compile();
 
-    let providePlugin = config.plugins.find(
+    let providePlugin = (config.plugins || []).find(
         plugin => plugin.constructor.name === 'ProvidePlugin'
-    );
+    ) || { definitions: {} };
 
-    t.deepEqual(
-        {
-            $: 'jquery',
-            'window.jQuery': 'jquery',
-            _map: ['lodash', 'map']
-        },
-        providePlugin.definitions
-    );
+    t.deepEqual(providePlugin.definitions, {
+        $: 'jquery',
+        'window.jQuery': 'jquery',
+        _map: ['lodash', 'map']
+    });
 });

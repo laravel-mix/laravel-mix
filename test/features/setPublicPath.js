@@ -1,7 +1,7 @@
 import test from 'ava';
 import path from 'path';
 
-import { mix, Mix } from '../helpers/mix';
+import { mix, Mix } from '../helpers/mix.js';
 
 test('mix.setPublicPath()', t => {
     let response = mix.setPublicPath('somewhere/else');

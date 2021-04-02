@@ -1,3 +1,3 @@
-const mix = require('../../../src/index');
+const mix = require('../../../src/index.js');
 
 mix.setPublicPath('public');

@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix';
+import { mix, Mix } from '../helpers/mix.js';
 
 test('mix.setResourceRoot()', t => {
     let response = mix.setResourceRoot('some/path');

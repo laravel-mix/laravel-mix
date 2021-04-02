@@ -1,9 +1,9 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix';
-import File from '../../src/File';
-import webpack from '../helpers/webpack';
-import assert from '../helpers/assertions';
+import assert from '../helpers/assertions.js';
+import File from '../../src/File.js';
+import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test('mix.ts()', t => {
     let response = mix.ts('src/app.ts', 'dist');
