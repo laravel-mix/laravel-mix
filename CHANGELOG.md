@@ -1,5 +1,22 @@
 # Changelog
 
+## 6.0.14
+
+-   `BabelConfig.fetchBabelRc` / `static BabelConfig.default` / `static BabelConfig.generate` have all been deprecated. They are no longer used by Mix itself but remain for backwards compatability.
+-   `MixDefinitionsPlugin.getDefinitions` and `static MixDefinitionsPlugin.build` have been deprecated. They are no longer used by Mix itself but remain for backwards compatability.
+-   `static Chunks._instance` / `static Chunks.instance()` / `static Chunks.reset()` are now deprecated and will be removed in a future release.
+-   The static methods on `HotReloading` are now deprecated. They have been replaced with instance methods.
+-   The use of the globals `Mix`, `Config`, and `webpackConfig` are now deprecated and will warn on use in Mix v7.
+
+We are working toward an API for access to `Mix` for extensions that does not assume that it is a global or that it is the same instance in all cases.
+
+In the mean time:
+
+-   Uses of `Chunks.instance()` may be replaced with `Mix.chunks`
+-   Uses of `Config` may be replaced with `Mix.config`
+-   Uses of `webpackConfig` may be replaced with `Mix.webpackConfig`
+-   Uses of `HotReloading.*` methods `Mix.hot.*`
+
 ## 6.0
 
 [View upgrade guide.](https://github.com/JeffreyWay/laravel-mix/blob/master/UPGRADE.md)
