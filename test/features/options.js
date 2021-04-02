@@ -1,11 +1,10 @@
 import test from 'ava';
-
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('mix.options()', t => {
     mix.options({
         foo: 'bar'
     });
 
-    t.is('bar', Config.foo);
+    t.is('bar', Mix.config.foo);
 });

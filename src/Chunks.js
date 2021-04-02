@@ -24,7 +24,14 @@ class Chunks {
     /** @type {Chunks|null} */
     static _instance = null;
 
-    constructor() {
+    /**
+     *
+     * @param {import("./Mix")} mix
+     */
+    constructor(mix) {
+        // TODO: Simplify in Mix 7 -- Here for backwards compat if a plugin creates this class directly
+        this.mix = mix || global.Mix;
+
         /** @type {{[key: string]: CacheGroup}} */
         this.chunks = {};
 
@@ -138,7 +145,7 @@ class Chunks {
         return {
             runtimeChunk: {
                 name: path
-                    .join(Config.runtimeChunkPath || this.entry.base, 'manifest')
+                    .join(this.mix.config.runtimeChunkPath || this.entry.base, 'manifest')
                     .replace(/\\/g, '/')
             }
         };

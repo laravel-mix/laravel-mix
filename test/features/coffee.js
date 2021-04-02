@@ -3,7 +3,7 @@ import assert from '../helpers/assertions';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test('it returns the mix instance', t => {
     t.deepEqual(mix, mix.coffee('resources/assets/js/app.coffee', 'dist/js'));

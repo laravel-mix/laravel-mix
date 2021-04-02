@@ -4,7 +4,7 @@ import Manifest from '../../src/Manifest';
 import File from '../../src/File';
 import fs from 'fs-extra';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test.beforeEach(() => (Mix.manifest = new Manifest()));
 
@@ -15,7 +15,7 @@ test('that it can fetch the underlying manifest object', t => {
 });
 
 test('that it can fetch a single versioned path from the underlying manifest', t => {
-    Config.publicPath = 'public';
+    Mix.config.publicPath = 'public';
 
     Mix.manifest.add('file/path.js');
 
@@ -43,7 +43,7 @@ test('it can get the underlying manifest object', t => {
 });
 
 test('it knows the path to the underlying file', t => {
-    t.is(path.join(Config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
+    t.is(path.join(Mix.config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
 });
 
 test('it can be refreshed', t => {

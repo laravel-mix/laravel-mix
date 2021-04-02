@@ -260,8 +260,11 @@ declare namespace mix {
         /** Whether or not to extract vue styles. If given a string the name of the file to extract to. */
         extractStyles?: boolean | string;
 
+        /** Whether or not to use the runtime only version of Vue. */
+        runtimeOnly?: boolean;
+
         /** Options to pass to Vue Loader */
-        options: VueLoaderOptions;
+        options?: VueLoaderOptions;
     };
 
     // Third-party support "feature flags"

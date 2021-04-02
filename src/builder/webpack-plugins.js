@@ -6,38 +6,45 @@ let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
 let WebpackBar = require('webpackbar');
 
-module.exports = function () {
+/**
+ *
+ * @param {import("../Mix")} mix
+ */
+module.exports = function (mix) {
+    // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
+    mix = mix || global.Mix;
+
     let plugins = [];
 
     // If the user didn't declare any JS compilation, we still need to
     // use a temporary script to force a compile. This plugin will
     // handle the process of deleting the compiled script.
-    if (!Mix.bundlingJavaScript) {
-        plugins.push(new MockEntryPlugin());
+    if (!mix.bundlingJavaScript) {
+        plugins.push(new MockEntryPlugin(mix));
     }
 
     // Activate support for Mix_ .env definitions.
     plugins.push(
-        MixDefinitionsPlugin.build({
-            NODE_ENV: Mix.inProduction()
+        new MixDefinitionsPlugin(mix.paths.root('.env'), {
+            NODE_ENV: mix.inProduction()
                 ? 'production'
                 : process.env.NODE_ENV || 'development'
         })
     );
 
     // Handle the creation of the mix-manifest.json file.
-    plugins.push(new ManifestPlugin());
+    plugins.push(new ManifestPlugin(mix));
 
     // Handle all custom, non-webpack tasks.
-    plugins.push(new CustomTasksPlugin());
+    plugins.push(new CustomTasksPlugin(mix));
 
     // Notify the rest of our app when Webpack has finished its build.
-    plugins.push(new BuildCallbackPlugin(stats => Mix.dispatch('build', stats)));
+    plugins.push(new BuildCallbackPlugin(stats => mix.dispatch('build', stats)));
 
     // Enable custom output when the Webpack build completes.
     plugins.push(
         new BuildOutputPlugin({
-            clearConsole: Config.clearConsole,
+            clearConsole: mix.config.clearConsole,
             showRelated: true
         })
     );

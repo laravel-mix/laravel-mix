@@ -3,6 +3,14 @@ let collect = require('collect.js');
 
 class CustomTasksPlugin {
     /**
+     *
+     * @param {import('../Mix')} mix
+     */
+    constructor(mix) {
+        this.mix = mix || global.Mix;
+    }
+
+    /**
      * Apply the plugin.
      *
      * @param {import("webpack").Compiler} compiler
@@ -10,19 +18,19 @@ class CustomTasksPlugin {
     apply(compiler) {
         compiler.hooks.done.tapAsync(this.constructor.name, (stats, callback) => {
             this.runTasks(stats).then(async () => {
-                if (Mix.components.get('version') && !Mix.isUsing('hmr')) {
+                if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
                     this.applyVersioning();
                 }
 
-                if (Mix.inProduction()) {
+                if (this.mix.inProduction()) {
                     await this.minifyAssets();
                 }
 
-                if (Mix.isWatching()) {
-                    Mix.tasks.forEach(task => task.watch(Mix.isPolling()));
+                if (this.mix.isWatching()) {
+                    this.mix.tasks.forEach(task => task.watch(this.mix.isPolling()));
                 }
 
-                Mix.manifest.refresh();
+                this.mix.manifest.refresh();
                 callback();
             });
         });
@@ -31,7 +39,7 @@ class CustomTasksPlugin {
     /**
      * Execute the task.
      *
-     * @param {Task} task
+     * @param {import("../tasks/Task")} task
      * @param {import("webpack").Stats} stats
      */
     async runTask(task, stats) {
@@ -56,7 +64,7 @@ class CustomTasksPlugin {
         const path = asset.pathFromPublic();
 
         // Add the asset to the manifest
-        Mix.manifest.add(path);
+        this.mix.manifest.add(path);
 
         // Update the Webpack assets list for better terminal output.
         stats.compilation.assets[path] = {
@@ -72,9 +80,9 @@ class CustomTasksPlugin {
      * @param index
      */
     runTasks(stats, index = 0) {
-        if (index === Mix.tasks.length) return Promise.resolve();
+        if (index === this.mix.tasks.length) return Promise.resolve();
 
-        const task = Mix.tasks[index];
+        const task = this.mix.tasks[index];
 
         return this.runTask(task, stats).then(() => this.runTasks(stats, index + 1));
     }
@@ -83,7 +91,7 @@ class CustomTasksPlugin {
      * Minify the given asset file.
      */
     async minifyAssets() {
-        const assets = collect(Mix.tasks)
+        const assets = collect(this.mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
             .flatMap(({ assets }) => assets);
 
@@ -107,7 +115,9 @@ class CustomTasksPlugin {
      * Version all files that are present in the manifest.
      */
     applyVersioning() {
-        collect(Mix.manifest.get()).each((value, key) => Mix.manifest.hash(key));
+        collect(this.mix.manifest.get()).each((value, key) =>
+            this.mix.manifest.hash(key)
+        );
     }
 }
 

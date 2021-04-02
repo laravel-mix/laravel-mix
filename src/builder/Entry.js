@@ -4,8 +4,13 @@ let File = require('../File');
 class Entry {
     /**
      * Create a new Entry instance.
+     * @param {import("../Mix")} mix
      */
-    constructor() {
+    constructor(mix) {
+        // TODO: Simplify in Mix 7 -- Here for backwards compat if a plugin creates this class directly
+        this.mix = mix || global.Mix;
+
+        /** @type {Record<string, string[]>} */
         this.structure = {};
         this.base = '';
     }
@@ -28,7 +33,7 @@ class Entry {
      * Add a key key-val pair to the structure.
      *
      * @param {string} key
-     * @param {mixed}  val
+     * @param {any}  val
      */
     add(key, val) {
         this.structure[key] = (this.structure[key] || []).concat(val);
@@ -39,7 +44,7 @@ class Entry {
     /**
      * Add a new key-val pair, based on a given output path.
      *
-     * @param {mixed}  val
+     * @param {any}  val
      * @param {Object} output
      * @param {Object} fallback
      */
@@ -67,7 +72,7 @@ class Entry {
      */
     createName(output) {
         let name = output
-            .pathFromPublic(Config.publicPath)
+            .pathFromPublic(this.mix.config.publicPath)
             .replace(/\.js$/, '')
             .replace(/\\/g, '/');
 
@@ -86,10 +91,12 @@ class Entry {
         // All output paths need to start at the project's public dir.
         let pathFromPublicDir = output.pathFromPublic();
         if (
-            !pathFromPublicDir.startsWith('/' + Config.publicPath) &&
-            !pathFromPublicDir.startsWith('\\' + Config.publicPath)
+            !pathFromPublicDir.startsWith('/' + this.mix.config.publicPath) &&
+            !pathFromPublicDir.startsWith('\\' + this.mix.config.publicPath)
         ) {
-            output = new File(path.join(Config.publicPath, output.pathFromPublic()));
+            output = new File(
+                path.join(this.mix.config.publicPath, output.pathFromPublic())
+            );
         }
 
         // If the output points to a directory, we'll grab a file name from the fallback src.

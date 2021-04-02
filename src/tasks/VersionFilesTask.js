@@ -12,7 +12,7 @@ class VersionFilesTask extends Task {
         this.assets = this.data.files.map(file => {
             file = new File(file);
 
-            Mix.manifest.hash(file.pathFromPublic());
+            this.mix.manifest.hash(file.pathFromPublic());
 
             return file;
         });
@@ -24,7 +24,11 @@ class VersionFilesTask extends Task {
      * @param {string} updatedFile
      */
     onChange(updatedFile) {
-        Mix.manifest.hash(new File(updatedFile).pathFromPublic()).refresh();
+        this.mix.manifest.hash(new File(updatedFile).pathFromPublic()).refresh();
+    }
+
+    get mix() {
+        return global.Mix;
     }
 }
 

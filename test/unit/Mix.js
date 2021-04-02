@@ -2,16 +2,16 @@ import test from 'ava';
 import sinon from 'sinon';
 import File from '../../src/File';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('that it knows if it is being executed in a production environment', t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     t.true(Mix.inProduction());
 });
 
 test('that it can check if a certain config item is truthy', t => {
-    Config.versioning = true;
+    Mix.config.versioning = true;
 
     t.true(Mix.isUsing('versioning'));
 });

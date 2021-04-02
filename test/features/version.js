@@ -5,7 +5,7 @@ import assert from '../helpers/assertions';
 
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('it can version an entire directory or regex of files.', async t => {
     fs.ensureDirSync(`test/fixtures/app/dist/js/folder`);
@@ -45,7 +45,7 @@ test('it compiles JavaScript and Sass with versioning', async t => {
 });
 
 test('it can build for production with versioning', async t => {
-    Config.production = true;
+    Mix.config.production = true;
     t.true(Mix.inProduction());
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').version();

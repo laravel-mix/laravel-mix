@@ -4,7 +4,7 @@ import File from '../../src/File';
 import webpack from '../helpers/webpack';
 import Stub from '../helpers/Stub';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 let postCssConfigFile;
 
@@ -153,7 +153,7 @@ test('it disables autoprefixer but still loads postcss.config.js', async t => {
 });
 
 test('it applies CSSNano minification during production', async t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     let css = `
         body {
@@ -172,7 +172,7 @@ test('it applies CSSNano minification during production', async t => {
 });
 
 test('it disables CSSNano minification', async t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     let css = `
         @keyframes testing { 
@@ -204,7 +204,7 @@ test('it disables CSSNano minification', async t => {
 });
 
 test('it applies CSSNano minification with configuration options', async t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     let css = `
         #empty {
@@ -229,7 +229,7 @@ test('it applies CSSNano minification with configuration options', async t => {
 });
 
 test("it merge Mix's default postcss plugins with any found in the user's postcss.config.js.", async t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     let css = `
         :root {

@@ -17,20 +17,24 @@ class Mix {
     /** @type {Mix|null} */
     static _primary = null;
 
+    /** @type {Record<string, boolean>} */
+    static _hasWarned = {};
+
     /**
      * Create a new instance.
      */
     constructor() {
         /** @type {ReturnType<buildConfig>} */
-        this.config = buildConfig();
+        this.config = buildConfig(this);
 
-        this.chunks = new Chunks();
+        this.chunks = new Chunks(this);
         this.components = new Components();
         this.dispatcher = new Dispatcher();
         this.manifest = new Manifest();
         this.paths = new Paths();
         this.registrar = new ComponentRegistrar();
         this.webpackConfig = new WebpackConfig(this);
+        this.hot = new HotReloading(this);
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -98,7 +102,7 @@ class Mix {
             this.config.publicPath = 'public';
         }
 
-        this.listen('init', () => HotReloading.record());
+        this.listen('init', () => this.hot.record());
         this.makeCurrent();
 
         return this;
@@ -246,8 +250,13 @@ class Mix {
     makeCurrent() {
         // Set up some globals
 
+        // @ts-ignore
         global.Config = this.config;
+
+        // @ts-ignore
         global.Mix = this;
+
+        // @ts-ignore
         global.webpackConfig = this.webpackConfig;
 
         this.chunks.makeCurrent();

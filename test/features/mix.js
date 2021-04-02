@@ -3,7 +3,7 @@ import assert from '../helpers/assertions';
 import File from '../../src/File';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix } from '../helpers/mix';
 
 test.beforeEach(() => webpack.setupVueAliases(2));
 

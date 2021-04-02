@@ -55,7 +55,7 @@ class FileCollection {
      * @param {string} contents
      */
     babelify(contents) {
-        let babelConfig = Config.babel();
+        let babelConfig = this.mix.config.babel();
 
         delete babelConfig.cacheDirectory;
 
@@ -108,6 +108,10 @@ class FileCollection {
         this.assets = this.assets.concat(destination);
 
         return destination.path();
+    }
+
+    get mix() {
+        return global.Mix;
     }
 }
 

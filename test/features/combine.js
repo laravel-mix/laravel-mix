@@ -3,7 +3,7 @@ import File from '../../src/File';
 import assert from '../helpers/assertions';
 import webpack from '../helpers/webpack';
 
-import '../helpers/mix';
+import { mix, Mix } from '../helpers/mix';
 
 test('it accepts a src directory', async t => {
     mix.scripts(
@@ -76,7 +76,7 @@ test('it compiles JS and then combines the bundles files.', async t => {
 });
 
 test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
-    Config.production = true;
+    Mix.config.production = true;
 
     mix.scripts(
         [
