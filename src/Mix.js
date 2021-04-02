@@ -71,22 +71,6 @@ class Mix {
 
     /**
      * @internal
-     * @deprecated
-     */
-    static get primaryWithWarning() {
-        if (!this._hasWarned.primary && !process.env.NO_MIX_INTERNALS_WARNING) {
-            this._hasWarned.primary = true;
-
-            console.warn(
-                'You are using a mix plugin that relies on implicit global usage of internal files.'
-            );
-        }
-
-        return Mix.primary;
-    }
-
-    /**
-     * @internal
      */
     async build() {
         if (!this.booted) {
