@@ -124,7 +124,7 @@
         "less-loader": "^8.0.0",
         "mock-require": "^3.0.3",
         "normalize.css": "^8.0.1",
-        "playwright": "^1.7.0",
+        "playwright": "^1.10.0",
         "postcss": "^8.1.2",
         "postcss-custom-properties": "^11.0.0",
         "prettier": "^2.2.1",
