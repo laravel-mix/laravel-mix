@@ -19,7 +19,7 @@ class Manifest {
     get(file = null) {
         if (file) {
             return path.posix.join(
-                Config.publicPath,
+                this.mix.config.publicPath,
                 this.manifest[this.normalizePath(file)]
             );
         }
@@ -48,7 +48,7 @@ class Manifest {
      * @param {string} file
      */
     hash(file) {
-        let hash = new File(path.join(Config.publicPath, file)).version();
+        let hash = new File(path.join(this.mix.config.publicPath, file)).version();
 
         let filePath = this.normalizePath(file);
 
@@ -86,7 +86,7 @@ class Manifest {
      * Get the path to the manifest file.
      */
     path() {
-        return path.join(Config.publicPath, this.name);
+        return path.join(this.mix.config.publicPath, this.name);
     }
 
     /**
@@ -117,8 +117,11 @@ class Manifest {
      * @param {string} filePath
      */
     normalizePath(filePath) {
-        if (Config.publicPath && filePath.startsWith(Config.publicPath)) {
-            filePath = filePath.substring(Config.publicPath.length);
+        if (
+            this.mix.config.publicPath &&
+            filePath.startsWith(this.mix.config.publicPath)
+        ) {
+            filePath = filePath.substring(this.mix.config.publicPath.length);
         }
         filePath = filePath.replace(/\\/g, '/');
 
@@ -127,6 +130,10 @@ class Manifest {
         }
 
         return filePath;
+    }
+
+    get mix() {
+        return global.Mix;
     }
 }
 

@@ -44,7 +44,7 @@ class PostCssPluginsFactory {
      */
     loadGlobalPlugins() {
         if (this.Config.postCss && this.Config.postCss.length) {
-            this.plugins = [...this.plugins, ...Config.postCss];
+            this.plugins = [...this.plugins, ...this.Config.postCss];
         }
 
         return this;

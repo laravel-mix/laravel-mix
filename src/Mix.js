@@ -17,20 +17,24 @@ class Mix {
     /** @type {Mix|null} */
     static _primary = null;
 
+    /** @type {Record<string, boolean>} */
+    static _hasWarned = {};
+
     /**
      * Create a new instance.
      */
     constructor() {
         /** @type {ReturnType<buildConfig>} */
-        this.config = buildConfig();
+        this.config = buildConfig(this);
 
-        this.chunks = new Chunks();
+        this.chunks = new Chunks(this);
         this.components = new Components();
         this.dispatcher = new Dispatcher();
         this.manifest = new Manifest();
         this.paths = new Paths();
         this.registrar = new ComponentRegistrar();
         this.webpackConfig = new WebpackConfig(this);
+        this.hot = new HotReloading(this);
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -67,6 +71,22 @@ class Mix {
 
     /**
      * @internal
+     * @deprecated
+     */
+    static get primaryWithWarning() {
+        if (!this._hasWarned.primary && !process.env.NO_MIX_INTERNALS_WARNING) {
+            this._hasWarned.primary = true;
+
+            console.warn(
+                'You are using a mix plugin that relies on implicit global usage of internal files.'
+            );
+        }
+
+        return Mix.primary;
+    }
+
+    /**
+     * @internal
      */
     async build() {
         if (!this.booted) {
@@ -98,7 +118,7 @@ class Mix {
             this.config.publicPath = 'public';
         }
 
-        this.listen('init', () => HotReloading.record());
+        this.listen('init', () => this.hot.record());
         this.makeCurrent();
 
         return this;
