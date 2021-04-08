@@ -45,7 +45,7 @@ test('it injects the snippet in the right place', t => {
 });
 
 test('it configures Browsersync proxy', t => {
-    t.is(browserSyncConfig().proxy, 'app.test', 'sets default proxy');
+    t.is(browserSyncConfig().proxy, 'laravel-mix.test', 'sets default proxy');
     t.is(
         browserSyncConfig('example.domain').proxy,
         'example.domain',
