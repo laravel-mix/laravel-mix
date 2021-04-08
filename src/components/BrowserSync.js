@@ -43,7 +43,7 @@ class BrowserSync {
         let defaultConfig = {
             host: 'localhost',
             port: 3000,
-            proxy: process.cwd().split('/').pop() + '.test',
+            proxy: process.cwd().replaceAll('\\', '/').split('/').pop() + '.test',
             files: [
                 'app/**/*.php',
                 'resources/views/**/*.php',
