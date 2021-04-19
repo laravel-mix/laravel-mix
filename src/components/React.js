@@ -26,6 +26,9 @@ class React {
 
     /**
      * Register the component.
+     *
+     * @param {object} options
+     * @param {boolean|string} [options.extractStyles] Whether or not to extract React styles. If given a string the name of the file to extract to.
      */
     register(options = {}) {
         if (
@@ -37,7 +40,7 @@ class React {
                 'mix.react() is now a feature flag. Use mix.js(source, destination).react() instead'
             );
         }
-        
+
         this.options = Object.assign(
             {
                 extractStyles: false
