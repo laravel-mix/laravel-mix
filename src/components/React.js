@@ -27,7 +27,7 @@ class React {
     /**
      * Register the component.
      */
-    register() {
+    register(options = {}) {
         if (
             arguments.length === 2 &&
             typeof arguments[0] === 'string' &&
@@ -37,6 +37,15 @@ class React {
                 'mix.react() is now a feature flag. Use mix.js(source, destination).react() instead'
             );
         }
+        
+        this.options = Object.assign(
+            {
+                extractStyles: false
+            },
+            options
+        );
+
+        Mix.extractingStyles = !!this.options.extractStyles;
     }
 
     /**
