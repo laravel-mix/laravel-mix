@@ -1,3 +1,5 @@
+let path = require('path');
+
 class BrowserSync {
     /**
      * Required dependencies for the component.
@@ -43,7 +45,7 @@ class BrowserSync {
         let defaultConfig = {
             host: 'localhost',
             port: 3000,
-            proxy: process.cwd().replace(/\\/g, '/').split('/').pop() + '.test',
+            proxy: `${path.basename(process.cwd())}.test`,
             files: [
                 'app/**/*.php',
                 'resources/views/**/*.php',
