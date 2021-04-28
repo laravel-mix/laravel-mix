@@ -1,7 +1,8 @@
 // Type definitions for laravel-mix 6.0
 
 import * as webpack from 'webpack';
-import { TransformOptions as BabelConfig } from 'babel-core';
+import { TransformOptions as BabelConfig } from '@babel/core';
+import api from './index';
 
 export type DependencyObject = {
     /** The name of the package */
@@ -73,7 +74,7 @@ export interface ClassComponent {
 }
 
 export interface FunctionalComponent {
-    (mix: Api, config: webpack.Configuration, ...args: any[]): void;
+    (mix: typeof api, config: webpack.Configuration, ...args: any[]): void;
 }
 
 export type Component = ClassComponent | FunctionalComponent;
