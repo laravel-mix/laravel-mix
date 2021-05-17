@@ -151,7 +151,7 @@
         "vue3": "npm:vue@^3.0.1"
     },
     "peerDependencies": {
-        "postcss": "^8.1.2"
+        "postcss": "^8.2.15"
     },
     "engines": {
         "node": ">=12.14.0"
