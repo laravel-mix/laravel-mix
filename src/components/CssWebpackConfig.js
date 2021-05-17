@@ -186,11 +186,7 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         if (method === 'inline') {
-            if (Mix.components.get('vue') && location === 'default') {
-                loaders.push({ loader: 'vue-style-loader' });
-            } else {
-                loaders.push({ loader: 'style-loader' });
-            }
+            loaders.push({ loader: 'style-loader' });
         } else if (method === 'extract') {
             loaders.push({
                 loader: MiniCssExtractPlugin.loader,
