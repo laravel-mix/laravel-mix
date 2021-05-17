@@ -3,7 +3,8 @@
 import * as webpack from 'webpack';
 import { Options as AutoprefixerConfig } from 'autoprefixer';
 import { Options as CleanCssConfig } from 'clean-css';
-import { CssNanoOptions as CssNanoConfig } from 'cssnano';
+// import { CssNanoOptions as CssNanoConfig } from 'cssnano';
+import { CssNanoOptions as CssNanoConfig } from './cssnano';
 import { Options as GifsicleConfig } from 'imagemin-gifsicle';
 import { Options as MozjpegConfig } from 'imagemin-mozjpeg';
 import { Options as OptipngConfig } from 'imagemin-optipng';
