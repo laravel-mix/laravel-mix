@@ -18,15 +18,17 @@ global.tap = function (val, callback) {
  * @param {*}    val
  * @param {Function} callback
  */
-Object.defineProperty(Array.prototype, 'tap', {
-    value: function (callback) {
-        if (this.length) {
-            callback(this);
-        }
+if (!Array.prototype.hasOwnProperty('tap')) {
+    Object.defineProperty(Array.prototype, 'tap', {
+        value: function (callback) {
+            if (this.length) {
+                callback(this);
+            }
 
-        return this;
-    }
-});
+            return this;
+        }
+    });
+}
 
 /**
  * Add wrap to arrays.
@@ -34,15 +36,17 @@ Object.defineProperty(Array.prototype, 'tap', {
  * @param {*}    val
  * @param {Function} callback
  */
-Object.defineProperty(Array, 'wrap', {
-    value(value) {
-        if (Array.isArray(value)) {
-            return value;
-        }
+if (!Array.hasOwnProperty('wrap')) {
+    Object.defineProperty(Array, 'wrap', {
+        value(value) {
+            if (Array.isArray(value)) {
+                return value;
+            }
 
-        return [value];
-    }
-});
+            return [value];
+        }
+    });
+}
 
 /**
  * Flatten the given array.
