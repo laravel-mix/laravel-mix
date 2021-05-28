@@ -16,23 +16,29 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
+        let firstRun = true;
         compiler.hooks.done.tapAsync(this.constructor.name, (stats, callback) => {
-            this.runTasks(stats).then(async () => {
-                if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
-                    this.applyVersioning();
-                }
+            if (firstRun) {
+                firstRun = false;
+                this.runTasks(stats).then(async () => {
+                    if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
+                        this.applyVersioning();
+                    }
 
-                if (this.mix.inProduction()) {
-                    await this.minifyAssets();
-                }
+                    if (this.mix.inProduction()) {
+                        await this.minifyAssets();
+                    }
 
-                if (this.mix.isWatching()) {
-                    this.mix.tasks.forEach(task => task.watch(this.mix.isPolling()));
-                }
+                    if (this.mix.isWatching()) {
+                        this.mix.tasks.forEach(task => task.watch(this.mix.isPolling()));
+                    }
 
-                this.mix.manifest.refresh();
+                    this.mix.manifest.refresh();
+                    callback();
+                });
+            } else {
                 callback();
-            });
+            }
         });
     }
 
