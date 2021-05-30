@@ -1,5 +1,6 @@
 let Log = require('../Log');
 let collect = require('collect.js');
+const { debounce } = require('lodash');
 
 class CustomTasksPlugin {
     /**
@@ -26,7 +27,10 @@ class CustomTasksPlugin {
 
                     if (this.mix.isWatching()) {
                         this.mix.tasks.forEach(task =>
-                            task.watch(this.mix.isPolling(), this.afterChange.bind(this))
+                            task.watch(
+                                this.mix.isPolling(),
+                                debounce(this.afterChange.bind(this), 100)
+                            )
                         );
                     }
 
