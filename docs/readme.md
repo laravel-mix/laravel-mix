@@ -14,8 +14,9 @@
 
 ### JavaScript
 
-- [JavaScript Bundling](mixjs.md)
+- [JavaScript Bundling](javascript.md)
 - [Vue Support](vue.md)
+- [TypeScript](typescript.md)
 - [File Versioning](versioning.md)
 - [Code Splitting](extract.md)
 - [Autoloading](autoloading.md)
