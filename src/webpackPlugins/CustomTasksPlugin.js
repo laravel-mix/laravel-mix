@@ -17,27 +17,23 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
-        let firstRun = true;
-        compiler.hooks.done.tapAsync(this.constructor.name, (stats, callback) => {
-            // Only run all tasks on first run
-            if (firstRun) {
-                firstRun = false;
-                this.runTasks(stats).then(async () => {
-                    await this.afterChange();
+        let ranOnce = false;
+        compiler.hooks.done.tapPromise(this.constructor.name, async stats => {
+            // Only run all tasks once
+            if (ranOnce) return;
+            ranOnce = true;
 
-                    if (this.mix.isWatching()) {
-                        this.mix.tasks.forEach(task =>
-                            task.watch(
-                                this.mix.isPolling(),
-                                debounce(this.afterChange.bind(this), 100)
-                            )
-                        );
-                    }
+            await this.runTasks(stats);
 
-                    callback();
-                });
-            } else {
-                callback();
+            await this.afterChange();
+
+            if (this.mix.isWatching()) {
+                this.mix.tasks.forEach(task =>
+                    task.watch(
+                        this.mix.isPolling(),
+                        debounce(this.afterChange.bind(this), 100)
+                    )
+                );
             }
         });
     }
