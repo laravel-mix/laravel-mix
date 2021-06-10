@@ -1,6 +1,5 @@
 let childProcess = require('child_process');
 let Log = require('./Log');
-let argv = require('yargs').argv;
 let PackageManager = require('./PackageManager');
 
 /**
