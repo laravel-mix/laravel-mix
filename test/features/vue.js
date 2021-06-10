@@ -38,13 +38,13 @@ test('it knows the Vue 2 compiler name', t => {
     t.true(dependencies.includes('vue-template-compiler'));
 });
 
-test('DISABLED: it switches to vue-style-loader when not extracting styles', async t => {
+test('it switches to vue-style-loader when not extracting styles', async t => {
     mix.vue({ version: 2, extractStyles: false });
 
     const config = await webpack.buildConfig();
 
-    assert.doesNotHaveWebpackLoader(t, config, 'vue-style-loader');
-    assert.hasWebpackLoader(t, config, 'style-loader');
+    assert.hasWebpackLoader(t, config, 'vue-style-loader');
+    assert.doesNotHaveWebpackLoader(t, config, 'style-loader');
     assert.doesNotHaveWebpackLoader(t, config, /mini-css-extract-plugin/);
 });
 
