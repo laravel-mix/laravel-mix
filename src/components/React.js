@@ -10,11 +10,11 @@ class React {
         if (this.supportsFastRefreshing()) {
             return dependencies.concat([
                 {
-                    package: '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-beta.0',
+                    package: '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-rc.0',
                     check: name =>
                         semver.satisfies(
                             require(`${name}/package.json`).version,
-                            '^0.5.0-beta.0'
+                            '^0.5.0-rc.0'
                         )
                 },
                 'react-refresh'
