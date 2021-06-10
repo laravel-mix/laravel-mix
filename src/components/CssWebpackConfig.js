@@ -228,6 +228,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 loaders.push({
                     loader: 'sass-resources-loader',
                     options: {
+                        hoistUseStatements: true,
                         resources
                     }
                 });
