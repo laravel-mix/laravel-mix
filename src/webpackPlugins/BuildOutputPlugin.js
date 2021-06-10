@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const argv = require('yargs');
 const chalk = require('chalk');
 const Table = require('cli-table3');
 const readline = require('readline');

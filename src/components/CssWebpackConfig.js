@@ -10,9 +10,9 @@ class CssWebpackConfig extends AutomaticComponent {
 
         return [
             {
-                package: 'postcss@^8.2.15',
+                package: 'postcss@^8.3.1',
                 check: name =>
-                    semver.satisfies(require(`${name}/package.json`).version, '^8.2.15')
+                    semver.satisfies(require(`${name}/package.json`).version, '^8.3.1')
             }
         ];
     }
@@ -186,7 +186,11 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         if (method === 'inline') {
-            loaders.push({ loader: 'style-loader' });
+            if (Mix.components.get('vue') && location === 'default') {
+                loaders.push({ loader: 'vue-style-loader' });
+            } else {
+                loaders.push({ loader: 'style-loader' });
+            }
         } else if (method === 'extract') {
             loaders.push({
                 loader: MiniCssExtractPlugin.loader,

@@ -1,6 +1,5 @@
 let assert = require('assert');
 let Dependencies = require('./Dependencies');
-let argv = require('yargs').argv;
 let File = require('./File');
 
 class Assert {
