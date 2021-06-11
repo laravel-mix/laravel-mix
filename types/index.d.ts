@@ -259,6 +259,9 @@ export type VueConfig = {
     /** Whether or not to extract vue styles. If given a string the name of the file to extract to. */
     extractStyles?: boolean | string;
 
+    /** Use vue-style-loader to extract Vue Styles. */
+    useVueStyleLoader?: boolean;
+
     /** Whether or not to use the runtime only version of Vue. */
     runtimeOnly?: boolean;
 

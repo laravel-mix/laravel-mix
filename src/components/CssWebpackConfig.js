@@ -186,7 +186,7 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         if (method === 'inline') {
-            if (Mix.components.get('vue') && location === 'default') {
+            if (this.wantsVueStyleLoader && location === 'default') {
                 loaders.push({ loader: 'vue-style-loader' });
             } else {
                 loaders.push({ loader: 'style-loader' });
@@ -205,6 +205,12 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         return loaders;
+    }
+
+    /** @private */
+    static get wantsVueStyleLoader() {
+        const VueFeature = Mix.components.get('vue');
+        return VueFeature && VueFeature.options && VueFeature.options.useVueStyleLoader;
     }
 
     /**
