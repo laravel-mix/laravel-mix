@@ -20,6 +20,7 @@ class Vue {
      * @param {number} [options.version] Which version of Vue to support. Detected automatically if not given.
      * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
      * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
+     * @param {boolean} [options.useVueStyleLoader] Use vue-style-loader to extract Vue Styles.
      * @param {VueLoaderOptions} [options.options] Options to pass to Vue Loader
      */
     register(options = {}) {
@@ -39,7 +40,8 @@ class Vue {
             {
                 options: null,
                 globalStyles: null,
-                extractStyles: false
+                extractStyles: false,
+                useVueStyleLoader: false
             },
             options
         );
