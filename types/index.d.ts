@@ -5,7 +5,7 @@
 
 import * as webpack from 'webpack';
 import { TransformOptions as BabelConfig } from '@babel/core';
-import { Options as BrowserSyncConfig } from 'browser-sync';
+import { Options as BrowserSyncConfig } from './browsersync';
 import * as ExtractTypes from './extract';
 import { MixConfig } from './config';
 import { Component } from './component';
