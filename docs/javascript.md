@@ -40,4 +40,4 @@ Laravel Mix also ships with basic Typescript support. Simply update your `mix.js
 mix.ts('src/app.ts', 'dist');
 ```
 
-Of course, you'll still want to handle any TypeScript-specific tweeks like creating a `tsconfig.json` file and installing [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped), but everything else should be taken care of.
+Of course, you'll still want to handle any TypeScript-specific tweaks like creating a `tsconfig.json` file and installing [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped), but everything else should be taken care of.
