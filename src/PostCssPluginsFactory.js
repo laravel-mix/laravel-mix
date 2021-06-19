@@ -15,17 +15,15 @@ class PostCssPluginsFactory {
      * Load all relevant PostCSS plugins.
      */
     load() {
-        this.loadConfigFile()
-            .loadGlobalPlugins()
-            .loadLocalPlugins()
-            .loadAutoprefixer()
-            .loadCssNano();
+        this.loadGlobalPlugins().loadLocalPlugins().loadAutoprefixer().loadCssNano();
 
         return this.plugins;
     }
 
     /**
      * Load the user's postcss.config.js file, if any.
+     *
+     * @deprecated postcss-loader already does this on its own
      */
     loadConfigFile() {
         let postcssrc = require('postcss-load-config');
