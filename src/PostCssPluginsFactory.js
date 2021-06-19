@@ -1,5 +1,3 @@
-let postcssrc = require('postcss-load-config');
-
 class PostCssPluginsFactory {
     /**
      * Create a new instance.
@@ -30,6 +28,8 @@ class PostCssPluginsFactory {
      * Load the user's postcss.config.js file, if any.
      */
     loadConfigFile() {
+        let postcssrc = require('postcss-load-config');
+
         try {
             this.plugins = [...this.plugins, ...postcssrc.sync().plugins];
         } catch (e) {
