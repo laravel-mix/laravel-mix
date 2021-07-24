@@ -134,7 +134,7 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
         t.true(
             config.module.rules
                 .find(rule => rule.test.toString().includes(file))
-                .use.find(loader => loader.loader === 'postcss-loader')
+                .use.find(loader => /postcss-loader/.test(loader.loader))
                 .options.postcssOptions.plugins.find(
                     plugin => plugin.postcssPlugin === pluginName
                 ) !== undefined

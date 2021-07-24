@@ -1,4 +1,3 @@
-import mockRequire from 'mock-require';
 import webpack from 'webpack';
 
 import { mix, Mix } from './mix.js';
@@ -51,18 +50,10 @@ export function setupVueAliases(version) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
 
-    mockRequire('vue', vueModule);
-    mockRequire('vue-loader', vueLoaderModule);
+    Mix.resolver.alias('vue', vueModule);
+    Mix.resolver.alias('vue-loader', vueLoaderModule);
 
     mix.alias({ vue: require.resolve(vueModule) });
-
-    mix.webpackConfig({
-        resolveLoader: {
-            alias: {
-                'vue-loader': vueLoaderModule
-            }
-        }
-    });
 }
 
 export default { buildConfig, compile, setupVueAliases };

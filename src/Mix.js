@@ -10,6 +10,7 @@ let HotReloading = require('./HotReloading');
 let Manifest = require('./Manifest');
 let Paths = require('./Paths');
 let WebpackConfig = require('./builder/WebpackConfig');
+let { Resolver } = require('./Resolver');
 
 /** @typedef {import("./tasks/Task")} Task */
 
@@ -35,6 +36,7 @@ class Mix {
         this.registrar = new ComponentRegistrar();
         this.webpackConfig = new WebpackConfig(this);
         this.hot = new HotReloading(this);
+        this.resolver = new Resolver();
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -242,6 +244,14 @@ class Mix {
         }
 
         return this.dispatcher.fire(event, data);
+    }
+
+    /**
+     * @param {string} name
+     * @internal
+     */
+    resolve(name) {
+        return this.resolver.get(name);
     }
 
     /**
