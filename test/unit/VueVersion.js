@@ -29,7 +29,7 @@ test('it detects Vue 3', t => {
     mockRequire.stop('vue3');
 });
 
-test.only('it aborts if Vue is not installed', async t => {
+test('it aborts if Vue is not installed', async t => {
     Log.fake();
 
     t.throws(() => vueVersion.detect());
