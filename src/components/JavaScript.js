@@ -62,7 +62,7 @@ class JavaScript {
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
-                        loader: require.resolve('babel-loader'),
+                        loader: Mix.resolve('babel-loader'),
                         options: Config.babel()
                     }
                 ]

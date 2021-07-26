@@ -13,7 +13,11 @@ class Resolver {
             return this.aliases[name];
         }
 
-        return require.resolve(name);
+        try {
+            return require.resolve(name);
+        } catch (err) {
+            return name;
+        }
     }
 
     /**
