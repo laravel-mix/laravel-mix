@@ -52,7 +52,7 @@ class VueVersion {
                 `Please ensure that it's installed (npm install vue).`
         );
 
-        throw new Error('Unable to detect vue versio');
+        throw new Error('Unable to detect vue version');
     }
 }
 
