@@ -57,7 +57,7 @@ class React {
      */
     babelConfig() {
         const plugins = this.supportsFastRefreshing()
-            ? [require.resolve('react-refresh/babel')]
+            ? [Mix.resolve('react-refresh/babel')]
             : [];
 
         return {
