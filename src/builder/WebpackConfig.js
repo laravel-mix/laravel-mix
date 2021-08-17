@@ -114,11 +114,13 @@ class WebpackConfig {
             port,
 
             client: {
-                host,
-                port
+                webSocketURL: {
+                    hostname: host,
+                    pathname: '/ws',
+                    port
+                }
             },
 
-            public: url,
             liveReload: false,
 
             https,
