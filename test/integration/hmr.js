@@ -14,13 +14,12 @@ test('it configures hot reloading dev server options', async t => {
     t.false(devServer.https);
 
     t.is('8080', devServer.port);
-    t.is('8080', devServer.client.port);
+    t.is('8080', devServer.client.webSocketURL.port);
 
     t.is('localhost', devServer.host);
-    t.is('localhost', devServer.client.host);
+    t.is('localhost', devServer.client.webSocketURL.hostname);
 
     t.is('http://localhost:8080/', config.output.publicPath);
-    t.is('http://localhost:8080/', devServer.public);
 });
 
 test('it configures hot reloading dev server options for https', async t => {
@@ -39,11 +38,10 @@ test('it configures hot reloading dev server options for https', async t => {
     t.true(devServer.https);
 
     t.is('8080', devServer.port);
-    t.is('8080', devServer.client.port);
+    t.is('8080', devServer.client.webSocketURL.port);
 
     t.is('localhost', devServer.host);
-    t.is('localhost', devServer.client.host);
+    t.is('localhost', devServer.client.webSocketURL.hostname);
 
     t.is('https://localhost:8080/', config.output.publicPath);
-    t.is('https://localhost:8080/', devServer.public);
 });

@@ -115,6 +115,9 @@ async function executeScript(cmd, opts, args = []) {
 
             process.exitCode = code;
         });
+
+        process.on('SIGINT', () => child.kill('SIGINT'));
+        process.on('SIGTERM', () => child.kill('SIGTERM'));
     }
 
     restart();
