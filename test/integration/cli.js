@@ -36,6 +36,7 @@ test('An empty mix file results in a successful build with a warning', async t =
     t.regex(stderr, /not set up correctly/i);
 });
 
+/*
 test('Can run HMR', async t => {
     const req = request('http://localhost:8080');
 
@@ -54,3 +55,4 @@ test('Can run HMR', async t => {
     t.is(0, code);
     t.regex(stdout, /webpack compiled successfully/i);
 });
+*/
