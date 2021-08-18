@@ -13,6 +13,10 @@ const execAsync = promisify(exec);
  */
 
 /**
+ * @typedef {(process: import("child_process").ChildProcess) => Promise<void>} CliRunCallback
+ */
+
+/**
  * Return a helper function appropriately configured to run the Mix CLI
  *
  * @param {{testing?: boolean, cwd?: string, env?: Record<string, string>}} opts
@@ -29,20 +33,25 @@ export function cli(opts) {
      * Run the Mix CLI
      *
      * @param {string[]} args
+     * @param {CliRunCallback} onRun
      * @returns {Promise<CliResult>}
      */
-    async function run(args = []) {
+    async function run(args, onRun) {
         let cmd = [`node ${path.resolve('./bin/cli')}`, ...args];
 
+        const promise = execAsync(cmd.join(' '), {
+            cwd,
+            env: {
+                ...process.env,
+                ...env,
+                TESTING: testing ? '1' : undefined
+            }
+        });
+
+        await onRun(promise.child);
+
         try {
-            const { stdout, stderr } = await execAsync(cmd.join(' '), {
-                cwd,
-                env: {
-                    ...process.env,
-                    ...env,
-                    TESTING: testing ? '1' : undefined
-                }
-            });
+            const { stdout, stderr } = await promise;
 
             return {
                 error: null,
@@ -55,7 +64,7 @@ export function cli(opts) {
 
             return {
                 error,
-                code,
+                code: code === null || code === undefined ? 1 : code,
                 stdout,
                 stderr
             };
@@ -66,9 +75,10 @@ export function cli(opts) {
      * Run the Mix and build in assertions
      *
      * @param {string[]} args
+     * @param {CliRunCallback} [onRun]
      */
-    async function testRun(args = []) {
-        const result = await run(args);
+    async function testRun(args = [], onRun = undefined) {
+        const result = await run(args, onRun || (async () => {}));
         const stdout = testing ? JSON.parse(result.stdout) : { script: null, env: {} };
 
         return {
