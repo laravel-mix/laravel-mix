@@ -182,7 +182,9 @@ class Mix {
      * Determine if polling is used for file watching
      */
     isPolling() {
-        return this.isWatching() && process.argv.includes('--watch-poll');
+        const hasPollingOption = process.argv.some((arg) => arg.includes('--watch-options-poll'));
+
+        return this.isWatching() && hasPollingOption;
     }
 
     /**
