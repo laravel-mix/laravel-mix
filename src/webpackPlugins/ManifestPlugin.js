@@ -5,7 +5,7 @@ class ManifestPlugin {
      */
     constructor(mix) {
         // TODO: Simplify in Mix 7 -- Here for backwards compat if a plugin creates this class directly
-        this.mix = mix || gglobal.Mix;
+        this.mix = mix || global.Mix;
     }
 
     /**
