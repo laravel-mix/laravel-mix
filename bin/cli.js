@@ -102,6 +102,8 @@ async function executeScript(cmd, opts, args = []) {
             }
         });
 
+        let shouldOverwriteExitCode = true;
+
         child.on('exit', (code, signal) => {
             // Note adapted from cross-env:
             // https://github.com/kentcdodds/cross-env/blob/3edefc7b450fe273655664f902fd03d9712177fe/src/index.js#L30-L31
@@ -113,11 +115,20 @@ async function executeScript(cmd, opts, args = []) {
                 code = signal === 'SIGINT' ? 130 : 1;
             }
 
-            process.exitCode = code;
+            if (shouldOverwriteExitCode) {
+                process.exitCode = code;
+            }
         });
 
-        process.on('SIGINT', () => child.kill('SIGINT'));
-        process.on('SIGTERM', () => child.kill('SIGTERM'));
+        process.on('SIGINT', () => {
+            shouldOverwriteExitCode = false;
+            child.kill('SIGINT');
+        });
+
+        process.on('SIGTERM', () => {
+            shouldOverwriteExitCode = false;
+            child.kill('SIGTERM');
+        });
     }
 
     restart();
