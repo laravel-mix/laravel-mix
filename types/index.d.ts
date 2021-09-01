@@ -292,4 +292,27 @@ declare namespace exports {
     export { Api, VueConfig };
 }
 
+declare global {
+    /**
+     * The context for the current mix build group
+     *
+     * @deprecated This will go away in a future release
+     **/
+    var Mix: import('../src/Mix.js');
+
+    /**
+     * The webpack config helper for the current mix build group
+     *
+     * @deprecated This will go away in a future release
+     **/
+    var webpackConfig: import('../src/builder/WebpackConfig');
+
+    /**
+     * The options for the current mix build group
+     *
+     * @deprecated This will go away in a future release
+     **/
+    var Config: ReturnType<typeof import('../src/config')>;
+}
+
 export = exports;
