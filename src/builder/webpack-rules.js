@@ -19,7 +19,7 @@ module.exports = function (mix) {
         // Add support for loading images.
         rules.push({
             // only include svg that doesn't have font in the path or file name by using negative lookahead
-            test: /(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/,
+            test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
             use: [
                 {
                     loader: mix.resolve('file-loader'),
