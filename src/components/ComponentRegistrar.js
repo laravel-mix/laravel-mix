@@ -1,12 +1,14 @@
 let Assert = require('../Assert');
 let Dependencies = require('../Dependencies');
 let mergeWebpackConfig = require('../builder/MergeWebpackConfig');
+const { Component } = require('./Component');
 
 let components = [
     'JavaScript',
     'Preact',
     'React',
     'Coffee',
+    'Define',
     'TypeScript',
     'Less',
     'Sass',
@@ -42,7 +44,13 @@ let components = [
 ];
 
 class ComponentRegistrar {
-    constructor() {
+    /**
+     *
+     * @param {import('../Mix')} [mix]
+     */
+    constructor(mix) {
+        this.mix = mix || global.Mix;
+
         this.components = {};
     }
 
@@ -58,10 +66,22 @@ class ComponentRegistrar {
     /**
      * Install a component.
      *
-     * @param {Component} Component
+     * @param {import("../../types/component").Component} ComponentDefinition
      */
-    install(Component) {
-        let component = typeof Component === 'function' ? new Component() : Component;
+    install(ComponentDefinition) {
+        /** @type {import("../../types/component").Component} */
+        let component;
+
+        // If we're extending from the internal `Component` class then we provide the mix API object
+        if (Component.isPrototypeOf(ComponentDefinition)) {
+            // @ts-ignore
+            // This API is not finalized which is why we've restricted to to the internal component class for now
+            component = new ComponentDefinition(this.mix);
+        } else if (typeof ComponentDefinition === 'function') {
+            component = new ComponentDefinition();
+        } else {
+            component = ComponentDefinition;
+        }
 
         this.registerComponent(component);
 

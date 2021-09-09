@@ -75,6 +75,10 @@ export interface Api {
     dumpWebpackConfig(): Api;
 }
 
+type CodeValuePrimitive = undefined | null | string | number | bigint | boolean;
+type LazyCodeValue = () => CodeValuePrimitive;
+type CodeValue = CodeValuePrimitive | LazyCodeValue;
+
 // Assorted capabilities
 export interface Api {
     /** Add webpack-resolution aliases */
@@ -108,6 +112,9 @@ export interface Api {
 
     /** Disable only success notifications when mix builds assets */
     disableSuccessNotifications(): Api;
+
+    /** Replace variables in code with other values  */
+    define(definitions: Record<string, CodeValue>): Api;
 }
 
 // JS / Transpilation capabilities
