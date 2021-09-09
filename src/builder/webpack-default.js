@@ -58,7 +58,7 @@ module.exports = function (mix) {
             static: path.resolve(mix.config.publicPath),
             historyApiFallback: true,
             compress: true,
-            allowedHosts: 'auto'
+            allowedHosts: 'all'
         },
 
         watchOptions: {
