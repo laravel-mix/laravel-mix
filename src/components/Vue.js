@@ -48,6 +48,8 @@ class Vue {
 
         Mix.globalStyles = this.options.globalStyles;
         Mix.extractingStyles = !!this.options.extractStyles;
+
+        this.addDefines();
     }
 
     /**
@@ -189,6 +191,22 @@ class Vue {
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+    }
+
+    /**
+     * Determine the extract file name.
+     *
+     * @internal
+     */
+    addDefines() {
+        if (this.version === 2) {
+            return;
+        }
+
+        this._mix.api.define({
+            __VUE_OPTIONS_API__: 'true',
+            __VUE_PROD_DEVTOOLS__: 'false'
+        });
     }
 
     /**

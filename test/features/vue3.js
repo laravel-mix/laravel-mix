@@ -381,6 +381,41 @@ test('Vue-loader options via mix.vue', async t => {
     t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
 });
 
+test('References to feature flags are replaced', async t => {
+    mix.vue({ version: 3 });
+    mix.js(`test/fixtures/app/src/vue/app-with-vue-and-css.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    assert.fileDoesNotContain(
+        `test/fixtures/app/dist/js/app.js`,
+        'typeof __VUE_OPTIONS_API__',
+        t
+    );
+    assert.fileDoesNotContain(
+        `test/fixtures/app/dist/js/app.js`,
+        'typeof __VUE_PROD_DEVTOOLS__',
+        t
+    );
+});
+
+test('The default Vue feature flags can be overridden', async t => {
+    mix.vue({ version: 3 });
+    mix.js(`test/fixtures/app/src/vue/app-with-vue-and-css.js`, 'js/app.js');
+    mix.define({
+        __VUE_OPTIONS_API__: false
+    });
+
+    await webpack.compile();
+
+    // TODO: This relies on Vue internals — really this should be an integration test
+    assert.fileContains(
+        `test/fixtures/app/dist/js/app.js`,
+        'false ? 0 : _vue_shared__',
+        t
+    );
+});
+
 function compilerSpy() {
     const compiler = require('@vue/compiler-dom');
     let called = false;

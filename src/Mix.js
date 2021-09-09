@@ -33,7 +33,7 @@ class Mix {
         this.dispatcher = new Dispatcher();
         this.manifest = new Manifest();
         this.paths = new Paths();
-        this.registrar = new ComponentRegistrar();
+        this.registrar = new ComponentRegistrar(this);
         this.webpackConfig = new WebpackConfig(this);
         this.hot = new HotReloading(this);
         this.resolver = new Resolver();
@@ -182,7 +182,9 @@ class Mix {
      * Determine if polling is used for file watching
      */
     isPolling() {
-        const hasPollingOption = process.argv.some((arg) => arg.includes('--watch-options-poll'));
+        const hasPollingOption = process.argv.some(arg =>
+            arg.includes('--watch-options-poll')
+        );
 
         return this.isWatching() && hasPollingOption;
     }
