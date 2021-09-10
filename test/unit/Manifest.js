@@ -4,7 +4,9 @@ import path from 'path';
 
 import File from '../../src/File.js';
 import Manifest from '../../src/Manifest.js';
+import assertions from '../helpers/assertions.js';
 import { mix, Mix } from '../helpers/mix.js';
+import webpack from '../helpers/webpack.js';
 
 test.beforeEach(() => {
     Mix.manifest = new Manifest();
@@ -80,4 +82,49 @@ test('it sorts files on the underlying manifest object', t => {
         ['/path1.js', '/path2.js', '/path3.js', '/path4.js'].join(),
         Object.keys(manifest).join()
     );
+});
+
+test('A manifest is created by default ', async t => {
+    await webpack.compile();
+
+    assertions.fileExists('test/fixtures/app/dist/mix-manifest.json', t);
+});
+
+test('The name of the manifest can be changed', async t => {
+    mix.options({ manifest: 'manifest.json' });
+
+    await webpack.compile();
+
+    assertions.fileExists('test/fixtures/app/dist/manifest.json', t);
+    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+});
+
+test('You can change the manfest path to a relative path', async t => {
+    mix.options({ manifest: '../manifest.json' });
+
+    await webpack.compile();
+
+    assertions.fileExists('test/fixtures/app/manifest.json', t);
+    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+});
+
+test('Manifest generation can be disabled', async t => {
+    mix.options({
+        manifest: false
+    });
+
+    await webpack.compile();
+
+    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+});
+
+test('Overwriting the manifest plugin with a custom name preserves old behavior', async t => {
+    mix.options({ manifest: 'foo.json' });
+    Mix.manifest.name = 'bar.json';
+
+    await webpack.compile();
+
+    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+    assertions.fileDoesNotExist('test/fixtures/app/dist/foo.json', t);
+    assertions.fileExists('test/fixtures/app/dist/bar.json', t);
 });
