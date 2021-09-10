@@ -2,6 +2,8 @@ let collect = require('collect.js');
 let path = require('path');
 let File = require('./File');
 
+let hasWarnedAboutManifestChange = false;
+
 class Manifest {
     /**
      * Create a new Manifest instance.
@@ -72,6 +74,10 @@ class Manifest {
      * Refresh the mix-manifest.js file.
      */
     refresh() {
+        if (this.path() === null) {
+            return;
+        }
+
         File.find(this.path()).makeDirectories().write(this.manifest);
     }
 
@@ -79,6 +85,10 @@ class Manifest {
      * Retrieve the JSON output from the manifest file.
      */
     read() {
+        if (this.path() === null) {
+            return {};
+        }
+
         return JSON.parse(File.find(this.path()).read());
     }
 
@@ -86,7 +96,25 @@ class Manifest {
      * Get the path to the manifest file.
      */
     path() {
-        return path.join(this.mix.config.publicPath, this.name);
+        // Backwards compat for plugis that manually swapped out the manifest plugin with a different name
+        if (this.name !== 'mix-manifest.json') {
+            if (!hasWarnedAboutManifestChange) {
+                hasWarnedAboutManifestChange = true;
+                console.warn(
+                    `You can now customize the name of the manifest using mix.options(${JSON.stringify(
+                        { manifest: this.name }
+                    )}) instead of changing the manifest name directly.`
+                );
+            }
+
+            return path.join(this.mix.config.publicPath, this.name);
+        }
+
+        if (!this.mix.config.manifest) {
+            return null;
+        }
+
+        return path.join(this.mix.config.publicPath, this.mix.config.manifest);
     }
 
     /**
@@ -132,6 +160,7 @@ class Manifest {
         return filePath;
     }
 
+    /** @type {import("./Mix")} */
     get mix() {
         return global.Mix;
     }

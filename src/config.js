@@ -213,6 +213,16 @@ module.exports = function (mix) {
         vue: {},
 
         /**
+         * The name / path to the mix manifest.
+         * The path is relative to the public path.
+         *
+         * Set to `false` to disable manifest generation.
+         *
+         * @type {string | false}
+         */
+        manifest: `mix-manifest.json`,
+
+        /**
          * Merge the given options with the current defaults.
          *
          * @param {object} options
