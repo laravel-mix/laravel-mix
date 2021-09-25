@@ -1,4 +1,5 @@
 import test from 'ava';
+import path from 'path';
 import mockRequire from 'mock-require';
 
 import BrowserSync from '../../src/components/BrowserSync.js';
@@ -43,7 +44,7 @@ test('it injects the snippet in the right place', t => {
 });
 
 test('it configures Browsersync proxy', t => {
-    t.is(browserSyncConfig().proxy, `app.test`, 'sets default proxy');
+    t.is(browserSyncConfig().proxy, `${path.basename(process.cwd())}.test`, 'sets default proxy');
     t.is(
         browserSyncConfig('example.domain').proxy,
         'example.domain',

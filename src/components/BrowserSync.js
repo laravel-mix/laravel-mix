@@ -1,4 +1,5 @@
 const { Component } = require('./Component');
+const path = require('path');
 
 /** @typedef {import('../../types/browsersync').Options} BrowserSyncOptions */
 
@@ -50,7 +51,7 @@ module.exports = class BrowserSync extends Component {
         let defaultConfig = {
             host: 'localhost',
             port: 3000,
-            proxy: 'app.test',
+            proxy: `${path.basename(process.cwd())}.test`,
             files: [
                 'app/**/*.php',
                 'resources/views/**/*.php',
