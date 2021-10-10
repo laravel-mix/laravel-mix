@@ -166,3 +166,12 @@ test('it can concat files produced by the build', async t => {
         t
     );
 });
+
+test('combine with missing files throws an error', async t => {
+    mix.combine(
+        [`test/fixtures/app/src/css/i-do-not-exist.css`],
+        `test/fixtures/app/dist/all.css`
+    );
+
+    await t.throwsAsync(() => webpack.compile(), { code: 'ENOENT' });
+});
