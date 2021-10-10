@@ -10,7 +10,7 @@ test('it does not process absolute urls', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
 
     await t.notThrowsAsync(
-        webpack.compile(),
+        () => webpack.compile(),
         'CSS failed to compile due to incorrect URL processing.'
     );
 });

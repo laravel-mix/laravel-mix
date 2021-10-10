@@ -39,6 +39,6 @@ test('it works fine with cache busting chunk filenames', async t => {
         .version()
         .sourceMaps();
 
-    await t.notThrowsAsync(webpack.compile());
+    await t.notThrowsAsync(() => webpack.compile());
     t.true(File.exists(`test/fixtures/app/dist/js/chunk.js.map`));
 });
