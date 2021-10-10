@@ -26,15 +26,26 @@ export async function compile(override) {
     return new Promise((resolve, reject) => {
         webpack(config, (err, stats) => {
             if (err) {
-                reject({ config, err, stats });
+                reject(
+                    Object.create(err, {
+                        config: { value: config },
+                        stats: { value: stats },
+                        err: { value: err }
+                    })
+                );
             } else if (stats && stats.hasErrors()) {
                 const { errors } = stats.toJson({ errors: true });
+                const err = new Error(
+                    (errors || []).map(error => error.message).join('\n')
+                );
 
-                reject({
-                    config,
-                    err: new Error((errors || []).map(error => error.message).join('\n')),
-                    stats
-                });
+                reject(
+                    Object.create(err, {
+                        config: { value: config },
+                        stats: { value: stats },
+                        err: { value: err }
+                    })
+                );
             } else {
                 resolve({ config, err, stats });
             }
