@@ -1,8 +1,5 @@
-let path = require('path');
-let glob = require('glob');
 let File = require('../File');
 let Assert = require('../Assert');
-let { collect } = require('collect.js');
 let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
 
 class Combine {
@@ -53,11 +50,12 @@ class Combine {
 
         Mix.addTask(
             new ConcatFilesTask({
-                src: collect(this.glob(this.src))
-                    .except(this.output.relativePath())
-                    .all(),
+                src: this.src,
                 output: this.output,
-                babel: this.babel
+                babel: this.babel,
+                ignore: [
+                    this.output.relativePath(),
+                ],
             })
         );
     }
