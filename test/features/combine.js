@@ -143,16 +143,18 @@ test('it minifies an array of files', async t => {
 
 test('it can concat files produced by the build', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, `test/fixtures/app/dist/app.css`);
-    mix.styles([
-        `test/fixtures/app/src/css/global.css`,
-        `test/fixtures/app/dist/app.css`,
-    ], `test/fixtures/app/dist/all.css`);
+    mix.styles(
+        [`test/fixtures/app/src/css/global.css`, `test/fixtures/app/dist/app.css`],
+        `test/fixtures/app/dist/all.css`
+    );
 
     await webpack.compile();
 
     t.true(File.exists(`test/fixtures/app/dist/all.css`));
 
-    assert.fileMatchesCss(`test/fixtures/app/dist/all.css`, `
+    assert.fileMatchesCss(
+        `test/fixtures/app/dist/all.css`,
+        `
         :root {
             --shared-color: rebeccapurple;
         }
@@ -160,5 +162,7 @@ test('it can concat files produced by the build', async t => {
             color: red;
             background: url('/absolute/image.jpg');
         }
-    `, t)
+    `,
+        t
+    );
 });
