@@ -1,6 +1,6 @@
 let Task = require('./Task');
 let FileCollection = require('../FileCollection');
-const { FileGlob } = require('./FileGlob')
+const { FileGlob } = require('./FileGlob');
 
 class ConcatenateFilesTask extends Task {
     /**
@@ -14,14 +14,13 @@ class ConcatenateFilesTask extends Task {
      * Merge the files into one.
      */
     async merge() {
-        // @ts-ignore
-        this.files = await FileGlob.expand(this.data.src, {
-            ignore: this.data.ignore || [],
-        })
+        const files = await FileGlob.expand(this.data.src, {
+            ignore: this.data.ignore || []
+        });
 
-        const files = new FileCollection(this.files)
+        this.files = new FileCollection(files);
 
-        return files
+        return this.files
             .merge(this.data.output, this.data.babel)
             .then(this.assets.push.bind(this.assets));
     }
