@@ -222,7 +222,7 @@ mix.after(webpackStats => {
 
 ### `.options(options)`
 
-Merge and override Mix's default configuration settings. Refer to this package's `src/Config.js` file for a full list of settings that can be overridden.
+Merge and override Mix's default configuration settings. Refer to this package's `src/config.js` file for a full list of settings that can be overridden.
 
 Below is a brief list of the most common overrides.
 
