@@ -2,12 +2,9 @@ const { Component } = require('./Component');
 
 module.exports = class Before extends Component {
     /**
-     * Register the component.
-     *
-     * @param  {Function} callback
-     * @return {void}
+     * @param  {() => void | Promise<void>} callback
      */
     register(callback) {
-        this.context.listen('init', callback);
+        this.context.mix.listen('init', callback);
     }
 };

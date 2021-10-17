@@ -1,3 +1,4 @@
+const { flatMap } = require('lodash');
 let path = require('path');
 let File = require('../File');
 
@@ -13,6 +14,12 @@ class Entry {
         /** @type {Record<string, string[]>} */
         this.structure = {};
         this.base = '';
+    }
+
+    isEmpty() {
+        const files = flatMap(Object.values(this.structure));
+
+        return files.length === 0;
     }
 
     /**

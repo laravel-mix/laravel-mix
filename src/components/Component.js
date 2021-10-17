@@ -18,10 +18,10 @@ class Component {
 
     /**
      *
-     * @param {import("../Mix")} mix
+     * @param {import("../Build/BuildContext").BuildContext} context
      */
-    constructor(mix) {
-        this.context = mix;
+    constructor(context) {
+        this.context = context;
     }
 
     /**

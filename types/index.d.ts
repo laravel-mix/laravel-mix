@@ -48,6 +48,12 @@ interface Api {
 
     /** Run a callback if a condition is true */
     when(condition: boolean, callback: (mix: Api) => void | Promise<void>): Api;
+
+    /**
+     * Add a separate build group to Mix.
+     * Can be used to run independent mix configs in parallel.
+     **/
+    group(name: string, callback: (mix: Api, context: MixHelpers) => void): Api;
 }
 
 // Webpack config related abilities

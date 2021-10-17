@@ -12,6 +12,9 @@ export default async function () {
     // Load the user's mix config
     await mix.load();
 
+    // Prepare any matching build groups
+    await mix.setup();
+
     // Install any missing dependencies
     await mix.installDependencies();
 
