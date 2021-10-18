@@ -73,7 +73,7 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
     result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
-test('it can run wepback directly when using yarn', async t => {
+test('it calls wepback directly when using yarn', async t => {
     const oldNpm = process.env.npm_execpath;
 
     process.env.npm_execpath = '/tmp/xfs-d06608ad/yarn';
