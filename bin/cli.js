@@ -7,6 +7,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const pkg = require('../package.json');
 const { assertSupportedNodeVersion } = require('../src/Engine.js');
+const PackageManager = require('../src/PackageManager');
 
 run().catch(err => {
     console.error(err);
@@ -142,21 +143,22 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
+    const script = (PackageManager.detect() === 'npm' ? 'npx ' : '') + 'webpack';
 
     if (cmd === 'build') {
         if (showProgress) {
-            return 'npx webpack --progress';
+            return script + ' --progress';
         }
 
-        return 'npx webpack';
+        return script;
     } else if (cmd === 'watch' && !opts.hot) {
         if (showProgress) {
-            return 'npx webpack --progress --watch';
+            return script + ' --progress --watch';
         }
 
-        return 'npx webpack --watch';
+        return script + ' --watch';
     } else if (cmd === 'watch' && opts.hot) {
-        return 'npx webpack serve --hot' + (opts.https ? ' --https' : '');
+        return script + ' serve --hot' + (opts.https ? ' --https' : '');
     }
 }
 

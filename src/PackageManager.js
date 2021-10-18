@@ -5,7 +5,11 @@ class PackageManager {
     static detect() {
         const execPath = process.env.npm_execpath || '';
 
-        if (execPath.endsWith('yarn.js') || PackageManager.hasYarnLockFile()) {
+        if (
+            execPath.endsWith('yarn.js') ||
+            execPath.endsWith('yarn') ||
+            PackageManager.hasYarnLockFile()
+        ) {
             return 'yarn';
         }
 
