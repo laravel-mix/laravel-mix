@@ -143,7 +143,7 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
-    const script = (PackageManager.detect() === 'npm' ? 'npx ' : '') + 'webpack';
+    const script = (PackageManager.detect() !== 'yarn' ? 'npx ' : '') + 'webpack';
 
     if (cmd === 'build') {
         if (showProgress) {
