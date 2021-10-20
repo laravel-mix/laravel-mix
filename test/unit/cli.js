@@ -32,7 +32,7 @@ test('it calls webpack in production mode', async t => {
 test('it calls webpack with watch mode', async t => {
     const result = await mix(['watch']);
 
-    result.assertScript(t, `npx webpack --progress --watch --config="${configPath}"`);
+    result.assertScript(t, `npx webpack --watch --progress --config="${configPath}"`);
     result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
@@ -41,7 +41,7 @@ test('it calls webpack with watch mode using polling', async t => {
 
     result.assertScript(
         t,
-        `npx webpack --progress --watch --config="${configPath}" --watch-poll`
+        `npx webpack --watch --progress --config="${configPath}" --watch-poll`
     );
     result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });

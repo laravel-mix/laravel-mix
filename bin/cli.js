@@ -143,23 +143,29 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
-    const script = (PackageManager.detect() !== 'yarn' ? 'npx ' : '') + 'webpack';
+    const script = ['webpack'];
 
-    if (cmd === 'build') {
-        if (showProgress) {
-            return script + ' --progress';
-        }
-
-        return script;
-    } else if (cmd === 'watch' && !opts.hot) {
-        if (showProgress) {
-            return script + ' --progress --watch';
-        }
-
-        return script + ' --watch';
-    } else if (cmd === 'watch' && opts.hot) {
-        return script + ' serve --hot' + (opts.https ? ' --https' : '');
+    if (PackageManager.detect() !== 'yarn') {
+        script.unshift('npx');
     }
+
+    if (cmd === 'build' && showProgress) {
+        script.push('--progress');
+    } else if (cmd === 'watch' && !opts.hot) {
+        script.push('--watch');
+
+        if (showProgress) {
+            script.push('--progress');
+        }
+    } else if (cmd === 'watch' && opts.hot) {
+        script.push('serve', '--hot');
+
+        if (opts.https) {
+            script.push('--https');
+        }
+    }
+
+    return script.join(' ');
 }
 
 /**
