@@ -7,7 +7,6 @@ const { spawn } = require('child_process');
 const path = require('path');
 const pkg = require('../package.json');
 const { assertSupportedNodeVersion } = require('../src/Engine.js');
-const PackageManager = require('../src/PackageManager');
 
 run().catch(err => {
     console.error(err);
@@ -144,10 +143,6 @@ async function executeScript(cmd, opts, args = []) {
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
     const script = ['webpack'];
-
-    if (PackageManager.detect() !== 'yarn') {
-        script.unshift('npx');
-    }
 
     if (cmd === 'build' && showProgress) {
         script.push('--progress');
