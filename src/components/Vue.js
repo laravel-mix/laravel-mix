@@ -2,6 +2,8 @@ let { Chunks } = require('../Chunks');
 let File = require('../File');
 let VueVersion = require('../VueVersion');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let path = require('path');
 
 /** @typedef {import("vue").VueLoaderOptions} VueLoaderOptions */
 
@@ -10,7 +12,7 @@ class Vue {
      * Create a new component instance.
      */
     constructor() {
-        this.chunks = Chunks.instance();
+        this.chunks = Mix.chunks;
     }
 
     /**
@@ -96,6 +98,27 @@ class Vue {
 
         webpackConfig.resolve.extensions.push('.vue');
 
+        if (this.fileNameIncludesPlaceHolders()) {
+            const extractPLuginIndex = webpackConfig.plugins.findIndex(
+                p => p instanceof MiniCssExtractPlugin
+            );
+
+            const [beforeName] = this.options.extractStyles.split('[name]');
+
+            webpackConfig.plugins.splice(
+                extractPLuginIndex,
+                1,
+                new MiniCssExtractPlugin({
+                    filename: data => {
+                        const name = data.chunk.name.split('/').pop();
+
+                        return path.join(beforeName, `${name}.css`);
+                    },
+                    chunkFilename: this.options.extractStyles
+                })
+            );
+        }
+
         this.updateChunks();
     }
 
@@ -124,7 +147,7 @@ class Vue {
      * Update CSS chunks to extract vue styles
      */
     updateChunks() {
-        if (this.options.extractStyles === false) {
+        if (this.options.extractStyles === false || this.fileNameIncludesPlaceHolders()) {
             return;
         }
 
@@ -207,6 +230,12 @@ class Vue {
             __VUE_OPTIONS_API__: 'true',
             __VUE_PROD_DEVTOOLS__: 'false'
         });
+    }
+
+    fileNameIncludesPlaceHolders() {
+        const fileName = this.options.extractStyles;
+
+        return typeof fileName === 'string' && /\[name\]/.test(fileName);
     }
 
     /**

@@ -11,6 +11,19 @@ test.beforeEach(() => {
     mix.options({ processCssUrls: false });
 });
 
+test('async components', async t => {
+    mix.vue({ version: 2, extractStyles: 'css/[name].css' });
+    mix.js(`test/fixtures/app/src/vue/app-with-async-imports.js`, 'js/app.js');
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    t.true(File.exists(`test/fixtures/app/dist/css/async-component.css`));
+
+    // t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    // t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+});
+
 test('it adds the Vue 2 resolve alias', async t => {
     mix.vue({ version: 2, extractStyles: true });
 

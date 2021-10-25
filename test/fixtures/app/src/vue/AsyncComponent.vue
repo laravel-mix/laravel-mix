@@ -1,19 +1,18 @@
 <template>
     <div class="hello">{{ message }}</div>
-    <async-component />
 </template>
 
 <script>
 module.exports = {
     data() {
         return {
-            message: 'Hello World'
+            message: 'Async A'
         };
     }
 };
 </script>
 
-<style>
+<style scoped>
 .hello {
     color: green;
 }

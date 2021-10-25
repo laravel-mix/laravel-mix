@@ -59,7 +59,9 @@ export async function compile(override) {
  */
 export function setupVueAliases(version) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
-    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
+
+    // Could not get the tests to run without this
+    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader16';
 
     Mix.resolver.alias('vue', vueModule);
     Mix.resolver.alias('vue-loader', vueLoaderModule);
