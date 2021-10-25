@@ -19,9 +19,6 @@ test('async components', async t => {
 
     t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
     t.true(File.exists(`test/fixtures/app/dist/css/async-component.css`));
-
-    // t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    // t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
 });
 
 test('it adds the Vue 2 resolve alias', async t => {
