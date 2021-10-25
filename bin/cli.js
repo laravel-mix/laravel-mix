@@ -102,6 +102,8 @@ async function executeScript(cmd, opts, args = []) {
             }
         });
 
+        let shouldOverwriteExitCode = true;
+
         child.on('exit', (code, signal) => {
             // Note adapted from cross-env:
             // https://github.com/kentcdodds/cross-env/blob/3edefc7b450fe273655664f902fd03d9712177fe/src/index.js#L30-L31
@@ -113,7 +115,19 @@ async function executeScript(cmd, opts, args = []) {
                 code = signal === 'SIGINT' ? 130 : 1;
             }
 
-            process.exitCode = code;
+            if (shouldOverwriteExitCode) {
+                process.exitCode = code;
+            }
+        });
+
+        process.on('SIGINT', () => {
+            shouldOverwriteExitCode = false;
+            child.kill('SIGINT');
+        });
+
+        process.on('SIGTERM', () => {
+            shouldOverwriteExitCode = false;
+            child.kill('SIGTERM');
         });
     }
 
@@ -128,22 +142,25 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
+    const script = ['webpack'];
 
-    if (cmd === 'build') {
-        if (showProgress) {
-            return 'npx webpack --progress';
-        }
-
-        return 'npx webpack';
+    if (cmd === 'build' && showProgress) {
+        script.push('--progress');
     } else if (cmd === 'watch' && !opts.hot) {
-        if (showProgress) {
-            return 'npx webpack --progress --watch';
-        }
+        script.push('--watch');
 
-        return 'npx webpack --watch';
+        if (showProgress) {
+            script.push('--progress');
+        }
     } else if (cmd === 'watch' && opts.hot) {
-        return 'npx webpack serve --hot' + (opts.https ? ' --https' : '');
+        script.push('serve', '--hot');
+
+        if (opts.https) {
+            script.push('--https');
+        }
     }
+
+    return script.join(' ');
 }
 
 /**

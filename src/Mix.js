@@ -10,6 +10,7 @@ let HotReloading = require('./HotReloading');
 let Manifest = require('./Manifest');
 let Paths = require('./Paths');
 let WebpackConfig = require('./builder/WebpackConfig');
+let { Resolver } = require('./Resolver');
 
 /** @typedef {import("./tasks/Task")} Task */
 
@@ -32,9 +33,10 @@ class Mix {
         this.dispatcher = new Dispatcher();
         this.manifest = new Manifest();
         this.paths = new Paths();
-        this.registrar = new ComponentRegistrar();
+        this.registrar = new ComponentRegistrar(this);
         this.webpackConfig = new WebpackConfig(this);
         this.hot = new HotReloading(this);
+        this.resolver = new Resolver();
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -180,7 +182,11 @@ class Mix {
      * Determine if polling is used for file watching
      */
     isPolling() {
-        return this.isWatching() && process.argv.includes('--watch-poll');
+        const hasPollingOption = process.argv.some(arg =>
+            arg.includes('--watch-options-poll')
+        );
+
+        return this.isWatching() && hasPollingOption;
     }
 
     /**
@@ -242,6 +248,14 @@ class Mix {
         }
 
         return this.dispatcher.fire(event, data);
+    }
+
+    /**
+     * @param {string} name
+     * @internal
+     */
+    resolve(name) {
+        return this.resolver.get(name);
     }
 
     /**

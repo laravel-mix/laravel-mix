@@ -1,4 +1,3 @@
-import mockRequire from 'mock-require';
 import webpack from 'webpack';
 
 import { mix, Mix } from './mix.js';
@@ -27,15 +26,26 @@ export async function compile(override) {
     return new Promise((resolve, reject) => {
         webpack(config, (err, stats) => {
             if (err) {
-                reject({ config, err, stats });
+                reject(
+                    Object.create(err, {
+                        config: { value: config },
+                        stats: { value: stats },
+                        err: { value: err }
+                    })
+                );
             } else if (stats && stats.hasErrors()) {
                 const { errors } = stats.toJson({ errors: true });
+                const err = new Error(
+                    (errors || []).map(error => error.message).join('\n')
+                );
 
-                reject({
-                    config,
-                    err: new Error((errors || []).map(error => error.message).join('\n')),
-                    stats
-                });
+                reject(
+                    Object.create(err, {
+                        config: { value: config },
+                        stats: { value: stats },
+                        err: { value: err }
+                    })
+                );
             } else {
                 resolve({ config, err, stats });
             }
@@ -51,18 +61,10 @@ export function setupVueAliases(version) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
 
-    mockRequire('vue', vueModule);
-    mockRequire('vue-loader', vueLoaderModule);
+    Mix.resolver.alias('vue', vueModule);
+    Mix.resolver.alias('vue-loader', vueLoaderModule);
 
     mix.alias({ vue: require.resolve(vueModule) });
-
-    mix.webpackConfig({
-        resolveLoader: {
-            alias: {
-                'vue-loader': vueLoaderModule
-            }
-        }
-    });
 }
 
 export default { buildConfig, compile, setupVueAliases };

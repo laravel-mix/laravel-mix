@@ -55,7 +55,7 @@ class Preprocessor {
         let loaders = [
             ...CssWebpackConfig.afterLoaders({ method: 'extract', location: 'per-file' }),
             {
-                loader: 'css-loader',
+                loader: Mix.resolve('css-loader'),
                 options: {
                     url: (url, resourcePath) => {
                         if (url.startsWith('/')) {
@@ -69,14 +69,14 @@ class Preprocessor {
                 }
             },
             {
-                loader: 'postcss-loader',
+                loader: Mix.resolve('postcss-loader'),
                 options: this.postCssLoaderOptions(preprocessor)
             }
         ];
 
         if (preprocessor.type === 'sass' && processUrls) {
             loaders.push({
-                loader: 'resolve-url-loader',
+                loader: Mix.resolve('resolve-url-loader'),
                 options: {
                     sourceMap: true
                 }

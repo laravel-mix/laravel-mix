@@ -157,7 +157,7 @@ module.exports = function (mix) {
          * cssnano-specific settings for Webpack.
          * Disabled if set to false.
          *
-         * See: https://cssnano.co/optimisations/
+         * See: https://cssnano.co/docs/optimisations
          *
          * @type {Boolean|Object}
          */
@@ -166,7 +166,7 @@ module.exports = function (mix) {
         /**
          * CleanCss-specific settings for Webpack.
          *
-         * See: https://github.com/jakubpawlowicz/clean-css#constructor-options
+         * See: https://github.com/clean-css/clean-css#constructor-options
          *
          * @type {Object}
          */
@@ -211,6 +211,16 @@ module.exports = function (mix) {
          * @type {any}
          */
         vue: {},
+
+        /**
+         * The name / path to the mix manifest.
+         * The path is relative to the public path.
+         *
+         * Set to `false` to disable manifest generation.
+         *
+         * @type {string | false}
+         */
+        manifest: `mix-manifest.json`,
 
         /**
          * Merge the given options with the current defaults.

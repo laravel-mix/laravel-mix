@@ -38,7 +38,7 @@ class TypeScript extends JavaScript {
     webpackRules() {
         return [].concat(super.webpackRules(), {
             test: /\.tsx?$/,
-            loader: 'ts-loader',
+            loader: Mix.resolve('ts-loader'),
             exclude: /node_modules/,
             options: Object.assign(
                 {},

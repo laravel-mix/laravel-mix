@@ -76,3 +76,11 @@ test('It can copy directories and handle versioning.', async t => {
         t
     );
 });
+
+test('It can copy dot files.', async t => {
+    mix.copy(`test/fixtures/app/src/.dotfile`, `test/fixtures/app/dist/.dotfile`);
+
+    await webpack.compile();
+
+    t.true(File.exists(`test/fixtures/app/dist/.dotfile`));
+});

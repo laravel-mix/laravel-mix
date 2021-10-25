@@ -47,6 +47,14 @@ interface MixConfig {
     publicPath?: string;
 
     /**
+     * The name / path to the mix manifest.
+     * The path is relative to the public path.
+     *
+     * Set to `false` to disable manifest generation.
+     **/
+    manifest?: string | false;
+
+    /**
      * The path for the runtime chunk (`manifest.js`).
      *
      * Defaults to being placed next to compiled JS files.

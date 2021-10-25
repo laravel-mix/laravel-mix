@@ -9,7 +9,7 @@ class Sass extends Preprocessor {
 
         return tap(['sass-loader@^12.1.0', 'sass'], dependencies => {
             if (Config.processCssUrls) {
-                dependencies.push('resolve-url-loader@^3.1.3');
+                dependencies.push('resolve-url-loader@^4.0.0');
             }
         });
     }

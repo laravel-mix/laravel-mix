@@ -114,16 +114,18 @@ class WebpackConfig {
             port,
 
             client: {
-                host,
-                port
+                webSocketURL: {
+                    hostname: host,
+                    pathname: '/ws',
+                    port
+                }
             },
 
-            public: url,
             liveReload: false,
 
             https,
 
-            dev: {
+            devMiddleware: {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',

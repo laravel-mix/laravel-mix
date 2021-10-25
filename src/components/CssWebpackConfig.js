@@ -32,7 +32,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 type: 'scss',
                 test: /\.scss$/,
                 loader: {
-                    loader: 'sass-loader',
+                    loader: Mix.resolve('sass-loader'),
                     options: {
                         sassOptions: {
                             precision: 8,
@@ -46,7 +46,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 type: 'sass',
                 test: /\.sass$/,
                 loader: {
-                    loader: 'sass-loader',
+                    loader: Mix.resolve('sass-loader'),
                     options: {
                         sassOptions: {
                             precision: 8,
@@ -60,13 +60,13 @@ class CssWebpackConfig extends AutomaticComponent {
                 command: 'less',
                 type: 'less',
                 test: /\.less$/,
-                loader: { loader: 'less-loader' }
+                loader: { loader: Mix.resolve('less-loader') }
             },
             {
                 command: 'stylus',
                 type: 'stylus',
                 test: /\.styl(us)?$/,
-                loader: { loader: 'stylus-loader' }
+                loader: { loader: Mix.resolve('stylus-loader') }
             }
         ].map(rule => this.createRule(rule));
     }
@@ -107,7 +107,7 @@ class CssWebpackConfig extends AutomaticComponent {
         return [
             ...CssWebpackConfig.afterLoaders(),
             {
-                loader: 'css-loader',
+                loader: Mix.resolve('css-loader'),
                 options: {
                     url: (url, resourcePath) => {
                         if (url.startsWith('/')) {
@@ -120,7 +120,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 }
             },
             {
-                loader: 'postcss-loader',
+                loader: Mix.resolve('postcss-loader'),
                 options: {
                     postcssOptions: {
                         plugins: new PostCssPluginsFactory({}, Config).load(),
@@ -187,9 +187,9 @@ class CssWebpackConfig extends AutomaticComponent {
 
         if (method === 'inline') {
             if (this.wantsVueStyleLoader && location === 'default') {
-                loaders.push({ loader: 'vue-style-loader' });
+                loaders.push({ loader: Mix.resolve('vue-style-loader') });
             } else {
-                loaders.push({ loader: 'style-loader' });
+                loaders.push({ loader: Mix.resolve('style-loader') });
             }
         } else if (method === 'extract') {
             loaders.push({
@@ -232,7 +232,7 @@ class CssWebpackConfig extends AutomaticComponent {
 
             if (resources.length) {
                 loaders.push({
-                    loader: 'sass-resources-loader',
+                    loader: Mix.resolve('sass-resources-loader'),
                     options: {
                         hoistUseStatements: true,
                         resources

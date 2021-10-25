@@ -12,7 +12,7 @@ module.exports = function (mix) {
     rules.push({
         test: /\.html$/,
         resourceQuery: { not: [/\?vue/i] },
-        use: [{ loader: 'html-loader' }]
+        use: [{ loader: mix.resolve('html-loader') }]
     });
 
     if (Config.imgLoaderOptions) {
@@ -22,7 +22,7 @@ module.exports = function (mix) {
             test: /(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/,
             use: [
                 {
-                    loader: 'file-loader',
+                    loader: mix.resolve('file-loader'),
                     options: {
                         name: path => {
                             if (!/node_modules|bower_components/.test(path)) {
@@ -49,7 +49,7 @@ module.exports = function (mix) {
                 },
 
                 {
-                    loader: 'img-loader',
+                    loader: mix.resolve('img-loader'),
                     options: mix.config.imgLoaderOptions
                 }
             ]
@@ -61,7 +61,7 @@ module.exports = function (mix) {
         test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
         use: [
             {
-                loader: 'file-loader',
+                loader: mix.resolve('file-loader'),
                 options: {
                     name: path => {
                         if (!/node_modules|bower_components/.test(path)) {
@@ -93,7 +93,7 @@ module.exports = function (mix) {
         test: /\.(cur|ani)$/,
         use: [
             {
-                loader: 'file-loader',
+                loader: mix.resolve('file-loader'),
                 options: {
                     name: '[name].[ext]?[hash]',
                     publicPath: mix.config.resourceRoot

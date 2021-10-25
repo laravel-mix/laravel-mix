@@ -25,7 +25,7 @@ function hasWebpackRule(config, test) {
 function hasWebpackLoader(config, loader) {
     const checkLoader =
         typeof loader === 'string'
-            ? str => str === loader
+            ? str => new RegExp(`[\/\\\\]${loader}[\/\\\\]`).test(str)
             : loader instanceof RegExp
             ? str => loader.test(str)
             : loader;

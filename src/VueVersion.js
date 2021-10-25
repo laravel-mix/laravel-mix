@@ -2,47 +2,57 @@ let Log = require('./Log');
 
 class VueVersion {
     /**
+     *
+     * @param {import("./Mix")} mix
+     */
+    constructor(mix) {
+        this.mix = mix;
+    }
+
+    /**
      * Vue versions that are supported by Mix.
      *
      * @returns {number[]}
      */
-    static supported() {
+    supported() {
         return [2, 3];
     }
 
     /**
      * Detect and validate the current version of Vue for the build.
      *
-     * @param {number|null} version
+     * @param {string|number|null|undefined} [version]
+     * @returns {number}
      */
-    static detect(version) {
-        version = parseInt(version);
+    detect(version) {
+        version = parseInt(`${version}`);
 
-        if (!version) {
+        if (!version || isNaN(version)) {
             try {
-                return VueVersion.detect(require('vue').version);
+                return this.detect(require(this.mix.resolve('vue')).version);
             } catch (e) {
-                VueVersion.fail();
+                this.fail();
             }
         }
 
-        if (VueVersion.supported().includes(version)) {
+        if (this.supported().includes(version)) {
             return version;
         }
 
-        VueVersion.fail();
+        this.fail();
     }
 
     /**
      * Abort and log that a supported version of Vue wasn't found.
+     * @returns {never}
      */
-    static fail() {
+    fail() {
         Log.error(
             `We couldn't find a supported version of Vue in your project. ` +
                 `Please ensure that it's installed (npm install vue).`
         );
 
-        throw new Error();
+        throw new Error('Unable to detect vue version');
     }
 }
 

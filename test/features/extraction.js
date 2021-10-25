@@ -29,7 +29,7 @@ test('JS compilation with vendor extraction config', async t => {
 test('vendor extraction with no requested JS compilation will throw an error', async t => {
     mix.extract(['vue']);
 
-    await t.throwsAsync(webpack.compile(), {
+    await t.throwsAsync(() => webpack.compile(), {
         message: 'You must compile JS to extract vendor code'
     });
 });

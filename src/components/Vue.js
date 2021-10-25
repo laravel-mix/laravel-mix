@@ -34,7 +34,7 @@ class Vue {
             );
         }
 
-        this.version = VueVersion.detect(options.version);
+        this.version = new VueVersion(this._mix).detect(options.version);
 
         this.options = Object.assign(
             {
@@ -48,6 +48,8 @@ class Vue {
 
         Mix.globalStyles = this.options.globalStyles;
         Mix.extractingStyles = !!this.options.extractStyles;
+
+        this.addDefines();
     }
 
     /**
@@ -79,7 +81,7 @@ class Vue {
             test: /\.vue$/,
             use: [
                 {
-                    loader: 'vue-loader',
+                    loader: this._mix.resolve('vue-loader'),
                     options: this.options.options || Config.vue || {}
                 }
             ]
@@ -113,7 +115,7 @@ class Vue {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        let { VueLoaderPlugin } = require('vue-loader');
+        let { VueLoaderPlugin } = require(this._mix.resolve('vue-loader'));
 
         return [new VueLoaderPlugin(), new AppendVueStylesPlugin()];
     }
@@ -189,6 +191,31 @@ class Vue {
                 : '/css/vue-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+    }
+
+    /**
+     * Determine the extract file name.
+     *
+     * @internal
+     */
+    addDefines() {
+        if (this.version === 2) {
+            return;
+        }
+
+        this._mix.api.define({
+            __VUE_OPTIONS_API__: 'true',
+            __VUE_PROD_DEVTOOLS__: 'false'
+        });
+    }
+
+    /**
+     * @internal
+     * @returns {import("../Mix")}
+     **/
+    get _mix() {
+        // @ts-ignore
+        return global.Mix;
     }
 }
 

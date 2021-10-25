@@ -308,17 +308,42 @@ class File {
     parse() {
         let parsed = path.parse(this.absolutePath);
 
+        let isDir = this.checkIsDir(parsed);
+
         return {
             path: this.filePath,
             absolutePath: this.absolutePath,
             pathWithoutExt: path.join(parsed.dir, `${parsed.name}`),
-            isDir: !parsed.ext && !parsed.name.endsWith('*'),
-            isFile: !!parsed.ext,
+            isDir,
+            isFile: !isDir,
             name: parsed.name,
             ext: parsed.ext,
             file: parsed.base,
             base: parsed.dir
         };
+    }
+
+    /**
+     * This is a bit more involved check to verify if a file is a directory
+     *
+     * @param {path.ParsedPath} parsed
+     * @private
+     */
+    checkIsDir(parsed) {
+        // 1. If the file exists and is a directory
+        try {
+            return fs.lstatSync(this.absolutePath).isDirectory();
+        } catch (err) {
+            //
+        }
+
+        // 2. If the path ends in a slash
+        if (this.absolutePath.endsWith('/')) {
+            return true;
+        }
+
+        // 3. Pevious logic: No extension & does not end in a wildcard
+        return !parsed.ext && !parsed.name.endsWith('*');
     }
 
     // TODO: Can we refactor this to remove the need for implicit global? Or does this one make sense to leave as is?

@@ -10,7 +10,7 @@ test('it does not process absolute urls', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
 
     await t.notThrowsAsync(
-        webpack.compile(),
+        () => webpack.compile(),
         'CSS failed to compile due to incorrect URL processing.'
     );
 });
@@ -134,7 +134,7 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
         t.true(
             config.module.rules
                 .find(rule => rule.test.toString().includes(file))
-                .use.find(loader => loader.loader === 'postcss-loader')
+                .use.find(loader => /postcss-loader/.test(loader.loader))
                 .options.postcssOptions.plugins.find(
                     plugin => plugin.postcssPlugin === pluginName
                 ) !== undefined
