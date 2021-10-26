@@ -87,6 +87,7 @@ test('basic JS compilation config.', async t => {
             path: path.resolve(`test/fixtures/app/dist`),
             filename: '[name].js',
             chunkFilename: webpackConfig.output.chunkFilename,
+            hashFunction: 'xxhash64',
             publicPath: '/'
         },
         webpackConfig.output
@@ -114,6 +115,7 @@ test('basic JS compilation with a different dist path', async t => {
             path: path.resolve('dist-html'),
             filename: '[name].js',
             chunkFilename: webpackConfig.output.chunkFilename,
+            hashFunction: 'xxhash64',
             publicPath: '/'
         },
         webpackConfig.output

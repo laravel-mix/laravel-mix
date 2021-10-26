@@ -69,6 +69,7 @@ class WebpackConfig {
      */
     buildOutput() {
         this.webpackConfig.output = {
+            hashFunction: 'xxhash64',
             path: path.resolve(this.mix.config.publicPath),
             filename: '[name].js',
 
