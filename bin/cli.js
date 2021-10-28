@@ -81,6 +81,10 @@ async function executeScript(cmd, opts, args = []) {
         MIX_FILE: opts.mixConfig
     };
 
+    const nodeEnv = process.version.startsWith('v17.')
+        ? { NODE_OPTIONS: process.env.NODE_OPTIONS || `--openssl-legacy-provider` }
+        : {};
+
     if (isTesting()) {
         process.stdout.write(
             JSON.stringify({
@@ -98,6 +102,7 @@ async function executeScript(cmd, opts, args = []) {
             shell: true,
             env: {
                 ...process.env,
+                ...nodeEnv,
                 ...scriptEnv
             }
         });
