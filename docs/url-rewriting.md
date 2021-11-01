@@ -43,6 +43,22 @@ With this addition to your `webpack.mix.js` file, Mix will no longer match `url(
 
 > As a bonus, when you disable url processing, your Webpack Sass compilation will be much faster.
 
+When processing files, you can also explicitly specify the absolute URL conversion:
+
+```js
+mix.sass('resources/sass/app.scss', 'public/css').options({
+    resourceRoot: 'https://example.com'
+});
+```
+
+After that, the final CSS file will contain absolute links:
+
+```css
+.example {
+    background: url(https://example.com/images/example.png?d41d8cd98f00b204e9800998ecf8427e);
+}
+```
+
 ### Per-file rewrite settings
 
 Url rewriting can be controlled on a per-file basis by specifying the `processUrls` option. This option will take precedence over what has been specified via the `processCssUrls` mix option.

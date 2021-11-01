@@ -81,6 +81,10 @@ async function executeScript(cmd, opts, args = []) {
         MIX_FILE: opts.mixConfig
     };
 
+    const nodeEnv = requiresLegacyOpenSSLProvider()
+        ? { NODE_OPTIONS: process.env.NODE_OPTIONS || `--openssl-legacy-provider` }
+        : {};
+
     if (isTesting()) {
         process.stdout.write(
             JSON.stringify({
@@ -98,6 +102,7 @@ async function executeScript(cmd, opts, args = []) {
             shell: true,
             env: {
                 ...process.env,
+                ...nodeEnv,
                 ...scriptEnv
             }
         });
@@ -217,4 +222,18 @@ function isTTY() {
     }
 
     return process.stdout.isTTY;
+}
+
+function requiresLegacyOpenSSLProvider() {
+    if (!process.version.startsWith('v17.')) {
+        return false;
+    }
+
+    try {
+        require('crypto').createHash('md4').update('test').digest('hex');
+
+        return false;
+    } catch (err) {
+        return true;
+    }
 }
