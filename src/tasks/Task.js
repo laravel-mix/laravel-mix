@@ -29,14 +29,18 @@ class Task {
      * Watch all relevant files for changes.
      *
      * @param {boolean} usePolling
+     * @param {function(Task)} onFileChange Will be called on every file that changes
      */
-    watch(usePolling = false) {
+    watch(usePolling = false, onFileChange = Function()) {
         if (this.isBeingWatched) return;
 
         let files = this.files.get();
         let watcher = chokidar
             .watch(files, { usePolling, persistent: true })
-            .on('change', this.onChange.bind(this));
+            .on('change', async file => {
+                await Promise.resolve(this.onChange(file));
+                onFileChange(this);
+            });
 
         // Workaround for issue with atomic writes.
         // See https://github.com/paulmillr/chokidar/issues/591

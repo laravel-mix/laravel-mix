@@ -1,5 +1,6 @@
 let Log = require('../Log');
 let collect = require('collect.js');
+const { debounce } = require('lodash');
 
 class CustomTasksPlugin {
     /**
@@ -16,19 +17,23 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
+        let ranOnce = false;
         compiler.hooks.done.tapPromise(this.constructor.name, async stats => {
+            // Only run all tasks once
+            if (ranOnce) return;
+            ranOnce = true;
+
             await this.runTasks(stats);
 
-            if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
-                this.applyVersioning();
-            }
-
-            if (this.mix.inProduction()) {
-                await this.minifyAssets();
-            }
+            await this.afterChange();
 
             if (this.mix.isWatching()) {
-                this.mix.tasks.forEach(task => task.watch(this.mix.isPolling()));
+                this.mix.tasks.forEach(task =>
+                    task.watch(
+                        this.mix.isPolling(),
+                        debounce(this.afterChange.bind(this), 100)
+                    )
+                );
             }
 
             this.mix.manifest.refresh();
@@ -88,9 +93,10 @@ class CustomTasksPlugin {
 
     /**
      * Minify the given asset file.
+     * @param {Task} task If specified, only assets of this task will be minified
      */
-    async minifyAssets() {
-        const assets = collect(this.mix.tasks)
+    async minifyAssets(task = null) {
+        const assets = collect(task ? [task] : this.mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
             .flatMap(({ assets }) => assets);
 
@@ -117,6 +123,25 @@ class CustomTasksPlugin {
         collect(this.mix.manifest.get()).each((value, key) =>
             this.mix.manifest.hash(key)
         );
+    }
+
+    /**
+     * Performs manifest and minification updates on files after running tasks
+     * @param {Task|null} task If specified, only files for this task will be minified
+     * @return {Promise<void>}
+     */
+    async afterChange(task = null) {
+        if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
+            this.applyVersioning();
+        }
+
+        if (this.mix.inProduction()) {
+            // Minify task assets
+            await this.minifyAssets(task);
+        }
+
+        // Rewrite manifest file
+        this.mix.manifest.refresh();
     }
 }
 
