@@ -314,7 +314,7 @@ class File {
             path: this.filePath,
             absolutePath: this.absolutePath,
             pathWithoutExt: path.join(parsed.dir, `${parsed.name}`),
-            isDir,
+            isDir: isDir,
             isFile: !isDir,
             name: parsed.name,
             ext: parsed.ext,
