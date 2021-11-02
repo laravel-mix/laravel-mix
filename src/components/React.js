@@ -184,17 +184,14 @@ class React {
             modules: {
                 ...(rule?.options?.modules ?? {}),
                 mode: "local",
-                localIdentName: this.options.localIdentName,
+                localIdentName: this.options.localIdentName
             },
         };
 
         // Convert string syntax to object syntax if neccessary
-        rule =
-            typeof rule === "string"
-                ? {
-                    rule,
-                }
-                : rule;
+        rule = typeof rule === "string"
+            ? {rule}
+            : rule;
 
         // Inject our options into the loader
         rule.options = rule.options
