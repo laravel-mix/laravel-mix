@@ -175,18 +175,20 @@ class React {
             return rule;
         }
 
-        if (!rule?.options?.modules)
+        if (!(rule && rule.options && rule.options.modules))
             return rule;
 
         // Add our options to the loader
-        let options = {
-            ...(rule?.options ?? {}),
-            modules: {
-                ...(rule?.options?.modules ?? {}),
+        const rule_options = rule.options ? rule.options : {};
+        const rule_modules = rule_options.modules ? rule_options.modules : {};
+
+        let options = Object.assign({}, rule_options, {
+            modules: Object.assign({}, rule_modules, {
                 mode: "local",
-                localIdentName: this.options.localIdentName
-            },
-        };
+                localIdentName: this.options.localIdentName,
+            })
+        })
+
 
         // Convert string syntax to object syntax if neccessary
         rule = typeof rule === "string"
