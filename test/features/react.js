@@ -136,8 +136,8 @@ color: red;
 }
 `;
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app-styles.css`));
-    assert.fileMatchesCss(`test/fixtures/app/dist/css/app-styles.css`, expected, t);
+    t.true(File.exists(`test/fixtures/app/dist/css/react-styles.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/react-styles.css`, expected, t);
 });
 
 test('it extracts css to a named dedicated file', async t => {

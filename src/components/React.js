@@ -79,7 +79,7 @@ class React {
      */
     babelConfig() {
         const plugins = this.supportsFastRefreshing()
-            ? [Mix.resolve('react-refresh/babel')]
+            ? [[Mix.resolve('react-refresh/babel'), { skipEnvCheck: true }]]
             : [];
 
         return {
@@ -196,7 +196,7 @@ class React {
             })
         });
 
-        // Convert string syntax to object syntax if neccessary
+        // Convert string syntax to object syntax if necessary
         rule = typeof rule === 'string' ? { rule } : rule;
 
         // Inject our options into the loader
@@ -242,7 +242,7 @@ class React {
         let fileName =
             typeof this.options.extractStyles === 'string'
                 ? this.options.extractStyles
-                : '/css/app-styles.css';
+                : '/css/react-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
     }
