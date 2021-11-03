@@ -3,6 +3,7 @@ import test from 'ava';
 import path from 'path';
 import sinon from 'sinon';
 
+import assert from '../helpers/assertions.js';
 import { recordBabelConfigs } from '../helpers/babel.js';
 import File from '../../src/File.js';
 import { mix, Mix } from '../helpers/mix.js';
@@ -120,4 +121,38 @@ test('it adds the necessary babel config', t => {
 
     t.true(babelConfig.presets[0].includes('@babel/preset-react'));
     t.true(babelConfig.plugins[0].includes(require.resolve('react-refresh/babel')));
+});
+
+test('it extracts css to a seperate file', async t => {
+    mix.react({ extractStyles: true }).js(
+        `test/fixtures/app/src/react/app-with-react-and-css`,
+        'js'
+    );
+
+    await webpack.compile();
+
+    let expected = `.component {
+color: red;
+}
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/app-styles.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/app-styles.css`, expected, t);
+});
+
+test('it extracts css to a named dedicated file', async t => {
+    mix.react({ extractStyles: 'css/my-styles.css' }).js(
+        `test/fixtures/app/src/react/app-with-react-and-css`,
+        'js'
+    );
+
+    await webpack.compile();
+
+    let expected = `.component {
+color: red;
+}
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/my-styles.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/my-styles.css`, expected, t);
 });

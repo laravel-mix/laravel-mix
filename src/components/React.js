@@ -1,5 +1,6 @@
 const semver = require('semver');
 let { Chunks } = require('../Chunks');
+let File = require('../File');
 
 class React {
     /**
