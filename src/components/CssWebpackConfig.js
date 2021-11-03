@@ -210,6 +210,7 @@ class CssWebpackConfig extends AutomaticComponent {
     /** @private */
     static get wantsVueStyleLoader() {
         const VueFeature = Mix.components.get('vue');
+
         return VueFeature && VueFeature.options && VueFeature.options.useVueStyleLoader;
     }
 
