@@ -177,6 +177,7 @@ class React {
         // If the loader is not the css-loader, we can safely skip it
         if (
             rule.loader.indexOf('/css-loader/') === -1 &&
+            rule.loader.indexOf('\\css-loader\\') === -1 &&
             rule.loader !== 'css-loader' &&
             rule !== 'css-loader'
         ) {
