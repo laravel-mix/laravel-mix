@@ -124,16 +124,16 @@ test('it adds the necessary babel config', t => {
 });
 
 test('it extracts css to a seperate file', async t => {
-    mix.react({ extractStyles: true }).js(
-        `test/fixtures/app/src/react/app-with-react-and-css`,
-        'js'
-    );
+    mix.react({
+        extractStyles: true
+    }).js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
 
     await webpack.compile();
 
     let expected = `.component {
 color: red;
 }
+
 `;
 
     t.true(File.exists(`test/fixtures/app/dist/css/react-styles.css`));
@@ -141,18 +141,36 @@ color: red;
 });
 
 test('it extracts css to a named dedicated file', async t => {
-    mix.react({ extractStyles: 'css/my-styles.css' }).js(
-        `test/fixtures/app/src/react/app-with-react-and-css`,
-        'js'
-    );
+    mix.react({
+        extractStyles: 'css/components.css'
+    }).js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
 
     await webpack.compile();
 
     let expected = `.component {
 color: red;
 }
+
 `;
 
-    t.true(File.exists(`test/fixtures/app/dist/css/my-styles.css`));
-    assert.fileMatchesCss(`test/fixtures/app/dist/css/my-styles.css`, expected, t);
+    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
+});
+
+test('it extracts css classes with a specified localIdentName', async t => {
+    mix.react({
+        extractStyles: 'css/components.css',
+        localIdentName: 'test'
+    }).js(`test/fixtures/app/src/react/app-with-react-and-css-module`, 'js');
+
+    await webpack.compile();
+
+    let expected = `.test {
+color: red;
+}
+
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
 });
