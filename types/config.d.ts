@@ -109,6 +109,13 @@ interface MixConfig {
     terser?: TerserPluginOptions;
 
     /**
+     * Sets the css module identifier pattern
+     *
+     * For more information see https://github.com/webpack-contrib/css-loader/tree/v5.2.7#localidentname
+     */
+    cssModuleIdentifier?: string;
+
+    /**
      * cssnano-specific settings for Webpack.
      * Disabled if set to false.
      *

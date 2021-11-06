@@ -87,7 +87,9 @@ class CssWebpackConfig extends AutomaticComponent {
                     resourceQuery: /module/,
                     use: this.createLoaderList(rule, {
                         mode: 'local',
-                        auto: undefined
+                        auto: undefined,
+                        localIdentName:
+                            this.context.config.cssModuleIdentifier || '[hash:base64]'
                     })
                 },
                 {
@@ -95,7 +97,9 @@ class CssWebpackConfig extends AutomaticComponent {
                     // Ex: foo.module.css
                     use: this.createLoaderList(rule, {
                         mode: 'local',
-                        auto: true
+                        auto: true,
+                        localIdentName:
+                            this.context.config.cssModuleIdentifier || '[hash:base64]'
                     })
                 }
             ]

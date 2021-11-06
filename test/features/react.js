@@ -124,9 +124,8 @@ test('it adds the necessary babel config', t => {
 });
 
 test('it extracts css to a seperate file', async t => {
-    mix.react({
-        extractStyles: true
-    }).js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+    mix.react({ extractStyles: true });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
 
     await webpack.compile();
 
@@ -141,9 +140,8 @@ color: red;
 });
 
 test('it extracts css to a named dedicated file', async t => {
-    mix.react({
-        extractStyles: 'css/components.css'
-    }).js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+    mix.react({ extractStyles: 'css/components.css' });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
 
     await webpack.compile();
 
@@ -158,10 +156,9 @@ color: red;
 });
 
 test('it extracts css classes with a specified localIdentName', async t => {
-    mix.react({
-        extractStyles: 'css/components.css',
-        localIdentName: 'test'
-    }).js(`test/fixtures/app/src/react/app-with-react-and-css-module`, 'js');
+    mix.react({ extractStyles: 'css/components.css' });
+    mix.options({ cssModuleIdentifier: 'test' });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css-module`, 'js');
 
     await webpack.compile();
 

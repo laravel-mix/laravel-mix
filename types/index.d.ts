@@ -279,9 +279,6 @@ type VueConfig = {
 type ReactConfig = {
     /** Whether or not to extract React styles. If given a string the name of the file to extract to. */
     extractStyles?: boolean | string;
-
-    /** Ability to override css-loader's localIdentName property */
-    localIdentName?: string;
 };
 
 // Third-party support "feature flags"
