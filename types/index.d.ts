@@ -276,7 +276,7 @@ type VueConfig = {
     options?: VueLoaderOptions;
 };
 
-export type ReactConfig = {
+type ReactConfig = {
     /** Whether or not to extract React styles. If given a string the name of the file to extract to. */
     extractStyles?: boolean | string;
 
@@ -285,7 +285,7 @@ export type ReactConfig = {
 };
 
 // Third-party support "feature flags"
-export interface Api {
+interface Api {
     /** Enable support for Preact */
     preact(): Api;
 
@@ -304,7 +304,7 @@ export interface Api {
 
 declare const exports: Api;
 declare namespace exports {
-    export { Api, VueConfig };
+    export { Api, ReactConfig, VueConfig };
 }
 
 declare global {
