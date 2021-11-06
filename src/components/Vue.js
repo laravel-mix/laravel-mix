@@ -1,4 +1,3 @@
-let { Chunks } = require('../Chunks');
 let File = require('../File');
 let VueVersion = require('../VueVersion');
 let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
@@ -6,13 +5,6 @@ let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin
 /** @typedef {import("vue").VueLoaderOptions} VueLoaderOptions */
 
 class Vue {
-    /**
-     * Create a new component instance.
-     */
-    constructor() {
-        this.chunks = Chunks.instance();
-    }
-
     /**
      * Register the component.
      *
@@ -34,7 +26,7 @@ class Vue {
             );
         }
 
-        this.version = new VueVersion(this._mix).detect(options.version);
+        this.version = new VueVersion(this.context).detect(options.version);
 
         this.options = Object.assign(
             {
@@ -46,8 +38,9 @@ class Vue {
             options
         );
 
-        Mix.globalStyles = this.options.globalStyles;
-        Mix.extractingStyles = !!this.options.extractStyles;
+        this.context.globalStyles = this.options.globalStyles;
+        this.context.extractingStyles =
+            this.context.extractingStyles || !!this.options.extractStyles;
 
         this.addDefines();
     }
@@ -81,7 +74,7 @@ class Vue {
             test: /\.vue$/,
             use: [
                 {
-                    loader: this._mix.resolve('vue-loader'),
+                    loader: this.context.resolve('vue-loader'),
                     options: this.options.options || Config.vue || {}
                 }
             ]
@@ -115,7 +108,7 @@ class Vue {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        let { VueLoaderPlugin } = require(this._mix.resolve('vue-loader'));
+        let { VueLoaderPlugin } = require(this.context.resolve('vue-loader'));
 
         return [new VueLoaderPlugin(), new AppendVueStylesPlugin()];
     }
@@ -128,7 +121,7 @@ class Vue {
             return;
         }
 
-        this.chunks.add(
+        this.context.chunks.add(
             'styles-vue',
             this.styleChunkName(),
             [/.vue$/, module => module.type === 'css/mini-extract'],
@@ -139,7 +132,7 @@ class Vue {
             }
         );
 
-        this.chunks.add(
+        this.context.chunks.add(
             'styles-jsx',
             this.styleChunkName(),
             [/.jsx$/, module => module.type === 'css/mini-extract'],
@@ -160,7 +153,7 @@ class Vue {
         // If the user set extractStyles: true, we'll try
         // to append the Vue styles to an existing CSS chunk.
         if (this.options.extractStyles === true) {
-            let chunk = this.chunks.find((chunk, id) => id.startsWith('styles-'));
+            let chunk = this.context.chunks.find((chunk, id) => id.startsWith('styles-'));
 
             if (chunk) {
                 return chunk.name;
@@ -203,7 +196,7 @@ class Vue {
             return;
         }
 
-        this._mix.api.define({
+        this.context.api.define({
             __VUE_OPTIONS_API__: 'true',
             __VUE_PROD_DEVTOOLS__: 'false'
         });
@@ -211,10 +204,8 @@ class Vue {
 
     /**
      * @internal
-     * @returns {import("../Mix")}
      **/
-    get _mix() {
-        // @ts-ignore
+    get context() {
         return global.Mix;
     }
 }

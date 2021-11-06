@@ -1,14 +1,11 @@
 const semver = require('semver');
-let { Chunks } = require('../Chunks');
-let File = require('../File');
+const File = require('../File');
 
 class React {
-    /**
-     * Create a new component instance.
-     */
-    constructor() {
-        this.chunks = Chunks.instance();
-    }
+    /** @type {import('laravel-mix').ReactConfig} */
+    options = {
+        extractStyles: false
+    };
 
     /**
      * Required dependencies for the component.
@@ -36,8 +33,7 @@ class React {
     /**
      * Register the component.
      *
-     * @param {object} options
-     * @param {boolean|string} [options.extractStyles] Whether or not to extract React styles. If given a string the name of the file to extract to.
+     * @param {import('laravel-mix').ReactConfig} options
      */
     register(options = {}) {
         if (
@@ -50,15 +46,10 @@ class React {
             );
         }
 
-        this.options = Object.assign(
-            {
-                extractStyles: false,
-                localIdentName: '[name]_[local]__[hash:base64:5]'
-            },
-            options
-        );
+        this.options = Object.assign(this.options, options);
 
-        Mix.extractingStyles = !!this.options.extractStyles;
+        this.context.extractingStyles =
+            this.context.extractingStyles || !!this.options.extractStyles;
     }
 
     /**
@@ -110,7 +101,7 @@ class React {
             return;
         }
 
-        this.chunks.add(
+        this.context.chunks.add(
             'styles-js',
             this.styleChunkName(),
             [/.(j|t)s$/, module => module.type === 'css/mini-extract'],
@@ -121,7 +112,7 @@ class React {
             }
         );
 
-        this.chunks.add(
+        this.context.chunks.add(
             'styles-jsx',
             this.styleChunkName(),
             [/.(j|t)sx?$/, module => module.type === 'css/mini-extract'],
@@ -215,7 +206,7 @@ class React {
         // If the user set extractStyles: true, we'll try
         // to append the React styles to an existing CSS chunk.
         if (this.options.extractStyles === true) {
-            let chunk = this.chunks.find((chunk, id) => id.startsWith('styles-'));
+            let chunk = this.context.chunks.find((chunk, id) => id.startsWith('styles-'));
 
             if (chunk) {
                 return chunk.name;
@@ -246,6 +237,10 @@ class React {
                 : '/css/react-styles.css';
 
         return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+    }
+
+    get context() {
+        return global.Mix;
     }
 }
 

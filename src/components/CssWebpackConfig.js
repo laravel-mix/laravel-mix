@@ -32,7 +32,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 type: 'scss',
                 test: /\.scss$/,
                 loader: {
-                    loader: Mix.resolve('sass-loader'),
+                    loader: this.context.resolve('sass-loader'),
                     options: {
                         sassOptions: {
                             precision: 8,
@@ -46,7 +46,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 type: 'sass',
                 test: /\.sass$/,
                 loader: {
-                    loader: Mix.resolve('sass-loader'),
+                    loader: this.context.resolve('sass-loader'),
                     options: {
                         sassOptions: {
                             precision: 8,
@@ -60,13 +60,13 @@ class CssWebpackConfig extends AutomaticComponent {
                 command: 'less',
                 type: 'less',
                 test: /\.less$/,
-                loader: { loader: Mix.resolve('less-loader') }
+                loader: { loader: this.context.resolve('less-loader') }
             },
             {
                 command: 'stylus',
                 type: 'stylus',
                 test: /\.styl(us)?$/,
-                loader: { loader: Mix.resolve('stylus-loader') }
+                loader: { loader: this.context.resolve('stylus-loader') }
             }
         ].map(rule => this.createRule(rule));
     }
@@ -74,8 +74,8 @@ class CssWebpackConfig extends AutomaticComponent {
     /**
      * Build up the appropriate loaders for the given rule.
      *
-     * @param  {Object} rule
-     * @returns {{test: *, use: *[], exclude: (*[]|[])}}
+     * @param  {import('webpack').RuleSetRule & {test: RegExp, command: string}} rule
+     * @returns {import('webpack').RuleSetRule}
      */
     createRule(rule) {
         return {
@@ -85,12 +85,18 @@ class CssWebpackConfig extends AutomaticComponent {
                 {
                     // Ex: foo.css?module
                     resourceQuery: /module/,
-                    use: this.createLoaderList(rule, true)
+                    use: this.createLoaderList(rule, {
+                        mode: 'local',
+                        auto: undefined
+                    })
                 },
                 {
                     // Ex: foo.css
                     // Ex: foo.module.css
-                    use: this.createLoaderList(rule, { auto: true })
+                    use: this.createLoaderList(rule, {
+                        mode: 'local',
+                        auto: true
+                    })
                 }
             ]
         };
@@ -100,14 +106,14 @@ class CssWebpackConfig extends AutomaticComponent {
      * Build up the appropriate loaders for the given rule.
      *
      * @param  {Object} rule
-     * @param  {string|boolean} useCssModules
+     * @param  {object} useCssModules
      * @returns {any[]}
      */
     createLoaderList(rule, useCssModules) {
         return [
             ...CssWebpackConfig.afterLoaders(),
             {
-                loader: Mix.resolve('css-loader'),
+                loader: this.context.resolve('css-loader'),
                 options: {
                     url: (url, resourcePath) => {
                         if (url.startsWith('/')) {
@@ -120,7 +126,7 @@ class CssWebpackConfig extends AutomaticComponent {
                 }
             },
             {
-                loader: Mix.resolve('postcss-loader'),
+                loader: this.context.resolve('postcss-loader'),
                 options: {
                     postcssOptions: {
                         plugins: new PostCssPluginsFactory({}, Config).load(),
@@ -142,7 +148,7 @@ class CssWebpackConfig extends AutomaticComponent {
      * @param {string} command
      */
     excludePathsFor(command) {
-        let exclusions = Mix.components.get(command);
+        let exclusions = this.context.components.get(command);
 
         if (command === 'css' || !exclusions) {
             return [];
@@ -258,6 +264,10 @@ class CssWebpackConfig extends AutomaticComponent {
         return mapValues(styles, files => {
             return Array.wrap(files).map(file => Mix.paths.root(file));
         });
+    }
+
+    get context() {
+        return global.Mix;
     }
 }
 
