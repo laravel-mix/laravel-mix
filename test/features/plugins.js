@@ -21,10 +21,26 @@ test('mix can be extended with new functionality as a class', t => {
     mix.extend(
         'foobar',
         class {
+            /** @param {string} val */
             register(val) {
                 t.is('baz', val);
             }
         }
+    );
+
+    // @ts-ignore - No declaration merging with JSDoc
+    mix.foobar('baz');
+});
+
+test('mix can be extended with new functionality as a class instance', t => {
+    mix.extend(
+        'foobar',
+        new (class {
+            /** @param {string} val */
+            register(val) {
+                t.is('baz', val);
+            }
+        })()
     );
 
     // @ts-ignore - No declaration merging with JSDoc
@@ -154,6 +170,7 @@ test('the fully constructed webpack config object is available for modification,
 
     t.false((await webpack.buildConfig(false)).stats.performance);
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.extension();
 
     t.true((await webpack.buildConfig(true)).stats.performance);
