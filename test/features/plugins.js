@@ -9,6 +9,7 @@ test('mix can be extended with new functionality as a callback', async t => {
 
     mix.extend('foobar', registration);
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar('baz', 'buzz');
 
     let config = await webpack.buildConfig();
@@ -19,36 +20,35 @@ test('mix can be extended with new functionality as a callback', async t => {
 test('mix can be extended with new functionality as a class', t => {
     mix.extend(
         'foobar',
-        new (class {
+        class {
             register(val) {
                 t.is('baz', val);
             }
-        })()
+        }
     );
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar('baz');
 });
 
 test('dependencies can be requested for download', async t => {
-    let Dependencies = require('../../src/Dependencies');
-
-    Dependencies.queue = sinon.spy();
-    Dependencies.installQueued = sinon.spy();
+    Mix.dependencies.enqueue = sinon.spy();
+    Mix.dependencies.install = sinon.spy();
 
     mix.extend(
         'foobar',
-        new (class {
+        class {
             dependencies() {
                 return ['npm-package'];
             }
 
             register() {}
-        })()
+        }
     );
 
     mix.extend(
         'foobar2',
-        new (class {
+        class {
             dependencies() {
                 this.requiresReload = true;
 
@@ -56,32 +56,36 @@ test('dependencies can be requested for download', async t => {
             }
 
             register() {}
-        })()
+        }
     );
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar();
+
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar2();
 
     await Mix.installDependencies();
     await Mix.init();
 
-    t.true(Dependencies.queue.calledWith(['npm-package'], false));
-    t.true(Dependencies.queue.calledWith(['npm-package2'], true));
-    t.true(Dependencies.installQueued.calledWith());
+    t.true(Mix.dependencies.enqueue.calledWith(['npm-package'], false));
+    t.true(Mix.dependencies.enqueue.calledWith(['npm-package2'], true));
+    t.true(Mix.dependencies.install.called);
 });
 
 test('webpack entry may be appended to', async t => {
     mix.extend(
         'foobar',
-        new (class {
+        class {
             register() {}
 
             webpackEntry(entry) {
                 entry.add('foo', 'path');
             }
-        })()
+        }
     );
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar();
 
     const config = await webpack.buildConfig();
@@ -97,15 +101,16 @@ test('webpack rules may be added', async t => {
 
     mix.extend(
         'foobar',
-        new (class {
+        class {
             register() {}
 
             webpackRules() {
                 return rule;
             }
-        })()
+        }
     );
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar();
 
     const config = await webpack.buildConfig();
@@ -118,15 +123,16 @@ test('webpack plugins may be added', async t => {
 
     mix.extend(
         'foobar',
-        new (class {
+        class {
             register() {}
 
             webpackPlugins() {
-                return plugin;
+                return [plugin];
             }
-        })()
+        }
     );
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foobar();
 
     const config = await webpack.buildConfig();
@@ -137,13 +143,13 @@ test('webpack plugins may be added', async t => {
 test('the fully constructed webpack config object is available for modification, if needed', async t => {
     mix.extend(
         'extension',
-        new (class {
+        class {
             register() {}
 
             webpackConfig(config) {
                 config.stats.performance = true;
             }
-        })()
+        }
     );
 
     t.false((await webpack.buildConfig(false)).stats.performance);
@@ -166,6 +172,7 @@ test('prior Mix components can be overwritten', t => {
 
     mix.extend('foo', overridingComponent);
 
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foo();
 
     t.true(component.register.notCalled);
@@ -175,63 +182,77 @@ test('prior Mix components can be overwritten', t => {
 test('components can be passive', t => {
     let stub = sinon.spy();
 
-    let component = new (class {
-        register() {
-            stub();
+    mix.extend(
+        'example',
+        class {
+            register() {
+                stub();
+            }
         }
-    })();
-
-    mix.extend('example', component);
+    );
 
     t.true(stub.notCalled);
 
-    component = new (class {
-        constructor() {
-            this.passive = true;
-        }
+    mix.extend(
+        'example',
+        class {
+            constructor() {
+                this.passive = true;
+            }
 
-        register() {
-            stub();
+            register() {
+                stub();
+            }
         }
-    })();
-
-    mix.extend('example', component);
+    );
 
     t.true(stub.called);
 });
 
 test('components can manually hook into the mix API', t => {
-    let component = new (class {
-        mix() {
-            return {
-                foo: arg => {
-                    t.is('value', arg);
-                },
+    mix.extend(
+        'example',
+        class {
+            mix() {
+                return {
+                    /**
+                     * @param {any} arg
+                     */
+                    foo: arg => {
+                        t.is('value', arg);
+                    },
 
-                baz: arg => {
-                    t.is('anotherValue', arg);
-                }
-            };
+                    /**
+                     * @param {any} arg
+                     */
+                    baz: arg => {
+                        t.is('anotherValue', arg);
+                    }
+                };
+            }
         }
-    })();
+    );
 
-    mix.extend('example', component);
-
+    // @ts-ignore - No declaration merging with JSDoc
     mix.foo('value');
+
+    // @ts-ignore - No declaration merging with JSDoc
     mix.baz('anotherValue');
 });
 
 test('components can be booted, after the webpack.mix.js configuration file has processed', async t => {
     let stub = sinon.spy();
 
-    let component = new (class {
-        boot() {
-            stub();
+    mix.extend(
+        'example',
+        class {
+            boot() {
+                stub();
+            }
         }
-    })();
+    );
 
-    mix.extend('example', component);
-
+    // @ts-ignore - No declaration merging with JSDoc
     mix.example();
 
     t.false(stub.called);

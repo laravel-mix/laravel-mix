@@ -2,6 +2,7 @@ import test from 'ava';
 import sinon from 'sinon';
 
 import File from '../../src/File.js';
+import Task from '../../src/tasks/Task.js';
 import { mix, Mix } from '../helpers/mix.js';
 
 test('that it knows if it is being executed in a production environment', t => {
@@ -11,9 +12,9 @@ test('that it knows if it is being executed in a production environment', t => {
 });
 
 test('that it can check if a certain config item is truthy', t => {
-    Mix.config.versioning = true;
+    Mix.config.processCssUrls = true;
 
-    t.true(Mix.isUsing('versioning'));
+    t.true(Mix.isUsing('processCssUrls'));
 });
 
 test('that it knows if it should watch files for changes', t => {
@@ -52,18 +53,19 @@ test('that it can see if we are using a Laravel app', t => {
 });
 
 test('that it can add a task', t => {
-    Mix.addTask('footask');
+    Mix.addTask(new Task({ foo: 'bar' }));
 
     t.is(1, Mix.tasks.length);
 });
 
 test('that it can fetch a registered component', t => {
-    let component = new (class {
+    let component = {
         register() {}
-    })();
+    };
 
     mix.extend('foo', component);
 
+    // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
     mix.foo();
 
     t.truthy(Mix.components.get('foo'));

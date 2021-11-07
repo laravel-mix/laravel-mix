@@ -1,26 +1,32 @@
-let objectValues = require('lodash').values;
-
 /**
  * Generic tap function.
- *
- * @param {*}    val
- * @param {Function} callback
- */
-global.tap = function (val, callback) {
-    callback(val);
+ * @deprecated
+ **/
+Object.defineProperty(global, 'tap', {
+    /**
+     * @template T
+     * @param {T} val
+     * @param {(val: T) => void} callback
+     * @returns {T}
+     */
+    value(val, callback) {
+        callback(val);
 
-    return val;
-};
+        return val;
+    }
+});
 
 /**
  * Add tap to arrays.
- *
- * @param {*}    val
- * @param {Function} callback
- */
+ * @deprecated
+ **/
 if (!Array.prototype.hasOwnProperty('tap')) {
     Object.defineProperty(Array.prototype, 'tap', {
-        value: function (callback) {
+        /**
+         * @param {(arr: self) => void} callback
+         * @returns {self}
+         */
+        value(callback) {
             if (this.length) {
                 callback(this);
             }
@@ -32,12 +38,15 @@ if (!Array.prototype.hasOwnProperty('tap')) {
 
 /**
  * Add wrap to arrays.
- *
- * @param {*}    val
- * @param {Function} callback
- */
+ * @deprecated
+ **/
 if (!Array.hasOwnProperty('wrap')) {
     Object.defineProperty(Array, 'wrap', {
+        /**
+         * @template T
+         * @param {T|T[]} value
+         * @returns {T[]}
+         */
         value(value) {
             if (Array.isArray(value)) {
                 return value;
@@ -49,10 +58,17 @@ if (!Array.hasOwnProperty('wrap')) {
 }
 
 /**
- * Flatten the given array.
- *
- * @param {Array} arr
- */
-global.flatten = function (arr) {
-    return [].concat.apply([], objectValues(arr));
-};
+ * Flatten an array.
+ * @deprecated
+ **/
+Object.defineProperty(global, 'flatten', {
+    /**
+     * @template T
+     * @param {T[]} arr
+     * @returns {T[]}
+     */
+    value(arr) {
+        // @ts-ignore
+        return [].concat.apply([], Object.values(arr));
+    }
+});

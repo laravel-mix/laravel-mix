@@ -2,15 +2,17 @@ let Task = require('./Task');
 let File = require('../File');
 let FileCollection = require('../FileCollection');
 
+/**
+ * @extends {Task<{ files: string[] }>}
+ */
 class VersionFilesTask extends Task {
     /**
      * Run the task.
      */
     run() {
         this.files = new FileCollection(this.data.files);
-
-        this.assets = this.data.files.map(file => {
-            file = new File(file);
+        this.assets = this.data.files.map(filepath => {
+            const file = new File(filepath);
 
             this.mix.manifest.hash(file.pathFromPublic());
 

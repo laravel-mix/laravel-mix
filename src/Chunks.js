@@ -57,7 +57,7 @@ class Chunks {
      * @return {Chunks}
      */
     static reset() {
-        return (Chunks._instance = new Chunks());
+        return (Chunks._instance = new Chunks(global.Mix));
     }
 
     /**
@@ -128,6 +128,9 @@ class Chunks {
         return item ? item[1] : null;
     }
 
+    /**
+     * @returns {import('webpack').Configuration}
+     */
     config() {
         return {
             optimization: {
@@ -162,7 +165,9 @@ class Chunks {
     cacheGroups() {
         return {
             cacheGroups: {
+                /** @type {false} */
                 default: false,
+                /** @type {false} */
                 defaultVendors: false,
                 ...this.chunks
             }
@@ -248,12 +253,12 @@ class Chunks {
         if (typeof test === 'string') {
             const name = module.nameForCondition();
 
-            return name && name.startsWith(test);
+            return (name && name.startsWith(test)) || false;
         }
         if (test instanceof RegExp) {
             const name = module.nameForCondition();
 
-            return name && test.test(name);
+            return (name && test.test(name)) || false;
         }
 
         return false;

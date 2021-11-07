@@ -1,4 +1,6 @@
-const argv = require('yargs').argv;
+// @ts-check
+
+const yargs = require('yargs/yargs');
 
 /** @typedef {import("@babel/core").TransformOptions} BabelConfig */
 
@@ -10,30 +12,37 @@ module.exports = function (mix) {
     // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
     mix = mix || global.Mix;
 
+    const argv = yargs(process.argv.slice(2))
+        .options({
+            https: { type: 'boolean', default: false },
+            hmrPort: { type: 'string', default: '8080' },
+            p: { type: 'boolean', default: false },
+            hot: { type: 'boolean', default: false }
+        })
+        .parseSync();
+
     return {
         /**
          * Determine if webpack should be triggered in a production environment.
          *
          * @type {Boolean}
          */
-        production: process.env.NODE_ENV === 'production' || process.argv.includes('-p'),
+        production: process.env.NODE_ENV === 'production' || argv.p,
 
         /**
          * Determine if we should enable hot reloading.
          *
          * @type {Boolean}
          */
-        hmr: process.argv.includes('--hot'),
+        hmr: argv.hot,
 
         /**
          * Hostname and port used for the hot reload module
-         *
-         * @type {Object}
          */
         hmrOptions: {
-            https: !!argv.https,
+            https: argv.https,
             host: 'localhost',
-            port: !!argv.hmrPort ? argv.hmrPort : '8080'
+            port: argv.hmrPort
         },
 
         /**
@@ -41,7 +50,7 @@ module.exports = function (mix) {
          *
          * See: https://github.com/postcss/postcss/blob/master/docs/plugins.md
          *
-         * @type {Array}
+         * @type {import('postcss').AcceptedPlugin[]}
          */
         postCss: [],
 
@@ -49,7 +58,7 @@ module.exports = function (mix) {
          * Determine if we should enable autoprefixer by default.
          * May be set to false to disable it.
          *
-         * @type {Boolean|Object}
+         * @type {false|import('autoprefixer').Options}
          */
         autoprefixer: {},
 
@@ -72,7 +81,7 @@ module.exports = function (mix) {
         /**
          * Determine if error notifications should be displayed for each build.
          *
-         * @type {Boolean}
+         * @type {false | {onSuccess: boolean, onFailure: boolean}}
          */
         notifications: {
             onSuccess: true,
@@ -82,7 +91,7 @@ module.exports = function (mix) {
         /**
          * Determine if sourcemaps should be created for the build.
          *
-         * @type {Boolean}
+         * @type {false | string}
          */
         sourcemaps: false,
 
@@ -109,8 +118,6 @@ module.exports = function (mix) {
 
         /**
          * File Loader directory defaults.
-         *
-         * @type {Object}
          */
         fileLoaderDirs: {
             images: 'images',
@@ -123,7 +130,7 @@ module.exports = function (mix) {
         babel: function () {
             const BabelConfig = require('./BabelConfig');
 
-            return new BabelConfig().generate();
+            return new BabelConfig(mix).generate();
         },
 
         /**
@@ -139,14 +146,12 @@ module.exports = function (mix) {
          *
          * See: https://github.com/webpack-contrib/terser-webpack-plugin#options
          *
-         * @type {Object}
+         * @type {import('../types/terser').TerserPluginOptions}
          */
         terser: {
             parallel: true,
             terserOptions: {
-                compress: {
-                    warnings: false
-                },
+                compress: true,
                 output: {
                     comments: false
                 }
@@ -159,7 +164,7 @@ module.exports = function (mix) {
          *
          * See: https://cssnano.co/docs/optimisations
          *
-         * @type {Boolean|Object}
+         * @type {false|Object}
          */
         cssNano: {},
 
@@ -232,7 +237,7 @@ module.exports = function (mix) {
         /**
          * Merge the given options with the current defaults.
          *
-         * @param {object} options
+         * @param {Record<string, any>} options
          */
         merge(options) {
             Object.keys(options).forEach(key => {

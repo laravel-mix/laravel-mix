@@ -4,6 +4,7 @@ let File = require('../File');
 let { Chunks } = require('../Chunks');
 let CssWebpackConfig = require('./CssWebpackConfig');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
+const Entry = require('../builder/Entry');
 
 /**
  * @typedef {object} Detail
@@ -12,7 +13,7 @@ let PostCssPluginsFactory = require('../PostCssPluginsFactory');
  * @property {File} output
  * @property {any} pluginOptions
  * @property {any[]} postCssPlugins
- * @property {boolean} processUrls
+ * @property {boolean} [processUrls]
  */
 
 class Preprocessor {
@@ -21,6 +22,11 @@ class Preprocessor {
      */
     constructor() {
         this.chunks = Chunks.instance();
+
+        /**
+         * @type {Detail[]}
+         */
+        this.details = [];
     }
 
     /**
@@ -52,12 +58,17 @@ class Preprocessor {
     webpackLoaders(preprocessor) {
         let processUrls = this.shouldProcessUrls(preprocessor);
 
+        /** @type {import('webpack').RuleSetRule[]} */
         let loaders = [
             ...CssWebpackConfig.afterLoaders({ method: 'extract', location: 'per-file' }),
             {
                 loader: Mix.resolve('css-loader'),
                 options: {
-                    url: (url, resourcePath) => {
+                    /**
+                     *
+                     * @param {string} url
+                     */
+                    url: url => {
                         if (url.startsWith('/')) {
                             return false;
                         }
@@ -118,7 +129,7 @@ class Preprocessor {
     /**
      * Generate the options object for the PostCSS Loader.
      *
-     * @param {string} preprocessor
+     * @param {Detail} preprocessor
      */
     postCssLoaderOptions(preprocessor) {
         return {
@@ -137,28 +148,31 @@ class Preprocessor {
      * @param {string} src
      * @param {string} output
      * @param {object} pluginOptions
-     * @param {Array} postCssPlugins
+     * @param {import('postcss').AcceptedPlugin[]} postCssPlugins
      */
     preprocess(type, src, output, pluginOptions = {}, postCssPlugins = []) {
         Assert.preprocessor(type, src, output);
 
-        src = new File(src);
+        const srcFile = new File(src);
 
-        output = this.normalizeOutput(
+        const outputFile = this.normalizeOutput(
             new File(output),
-            src.nameWithoutExtension() + '.css'
+            srcFile.nameWithoutExtension() + '.css'
         );
 
-        /** @type {Detail[]} */
-        this.details = (this.details || []).concat({
+        this.details.push({
             type: this.constructor.name.toLowerCase(),
-            src,
-            output,
+            src: srcFile,
+            output: outputFile,
             pluginOptions,
             postCssPlugins
         });
 
-        this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
+        this._addChunks(
+            `styles-${outputFile.relativePathWithoutExtension()}`,
+            srcFile,
+            outputFile
+        );
 
         return this;
     }
@@ -167,6 +181,7 @@ class Preprocessor {
      * Determine whether to apply url preprocessing.
      *
      * @param {Detail} preprocessor
+     * @returns {boolean}
      */
     shouldProcessUrls(preprocessor) {
         const processUrls =
@@ -206,8 +221,8 @@ class Preprocessor {
      * @internal
      *
      * @param {string} name
-     * @param {Object} src
-     * @param {Object} output
+     * @param {File} src
+     * @param {File} output
      */
     _addChunks(name, src, output) {
         const tests = [

@@ -22,17 +22,18 @@ class MockEntryPlugin {
      */
     apply(compiler) {
         compiler.hooks.done.tap('MockEntryPlugin', stats => {
-            let temporaryOutputFile = stats
-                .toJson()
-                .assets.find(asset => asset.name === 'mix.js');
+            const assets = stats.toJson().assets || [];
+            const temporaryOutputFile = assets.find(asset => asset.name === 'mix.js');
 
-            if (temporaryOutputFile) {
-                delete stats.compilation.assets[temporaryOutputFile.name];
-
-                File.find(
-                    path.resolve(this.mix.config.publicPath, temporaryOutputFile.name)
-                ).delete();
+            if (!temporaryOutputFile) {
+                return;
             }
+
+            delete stats.compilation.assets[temporaryOutputFile.name];
+
+            File.find(
+                path.resolve(this.mix.config.publicPath, temporaryOutputFile.name)
+            ).delete();
         });
     }
 }

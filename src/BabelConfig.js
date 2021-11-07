@@ -17,7 +17,7 @@ const babel = require('@babel/core');
 class BabelConfig {
     /**
      *
-     * @param {import("./Mix")} mix
+     * @param {import("./Mix")} [mix]
      */
     constructor(mix) {
         this.mix = mix || global.Mix;
@@ -26,7 +26,6 @@ class BabelConfig {
     /**
      * Generate the appropriate Babel configuration for the build.
      *
-     * @param {BabelOptions} mixBabelConfig
      * @deprecated
      */
     static generate() {
@@ -35,8 +34,6 @@ class BabelConfig {
 
     /**
      * Generate the appropriate Babel configuration for the build.
-     *
-     * @param {BabelOptions} mixBabelConfig
      */
     generate() {
         return this.mergeAll([
@@ -54,9 +51,12 @@ class BabelConfig {
     /**
      * Fetch the user's .babelrc config file, if any.
      *
+     * @param {string} path
      * @deprecated
      */
     fetchBabelRc(path) {
+        const File = require('./File');
+
         return File.exists(path) ? JSON.parse(File.find(path).read()) : {};
     }
 
@@ -79,15 +79,13 @@ class BabelConfig {
      */
     mergeAll(configs) {
         const options = configs.reduce((prev, current) => {
-            const presets = [
-                ...(prev.presets || []),
-                ...(current.presets || [])
-            ].map(preset => babel.createConfigItem(preset, { type: 'preset' }));
+            const presets = [...(prev.presets || []), ...(current.presets || [])].map(
+                preset => babel.createConfigItem(preset, { type: 'preset' })
+            );
 
-            const plugins = [
-                ...(prev.plugins || []),
-                ...(current.plugins || [])
-            ].map(preset => babel.createConfigItem(preset, { type: 'plugin' }));
+            const plugins = [...(prev.plugins || []), ...(current.plugins || [])].map(
+                preset => babel.createConfigItem(preset, { type: 'plugin' })
+            );
 
             return Object.assign(prev, current, { presets, plugins });
         });
@@ -105,12 +103,18 @@ class BabelConfig {
      * @param {import("@babel/core").PluginItem[]} items
      * @returns {import("@babel/core").PluginItem[]}
      */
-    filterConfigItems(configItems) {
-        return configItems.reduce((unique, configItem) => {
-            if (configItem.file != null) {
+    filterConfigItems(items) {
+        /**
+         *
+         * @param {import("@babel/core").PluginItem[]} unique
+         * @param {import("@babel/core").PluginItem} item
+         * @returns
+         */
+        function dedupe(unique, item) {
+            if (item.file != null) {
                 const toDeleteIndex = unique.findIndex(
                     element =>
-                        element.file && element.file.resolved === configItem.file.resolved
+                        element.file && element.file.resolved === item.file.resolved
                 );
 
                 if (toDeleteIndex >= 0) {
@@ -118,8 +122,10 @@ class BabelConfig {
                 }
             }
 
-            return [...unique, configItem];
-        }, []);
+            return [...unique, item];
+        }
+
+        return items.reduce((unique, configItem) => dedupe(unique, configItem), []);
     }
 
     /** @deprecated */

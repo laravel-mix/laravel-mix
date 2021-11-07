@@ -37,6 +37,7 @@ class Mix {
         this.webpackConfig = new WebpackConfig(this);
         this.hot = new HotReloading(this);
         this.resolver = new Resolver();
+        this.dependencies = new Dependencies();
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -53,7 +54,7 @@ class Mix {
 
         /**
          * @internal
-         * @type {string|null}
+         * @type {Record<string, string|string[]>|string|null}
          */
         this.globalStyles = null;
 
@@ -115,8 +116,7 @@ class Mix {
      */
     async installDependencies() {
         await this.dispatch('internal:gather-dependencies');
-
-        Dependencies.installQueued();
+        await this.dependencies.install();
     }
 
     /**
@@ -133,7 +133,7 @@ class Mix {
     }
 
     /**
-     * @returns {import("../types/index")}
+     * @returns {import("laravel-mix")}
      */
     get api() {
         if (!this._api) {

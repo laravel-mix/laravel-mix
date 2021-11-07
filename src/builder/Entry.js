@@ -45,8 +45,8 @@ class Entry {
      * Add a new key-val pair, based on a given output path.
      *
      * @param {any}  val
-     * @param {Object} output
-     * @param {Object} fallback
+     * @param {File} output
+     * @param {File} fallback
      */
     addFromOutput(val, output, fallback) {
         output = this.normalizePath(output, fallback);
@@ -68,7 +68,7 @@ class Entry {
     /**
      * Build the proper entry name, based on a given output.
      *
-     * @param {Object} output
+     * @param {File} output
      */
     createName(output) {
         let name = output
@@ -84,8 +84,8 @@ class Entry {
     /**
      * Normalize the given output path.
      *
-     * @param {Object} output
-     * @param {Object} fallback
+     * @param {File} output
+     * @param {File} fallback
      */
     normalizePath(output, fallback) {
         // All output paths need to start at the project's public dir.

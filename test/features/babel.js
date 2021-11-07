@@ -107,6 +107,7 @@ test('Babel config from Mix extensions is merged with the defaults', async t => 
         }
     });
 
+    // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
     mix.extensionWithBabelConfig();
 
     await webpack.compile();

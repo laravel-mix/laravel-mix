@@ -11,12 +11,15 @@ class Manifest {
      * @param {string} name
      */
     constructor(name = 'mix-manifest.json') {
+        /** @type {Record<string, string>} */
         this.manifest = {};
         this.name = name;
     }
 
     /**
      * Get the underlying manifest collection.
+     * @param {string|null} [file]
+     * @returns {string | Record<string, string>}
      */
     get(file = null) {
         if (file) {
@@ -26,7 +29,9 @@ class Manifest {
             );
         }
 
-        return collect(this.manifest).sortKeys().all();
+        return Object.fromEntries(
+            Object.entries(this.manifest).sort((a, b) => a[0].localeCompare(b[0]))
+        );
     }
 
     /**

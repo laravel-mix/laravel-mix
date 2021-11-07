@@ -1,13 +1,12 @@
 let assert = require('assert');
-let Dependencies = require('./Dependencies');
 let File = require('./File');
 
 class Assert {
     /**
      * Assert that the call the mix.js() is valid.
      *
-     * @param {*} entry
-     * @param {*} output
+     * @param {any} entry
+     * @param {any} output
      */
     static js(entry, output) {
         assert(
@@ -69,21 +68,6 @@ class Assert {
             File.exists(file),
             `Whoops, you are trying to compile ${file}, but that file does not exist.`
         );
-    }
-
-    /**
-     * Assert that the necessary dependencies are available.
-     *
-     * @deprecated
-     * @param {Array}  list
-     * @param {Boolean} abortOnComplete
-     */
-    static dependencies(dependencies, abortOnComplete = false) {
-        if (process.env.NODE_ENV === 'test') {
-            return;
-        }
-
-        new Dependencies(dependencies).install(abortOnComplete);
     }
 }
 

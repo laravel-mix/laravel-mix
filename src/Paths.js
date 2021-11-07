@@ -46,7 +46,7 @@ class Paths {
     /**
      * Determine the project root.
      *
-     * @param {string|null} append
+     * @param {string} [append]
      */
     root(append = '') {
         return path.resolve(this.rootPath, append);

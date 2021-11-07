@@ -3,6 +3,7 @@ let path = require('path');
 let fs = require('fs');
 let babel = require('@babel/core');
 let glob = require('glob');
+let _ = require('lodash');
 let Log = require('./Log');
 let File = require('./File');
 
@@ -10,10 +11,11 @@ class FileCollection {
     /**
      * Create a new FileCollection instance.
      *
-     * @param {Array|string} files
+     * @param {string|string[]} files
      */
     constructor(files = []) {
-        this.files = [].concat(files);
+        /** @type {string[]} */
+        this.files = _.concat([], files);
     }
 
     /**
@@ -26,24 +28,30 @@ class FileCollection {
     /**
      * Merge all files in the collection into one.
      *
-     * @param {object} output
-     * @param {object} wantsBabel
+     * @param {File} output
+     * @param {boolean} wantsBabel
      */
-    merge(output, wantsBabel = false) {
-        return concat(this.files, output.makeDirectories().path()).then(contents => {
-            if (this.shouldCompileWithBabel(wantsBabel, output)) {
-                output.write(this.babelify(contents));
-            }
+    async merge(output, wantsBabel = false) {
+        /** @type {string} */
+        // @ts-ignore
+        const contents = await concat(this.files, output.makeDirectories().path());
 
-            return new File(output.makeDirectories().path());
-        });
+        if (this.shouldCompileWithBabel(wantsBabel, output)) {
+            const code = this.babelify(contents);
+
+            if (code) {
+                output.write(code);
+            }
+        }
+
+        return new File(output.makeDirectories().path());
     }
 
     /**
      * Determine if we should add a Babel pass to the concatenated file.
      *
-     * @param {Boolean}  wantsBabel
-     * @param {Object}  output
+     * @param {Boolean} wantsBabel
+     * @param {File} output
      */
     shouldCompileWithBabel(wantsBabel, output) {
         return wantsBabel && output.extension() === '.js';
@@ -59,14 +67,17 @@ class FileCollection {
 
         delete babelConfig.cacheDirectory;
 
-        return babel.transform(contents, babelConfig).code;
+        const result = babel.transform(contents, babelConfig);
+
+        return result && result.code;
     }
 
     /**
      * Copy the src files to the given destination.
      *
-     * @param {string} destination
-     * @param {string|array|null} src
+     * @param {File} destination
+     * @param {string[]|File} [src]
+     * @return {void|string}
      */
     copyTo(destination, src = this.files) {
         this.assets = this.assets || [];

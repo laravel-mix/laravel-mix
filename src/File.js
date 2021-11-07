@@ -115,9 +115,9 @@ class File {
     /**
      * Force the file's relative path to begin from the public path.
      *
-     * @param {string|null} publicPath
+     * @param {string|null} [publicPath]
      */
-    forceFromPublic(publicPath) {
+    forceFromPublic(publicPath = null) {
         publicPath = publicPath || this.mix.config.publicPath;
 
         if (!this.relativePath().startsWith(publicPath)) {
@@ -143,7 +143,7 @@ class File {
     /**
      * Get the path to the file, starting at the project's public dir.
      *
-     * @param {string|null} publicPath
+     * @param {string|null} [publicPath]
      */
     pathFromPublic(publicPath) {
         publicPath = publicPath || this.mix.config.publicPath;
@@ -257,7 +257,9 @@ class File {
                 this.mix.config.terser.terserOptions
             );
 
-            this.write(output.code);
+            if (output.code !== undefined) {
+                this.write(output.code);
+            }
         }
 
         if (this.extension() === '.css') {
