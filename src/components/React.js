@@ -70,7 +70,7 @@ class React {
      */
     babelConfig() {
         const plugins = this.supportsFastRefreshing()
-            ? [[Mix.resolve('react-refresh/babel'), { skipEnvCheck: true }]]
+            ? [Mix.resolve('react-refresh/babel')]
             : [];
 
         return {
