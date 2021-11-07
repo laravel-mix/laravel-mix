@@ -14,7 +14,7 @@ test.before(() => {
 
     configPath = path.relative(
         process.cwd(),
-        require.resolve('../../setup/webpack.config.js')
+        require.resolve('../../setup/webpack.config.mjs')
     );
 });
 

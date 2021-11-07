@@ -67,7 +67,7 @@ async function executeScript(cmd, opts, args = []) {
     // containg spaces on Windows (yarn does)
     const configPath = path.relative(
         process.cwd(),
-        require.resolve('../setup/webpack.config.js')
+        require.resolve('../setup/webpack.config.mjs')
     );
 
     const script = [
