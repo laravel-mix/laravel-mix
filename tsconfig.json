@@ -1,5 +1,12 @@
 {
     "include": ["src/**/*", "test/**/*"],
+    "exclude": [
+        "node_modules",
+        "node_modules/@types/*/*",
+        "test/integration/fixture/public",
+        "test/fixtures/integration/dist",
+        "test/fixtures/app/dist"
+    ],
 
     "compilerOptions": {
         "target": "ES2020",
@@ -12,6 +19,10 @@
         "resolveJsonModule": true,
 
         "noEmit": true,
-        "strict": true
+        "strict": true,
+
+        "paths": {
+            "laravel-mix": ["./types"]
+        }
     }
 }

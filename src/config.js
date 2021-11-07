@@ -223,6 +223,13 @@ module.exports = function (mix) {
         manifest: `mix-manifest.json`,
 
         /**
+         * Sets the css module identifier pattern
+         *
+         * For more information see https://github.com/webpack-contrib/css-loader/tree/v5.2.7#localidentname
+         */
+        cssModuleIdentifier: '[hash:base64]',
+
+        /**
          * Merge the given options with the current defaults.
          *
          * @param {object} options

@@ -53,9 +53,7 @@ class Combine {
                 src: this.src,
                 output: this.output,
                 babel: this.babel,
-                ignore: [
-                    this.output.relativePath(),
-                ],
+                ignore: [this.output.relativePath()]
             })
         );
     }

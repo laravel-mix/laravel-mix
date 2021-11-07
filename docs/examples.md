@@ -79,6 +79,13 @@ mix.js('src/app.js', 'js')
    .react();
 ```
 
+### Extract React Component CSS to its Own File when in Production build
+
+```js
+mix.js('src/app.js', 'js')
+   .react({ extractStyles: mix.inProduction() });
+```
+
 ### Compile JavaScript and Extract Lodash to its Own File
 
 ```js

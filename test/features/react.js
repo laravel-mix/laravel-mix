@@ -3,6 +3,7 @@ import test from 'ava';
 import path from 'path';
 import sinon from 'sinon';
 
+import assert from '../helpers/assertions.js';
 import { recordBabelConfigs } from '../helpers/babel.js';
 import File from '../../src/File.js';
 import { mix, Mix } from '../helpers/mix.js';
@@ -75,7 +76,7 @@ test('fast refreshing is disabled when not in hot mode', t => {
 
 test('it supports fast refreshing in hot mode if the React version is 16.9.0 or higher', t => {
     // Fake hot mode.
-    process.argv.push('--hot');
+    Mix.isHot = () => true;
 
     let react = new ReactComponent();
     let library = sinon.stub(react, 'library');
@@ -120,4 +121,53 @@ test('it adds the necessary babel config', t => {
 
     t.true(babelConfig.presets[0].includes('@babel/preset-react'));
     t.true(babelConfig.plugins[0].includes(require.resolve('react-refresh/babel')));
+});
+
+test('it extracts css to a seperate file', async t => {
+    mix.react({ extractStyles: true });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+
+    await webpack.compile();
+
+    let expected = `.component {
+color: red;
+}
+
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/react-styles.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/react-styles.css`, expected, t);
+});
+
+test('it extracts css to a named dedicated file', async t => {
+    mix.react({ extractStyles: 'css/components.css' });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+
+    await webpack.compile();
+
+    let expected = `.component {
+color: red;
+}
+
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
+});
+
+test('it extracts css classes with a specified localIdentName', async t => {
+    mix.react({ extractStyles: 'css/components.css' });
+    mix.options({ cssModuleIdentifier: 'test' });
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css-module`, 'js');
+
+    await webpack.compile();
+
+    let expected = `.test {
+color: red;
+}
+
+`;
+
+    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
+    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
 });
