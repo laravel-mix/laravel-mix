@@ -23,6 +23,11 @@ export type DependencyObject = {
 export type Dependency = string | DependencyObject;
 
 export interface ClassComponent {
+    prototype: ComponentInterface;
+    new (): ComponentInterface;
+}
+
+export interface ComponentInterface {
     /** Whether or not to automatically register this component */
     passive?: boolean;
 
@@ -78,7 +83,8 @@ export interface ClassComponent {
 }
 
 export interface FunctionalComponent {
-    (mix: typeof api, config: webpack.Configuration, ...args: any[]): void;
+    (config: webpack.Configuration, ...args: any[]): void;
 }
 
-export type Component = ClassComponent | FunctionalComponent;
+export type InstallableComponent = ComponentInterface | ClassComponent;
+export type Component = InstallableComponent | FunctionalComponent;

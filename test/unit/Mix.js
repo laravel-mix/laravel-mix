@@ -59,12 +59,13 @@ test('that it can add a task', t => {
 });
 
 test('that it can fetch a registered component', t => {
-    let component = new (class {
+    let component = {
         register() {}
-    })();
+    };
 
     mix.extend('foo', component);
 
+    // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
     mix.foo();
 
     t.truthy(Mix.components.get('foo'));
