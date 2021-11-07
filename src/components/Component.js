@@ -21,7 +21,6 @@ class Component {
      * Specifiy one or more dependencies that must
      * be installed for this component to work
      *
-     * @protected
      * @returns {import("../Dependencies").Dependency[]}
      **/
     dependencies() {

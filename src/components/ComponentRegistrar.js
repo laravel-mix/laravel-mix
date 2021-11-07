@@ -85,7 +85,7 @@ class ComponentRegistrar {
 
         this.registerComponent(component, names || this.getComponentNames(component));
 
-        Mix.listen('internal:gather-dependencies', () => {
+        this.mix.listen('internal:gather-dependencies', () => {
             if (!component.activated && !component.passive) {
                 return;
             }
@@ -100,7 +100,7 @@ class ComponentRegistrar {
             );
         });
 
-        Mix.listen('init', () => {
+        this.mix.listen('init', () => {
             if (!component.activated && !component.passive) {
                 return;
             }
@@ -108,21 +108,19 @@ class ComponentRegistrar {
             component.boot && component.boot();
             component.babelConfig && this.applyBabelConfig(component);
 
-            Mix.listen('loading-entry', entry => {
-                if (component.webpackEntry) {
-                    component.webpackEntry(entry);
-                }
+            this.mix.listen('loading-entry', entry => {
+                component.webpackEntry && component.webpackEntry(entry);
             });
 
-            Mix.listen('loading-rules', rules => {
+            this.mix.listen('loading-rules', rules => {
                 component.webpackRules && this.applyRules(rules, component);
             });
 
-            Mix.listen('loading-plugins', plugins => {
+            this.mix.listen('loading-plugins', plugins => {
                 component.webpackPlugins && this.applyPlugins(plugins, component);
             });
 
-            Mix.listen('configReady', config => {
+            this.mix.listen('configReady', config => {
                 component.webpackConfig && component.webpackConfig(config);
             });
         });
@@ -148,13 +146,17 @@ class ComponentRegistrar {
     /**
      * Register the component.
      *
-     * @param {Object} component
+     * @param {Component} component
      * @param {string[]} names
      */
     registerComponent(component, names) {
-        names.forEach(name => {
+        /**
+         *
+         * @param {string} name
+         */
+        const register = name => {
             this.components[name] = (...args) => {
-                Mix.components.record(name, component);
+                this.mix.components.record(name, component);
 
                 component.caller = name;
 
@@ -178,14 +180,16 @@ class ComponentRegistrar {
                     this.components[name] = component.mix()[name];
                 });
             }
-        });
+        };
+
+        names.forEach(name => register(name));
     }
 
     /**
      * Install the component's dependencies.
      *
      * @deprecated
-     * @param {Object} component
+     * @param {Component} component
      */
     installDependencies(component) {
         throw new Error(
@@ -197,11 +201,11 @@ class ComponentRegistrar {
      *
      * Apply the Babel configuration for the component.
      *
-     * @param {Object} component
+     * @param {Component} component
      */
     applyBabelConfig(component) {
-        Config.babelConfig = mergeWebpackConfig(
-            Config.babelConfig,
+        this.mix.config.babelConfig = mergeWebpackConfig(
+            this.mix.config.babelConfig,
             component.babelConfig()
         );
     }
@@ -210,24 +214,26 @@ class ComponentRegistrar {
      *
      * Apply the webpack rules for the component.
      *
-     * @param {Object} component
+     * @param {import('webpack').RuleSetRule[]} rules
+     * @param {Component} component
      */
     applyRules(rules, component) {
         const newRules = component.webpackRules() || [];
 
-        rules.push(...[].concat(newRules));
+        rules.push(...concat(newRules));
     }
 
     /**
      *
      * Apply the webpack plugins for the component.
      *
-     * @param {Object} component
+     * @param {import('webpack').WebpackPluginInstance[]} plugins
+     * @param {Component} component
      */
     applyPlugins(plugins, component) {
         const newPlugins = component.webpackPlugins() || [];
 
-        plugins.push(...[].concat(newPlugins));
+        plugins.push(...concat(newPlugins));
     }
 }
 
