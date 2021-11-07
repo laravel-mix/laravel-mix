@@ -7,66 +7,66 @@ import Dependencies from '../../src/Dependencies.js';
 import PackageManager from '../../src/PackageManager.js';
 import '../../src/helpers.js';
 
+/** @type {Dependencies} */
+let dependencies;
+
+/** @type {sinon.SinonStub<Parameters<childProcess.exec>>} */
+let exec;
+
 test.beforeEach(() => {
+    PackageManager.detect = () => 'npm';
     console.log = () => {};
 
-    sinon.stub(childProcess, 'execSync');
-
-    PackageManager.detect = () => 'npm';
+    dependencies = new Dependencies();
+    exec = sinon.stub(childProcess, 'exec').yields(undefined);
 });
 
 test.afterEach.always(() => {
-    childProcess.execSync.restore();
+    exec.restore();
 });
 
-test('it installs a single dependency', t => {
-    new Dependencies(['browser-sync']).install(false);
+test('it installs a single dependency', async t => {
+    await dependencies.enqueue(['browser-sync']).install();
 
-    t.true(
-        childProcess.execSync.calledWith(
-            'npm install browser-sync --save-dev --legacy-peer-deps'
-        )
+    assertRanCommand(t, 'npm install browser-sync --save-dev --legacy-peer-deps');
+});
+
+test('it installs multiple dependencies', async t => {
+    await dependencies.enqueue(['browser-sync', 'browser-sync-webpack-plugin']).install();
+
+    assertRanCommand(
+        t,
+        'npm install browser-sync browser-sync-webpack-plugin --save-dev --legacy-peer-deps'
     );
 });
 
-test('it installs multiple dependencies', t => {
-    new Dependencies(['browser-sync', 'browser-sync-webpack-plugin']).install(false);
-
-    t.true(
-        childProcess.execSync.calledWith(
-            'npm install browser-sync browser-sync-webpack-plugin --save-dev --legacy-peer-deps'
-        )
-    );
-});
-
-test('it can install dependencies using yarn', t => {
+test('it can install dependencies using yarn', async t => {
     PackageManager.detect = () => 'yarn';
 
-    new Dependencies(['browser-sync']).install(false);
+    await dependencies.enqueue(['browser-sync']).install();
 
-    t.true(childProcess.execSync.calledWith('yarn add browser-sync --dev'));
+    assertRanCommand(t, 'yarn add browser-sync --dev');
 });
 
-test('it can install all queued dependencies at once', t => {
-    Dependencies.queue(['pkg1', 'pkg2']);
-    Dependencies.queue(['pkg3']);
-    Dependencies.queue(['pkg4'], true);
-    Dependencies.queue('pkg5', true);
-    Dependencies.installQueued();
+test('it can install all queued dependencies at once', async t => {
+    dependencies.enqueue(['pkg1', 'pkg2']);
+    dependencies.enqueue(['pkg3']);
+    dependencies.enqueue(['pkg4'], true);
+    dependencies.enqueue(['pkg5'], true);
+    await dependencies.install();
 
-    t.true(
-        childProcess.execSync.calledWith(
-            'npm install pkg1 pkg2 pkg3 pkg4 pkg5 --save-dev --legacy-peer-deps'
-        )
+    assertRanCommand(
+        t,
+        'npm install pkg1 pkg2 pkg3 pkg4 pkg5 --save-dev --legacy-peer-deps'
     );
 });
 
-test('it can utilize custom checks for a dependency', t => {
+test('it can utilize custom checks for a dependency: false', async t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
     let called = false;
 
-    new Dependencies([
+    dependencies.enqueue([
         {
             package: 'postcss@^8.1',
             check: () => {
@@ -75,14 +75,20 @@ test('it can utilize custom checks for a dependency', t => {
                 return true;
             }
         }
-    ]).install(false);
+    ]);
+
+    await dependencies.install();
 
     t.true(called);
-    t.false(childProcess.execSync.calledWith(cmd));
+    t.false(exec.calledWith(cmd, sinon.match.func));
+});
 
-    called = false;
+test('it can utilize custom checks for a dependency: true', async t => {
+    const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
-    new Dependencies([
+    let called = false;
+
+    dependencies.enqueue([
         {
             package: 'postcss@^8.1',
             check: name => {
@@ -93,8 +99,19 @@ test('it can utilize custom checks for a dependency', t => {
                 return false;
             }
         }
-    ]).install(false);
+    ]);
+
+    await dependencies.install();
 
     t.true(called);
-    t.true(childProcess.execSync.calledWith(cmd));
+    assertRanCommand(t, cmd);
 });
+
+/**
+ *
+ * @param {import('ava').Assertions} t
+ * @param {string} command
+ */
+function assertRanCommand(t, command) {
+    t.true(exec.calledWith(command));
+}

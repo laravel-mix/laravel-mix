@@ -1,5 +1,4 @@
 let assert = require('assert');
-let Dependencies = require('./Dependencies');
 let File = require('./File');
 
 class Assert {
@@ -69,21 +68,6 @@ class Assert {
             File.exists(file),
             `Whoops, you are trying to compile ${file}, but that file does not exist.`
         );
-    }
-
-    /**
-     * Assert that the necessary dependencies are available.
-     *
-     * @deprecated
-     * @param {import('./Dependencies').Dependency[]}  dependencies
-     * @param {Boolean} abortOnComplete
-     */
-    static dependencies(dependencies, abortOnComplete = false) {
-        if (process.env.NODE_ENV === 'test') {
-            return;
-        }
-
-        new Dependencies(dependencies).install(abortOnComplete);
     }
 }
 

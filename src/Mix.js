@@ -37,6 +37,7 @@ class Mix {
         this.webpackConfig = new WebpackConfig(this);
         this.hot = new HotReloading(this);
         this.resolver = new Resolver();
+        this.dependencies = new Dependencies();
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -115,8 +116,7 @@ class Mix {
      */
     async installDependencies() {
         await this.dispatch('internal:gather-dependencies');
-
-        Dependencies.installQueued();
+        await this.dependencies.install();
     }
 
     /**

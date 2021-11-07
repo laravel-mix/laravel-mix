@@ -1,7 +1,6 @@
-let Assert = require('../Assert');
-let Dependencies = require('../Dependencies');
 let mergeWebpackConfig = require('../builder/MergeWebpackConfig');
 const { Component } = require('./Component');
+const { concat } = require('lodash');
 
 let components = [
     'JavaScript',
@@ -94,8 +93,8 @@ class ComponentRegistrar {
                 return;
             }
 
-            Dependencies.queue(
-                component.dependencies(),
+            this.mix.dependencies.enqueue(
+                concat([], component.dependencies()),
                 component.requiresReload || false
             );
         });
@@ -180,12 +179,9 @@ class ComponentRegistrar {
      * @param {Object} component
      */
     installDependencies(component) {
-        []
-            .concat(component.dependencies())
-            .filter(dependency => dependency)
-            .tap(dependencies => {
-                Assert.dependencies(dependencies, component.requiresReload);
-            });
+        throw new Error(
+            'ComponentRegistrar.installDependencies is an implementation detail and no longer used'
+        );
     }
 
     /**
