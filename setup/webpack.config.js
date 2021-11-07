@@ -1,6 +1,9 @@
 const { assertSupportedNodeVersion } = require('../src/Engine');
 
 module.exports = async () => {
+    // @ts-ignore
+    process.noDeprecation = true;
+
     assertSupportedNodeVersion();
 
     const mix = require('../src/Mix').primary;

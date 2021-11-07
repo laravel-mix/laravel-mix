@@ -4,9 +4,6 @@ let webpackRules = require('./webpack-rules');
 let webpackPlugins = require('./webpack-plugins');
 let webpackDefaultConfig = require('./webpack-default');
 
-// @ts-ignore
-process.noDeprecation = true;
-
 class WebpackConfig {
     /**
      * Create a new instance.
