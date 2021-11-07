@@ -6,6 +6,7 @@ module.exports = function (mix) {
     // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
     mix = mix || global.Mix;
 
+    /** @type {import("webpack").RuleSetRule[]} */
     let rules = [];
 
     // Add support for loading HTML files.
@@ -24,6 +25,9 @@ module.exports = function (mix) {
                 {
                     loader: mix.resolve('file-loader'),
                     options: {
+                        /**
+                         * @param {string} path
+                         */
                         name: path => {
                             if (!/node_modules|bower_components/.test(path)) {
                                 return (
@@ -50,7 +54,7 @@ module.exports = function (mix) {
 
                 {
                     loader: mix.resolve('img-loader'),
-                    options: mix.config.imgLoaderOptions
+                    options: mix.config.imgLoaderOptions || {}
                 }
             ]
         });
@@ -63,6 +67,9 @@ module.exports = function (mix) {
             {
                 loader: mix.resolve('file-loader'),
                 options: {
+                    /**
+                     * @param {string} path
+                     */
                     name: path => {
                         if (!/node_modules|bower_components/.test(path)) {
                             return (

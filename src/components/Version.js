@@ -1,29 +1,31 @@
 let glob = require('glob');
+const { concat } = require('lodash');
 let path = require('path');
 let File = require('../File');
-let webpack = require('webpack');
 let VersionFilesTask = require('../tasks/VersionFilesTask');
 
 class Version {
     /**
      * Register the component.
      *
-     * @param {Array} files
+     * @param {string[]} paths
      */
-    register(files = []) {
-        files = flatten(
-            [].concat(files).map(filePath => {
-                if (File.find(filePath).isDirectory()) {
-                    filePath += path.sep + '**/*';
-                }
+    register(paths = []) {
+        paths = concat([], paths);
 
-                if (!filePath.includes('*')) return filePath;
+        const files = paths.flatMap(filePath => {
+            if (File.find(filePath).isDirectory()) {
+                filePath += path.sep + '**/*';
+            }
 
-                return glob.sync(new File(filePath).forceFromPublic().relativePath(), {
-                    nodir: true
-                });
-            })
-        );
+            if (!filePath.includes('*')) {
+                return filePath;
+            }
+
+            return glob.sync(new File(filePath).forceFromPublic().relativePath(), {
+                nodir: true
+            });
+        });
 
         Mix.addTask(new VersionFilesTask({ files }));
     }

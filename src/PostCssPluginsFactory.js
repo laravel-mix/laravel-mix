@@ -1,13 +1,14 @@
 class PostCssPluginsFactory {
     /**
      * Create a new instance.
-     * @param {Object} preprocessor
+     * @param {import('./components/Preprocessor').Detail} preprocessor
      * @param {Config} Config
      */
     constructor(preprocessor, Config) {
         this.preprocessor = preprocessor;
         this.Config = Config;
 
+        /** @type {import('postcss').AcceptedPlugin[]} */
         this.plugins = [];
     }
 

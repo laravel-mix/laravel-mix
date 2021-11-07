@@ -4,6 +4,9 @@ let Log = require('../Log');
 const path = require('path');
 const File = require('../File');
 
+/**
+ * @extends {Task<{ from: string|string[], to: File }>}
+ */
 class CopyFilesTask extends Task {
     /**
      * Run the task.

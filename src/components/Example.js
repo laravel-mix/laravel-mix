@@ -17,7 +17,7 @@ class Example {
      *
      * Ex: mix.example();
      *
-     * @return {String|Array}
+     * @return {string|string[]}
      */
     name() {
         // Example:
@@ -28,7 +28,7 @@ class Example {
     /**
      * All dependencies that should be installed by Mix.
      *
-     * @return {Array}
+     * @return {string[]}
      */
     dependencies() {
         // Example:
@@ -44,7 +44,7 @@ class Example {
      * Ex: register(src, output) {}
      * Ex: mix.yourPlugin('src/path', 'output/path');
      *
-     * @param  {*} ...params
+     * @param  {any} ...params
      * @return {void}
      *
      */
@@ -76,7 +76,7 @@ class Example {
     /**
      * Rules to be merged with the master webpack loaders.
      *
-     * @return {Array|Object}
+     * @return {any[]}
      */
     webpackRules() {
         // Example:
@@ -86,10 +86,10 @@ class Example {
         // });
     }
 
-    /*
+    /**
      * Plugins to be merged with the master webpack config.
      *
-     * @return {Array|Object}
+     * @return {any[]}
      */
     webpackPlugins() {
         // Example:
@@ -99,7 +99,7 @@ class Example {
     /**
      * Override the generated webpack configuration.
      *
-     * @param  {Object} webpackConfig
+     * @param  {import("webpack").Configuration} webpackConfig
      * @return {void}
      */
     webpackConfig(webpackConfig) {
@@ -110,7 +110,7 @@ class Example {
     /**
      * Babel config to be merged with Mix's defaults.
      *
-     * @return {Object}
+     * @return {import("@babel/core").TransformOptions}
      */
     babelConfig() {
         // Example:

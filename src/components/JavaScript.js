@@ -19,7 +19,7 @@ class JavaScript {
     /**
      * Register the component.
      *
-     * @param {*} entry
+     * @param {any} entry
      * @param {string} output
      */
     register(entry, output) {

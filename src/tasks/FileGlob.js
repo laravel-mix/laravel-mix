@@ -2,6 +2,7 @@ let path = require('path');
 let glob = require('glob');
 let File = require('../File');
 let { promisify } = require('util');
+let { concat } = require('lodash');
 let globAsync = promisify(glob);
 
 /** @internal */
@@ -14,7 +15,7 @@ module.exports.FileGlob = class FileGlob {
      * @returns {Promise<string[]>}
      */
     static async expand(src, { ignore = [] } = {}) {
-        const paths = Array.isArray(src) ? src : [src];
+        const paths = concat([], src);
 
         const results = await Promise.all(
             paths.map(async srcPath => {

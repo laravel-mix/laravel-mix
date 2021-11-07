@@ -66,10 +66,10 @@ class ComponentRegistrar {
     /**
      * Install a component.
      *
-     * @param {import("../../types/component").Component} ComponentDefinition
+     * @param {import("laravel-mix").Component} ComponentDefinition
      */
     install(ComponentDefinition) {
-        /** @type {import("../../types/component").Component} */
+        /** @type {import("laravel-mix").Component} */
         let component;
 
         // If we're extending from the internal `Component` class then we provide the mix API object
@@ -208,9 +208,9 @@ class ComponentRegistrar {
      * @param {Object} component
      */
     applyRules(rules, component) {
-        tap(component.webpackRules(), newRules => {
-            newRules && rules.push(...[].concat(newRules));
-        });
+        const newRules = component.webpackRules() || [];
+
+        rules.push(...[].concat(newRules));
     }
 
     /**
@@ -220,9 +220,9 @@ class ComponentRegistrar {
      * @param {Object} component
      */
     applyPlugins(plugins, component) {
-        tap(component.webpackPlugins(), newPlugins => {
-            newPlugins && plugins.push(...[].concat(newPlugins));
-        });
+        const newPlugins = component.webpackPlugins() || [];
+
+        plugins.push(...[].concat(newPlugins));
     }
 }
 

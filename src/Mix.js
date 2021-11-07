@@ -53,7 +53,7 @@ class Mix {
 
         /**
          * @internal
-         * @type {string|null}
+         * @type {Record<string, string|string[]>|string|null}
          */
         this.globalStyles = null;
 
@@ -133,7 +133,7 @@ class Mix {
     }
 
     /**
-     * @returns {import("../types/index")}
+     * @returns {import("laravel-mix")}
      */
     get api() {
         if (!this._api) {

@@ -1,10 +1,11 @@
 let semver = require('semver');
-let mapValues = require('lodash').mapValues;
+let { concat, mapValues } = require('lodash');
 let AutomaticComponent = require('./AutomaticComponent');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class CssWebpackConfig extends AutomaticComponent {
+    /** @returns {import('../Dependencies').DependencyObject[]} */
     dependencies() {
         this.requiresReload = true;
 
@@ -74,7 +75,7 @@ class CssWebpackConfig extends AutomaticComponent {
     /**
      * Build up the appropriate loaders for the given rule.
      *
-     * @param  {import('webpack').RuleSetRule & {test: RegExp, command: string}} rule
+     * @param  {import('webpack').RuleSetRule & {test: RegExp, command: string, type: string}} rule
      * @returns {import('webpack').RuleSetRule}
      */
     createRule(rule) {
@@ -109,22 +110,25 @@ class CssWebpackConfig extends AutomaticComponent {
     /**
      * Build up the appropriate loaders for the given rule.
      *
-     * @param  {Object} rule
+     * @param  {import('webpack').RuleSetRule & {test: RegExp, command: string, type: string}} rule
      * @param  {object} useCssModules
      * @returns {any[]}
      */
     createLoaderList(rule, useCssModules) {
         return [
-            ...CssWebpackConfig.afterLoaders(),
+            ...CssWebpackConfig.afterLoaders({ method: 'auto', location: 'default' }),
             {
                 loader: this.context.resolve('css-loader'),
                 options: {
-                    url: (url, resourcePath) => {
+                    /**
+                     * @param {string} url
+                     **/
+                    url: url => {
                         if (url.startsWith('/')) {
                             return false;
                         }
 
-                        return Config.processCssUrls;
+                        return this.context.config.processCssUrls;
                     },
                     modules: useCssModules
                 }
@@ -179,16 +183,16 @@ class CssWebpackConfig extends AutomaticComponent {
      * This handles inlining or extraction of CSS based on context.
      * The default is to inline styles
      *
-     * @param {object} [options]
+     * @param {object} options
      * @param {"auto" | "inline" | "extract"} options.method The method to use when handling CSS.
      * @param {"default" | "per-file"} options.location Where these loaders are applied. The `default` set or on a per-file basis (used by preprocessors).
      */
-    static afterLoaders({ method = 'auto', location = 'default' } = {}) {
+    static afterLoaders({ method = 'auto', location = 'default' }) {
         const loaders = [];
 
         if (method === 'auto') {
             // TODO: Fix
-            if (Mix.extractingStyles !== false) {
+            if (this.context.extractingStyles !== false) {
                 method = 'extract';
             } else {
                 method = 'inline';
@@ -197,9 +201,9 @@ class CssWebpackConfig extends AutomaticComponent {
 
         if (method === 'inline') {
             if (this.wantsVueStyleLoader && location === 'default') {
-                loaders.push({ loader: Mix.resolve('vue-style-loader') });
+                loaders.push({ loader: this.context.resolve('vue-style-loader') });
             } else {
-                loaders.push({ loader: Mix.resolve('style-loader') });
+                loaders.push({ loader: this.context.resolve('style-loader') });
             }
         } else if (method === 'extract') {
             loaders.push({
@@ -230,20 +234,21 @@ class CssWebpackConfig extends AutomaticComponent {
      * This handles inlining or extraction of CSS based on context.
      * The default is to inline styles
      *
-     * @param {object} [options]
+     * @param {object} options
      * @param {string} options.type The file type
      * @param {boolean} options.injectGlobalStyles Whether or not to inject global styles
      */
     static beforeLoaders({ type, injectGlobalStyles }) {
         const loaders = [];
 
-        if (Mix.globalStyles && injectGlobalStyles) {
+        if (this.context.globalStyles && injectGlobalStyles) {
             let resources =
-                CssWebpackConfig.normalizeGlobalStyles(Mix.globalStyles)[type] || [];
+                CssWebpackConfig.normalizeGlobalStyles(this.context.globalStyles)[type] ||
+                [];
 
             if (resources.length) {
                 loaders.push({
-                    loader: Mix.resolve('sass-resources-loader'),
+                    loader: this.context.resolve('sass-resources-loader'),
                     options: {
                         hoistUseStatements: true,
                         resources
@@ -255,6 +260,10 @@ class CssWebpackConfig extends AutomaticComponent {
         return loaders;
     }
 
+    /**
+     *
+     * @param {string | Record<string, string|string[]>} styles
+     */
     static normalizeGlobalStyles(styles) {
         // Backwards compat with existing Vue globalStyles:
         // A string only is supported for sass / scss.
@@ -266,11 +275,17 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         return mapValues(styles, files => {
-            return Array.wrap(files).map(file => Mix.paths.root(file));
+            files = concat([], files);
+
+            return files.map(file => this.context.paths.root(file));
         });
     }
 
     get context() {
+        return global.Mix;
+    }
+
+    static get context() {
         return global.Mix;
     }
 }

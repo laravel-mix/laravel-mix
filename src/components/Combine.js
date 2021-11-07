@@ -61,20 +61,18 @@ class Combine {
     /**
      * Find all relevant files matching the given source path.
      *
-     * @param   {String|Array} src
-     * @returns {Array}
+     * @param   {string|string[]} src
+     * @returns {string[]}
      */
     glob(src) {
-        return collect([].concat(src))
-            .flatMap(srcPath =>
-                glob.sync(
-                    File.find(srcPath).isDirectory()
-                        ? path.join(srcPath, '**/*')
-                        : srcPath,
-                    { nodir: true }
-                )
+        const paths = Array.isArray(src) ? src : [src];
+
+        return paths.flatMap(srcPath =>
+            glob.sync(
+                File.find(srcPath).isDirectory() ? path.join(srcPath, '**/*') : srcPath,
+                { nodir: true }
             )
-            .all();
+        );
     }
 }
 

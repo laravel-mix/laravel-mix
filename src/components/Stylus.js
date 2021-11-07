@@ -11,10 +11,10 @@ class Stylus extends Preprocessor {
     /**
      * Register the component.
      *
-     * @param {*} src
+     * @param {any} src
      * @param {string} output
-     * @param {Object} pluginOptions
-     * @param {Array}  postCssPlugins
+     * @param {Record<string, any>} pluginOptions
+     * @param {import('postcss').AcceptedPlugin[]}  postCssPlugins
      */
     register(src, output, pluginOptions = {}, postCssPlugins = []) {
         return this.preprocess('stylus', src, output, pluginOptions, postCssPlugins);

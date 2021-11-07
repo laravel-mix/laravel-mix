@@ -7,20 +7,22 @@ class Sass extends Preprocessor {
     dependencies() {
         this.requiresReload = true;
 
-        return tap(['sass-loader@^12.1.0', 'sass'], dependencies => {
-            if (Config.processCssUrls) {
-                dependencies.push('resolve-url-loader@^4.0.0');
-            }
-        });
+        const deps = ['sass-loader@^12.1.0', 'sass'];
+
+        if (Config.processCssUrls) {
+            deps.push('resolve-url-loader@^4.0.0');
+        }
+
+        return deps;
     }
 
     /**
      * Register the component.
      *
-     * @param {*} src
+     * @param {any} src
      * @param {string} output
-     * @param {Object} pluginOptions
-     * @param {Array}  postCssPlugins
+     * @param {Record<string, any>} pluginOptions
+     * @param {import('postcss').AcceptedPlugin[]}  postCssPlugins
      */
     register(src, output, pluginOptions = {}, postCssPlugins = []) {
         return this.preprocess(

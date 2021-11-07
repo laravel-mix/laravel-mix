@@ -1,21 +1,24 @@
 let path = require('path');
 let Entry = require('./Entry');
-let { Chunks } = require('../Chunks');
 let webpackRules = require('./webpack-rules');
 let webpackPlugins = require('./webpack-plugins');
 let webpackDefaultConfig = require('./webpack-default');
 
+// @ts-ignore
 process.noDeprecation = true;
 
 class WebpackConfig {
     /**
      * Create a new instance.
      *
-     * @param {import("../Mix")} mix
+     * @param {import("../Mix.js")} mix
      */
     constructor(mix) {
         this.mix = mix;
         this.chunks = mix.chunks;
+
+        /** @type {ReturnType<webpackDefaultConfig>} */
+        this.webpackConfig = {};
     }
 
     /**
@@ -75,7 +78,9 @@ class WebpackConfig {
 
             chunkFilename: pathData => {
                 let hasAbsolutePathChunkName =
-                    pathData.chunk.name && pathData.chunk.name.startsWith('/');
+                    pathData.chunk &&
+                    pathData.chunk.name &&
+                    pathData.chunk.name.startsWith('/');
 
                 if (
                     (this.mix.components.get('js') || this.mix.components.get('ts')) &&
@@ -161,9 +166,10 @@ class WebpackConfig {
      * Build the rules array.
      */
     async buildRules() {
-        this.webpackConfig.module.rules = this.webpackConfig.module.rules.concat(
-            webpackRules(this.mix)
-        );
+        this.webpackConfig.module = this.webpackConfig.module || {};
+        this.webpackConfig.module.rules = this.webpackConfig.module.rules || [];
+
+        this.webpackConfig.module.rules.push(...webpackRules(this.mix));
 
         await this.mix.dispatch('loading-rules', this.webpackConfig.module.rules);
     }
@@ -172,9 +178,8 @@ class WebpackConfig {
      * Build the plugins array.
      */
     async buildPlugins() {
-        this.webpackConfig.plugins = this.webpackConfig.plugins.concat(
-            webpackPlugins(this.mix)
-        );
+        this.webpackConfig.plugins = this.webpackConfig.plugins || [];
+        this.webpackConfig.plugins.push(...webpackPlugins(this.mix));
 
         await this.mix.dispatch('loading-plugins', this.webpackConfig.plugins);
     }

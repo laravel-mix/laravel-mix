@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // This code was taken from v4.2.2 of webpack-merge for backwards compatability.
 // With minor modifications since Mix is not transpiled before running in Node.
 // Sources:

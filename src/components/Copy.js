@@ -12,7 +12,7 @@ class Copy {
     /**
      * Register the component.
      *
-     * @param {*} from
+     * @param {any} from
      * @param {string} to
      */
     register(from, to) {

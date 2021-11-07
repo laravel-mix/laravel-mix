@@ -13,10 +13,10 @@ class PostCss extends Preprocessor {
     /**
      * Register the component.
      *
-     * @param {*} src
+     * @param {any} src
      * @param {string} output
-     * @param {Array|Object} pluginOptions
-     * @param {Array} postCssPlugins
+     * @param {import('postcss').AcceptedPlugin[] | Record<string, any>} pluginOptions
+     * @param {import('postcss').AcceptedPlugin[]} postCssPlugins
      */
     register(src, output, pluginOptions = {}, postCssPlugins = []) {
         // Backwards compat with earlier versions of Mix
@@ -25,38 +25,43 @@ class PostCss extends Preprocessor {
             pluginOptions = {};
         }
 
+        if (!Array.isArray(postCssPlugins)) {
+            postCssPlugins = [postCssPlugins];
+        }
+
         Assert.preprocessor('postCss', src, output);
 
-        src = new File(src);
+        const srcFile = new File(src);
 
-        output = this.normalizeOutput(
+        const outputFile = this.normalizeOutput(
             new File(output),
-            src.nameWithoutExtension() + '.css'
+            srcFile.nameWithoutExtension() + '.css'
         );
 
-        this.details = (this.details || []).concat({
+        this.details.push({
             type: 'postCss',
-            src,
-            output,
+            src: srcFile,
+            output: outputFile,
             pluginOptions,
-            postCssPlugins: [].concat(postCssPlugins)
+            postCssPlugins
         });
 
         // Register a split chunk that takes everything generated
         // by this file and puts it in a separate file
         // We use a output-specific chunk name so we don't accidentally merge multiple files
-        this._addChunks(`styles-${output.relativePathWithoutExtension()}`, src, output);
+        this._addChunks(
+            `styles-${outputFile.relativePathWithoutExtension()}`,
+            srcFile,
+            outputFile
+        );
     }
 
     /**
      * Override the generated webpack configuration.
-     *
-     * @param {Object} config
      */
     webpackConfig(config) {
-        config.module.rules.find(
-            rule => rule.test.toString() === '/\\.p?css$/'
-        ).exclude = this.details.map(postCss => postCss.src.path());
+        config.module.rules.find(rule => rule.test.toString() === '/\\.p?css$/').exclude =
+            this.details.map(postCss => postCss.src.path());
     }
 }
 

@@ -16,9 +16,9 @@ class TypeScript extends JavaScript {
     /**
      * Register the component.
      *
-     * @param {*} entry
+     * @param {any} entry
      * @param {string} output
-     * @param {object} options
+     * @param {Record<string, any>} options
      */
     register(entry, output, options = {}) {
         super.register(entry, output);
@@ -52,9 +52,10 @@ class TypeScript extends JavaScript {
     /**
      * Override the generated webpack configuration.
      *
-     * @param {Object} config
+     * @param {import('webpack').Configuration} config
      */
     webpackConfig(config) {
+        // @ts-ignore
         config.resolve.extensions.push('.ts', '.tsx');
     }
 }

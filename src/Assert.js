@@ -6,8 +6,8 @@ class Assert {
     /**
      * Assert that the call the mix.js() is valid.
      *
-     * @param {*} entry
-     * @param {*} output
+     * @param {any} entry
+     * @param {any} output
      */
     static js(entry, output) {
         assert(
@@ -75,7 +75,7 @@ class Assert {
      * Assert that the necessary dependencies are available.
      *
      * @deprecated
-     * @param {Array}  list
+     * @param {import('./Dependencies').Dependency[]}  dependencies
      * @param {Boolean} abortOnComplete
      */
     static dependencies(dependencies, abortOnComplete = false) {

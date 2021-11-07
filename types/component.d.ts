@@ -3,6 +3,7 @@
 import * as webpack from 'webpack';
 import { TransformOptions as BabelConfig } from '@babel/core';
 import api from './index';
+import Entry from '../src/builder/Entry';
 
 export type DependencyObject = {
     /** The name of the package */
@@ -24,6 +25,9 @@ export type Dependency = string | DependencyObject;
 export interface ClassComponent {
     /** Whether or not to automatically register this component */
     passive?: boolean;
+
+    /** Whether or not this component requires dependency reloading */
+    requiresReload?: boolean;
 
     /**
      * Register this component
@@ -58,7 +62,7 @@ export interface ClassComponent {
     babelConfig?(): BabelConfig;
 
     /** Update the build webpack entries */
-    webpackEntry?(entry: any): void;
+    webpackEntry?(entry: Entry): void;
 
     /** Add one or more rules to the webpack config */
     webpackRules?(): webpack.RuleSetRule | webpack.RuleSetRule[];
