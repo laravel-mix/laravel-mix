@@ -76,7 +76,7 @@ test('fast refreshing is disabled when not in hot mode', t => {
 
 test('it supports fast refreshing in hot mode if the React version is 16.9.0 or higher', t => {
     // Fake hot mode.
-    process.argv.push('--hot');
+    Mix.isHot = () => true;
 
     let react = new ReactComponent();
     let library = sinon.stub(react, 'library');
