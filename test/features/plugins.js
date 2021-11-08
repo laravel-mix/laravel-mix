@@ -278,3 +278,22 @@ test('components can be booted, after the webpack.mix.js configuration file has 
 
     t.true(stub.called);
 });
+
+test('can register plugin with anonymous closure', async t => {
+    let stub = sinon.spy();
+
+    mix.extend('example', () => stub());
+
+    // @ts-ignore - No declaration merging with JSDoc
+    mix.example();
+
+    t.false(stub.called);
+
+    await Mix.init();
+
+    t.false(stub.called);
+
+    await webpack.buildConfig();
+
+    t.true(stub.called);
+});

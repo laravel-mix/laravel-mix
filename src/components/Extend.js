@@ -43,6 +43,10 @@ class Extend {
             return false;
         }
 
+        if (!component.prototype) {
+            return true;
+        }
+
         return (
             typeof component.prototype.name !== 'function' &&
             typeof component.prototype.register !== 'function' &&
