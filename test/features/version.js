@@ -1,5 +1,5 @@
 import test from 'ava';
-import fs from 'fs-extra';
+import { promises as fs } from 'fs';
 
 import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
@@ -7,7 +7,7 @@ import webpack from '../helpers/webpack.js';
 import { mix, Mix } from '../helpers/mix.js';
 
 test('it can version an entire directory or regex of files.', async t => {
-    fs.ensureDirSync(`test/fixtures/app/dist/js/folder`);
+    await fs.mkdir(`test/fixtures/app/dist/js/folder`, { mode: 0o777, recursive: true });
 
     new File(`test/fixtures/app/dist/js/folder/one.js`).write('var one');
     new File(`test/fixtures/app/dist/js/folder/two.js`).write('var two');

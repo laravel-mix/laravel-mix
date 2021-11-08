@@ -40,6 +40,7 @@ class Chunks {
         this.runtime = false;
     }
 
+    /** @deprecated */
     makeCurrent() {
         Chunks._instance = this;
     }

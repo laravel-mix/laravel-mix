@@ -1,5 +1,5 @@
 import test from 'ava';
-import fs from 'fs-extra';
+import { promises as fs } from 'fs';
 import path from 'path';
 
 import File from '../../src/File.js';
@@ -10,6 +10,12 @@ test('it creates a file to mark a request for hot reloading', async t => {
 
     let hotFilePath = path.join(__dirname, 'hot');
 
+    try {
+        await fs.unlink(hotFilePath);
+    } catch (err) {
+        //
+    }
+
     t.false(File.exists(hotFilePath));
 
     // Mix should listen for the "init" event before checking
@@ -17,7 +23,4 @@ test('it creates a file to mark a request for hot reloading', async t => {
     await Mix.init();
 
     t.true(File.exists(hotFilePath));
-
-    // Clean up
-    fs.remove(hotFilePath);
 });

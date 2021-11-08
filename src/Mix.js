@@ -193,6 +193,7 @@ class Mix {
      * Determine if Mix sees a particular tool or framework.
      *
      * @param {string} tool
+     * @deprecated
      */
     sees(tool) {
         if (tool === 'laravel') {
@@ -206,15 +207,10 @@ class Mix {
      * Determine if the given npm package is installed.
      *
      * @param {string} npmPackage
+     * @deprecated
      */
     seesNpmPackage(npmPackage) {
-        try {
-            require.resolve(npmPackage);
-
-            return true;
-        } catch (e) {
-            return false;
-        }
+        return this.resolver.has(npmPackage);
     }
 
     /**

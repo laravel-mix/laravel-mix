@@ -6,11 +6,11 @@ let expand = require('dotenv-expand');
 class MixDefinitionsPlugin {
     /**
      *
-     * @param {string} [envPath]
+     * @param {string} envPath
      * @param {Record<string, string>} [additionalEnv]
      */
-    constructor(envPath = undefined, additionalEnv = {}) {
-        this.envPath = envPath || global.Mix.paths.root('.env');
+    constructor(envPath, additionalEnv = {}) {
+        this.envPath = envPath;
         this.additionalEnv = additionalEnv;
     }
 
@@ -75,7 +75,8 @@ class MixDefinitionsPlugin {
      * @param {Record<string, string>} additionalEnv
      */
     static build(additionalEnv) {
-        return new MixDefinitionsPlugin(undefined, additionalEnv).plugin;
+        return new MixDefinitionsPlugin(global.Mix.paths.root('.env'), additionalEnv)
+            .plugin;
     }
 }
 

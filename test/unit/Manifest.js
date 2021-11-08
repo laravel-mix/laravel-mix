@@ -1,5 +1,5 @@
 import test from 'ava';
-import fs from 'fs-extra';
+import { promises as fs } from 'fs';
 import path from 'path';
 
 import File from '../../src/File.js';
@@ -50,7 +50,7 @@ test('it knows the path to the underlying file', t => {
     t.is(path.join(Mix.config.publicPath, 'mix-manifest.json'), Mix.manifest.path());
 });
 
-test('it can be refreshed', t => {
+test('it can be refreshed', async t => {
     mix.setPublicPath(__dirname);
 
     new File(Mix.manifest.path()).write('{}');
@@ -67,7 +67,7 @@ test('it can be refreshed', t => {
 
     // Cleanup.
     File.find(Mix.manifest.path()).delete();
-    fs.removeSync(path.resolve(__dirname, 'js'));
+    await fs.rmdir(path.resolve(__dirname, 'js'), { recursive: true });
 });
 
 test('it sorts files on the underlying manifest object', t => {

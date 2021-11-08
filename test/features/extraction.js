@@ -1,4 +1,5 @@
 import test from 'ava';
+import { promises as fs } from 'fs';
 
 import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
@@ -59,9 +60,6 @@ test('JS compilation with total vendor extraction', async t => {
 
     assert.fileContains(`test/fixtures/app/dist/js/vendor.js`, 'vue2', t);
     assert.fileContains(`test/fixtures/app/dist/js/vendor.js`, 'core-js', t);
-
-    let fs = require('fs-extra');
-    fs.removeSync('test/fixtures/app/public');
 });
 
 test('async chunk splitting works', async t => {

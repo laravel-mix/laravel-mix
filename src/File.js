@@ -231,7 +231,7 @@ class File {
      * Create all nested directories.
      */
     makeDirectories() {
-        fs.ensureDirSync(this.base());
+        fs.mkdirSync(this.base(), { mode: 0o777, recursive: true });
 
         return this;
     }
