@@ -14,8 +14,8 @@ module.exports = class Extend extends Component {
     /**
      * Register the component.
      *
-     * @param {string | string[] | FunctionalComponent} name
-     * @param {Component} component
+     * @param {string|ClassComponent} name
+     * @param {FunctionalComponent | ComponentInterface} component
      */
     register(name, component) {
         if (typeof name === 'function') {
