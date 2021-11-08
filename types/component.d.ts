@@ -24,6 +24,20 @@ export type Dependency = string | DependencyObject;
 export interface ClassComponent {
     prototype: ComponentInterface;
     new (): ComponentInterface;
+
+    /**
+     * The public API name(s) for this component.
+     *
+     * These get attached to the mix object and when called will register this compoent.
+     *
+     * For example if name returns `['foo', 'bar']` then you may
+     * register this component via both `mix.foo()` and `mix.bar()`
+     *
+     * You can return an empty array to not add anything to the mix API.
+     * If you do this the component is considered passive and will be
+     * called by Mix at an appropriate time.
+     **/
+    names?(): string | string[];
 }
 
 export interface ComponentInterface {
@@ -63,19 +77,24 @@ export interface ComponentInterface {
     boot?(): void;
 
     /** Modify the babel config */
-    babelConfig?(): BabelConfig;
+    babelConfig?(): BabelConfig | Promise<BabelConfig>;
 
     /** Update the build webpack entries */
-    webpackEntry?(entry: Entry): void;
+    webpackEntry?(entry: Entry): void | Promise<void>;
 
     /** Add one or more rules to the webpack config */
-    webpackRules?(): webpack.RuleSetRule | webpack.RuleSetRule[];
+    webpackRules?():
+        | webpack.RuleSetRule
+        | webpack.RuleSetRule[]
+        | Promise<webpack.RuleSetRule[]>;
 
     /** Add one or more plugins to the webpack config */
-    webpackPlugins?(): webpack.WebpackPluginInstance[];
+    webpackPlugins?():
+        | webpack.WebpackPluginInstance[]
+        | Promise<webpack.WebpackPluginInstance[]>;
 
     /** Update the webpack config */
-    webpackConfig?(config: webpack.Configuration): void;
+    webpackConfig?(config: webpack.Configuration): void | Promise<void>;
 
     /** Add additional components to the Mix API */
     mix?(): Record<string, Component>;
