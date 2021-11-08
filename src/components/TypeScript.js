@@ -1,10 +1,8 @@
-let JavaScript = require('./JavaScript');
+const JavaScript = require('./JavaScript');
 
 class TypeScript extends JavaScript {
-    constructor() {
-        super();
-        this.options = {};
-    }
+    /** @type {Record<string, any>} */
+    options = {};
 
     /**
      * The API name for the component.
@@ -36,17 +34,20 @@ class TypeScript extends JavaScript {
      * webpack rules to be appended to the master config.
      */
     webpackRules() {
-        return [].concat(super.webpackRules(), {
-            test: /\.tsx?$/,
-            loader: Mix.resolve('ts-loader'),
-            exclude: /node_modules/,
-            options: Object.assign(
-                {},
-                // TODO: Maybe move to Vue plugin?
-                { appendTsSuffixTo: [/\.vue$/] },
-                this.options
-            )
-        });
+        return [
+            ...super.webpackRules(),
+            {
+                test: /\.tsx?$/,
+                loader: this.context.resolve('ts-loader'),
+                exclude: /node_modules/,
+                options: Object.assign(
+                    {},
+                    // TODO: Maybe move to Vue plugin?
+                    { appendTsSuffixTo: [/\.vue$/] },
+                    this.options
+                )
+            }
+        ];
     }
 
     /**
@@ -55,8 +56,11 @@ class TypeScript extends JavaScript {
      * @param {import('webpack').Configuration} config
      */
     webpackConfig(config) {
-        // @ts-ignore
+        config.resolve = config.resolve || {};
+        config.resolve.extensions = config.resolve.extensions || [];
         config.resolve.extensions.push('.ts', '.tsx');
+
+        return config;
     }
 }
 

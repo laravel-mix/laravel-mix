@@ -71,14 +71,14 @@ test('non-feature-flag use of mix.preact throws an error', t => {
 });
 
 test('fast refreshing is disabled when not in hot mode', t => {
-    t.false(new ReactComponent().supportsFastRefreshing());
+    t.false(new ReactComponent(Mix).supportsFastRefreshing());
 });
 
 test('it supports fast refreshing in hot mode if the React version is 16.9.0 or higher', t => {
     // Fake hot mode.
     Mix.isHot = () => true;
 
-    let react = new ReactComponent();
+    let react = new ReactComponent(Mix);
     let library = sinon.stub(react, 'library');
 
     library.onFirstCall().returns({ version: '15.0.0' });
@@ -89,7 +89,7 @@ test('it supports fast refreshing in hot mode if the React version is 16.9.0 or 
 });
 
 test('it adds the necessary fast refreshing dependencies', t => {
-    let react = new ReactComponent();
+    let react = new ReactComponent(Mix);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 
@@ -105,15 +105,16 @@ test('it adds the necessary fast refreshing dependencies', t => {
 });
 
 test('it adds the necessary fast refreshing webpack plugins', t => {
-    let react = new ReactComponent();
+    let react = new ReactComponent(Mix);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 
-    t.true(react.webpackPlugins() instanceof ReactRefreshPlugin);
+    t.true(react.webpackPlugins().length > 0);
+    t.true(react.webpackPlugins()[0] instanceof ReactRefreshPlugin);
 });
 
 test('it adds the necessary babel config', t => {
-    let react = new ReactComponent();
+    let react = new ReactComponent(Mix);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 

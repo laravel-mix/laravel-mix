@@ -1,10 +1,12 @@
 let semver = require('semver');
 let { concat, mapValues } = require('lodash');
-let AutomaticComponent = require('./AutomaticComponent');
+let { Component } = require('./Component');
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
-class CssWebpackConfig extends AutomaticComponent {
+class CssWebpackConfig extends Component {
+    passive = true;
+
     /** @returns {import('../Dependencies').DependencyObject[]} */
     dependencies() {
         this.requiresReload = true;
@@ -116,7 +118,11 @@ class CssWebpackConfig extends AutomaticComponent {
      */
     createLoaderList(rule, useCssModules) {
         return [
-            ...CssWebpackConfig.afterLoaders({ method: 'auto', location: 'default' }),
+            ...CssWebpackConfig.afterLoaders({
+                method: 'auto',
+                location: 'default',
+                context: this.context
+            }),
             {
                 loader: this.context.resolve('css-loader'),
                 options: {
@@ -137,13 +143,14 @@ class CssWebpackConfig extends AutomaticComponent {
                 loader: this.context.resolve('postcss-loader'),
                 options: {
                     postcssOptions: {
-                        plugins: new PostCssPluginsFactory({}, Config).load(),
+                        plugins: new PostCssPluginsFactory(this.context).load(),
                         hideNothingWarning: true
                     }
                 }
             },
             rule.loader,
             ...CssWebpackConfig.beforeLoaders({
+                context: this.context,
                 type: rule.type,
                 injectGlobalStyles: true
             })
@@ -184,15 +191,16 @@ class CssWebpackConfig extends AutomaticComponent {
      * The default is to inline styles
      *
      * @param {object} options
+     * @param {import('../Mix')} options.context The method to use when handling CSS.
      * @param {"auto" | "inline" | "extract"} options.method The method to use when handling CSS.
      * @param {"default" | "per-file"} options.location Where these loaders are applied. The `default` set or on a per-file basis (used by preprocessors).
      */
-    static afterLoaders({ method = 'auto', location = 'default' }) {
+    static afterLoaders({ context, method, location }) {
         const loaders = [];
 
         if (method === 'auto') {
             // TODO: Fix
-            if (this.context.extractingStyles !== false) {
+            if (context.extractingStyles !== false) {
                 method = 'extract';
             } else {
                 method = 'inline';
@@ -200,10 +208,10 @@ class CssWebpackConfig extends AutomaticComponent {
         }
 
         if (method === 'inline') {
-            if (this.wantsVueStyleLoader && location === 'default') {
-                loaders.push({ loader: this.context.resolve('vue-style-loader') });
+            if (this.wantsVueStyleLoader(context) && location === 'default') {
+                loaders.push({ loader: context.resolve('vue-style-loader') });
             } else {
-                loaders.push({ loader: this.context.resolve('style-loader') });
+                loaders.push({ loader: context.resolve('style-loader') });
             }
         } else if (method === 'extract') {
             loaders.push({
@@ -221,9 +229,12 @@ class CssWebpackConfig extends AutomaticComponent {
         return loaders;
     }
 
-    /** @private */
-    static get wantsVueStyleLoader() {
-        const VueFeature = Mix.components.get('vue');
+    /**
+     * @private
+     * @param {import('../Mix')} context
+     **/
+    static wantsVueStyleLoader(context) {
+        const VueFeature = context.components.get('vue');
 
         return VueFeature && VueFeature.options && VueFeature.options.useVueStyleLoader;
     }
@@ -235,20 +246,22 @@ class CssWebpackConfig extends AutomaticComponent {
      * The default is to inline styles
      *
      * @param {object} options
+     * @param {import('../Mix')} options.context
      * @param {string} options.type The file type
      * @param {boolean} options.injectGlobalStyles Whether or not to inject global styles
      */
-    static beforeLoaders({ type, injectGlobalStyles }) {
+    static beforeLoaders({ context, type, injectGlobalStyles }) {
         const loaders = [];
 
-        if (this.context.globalStyles && injectGlobalStyles) {
+        if (context.globalStyles && injectGlobalStyles) {
             let resources =
-                CssWebpackConfig.normalizeGlobalStyles(this.context.globalStyles)[type] ||
-                [];
+                CssWebpackConfig.normalizeGlobalStyles(context, context.globalStyles)[
+                    type
+                ] || [];
 
             if (resources.length) {
                 loaders.push({
-                    loader: this.context.resolve('sass-resources-loader'),
+                    loader: context.resolve('sass-resources-loader'),
                     options: {
                         hoistUseStatements: true,
                         resources
@@ -262,9 +275,10 @@ class CssWebpackConfig extends AutomaticComponent {
 
     /**
      *
+     * @param {import('../Mix')} context
      * @param {string | Record<string, string|string[]>} styles
      */
-    static normalizeGlobalStyles(styles) {
+    static normalizeGlobalStyles(context, styles) {
         // Backwards compat with existing Vue globalStyles:
         // A string only is supported for sass / scss.
         if (typeof styles !== 'object') {
@@ -277,16 +291,8 @@ class CssWebpackConfig extends AutomaticComponent {
         return mapValues(styles, files => {
             files = concat([], files);
 
-            return files.map(file => this.context.paths.root(file));
+            return files.map(file => context.paths.root(file));
         });
-    }
-
-    get context() {
-        return global.Mix;
-    }
-
-    static get context() {
-        return global.Mix;
     }
 }
 

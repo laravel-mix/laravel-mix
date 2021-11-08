@@ -1,16 +1,18 @@
-let AutomaticComponent = require('./AutomaticComponent');
+const { Component } = require('./Component');
 
-class PurifyCss extends AutomaticComponent {
+module.exports = class PurifyCss extends Component {
+    passive = true;
+
     /**
      * Required dependencies for the component.
      */
     dependencies() {
-        if (Config.purifyCss) {
+        if (this.context.config.purifyCss) {
             throw new Error(
                 'PurifyCSS support is no longer available. We recommend using PurgeCss + postCss instead.'
             );
         }
-    }
-}
 
-module.exports = PurifyCss;
+        return [];
+    }
+};

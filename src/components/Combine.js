@@ -1,8 +1,9 @@
-let File = require('../File');
-let Assert = require('../Assert');
-let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
+const File = require('../File');
+const Assert = require('../Assert');
+const ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
+const { Component } = require('./Component');
 
-class Combine {
+module.exports = class Combine extends Component {
     /**
      * The API name for the component.
      */
@@ -13,9 +14,9 @@ class Combine {
     /**
      * Register the component.
      *
-     * @param {String|Array} src
-     * @param {String} output
-     * @param {Boolean} babel
+     * @param {string|string[]} src
+     * @param {string} output
+     * @param {boolean} babel
      */
     register(src, output = '', babel = false) {
         this.src = src;
@@ -48,7 +49,7 @@ class Combine {
 
         Assert.combine(this.src, this.output);
 
-        Mix.addTask(
+        this.context.addTask(
             new ConcatFilesTask({
                 src: this.src,
                 output: this.output,
@@ -74,6 +75,4 @@ class Combine {
             )
         );
     }
-}
-
-module.exports = Combine;
+};

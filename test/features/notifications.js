@@ -4,7 +4,7 @@ import { mix } from '../helpers/mix.js';
 import webpack from '../helpers/webpack.js';
 
 test('it returns the mix instance', t => {
-    t.deepEqual(mix, mix.disableNotifications());
+    t.is(mix, mix.disableNotifications());
 });
 
 test('it displays OS notifications', async t => {

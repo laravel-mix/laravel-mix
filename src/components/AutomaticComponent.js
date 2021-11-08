@@ -1,10 +1,8 @@
-class AutomaticComponent {
-    /**
-     * Create a new component instance.
-     */
-    constructor() {
-        this.passive = true;
-    }
-}
+const { Component } = require('./Component');
 
-module.exports = AutomaticComponent;
+/**
+ * @deprecated Instead extend `Component` and set `passive` to `true`
+ **/
+module.exports = class AutomaticComponent extends Component {
+    passive = true;
+};

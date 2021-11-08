@@ -1,11 +1,11 @@
-let path = require('path');
+const path = require('path');
+const { Component } = require('./Component');
 
-class SetPublicPath {
+module.exports = class SetPublicPath extends Component {
+    /**
+     * @param {string} defaultPath
+     */
     register(defaultPath) {
-        Config.publicPath = path.normalize(defaultPath.replace(/\/$/, ''));
-
-        return this;
+        this.context.config.publicPath = path.normalize(defaultPath.replace(/\/$/, ''));
     }
-}
-
-module.exports = SetPublicPath;
+};

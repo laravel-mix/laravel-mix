@@ -1,9 +1,8 @@
-let Assert = require('../Assert');
-let path = require('path');
-let File = require('../File');
-let { Chunks } = require('../Chunks');
-let CssWebpackConfig = require('./CssWebpackConfig');
-let PostCssPluginsFactory = require('../PostCssPluginsFactory');
+const Assert = require('../Assert');
+const path = require('path');
+const File = require('../File');
+const CssWebpackConfig = require('./CssWebpackConfig');
+const PostCssPluginsFactory = require('../PostCssPluginsFactory');
 const Entry = require('../builder/Entry');
 
 /**
@@ -16,18 +15,11 @@ const Entry = require('../builder/Entry');
  * @property {boolean} [processUrls]
  */
 
-class Preprocessor {
-    /**
-     * Create a new component instance.
-     */
-    constructor() {
-        this.chunks = Chunks.instance();
+const { Component } = require('./Component');
 
-        /**
-         * @type {Detail[]}
-         */
-        this.details = [];
-    }
+module.exports = class Preprocessor extends Component {
+    /** @type {Detail[]} */
+    details = [];
 
     /**
      * Assets to append to the webpack entry.
@@ -60,9 +52,13 @@ class Preprocessor {
 
         /** @type {import('webpack').RuleSetRule[]} */
         let loaders = [
-            ...CssWebpackConfig.afterLoaders({ method: 'extract', location: 'per-file' }),
+            ...CssWebpackConfig.afterLoaders({
+                context: this.context,
+                method: 'extract',
+                location: 'per-file'
+            }),
             {
-                loader: Mix.resolve('css-loader'),
+                loader: this.context.resolve('css-loader'),
                 options: {
                     /**
                      *
@@ -75,19 +71,19 @@ class Preprocessor {
 
                         return processUrls;
                     },
-                    sourceMap: Mix.isUsing('sourcemaps'),
+                    sourceMap: this.context.isUsing('sourcemaps'),
                     importLoaders: 1
                 }
             },
             {
-                loader: Mix.resolve('postcss-loader'),
+                loader: this.context.resolve('postcss-loader'),
                 options: this.postCssLoaderOptions(preprocessor)
             }
         ];
 
         if (preprocessor.type === 'sass' && processUrls) {
             loaders.push({
-                loader: Mix.resolve('resolve-url-loader'),
+                loader: this.context.resolve('resolve-url-loader'),
                 options: {
                     sourceMap: true
                 }
@@ -103,6 +99,7 @@ class Preprocessor {
 
         loaders.push(
             ...CssWebpackConfig.beforeLoaders({
+                context: this.context,
                 type: preprocessor.type,
                 injectGlobalStyles: false
             })
@@ -122,7 +119,7 @@ class Preprocessor {
             sourceMap:
                 preprocessor.type === 'sass' && processUrls
                     ? true
-                    : Mix.isUsing('sourcemaps')
+                    : this.context.isUsing('sourcemaps')
         });
     }
 
@@ -133,9 +130,11 @@ class Preprocessor {
      */
     postCssLoaderOptions(preprocessor) {
         return {
-            sourceMap: Mix.isUsing('sourcemaps'),
+            sourceMap: this.context.isUsing('sourcemaps'),
             postcssOptions: {
-                plugins: new PostCssPluginsFactory(preprocessor, Config).load(),
+                plugins: new PostCssPluginsFactory(this.context).load(
+                    preprocessor.postCssPlugins
+                ),
                 hideNothingWarning: true
             }
         };
@@ -187,7 +186,7 @@ class Preprocessor {
         const processUrls =
             preprocessor.pluginOptions.processUrls !== undefined
                 ? preprocessor.pluginOptions.processUrls
-                : Config.processCssUrls;
+                : this.context.config.processCssUrls;
 
         delete preprocessor.pluginOptions.processUrls;
 
@@ -240,8 +239,6 @@ class Preprocessor {
             type: 'css/mini-extract'
         };
 
-        this.chunks.add(name, output.normalizedOutputPath(), tests, attrs);
+        this.context.chunks.add(name, output.normalizedOutputPath(), tests, attrs);
     }
-}
-
-module.exports = Preprocessor;
+};

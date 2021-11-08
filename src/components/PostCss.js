@@ -1,8 +1,8 @@
-let Assert = require('../Assert');
-let File = require('../File');
-let Preprocessor = require('./Preprocessor');
+const Assert = require('../Assert');
+const File = require('../File');
+const Preprocessor = require('./Preprocessor');
 
-class PostCss extends Preprocessor {
+module.exports = class PostCss extends Preprocessor {
     /**
      * The Mix API name for the component.
      */
@@ -58,11 +58,10 @@ class PostCss extends Preprocessor {
 
     /**
      * Override the generated webpack configuration.
+     * @param {import('webpack').Configuration} config
      */
     webpackConfig(config) {
         config.module.rules.find(rule => rule.test.toString() === '/\\.p?css$/').exclude =
             this.details.map(postCss => postCss.src.path());
     }
-}
-
-module.exports = PostCss;
+};

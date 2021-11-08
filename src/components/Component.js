@@ -10,6 +10,13 @@ class Component {
     requiresReload = false;
 
     /**
+     * The name used to call this component.
+     *
+     * @deprecated
+     **/
+    caller = '';
+
+    /**
      *
      * @param {import("../Mix")} mix
      */

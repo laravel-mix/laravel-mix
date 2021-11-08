@@ -1,19 +1,26 @@
-let glob = require('glob');
+const glob = require('glob');
 const { concat } = require('lodash');
-let path = require('path');
-let File = require('../File');
-let VersionFilesTask = require('../tasks/VersionFilesTask');
+const path = require('path');
+const File = require('../File');
+const VersionFilesTask = require('../tasks/VersionFilesTask');
+const { Component } = require('./Component');
 
-class Version {
+module.exports = class Version extends Component {
+    /** @type {string[]} */
+    paths = [];
+
     /**
      * Register the component.
      *
-     * @param {string[]} paths
+     * @param {string|string[]} paths
      */
     register(paths = []) {
-        paths = concat([], paths);
+        this.paths = concat([], paths);
+        this.context.addTask(new VersionFilesTask({ files: this.files() }));
+    }
 
-        const files = paths.flatMap(filePath => {
+    files() {
+        return this.paths.flatMap(filePath => {
             if (File.find(filePath).isDirectory()) {
                 filePath += path.sep + '**/*';
             }
@@ -26,9 +33,5 @@ class Version {
                 nodir: true
             });
         });
-
-        Mix.addTask(new VersionFilesTask({ files }));
     }
-}
-
-module.exports = Version;
+};

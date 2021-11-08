@@ -2,7 +2,6 @@
 
 import * as webpack from 'webpack';
 import { TransformOptions as BabelConfig } from '@babel/core';
-import api from './index';
 import Entry from '../src/builder/Entry';
 
 export type DependencyObject = {

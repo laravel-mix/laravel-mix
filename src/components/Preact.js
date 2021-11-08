@@ -1,4 +1,6 @@
-class Preact {
+const { Component } = require('./Component');
+
+module.exports = class Preact extends Component {
     /**
      * Required dependencies for the component.
      */
@@ -26,6 +28,4 @@ class Preact {
             presets: ['preact']
         };
     }
-}
-
-module.exports = Preact;
+};

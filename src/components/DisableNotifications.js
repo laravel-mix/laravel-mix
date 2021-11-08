@@ -1,4 +1,6 @@
-class DisableNotifications {
+const { Component } = require('./Component');
+
+module.exports = class DisableNotifications extends Component {
     /**
      * The API name for the component.
      */
@@ -10,15 +12,11 @@ class DisableNotifications {
      * Register the component.
      */
     register() {
-        if (this.caller === 'disableSuccessNotifications') {
-            Config.notifications = {
-                onSuccess: false,
-                onFailure: true
-            };
-        } else {
-            Config.notifications = false;
-        }
-    }
-}
+        const enabled = this.caller === 'disableSuccessNotifications' ? ['failure'] : [];
 
-module.exports = DisableNotifications;
+        this.context.config.notifications = {
+            onSuccess: enabled.includes('success'),
+            onFailure: enabled.includes('failure')
+        };
+    }
+};
