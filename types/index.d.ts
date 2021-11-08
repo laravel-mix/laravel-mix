@@ -302,7 +302,7 @@ interface Api {
 
 declare const exports: Api;
 declare namespace exports {
-    export { Api, ReactConfig, VueConfig };
+    export { Api, Component, ReactConfig, VueConfig };
 }
 
 declare global {

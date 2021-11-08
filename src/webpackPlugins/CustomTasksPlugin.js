@@ -1,6 +1,8 @@
 let Log = require('../Log');
-let collect = require('collect.js');
+const VersionFilesTask = require('../tasks/VersionFilesTask');
 const { debounce } = require('lodash');
+const webpack = require('webpack');
+const Task = require('../tasks/Task');
 
 class CustomTasksPlugin {
     /**
@@ -43,12 +45,11 @@ class CustomTasksPlugin {
     /**
      * Execute the task.
      *
-     * @param {import("../tasks/Task")} task
+     * @param {import("../tasks/Task")<any>} task
      * @param {import("webpack").Stats} stats
      */
     async runTask(task, stats) {
         await Promise.resolve(task.run());
-
         await Promise.allSettled(task.assets.map(asset => this.addAsset(asset, stats)));
     }
 
@@ -71,34 +72,28 @@ class CustomTasksPlugin {
         this.mix.manifest.add(path);
 
         // Update the Webpack assets list for better terminal output.
-        stats.compilation.assets[path] = {
-            size: () => asset.size(),
-            emitted: true
-        };
+        stats.compilation.assets[path] = new webpack.sources.SizeOnlySource(asset.size());
     }
 
     /**
      * Execute potentially asynchronous tasks sequentially.
      *
-     * @param stats
-     * @param index
+     * @param {import("webpack").Stats} stats
      */
-    runTasks(stats, index = 0) {
-        if (index === this.mix.tasks.length) return Promise.resolve();
-
-        const task = this.mix.tasks[index];
-
-        return this.runTask(task, stats).then(() => this.runTasks(stats, index + 1));
+    async runTasks(stats) {
+        for (const task of this.mix.tasks) {
+            await this.runTask(task, stats);
+        }
     }
 
     /**
      * Minify the given asset file.
-     * @param {Task} task If specified, only assets of this task will be minified
+     * @param {Task<any> | null} task If specified, only assets of this task will be minified
      */
     async minifyAssets(task = null) {
-        const assets = collect(task ? [task] : this.mix.tasks)
-            .where('constructor.name', '!==', 'VersionFilesTask')
-            .flatMap(({ assets }) => assets);
+        const assets = (task ? [task] : this.mix.tasks)
+            .filter(task => !(task instanceof VersionFilesTask))
+            .flatMap(task => task.assets);
 
         const tasks = assets.map(async asset => {
             try {
@@ -120,14 +115,14 @@ class CustomTasksPlugin {
      * Version all files that are present in the manifest.
      */
     applyVersioning() {
-        collect(this.mix.manifest.get()).each((value, key) =>
-            this.mix.manifest.hash(key)
-        );
+        Object.keys(this.mix.manifest.get()).forEach(path => {
+            this.mix.manifest.hash(path);
+        });
     }
 
     /**
      * Performs manifest and minification updates on files after running tasks
-     * @param {Task|null} task If specified, only files for this task will be minified
+     * @param {Task<any>|null} task If specified, only files for this task will be minified
      * @return {Promise<void>}
      */
     async afterChange(task = null) {

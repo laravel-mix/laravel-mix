@@ -29,9 +29,9 @@ class Task {
      * Watch all relevant files for changes.
      *
      * @param {boolean} usePolling
-     * @param {function(Task)} onFileChange Will be called on every file that changes
+     * @param {(task: Task<TData>) => void|Promise<void>} onFileChange Will be called on every file that changes
      */
-    watch(usePolling = false, onFileChange = Function()) {
+    watch(usePolling = false, onFileChange = NOOP) {
         if (this.isBeingWatched) return;
 
         let files = this.files.get();
