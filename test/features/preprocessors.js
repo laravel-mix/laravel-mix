@@ -251,11 +251,11 @@ test('Sass url resolution can be configured per-file', async t => {
     t.true(File.exists(`test/fixtures/app/dist/css/font-and-image.css`));
     t.true(File.exists(`test/fixtures/app/dist/css/image.css`));
 
-    t.false(File.exists(`test/fixtures/app/dist/images/img.66162.svg`));
-    t.true(File.exists(`test/fixtures/app/dist/images/img2.66162.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/images/img.66162863.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img2.66162863.svg`));
 
-    t.false(File.exists(`test/fixtures/app/dist/fonts/font.66162.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/fonts/awesome.66162.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/fonts/font.66162863.svg`));
+    t.false(File.exists(`test/fixtures/app/dist/fonts/awesome.66162863.svg`));
 });
 
 test('Sass url resolution can be disabled: globally (before)', async t => {
