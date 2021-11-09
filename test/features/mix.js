@@ -65,3 +65,9 @@ test('it resolves image- and font-urls and distinguishes between them even if we
     t.false(File.exists(`test/fixtures/app/dist/images/font.svg`));
     t.false(File.exists(`test/fixtures/app/dist/images/awesome.svg`));
 });
+
+test('it accepts images with the same file name but with different paths', async t => {
+    mix.js(`test/fixtures/app/src/js/app-import-images-same-file-name.js`, 'js');
+    await webpack.compile();
+    t.true(true);
+});
