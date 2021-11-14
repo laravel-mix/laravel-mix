@@ -25,8 +25,18 @@ test.after.always(async () => {
     server && server.close();
 });
 
+/** @type {string[]} */
+let logEvents = [];
+
 test.beforeEach(() => {
+    logEvents = [];
     mix.setPublicPath('test/fixtures/integration/dist');
+});
+
+test.afterEach.always(t => {
+    if (!t.passed) {
+        logEvents.forEach(log => console.log(log));
+    }
 });
 
 test('compiling just js', async t => {
@@ -112,12 +122,9 @@ async function assertProducesLogs(t, logs) {
     // Verify in the browser
     const page = await browser.newPage();
 
-    page.on('request', req => {
-        console.log(`[browser request] `, req.url());
-    });
-
+    page.on('request', req => logEvents.push(`[browser request] ${req.url()}`));
     page.on('console', msg =>
-        console.log(`[browser console] ${msg.type()}: ${msg.text()}`)
+        logEvents.push(`[browser console] ${msg.type()}: ${msg.text()}`)
     );
 
     /** @type Promise<import('playwright').ConsoleMessage | import('playwright').Response | null>[] */
