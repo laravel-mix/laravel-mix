@@ -103,7 +103,7 @@ test('node browser polyfills: disabled', async t => {
 });
 
 /**
- * @param {import('ava').Assertions} t
+ * @param {import('ava').ExecutionContext} t
  * @param {string[]} logs
  **/
 async function assertProducesLogs(t, logs) {
@@ -120,15 +120,21 @@ async function assertProducesLogs(t, logs) {
         console.log(`[browser console] ${msg.type()}: ${msg.text()}`)
     );
 
-    await Promise.all([
+    /** @type Promise<import('playwright').ConsoleMessage | import('playwright').Response | null>[] */
+    const events = [];
+
+    events.push(
         ...logs.map(log =>
             page.waitForEvent('console', {
                 predicate: msg => msg.text() === log,
                 timeout: 1000
             })
-        ),
-        page.goto(uri)
-    ]);
+        )
+    );
+
+    events.push(page.goto(uri));
+
+    await Promise.all(events);
 
     t.pass();
 }
