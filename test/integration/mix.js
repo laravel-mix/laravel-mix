@@ -4,7 +4,8 @@ import serveFilesFrom from 'koa-static';
 import { chromium } from 'playwright';
 
 import { mix } from '../helpers/mix.js';
-import webpack, { setupVueAliases } from '../helpers/webpack.js';
+import { setupVueAliases } from '../features/vue.js';
+import webpack from '../helpers/webpack.js';
 
 /** @type {import("playwright").Browser} */
 let browser;

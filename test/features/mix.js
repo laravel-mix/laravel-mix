@@ -3,16 +3,17 @@ import test from 'ava';
 import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
 import { mix } from '../helpers/mix.js';
+import { setupVueAliases } from './vue.js';
 import webpack from '../helpers/webpack.js';
 
-test.beforeEach(() => webpack.setupVueAliases(2));
+test.beforeEach(() => setupVueAliases(2));
 
 test('the kitchen sink', async t => {
     new File(`test/fixtures/app/dist/file.js`).write('var foo');
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
         .extract(['vue2'])
-        .vue({ version: 2 })
+        .vue()
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .sass(`test/fixtures/app/src/sass/app.scss`, 'css')
         .postCss(`test/fixtures/app/src/css/app.css`, 'css/example.css')

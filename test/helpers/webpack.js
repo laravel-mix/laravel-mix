@@ -53,18 +53,4 @@ export async function compile(override) {
     });
 }
 
-/**
- *
- * @param {string|number} version
- */
-export function setupVueAliases(version) {
-    const vueModule = version === 3 ? 'vue3' : 'vue2';
-    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
-
-    Mix.resolver.alias('vue', vueModule);
-    Mix.resolver.alias('vue-loader', vueLoaderModule);
-
-    mix.alias({ vue: require.resolve(vueModule) });
-}
-
-export default { buildConfig, compile, setupVueAliases };
+export default { buildConfig, compile };

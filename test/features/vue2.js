@@ -1,6 +1,6 @@
 import { setupVueTests } from './vue.js';
 
 setupVueTests({
-    version: 3,
-    dir: 'vue3'
+    version: 2,
+    dir: 'vue'
 });
