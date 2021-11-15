@@ -20,6 +20,8 @@ class HotReloading {
         this.hotFile().write(
             `${this.http()}://${this.mix.config.hmrOptions.host}:${this.port()}`
         );
+
+        process.on('exit', () => this.clean());
     }
 
     hotFile() {
