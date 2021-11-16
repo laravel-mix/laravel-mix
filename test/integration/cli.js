@@ -41,7 +41,7 @@ test('it removes the hot reloading file when the process is finished', async t =
     let hotFilePath = path.join(__dirname, './fixture/public/hot');
 
     await mix(['watch --hot'], async child => {
-        await new Promise(resolve => setTimeout(resolve, 3500));
+        await new Promise(resolve => setTimeout(resolve, 4500));
         child.kill('SIGINT');
     });
 
