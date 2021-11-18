@@ -48,7 +48,7 @@ class CustomTasksPlugin {
     }
 
     /**
-     * Add asset to the webpack statss
+     * Add asset to the webpack stats.
      *
      * @param {import("../File")} asset
      * @param {import("webpack").Stats} stats
