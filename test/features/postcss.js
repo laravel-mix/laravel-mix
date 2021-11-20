@@ -15,6 +15,8 @@ test.beforeEach(() => {
             plugins: [require('postcss-custom-properties')]
         };`
     );
+
+    mix.options({ autoprefixer: {} });
 });
 
 test.after.always(() => {

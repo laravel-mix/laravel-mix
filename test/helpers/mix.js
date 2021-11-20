@@ -20,6 +20,10 @@ test.beforeEach(async () => {
     Mix = new MixClass().boot();
     mix = Mix.api;
 
+    // We also disable autoprefixer
+    // Under profiling loading autoprefixer takes 2.5s
+    mix.options({ autoprefixer: false });
+
     if (process.versions.node.startsWith('12.')) {
         await fs.rmdir(`test/fixtures/app/dist`, { recursive: true }).catch(() => {});
     } else {
