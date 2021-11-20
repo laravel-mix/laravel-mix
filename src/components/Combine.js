@@ -2,6 +2,7 @@ const File = require('../File');
 const Assert = require('../Assert');
 const ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
 const { Component } = require('./Component');
+const { concat } = require('lodash');
 
 module.exports = class Combine extends Component {
     /**
@@ -15,55 +16,62 @@ module.exports = class Combine extends Component {
      * Register the component.
      *
      * @param {string|string[]} src
-     * @param {string} output
+     * @param {string} [output]
      * @param {boolean} babel
      */
     register(src, output = '', babel = false) {
-        this.src = src;
-        this.output = output;
-        this.babel = babel || this.caller === 'babel';
+        // Do we need to perform compilation?
+        babel = babel || this.caller === 'babel';
 
-        if (this.caller === 'minify') {
-            this.registerMinify();
-        }
+        const sources = concat([], src);
+        const hasOutputPath = output !== undefined && output !== '';
 
-        this.addTask();
-    }
+        if (hasOutputPath) {
+            this.context.addTask(
+                this.createTask({
+                    src: sources,
+                    dst: output,
+                    babel
+                })
+            );
 
-    /**
-     * Register the minify task.
-     */
-    registerMinify() {
-        if (this.src === undefined) {
             return;
         }
 
-        if (Array.isArray(this.src)) {
-            return this.src.forEach(file => this.register(file));
+        if (this.caller !== 'minify') {
+            throw new Error(
+                `An output file path is required when using mix.${this.caller}()`
+            );
         }
 
-        this.output = this.src.replace(/\.([a-z]{2,})$/i, '.min.$1');
+        // We've we're minifying an array of files then the output is the same as the input with a .min extension added
+        for (const source of sources) {
+            this.context.addTask(
+                this.createTask({
+                    src: source,
+                    dst: source.replace(/\.([a-z]{2,})$/i, '.min.$1'),
+                    babel
+                })
+            );
+        }
     }
 
     /**
-     * Add a new ConcatFiles task.
+     * @param {object} param0
+     * @param {string|string[]} param0.src
+     * @param {string} param0.dst
+     * @param {boolean} param0.babel
      */
-    addTask() {
-        if (this.src === undefined || this.babel === undefined) {
-            return;
-        }
+    createTask({ src, dst, babel }) {
+        const output = new File(dst);
 
-        this.output = new File(this.output);
+        Assert.combine(src, output);
 
-        Assert.combine(this.src, this.output);
-
-        this.context.addTask(
-            new ConcatFilesTask({
-                src: this.src,
-                output: this.output,
-                babel: this.babel,
-                ignore: [this.output.relativePath()]
-            })
-        );
+        return new ConcatFilesTask({
+            src,
+            output,
+            babel,
+            ignore: [output.relativePath()]
+        });
     }
 };
