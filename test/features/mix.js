@@ -1,10 +1,8 @@
 import test from 'ava';
 
-import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
-import { mix } from '../helpers/mix.js';
+import { assert, mix, webpack } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
-import webpack from '../helpers/webpack.js';
 
 test.beforeEach(() => setupVueAliases(2));
 
@@ -29,22 +27,19 @@ test('the kitchen sink', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/all.js`));
+    assert(t).file(`test/fixtures/app/dist/js/all.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/another.js': '/js/another.js\\?id=\\w{20}',
-            '/css/app.css': '/css/app.css\\?id=\\w{20}',
-            '/css/example.css': '/css/example.css\\?id=\\w{20}',
-            '/js/app.js': '/js/app.js\\?id=\\w{20}',
-            '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
-            '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
-            '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
-            '/js/all.js': '/js/all.js\\?id=\\w{20}',
-            '/file.js': '/file.js\\?id=\\w{20}'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/another.js': '/js/another.js\\?id=\\w{20}',
+        '/css/app.css': '/css/app.css\\?id=\\w{20}',
+        '/css/example.css': '/css/example.css\\?id=\\w{20}',
+        '/js/app.js': '/js/app.js\\?id=\\w{20}',
+        '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
+        '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
+        '/somewhere/app.js': '/somewhere/app.js\\?id=\\w{20}',
+        '/js/all.js': '/js/all.js\\?id=\\w{20}',
+        '/file.js': '/file.js\\?id=\\w{20}'
+    });
 });
 
 test('it resolves image- and font-urls and distinguishes between them even if we deal with svg', async t => {
@@ -54,15 +49,15 @@ test('it resolves image- and font-urls and distinguishes between them even if we
     await webpack.compile();
 
     // Then we expect the css to be built
-    t.true(File.exists(`test/fixtures/app/dist/css/font-and-image.css`));
+    assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
     // Along with the referred image in the images folder
-    t.true(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).exists();
     // And the referred fonts in the fonts folder
-    t.true(File.exists(`test/fixtures/app/dist/fonts/font.svg`));
-    t.true(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
+    assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).exists();
+    assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
     // And we expect the image NOT to be in the fonts folder:
-    t.false(File.exists(`test/fixtures/app/dist/fonts/img.svg`));
+    assert(t).file(`test/fixtures/app/dist/fonts/img.svg`).absent();
     // And the fonts NOT to be in the image folder
-    t.false(File.exists(`test/fixtures/app/dist/images/font.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/awesome.svg`));
+    assert(t).file(`test/fixtures/app/dist/images/font.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/awesome.svg`).absent();
 });

@@ -1,15 +1,14 @@
 import test from 'ava';
 
-import { mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { mix, webpack } from '../helpers/test.js';
 
 test('it configures hot reloading dev server options', async t => {
     mix.options({
         hmr: true
     });
 
-    let { config } = await webpack.compile();
-    let devServer = config.devServer;
+    const config = await webpack.buildConfig();
+    const devServer = config.devServer;
 
     t.false(devServer.https);
 
@@ -32,8 +31,8 @@ test('it configures hot reloading dev server options for https', async t => {
         }
     });
 
-    let { config } = await webpack.compile();
-    let devServer = config.devServer;
+    const config = await webpack.buildConfig();
+    const devServer = config.devServer;
 
     t.true(devServer.https);
 

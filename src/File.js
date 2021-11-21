@@ -43,6 +43,13 @@ class File {
         return fs.existsSync(file);
     }
 
+    /**
+     * Determine if the given file exists.
+     */
+    exists() {
+        return fs.existsSync(this.path());
+    }
+
     normalizedOutputPath() {
         let path = this.pathFromPublic(this.mix.config.publicPath);
 

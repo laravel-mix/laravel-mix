@@ -1,9 +1,7 @@
 import test from 'ava';
 
-import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, Mix, webpack } from '../helpers/test.js';
 
 test('it accepts a src directory', async t => {
     mix.scripts(
@@ -13,11 +11,9 @@ test('it accepts a src directory', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');");
 });
 
 test('it accepts a src wildcard', async t => {
@@ -28,11 +24,9 @@ test('it accepts a src wildcard', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');");
 });
 
 test('it accepts a src array of wildcards', async t => {
@@ -46,11 +40,9 @@ test('it accepts a src array of wildcards', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');alert('bar1');alert('bar2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');alert('bar1');alert('bar2');");
 });
 
 test('it compiles JS and then combines the bundles files.', async t => {
@@ -63,16 +55,13 @@ test('it compiles JS and then combines the bundles files.', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/all.js`));
+    assert(t).file(`test/fixtures/app/dist/js/all.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/js/another.js': '/js/another.js',
-            '/js/all.js': '/js/all.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/js/another.js': '/js/another.js',
+        '/js/all.js': '/js/all.js'
+    });
 });
 
 test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
@@ -90,11 +79,9 @@ test('it concatenates a directory of files, copies the output to a new location,
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        'alert("foo1"),alert("foo2");',
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss('alert("foo1"),alert("foo2");');
 });
 
 test('it minifies a file', async t => {
@@ -104,15 +91,12 @@ test('it minifies a file', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.min.js`));
+    assert(t).file(`test/fixtures/app/dist/js/app.min.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/js/app.min.js': '/js/app.min.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/js/app.min.js': '/js/app.min.js'
+    });
 });
 
 test('it minifies an array of files', async t => {
@@ -123,18 +107,15 @@ test('it minifies an array of files', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/src/combine/foo/one.min.js`));
-    t.true(File.exists(`test/fixtures/app/src/combine/foo/two.min.js`));
+    assert(t).file(`test/fixtures/app/src/combine/foo/one.min.js`).exists();
+    assert(t).file(`test/fixtures/app/src/combine/foo/two.min.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/test/fixtures/app/src/combine/foo/one.min.js':
-                '/test/fixtures/app/src/combine/foo/one.min.js',
-            '/test/fixtures/app/src/combine/foo/two.min.js':
-                '/test/fixtures/app/src/combine/foo/two.min.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/test/fixtures/app/src/combine/foo/one.min.js':
+            '/test/fixtures/app/src/combine/foo/one.min.js',
+        '/test/fixtures/app/src/combine/foo/two.min.js':
+            '/test/fixtures/app/src/combine/foo/two.min.js'
+    });
 
     // Clean Up
     File.find(`test/fixtures/app/src/combine/foo/one.min.js`).delete();
@@ -150,11 +131,8 @@ test('it can concat files produced by the build', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/all.css`));
-
-    assert.fileMatchesCss(
-        `test/fixtures/app/dist/all.css`,
-        `
+    assert(t).file(`test/fixtures/app/dist/all.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/all.css`).matchesCss(`
         :root {
             --shared-color: rebeccapurple;
         }
@@ -162,9 +140,7 @@ test('it can concat files produced by the build', async t => {
             color: red;
             background: url('/absolute/image.jpg');
         }
-    `,
-        t
-    );
+    `);
 });
 
 test('combine with missing files throws an error', async t => {

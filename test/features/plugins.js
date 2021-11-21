@@ -1,8 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
 
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, Mix, webpack } from '../helpers/test.js';
 
 test('mix can be extended with new functionality as a callback', async t => {
     let registration = sinon.spy();
@@ -131,7 +130,9 @@ test('webpack rules may be added', async t => {
 
     const config = await webpack.buildConfig();
 
-    t.deepEqual(config.module.rules.pop(), rule);
+    assert(t)
+        .rule(config, aRule => aRule === rule)
+        .exists();
 });
 
 test('webpack plugins may be added', async t => {
@@ -168,12 +169,14 @@ test('the fully constructed webpack config object is available for modification,
         }
     );
 
-    t.false((await webpack.buildConfig(false)).stats.performance);
+    let config = await webpack.buildConfig(false);
+    t.false(config.stats.performance);
 
     // @ts-ignore - No declaration merging with JSDoc
     mix.extension();
 
-    t.true((await webpack.buildConfig(true)).stats.performance);
+    config = await webpack.buildConfig(true);
+    t.true(config.stats.performance);
 });
 
 test('prior Mix components can be overwritten', t => {

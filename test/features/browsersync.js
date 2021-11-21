@@ -2,8 +2,7 @@ import test from 'ava';
 import mockRequire from 'mock-require';
 
 import BrowserSync from '../../src/components/BrowserSync.js';
-import { mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, Mix, webpack } from '../helpers/test.js';
 
 mockRequire(
     'browser-sync-webpack-plugin',
@@ -13,19 +12,15 @@ mockRequire(
 );
 
 test('it handles Browsersync reloading', async t => {
-    let response = mix.browserSync('app.dev');
+    mix.browserSync('app.dev');
 
-    t.deepEqual(mix, response);
+    const config = await webpack.buildConfig();
 
-    let { config } = await webpack.compile();
-
-    t.truthy(
-        config.plugins.find(plugin => plugin.constructor.name === 'BrowserSyncPluginStub')
-    );
+    assert(t).webpackPlugin(config, 'BrowserSyncPluginStub').exists();
 });
 
 test('it injects the snippet in the right place', t => {
-    let regex = new BrowserSync().regex();
+    let regex = new BrowserSync(Mix).regex();
 
     t.is(regex.exec(`<div></div>`), null);
     t.is(regex.exec(`<body></body>`).index, 6);
@@ -45,7 +40,7 @@ test('it injects the snippet in the right place', t => {
 });
 
 test('it configures Browsersync proxy', t => {
-    t.is(browserSyncConfig().proxy, 'app.test', 'sets default proxy');
+    t.is(browserSyncConfig().proxy, `app.test`, 'sets default proxy');
     t.is(
         browserSyncConfig('example.domain').proxy,
         'example.domain',
@@ -66,7 +61,7 @@ test('it configures Browsersync server', t => {
 });
 
 let browserSyncConfig = userConfig => {
-    let plugin = new BrowserSync();
+    let plugin = new BrowserSync(Mix);
 
     plugin.register(userConfig);
 

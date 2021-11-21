@@ -3,9 +3,8 @@ import Koa from 'koa';
 import serveFilesFrom from 'koa-static';
 import { chromium } from 'playwright';
 
-import { mix } from '../helpers/mix.js';
+import { mix, webpack } from '../helpers/test.js';
 import { setupVueAliases } from '../features/vue.js';
-import webpack from '../helpers/webpack.js';
 
 /** @type {import("playwright").Browser} */
 let browser;

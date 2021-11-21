@@ -1,10 +1,9 @@
 import test from 'ava';
 import path from 'path';
 
+import { mix, Mix, webpack } from '../helpers/test.js';
 import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
 import Stub from '../helpers/Stub.js';
-import webpack from '../helpers/webpack.js';
 
 /** @type {File} */
 let postCssConfigFile;

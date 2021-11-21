@@ -1,69 +1,62 @@
 import test from 'ava';
-import eol from 'eol';
-import fs from 'fs-extra';
+import fsx from 'fs-extra';
 import path from 'path';
 import sinon from 'sinon';
 
 import File from '../../src/File.js';
 import FileCollection from '../../src/FileCollection.js';
-import '../helpers/mix.js';
+import { assert, fs } from '../helpers/test.js';
 
-let stubsDir = path.resolve(__dirname, 'stubs');
+const stubsDir = path.resolve(__dirname, 'stubs');
 
-test.before(t => fs.ensureDirSync(stubsDir));
-
-test.afterEach(t => {
-    fs.emptyDirSync(stubsDir);
-});
+test.before(() => fsx.ensureDirSync(stubsDir));
+test.afterEach(() => fsx.emptyDirSync(stubsDir));
 
 test('that it can get the underlying files', t => {
-    let files = ['path/to/file.js'];
+    const files = ['path/to/file.js'];
 
     t.deepEqual(files, new FileCollection(files).get());
 });
 
-test.cb('that it can merge multiple files into one.', t => {
-    let files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
+test('that it can merge multiple files into one.', async t => {
+    const files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
+    const outputPath = path.resolve(stubsDir, 'merged.js');
 
-    new File(files[0]).write('class Foo {}');
-    new File(files[1]).write('class Bar {}');
-
-    let output = new File(path.resolve(stubsDir, 'merged.js'));
-
-    new FileCollection(files).merge(output).then(() => {
-        t.true(File.exists(output.path()));
-        t.is('class Foo {}\n\nclass Bar {}\n', eol.lf(output.read()));
-        t.end();
+    await fs(t).stub({
+        [files[0]]: 'class Foo {}',
+        [files[1]]: 'class Bar {}'
     });
+
+    await new FileCollection(files).merge(new File(outputPath));
+
+    assert(t).file(outputPath).exists();
+    assert(t).file(outputPath).contains('class Foo {}\n\nclass Bar {}\n');
 });
 
-test.cb('that it can merge JS files and apply Babel compilation.', t => {
-    let files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
+test('that it can merge JS files and apply Babel compilation.', async t => {
+    const files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
+    const outputPath = path.resolve(stubsDir, 'merged.js');
 
-    new File(files[0]).write('class Foo {}');
-    new File(files[1]).write('class Bar {}');
+    await fs(t).stub({
+        [files[0]]: 'class Foo {}',
+        [files[1]]: 'class Bar {}'
+    });
 
-    let collection = new FileCollection(files);
+    const collection = new FileCollection(files);
 
     sinon.stub(collection, 'babelify').callsFake(() => 'fake minified output');
 
-    let output = new File(path.resolve(stubsDir, 'merged.js'));
-    let useBabel = true;
+    await collection.merge(new File(outputPath), true);
 
-    collection.merge(output, useBabel).then(() => {
-        t.true(File.exists(output.path()));
-        t.is(eol.auto('fake minified output\n'), output.read());
-        t.end();
-    });
+    assert(t).file(outputPath).exists();
+    assert(t).file(outputPath).contains('fake minified output\n');
 });
 
 test("that it throw an error if a file doesn't exist.", async t => {
-    let files = [path.resolve(stubsDir, 'fileThatDoesntExist.js')];
-    let output = new File(path.resolve(stubsDir, 'merged.js'));
+    const files = [path.resolve(stubsDir, 'fileThatDoesntExist.js')];
+    const outputPath = path.resolve(stubsDir, 'merged.js');
 
-    let mergeFiles = () => new FileCollection(files).merge(output);
+    await t.throwsAsync(() => new FileCollection(files).merge(new File(outputPath)));
 
-    await t.throwsAsync(mergeFiles());
-
-    t.false(File.exists(output.path()));
+    assert(t).file(outputPath).absent();
 });

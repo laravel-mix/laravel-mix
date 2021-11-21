@@ -1,20 +1,17 @@
 import test from 'ava';
+import sinon from 'sinon';
 
-import { mix, Mix } from '../helpers/mix.js';
+import { mix, Mix } from '../helpers/test.js';
 
 test('mix.then()', t => {
-    let called = false;
+    const spy = sinon.spy();
 
     // mix.then() registers a "build" event listener.
-    let response = mix.then(() => {
-        called = true;
-    });
-
-    t.deepEqual(mix, response);
+    mix.then(spy);
 
     // Let's fire a "build" event, and make sure that
     // our callback handler is called, as expected.
     Mix.dispatch('build');
 
-    t.true(called);
+    t.true(spy.called);
 });

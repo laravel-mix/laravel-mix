@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix.js';
+import { mix, Mix } from '../helpers/test.js';
 
 test('mix.options()', t => {
     mix.options({

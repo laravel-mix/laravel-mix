@@ -4,9 +4,7 @@ import path from 'path';
 
 import File from '../../src/File.js';
 import Manifest from '../../src/Manifest.js';
-import assertions from '../helpers/assertions.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, Mix, webpack } from '../helpers/test.js';
 
 test.beforeEach(() => {
     Mix.manifest = new Manifest();
@@ -67,7 +65,14 @@ test('it can be refreshed', t => {
 
     // Cleanup.
     File.find(Mix.manifest.path()).delete();
-    fs.removeSync(path.resolve(__dirname, 'js'));
+
+    if (process.versions.node.startsWith('12.')) {
+        await fs
+            .rmdir(path.resolve(__dirname, 'js'), { recursive: true })
+            .catch(() => {});
+    } else {
+        await fs.rm(path.resolve(__dirname, 'js'), { recursive: true }).catch(() => {});
+    }
 });
 
 test('it sorts files on the underlying manifest object', t => {
@@ -87,7 +92,7 @@ test('it sorts files on the underlying manifest object', t => {
 test('A manifest is created by default ', async t => {
     await webpack.compile();
 
-    assertions.fileExists('test/fixtures/app/dist/mix-manifest.json', t);
+    assert(t).file('test/fixtures/app/dist/mix-manifest.json').exists();
 });
 
 test('The name of the manifest can be changed', async t => {
@@ -95,8 +100,8 @@ test('The name of the manifest can be changed', async t => {
 
     await webpack.compile();
 
-    assertions.fileExists('test/fixtures/app/dist/manifest.json', t);
-    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+    assert(t).file('test/fixtures/app/dist/manifest.json').exists();
+    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test('You can change the manfest path to a relative path', async t => {
@@ -104,8 +109,8 @@ test('You can change the manfest path to a relative path', async t => {
 
     await webpack.compile();
 
-    assertions.fileExists('test/fixtures/app/manifest.json', t);
-    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+    assert(t).file('test/fixtures/app/manifest.json').exists();
+    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test('Manifest generation can be disabled', async t => {
@@ -115,7 +120,7 @@ test('Manifest generation can be disabled', async t => {
 
     await webpack.compile();
 
-    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
+    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test('Overwriting the manifest plugin with a custom name preserves old behavior', async t => {
@@ -124,7 +129,7 @@ test('Overwriting the manifest plugin with a custom name preserves old behavior'
 
     await webpack.compile();
 
-    assertions.fileDoesNotExist('test/fixtures/app/dist/mix-manifest.json', t);
-    assertions.fileDoesNotExist('test/fixtures/app/dist/foo.json', t);
-    assertions.fileExists('test/fixtures/app/dist/bar.json', t);
+    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
+    assert(t).file('test/fixtures/app/dist/foo.json').absent();
+    assert(t).file('test/fixtures/app/dist/bar.json').exists();
 });

@@ -1,22 +1,25 @@
 import test from 'ava';
 
-import { mix } from '../helpers/mix.js';
-import { buildConfig } from '../helpers/webpack.js';
+import { mix, webpack } from '../helpers/test.js';
 
 test('Custom webpack config can be merged', async t => {
-    mix.webpackConfig({ context: 'changed' });
+    mix.webpackConfig({ externals: ['foo'] });
 
-    t.is('changed', (await buildConfig()).context);
+    const config = await webpack.buildConfig();
+
+    t.deepEqual(['foo'], config.externals);
 });
 
 test('Custom webpack config can be merged as a callback function', async t => {
     mix.webpackConfig(() => {
         return {
-            context: 'changed'
+            externals: ['foo']
         };
     });
 
-    t.is('changed', (await buildConfig()).context);
+    const config = await webpack.buildConfig();
+
+    t.deepEqual(['foo'], config.externals);
 });
 
 test('Custom webpack config is called and merged *after* all plugins and extensions', async t => {
@@ -35,5 +38,7 @@ test('Custom webpack config is called and merged *after* all plugins and extensi
         };
     });
 
-    t.deepEqual(['extension foo', 'webpackConfig foo'], (await buildConfig()).externals);
+    const { config } = await webpack.compile();
+
+    t.deepEqual(['extension foo', 'webpackConfig foo'], config.externals);
 });

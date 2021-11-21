@@ -1,6 +1,6 @@
 import webpack from 'webpack';
 
-import { mix, Mix } from './mix.js';
+import { Mix } from './mix.js';
 
 /**
  *

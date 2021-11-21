@@ -64,35 +64,31 @@ test('it can install all queued dependencies at once', async t => {
 test('it can utilize custom checks for a dependency: false', async t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
-    let called = false;
+    const stub = sinon.stub().returns(true);
 
     dependencies.enqueue([
         {
             package: 'postcss@^8.1',
-            check: () => {
-                called = true;
-
-                return true;
-            }
+            check: stub
         }
     ]);
 
     await dependencies.install();
 
-    t.true(called);
+    t.true(stub.called);
     t.false(exec.calledWith(cmd, sinon.match.func));
 });
 
 test('it can utilize custom checks for a dependency: true', async t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
-    let called = false;
+    const spy = sinon.spy();
 
     dependencies.enqueue([
         {
             package: 'postcss@^8.1',
             check: name => {
-                called = true;
+                spy();
 
                 t.true(semver.satisfies(require(`${name}/package.json`).version, '^8.1'));
 
@@ -103,7 +99,7 @@ test('it can utilize custom checks for a dependency: true', async t => {
 
     await dependencies.install();
 
-    t.true(called);
+    t.true(spy.called);
     assertRanCommand(t, cmd);
 });
 

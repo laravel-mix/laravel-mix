@@ -1,16 +1,13 @@
 import test from 'ava';
 
-import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, Mix, webpack } from '../helpers/test.js';
 
 test('mix.sourceMaps()', t => {
     t.false(Mix.config.sourcemaps);
 
-    let response = mix.sourceMaps();
+    mix.sourceMaps();
 
     // Sourcemaps should use a sensible type as the default for dev.
-    t.deepEqual(mix, response);
     t.is('eval-source-map', Mix.config.sourcemaps);
 
     // For production builds, we should use a more performant type.
@@ -40,5 +37,5 @@ test('it works fine with cache busting chunk filenames', async t => {
         .sourceMaps();
 
     await t.notThrowsAsync(() => webpack.compile());
-    t.true(File.exists(`test/fixtures/app/dist/js/chunk.js.map`));
+    assert(t).file(`test/fixtures/app/dist/js/chunk.js.map`).exists();
 });

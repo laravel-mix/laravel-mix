@@ -1,4 +1,4 @@
-import test, { afterEach, beforeEach } from 'ava';
+import test from 'ava';
 import mockRequire from 'mock-require';
 
 import Log from '../../src/Log.js';
@@ -8,8 +8,8 @@ import VueVersion from '../../src/VueVersion.js';
 let mix = new Mix();
 let vueVersion = new VueVersion(mix);
 
-beforeEach(() => mix.resolver.clear());
-afterEach(() => mix.resolver.clear());
+test.beforeEach(() => mix.resolver.clear());
+test.afterEach(() => mix.resolver.clear());
 
 test('it detects Vue 2', t => {
     mockRequire('vue2', { version: '2.0' });

@@ -1,9 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-
-import File from '../../src/File.js';
 import Task from '../../src/tasks/Task.js';
-import { mix, Mix } from '../helpers/mix.js';
+import { fs, mix, Mix } from '../helpers/test.js';
 
 test('that it knows if it is being executed in a production environment', t => {
     Mix.config.production = true;
@@ -41,15 +39,14 @@ test('that it can dispatch events using a function to determine the data', t => 
     t.true(callback.calledWith('foo'));
 });
 
-test('that it can see if we are using a Laravel app', t => {
+test('that it can see if we are using a Laravel app', async t => {
     t.false(Mix.sees('laravel'));
 
-    new File('./artisan').write('all laravel apps have one');
+    await fs(t).stub({
+        './artisan': 'all laravel apps have one'
+    });
 
     t.true(Mix.sees('laravel'));
-
-    // Clean up.
-    File.find('./artisan').delete();
 });
 
 test('that it can add a task', t => {
@@ -79,14 +76,12 @@ test('that it can check for an installed npm package', t => {
 });
 
 test('that it listens for when the webpack configuration object has been fully generated', t => {
-    let called = false;
+    const spy = sinon.spy();
 
-    mix.override(() => {
-        called = true;
-    });
+    mix.override(spy);
 
     Mix.dispatch('build');
     Mix.dispatch('configReadyForUser');
 
-    t.true(called);
+    t.true(spy.called);
 });

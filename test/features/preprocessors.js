@@ -1,10 +1,7 @@
 import test from 'ava';
 import path from 'path';
 
-import assert from '../helpers/assertions.js';
-import File from '../../src/File.js';
-import { mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { assert, mix, webpack } from '../helpers/test.js';
 
 test('it does not process absolute urls', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, 'css');
@@ -20,14 +17,11 @@ test('it compiles PostCSS without JS', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert.manifestEquals(
-        {
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/css/app.css': '/css/app.css'
+    });
 });
 
 test('it compiles .pcss files without JS', async t => {
@@ -35,14 +29,11 @@ test('it compiles .pcss files without JS', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert.manifestEquals(
-        {
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/css/app.css': '/css/app.css'
+    });
 });
 
 test('it compiles Sass without JS', async t => {
@@ -50,14 +41,11 @@ test('it compiles Sass without JS', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert.manifestEquals(
-        {
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/css/app.css': '/css/app.css'
+    });
 });
 
 test('JS and Sass + Less + Stylus compilation config', async t => {
@@ -65,6 +53,8 @@ test('JS and Sass + Less + Stylus compilation config', async t => {
         .sass('src/sass.scss', 'css')
         .less('src/less.less', 'css')
         .stylus('src/stylus.styl', 'css');
+
+    const config = await webpack.buildConfig();
 
     t.deepEqual(
         {
@@ -75,48 +65,48 @@ test('JS and Sass + Less + Stylus compilation config', async t => {
                 path.resolve('src/stylus.styl')
             ]
         },
-        (await webpack.buildConfig()).entry
+        config.entry
     );
 });
 
 test('Generic Sass rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
-    t.truthy(
-        (await webpack.buildConfig()).module.rules.find(rule => {
-            return rule.test.toString() === '/\\.scss$/';
-        })
-    );
+    const config = await webpack.buildConfig();
+
+    assert(t)
+        .rule(config, rule => String(rule.test).toString() === '/\\.scss$/')
+        .exists();
 });
 
 test('Generic Less rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
-    t.truthy(
-        (await webpack.buildConfig()).module.rules.find(rule => {
-            return rule.test.toString() === '/\\.less$/';
-        })
-    );
+    const config = await webpack.buildConfig();
+
+    assert(t)
+        .rule(config, rule => String(rule.test).toString() === '/\\.less$/')
+        .exists();
 });
 
 test('Generic CSS rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
-    t.truthy(
-        (await webpack.buildConfig()).module.rules.find(rule => {
-            return rule.test.toString() === '/\\.p?css$/';
-        })
-    );
+    const config = await webpack.buildConfig();
+
+    assert(t)
+        .rule(config, rule => String(rule.test).toString() === '/\\.p?css$/')
+        .exists();
 });
 
 test('Generic Stylus rules are applied', async t => {
     mix.js('js/app.js', 'js');
 
-    t.truthy(
-        (await webpack.buildConfig()).module.rules.find(rule => {
-            return rule.test.toString() === '/\\.styl(us)?$/';
-        })
-    );
+    const config = await webpack.buildConfig();
+
+    assert(t)
+        .rule(config, rule => String(rule.test).toString() === '/\\.styl(us)?$/')
+        .exists();
 });
 
 test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call.', async t => {
@@ -128,18 +118,30 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
         { postcssPlugin: 'second-postcss-plugin-stub' }
     ]);
 
-    let config = await webpack.buildConfig();
+    const config = await webpack.buildConfig();
 
-    let seePostCssPluginFor = (file, pluginName) => {
-        t.true(
-            config.module.rules
-                .find(rule => rule.test.toString().includes(file))
-                .use.find(loader => /postcss-loader/.test(loader.loader))
-                .options.postcssOptions.plugins.find(
-                    plugin => plugin.postcssPlugin === pluginName
-                ) !== undefined
-        );
-    };
+    /**
+     *
+     * @param {string} file
+     * @param {string} pluginName
+     */
+    function seePostCssPluginFor(file, pluginName) {
+        const loader = assert(t)
+            .rule(config, rule => String(rule.test).includes(file))
+            .loader(/postcss-loader/)
+            .get();
+
+        /** @type {import('postcss').AcceptedPlugin[]} */
+        const plugins =
+            (loader &&
+                loader.options &&
+                loader.options.postcssOptions &&
+                loader.options.postcssOptions.plugins) ||
+            [];
+
+        // @ts-ignore
+        t.true(plugins.some(plugin => plugin.postcssPlugin === pluginName));
+    }
 
     seePostCssPluginFor('app.scss', 'postcss-plugin-stub');
     seePostCssPluginFor('app2.scss', 'second-postcss-plugin-stub');
@@ -150,9 +152,9 @@ test('Sass is extracted properly', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
+    assert(t).manifestEquals({ '/css/app.css': '/css/app.css' });
 });
 
 test('Stylus is extracted properly', async t => {
@@ -160,8 +162,8 @@ test('Stylus is extracted properly', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
-    assert.manifestEquals({ '/css/app.css': '/css/app.css' }, t);
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert(t).manifestEquals({ '/css/app.css': '/css/app.css' });
 });
 
 test('CSS output paths are normalized', async t => {
@@ -170,19 +172,16 @@ test('CSS output paths are normalized', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
-    t.false(File.exists(`test/fixtures/app/dist/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/dist/css/app.css`).absent();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.false(File.exists(`test/fixtures/app/dist/dist/js/app.js`));
+    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert(t).file(`test/fixtures/app/dist/dist/js/app.js`).absent();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/css/app.css': '/css/app.css'
+    });
 });
 
 test('Compiling multiple CSS assets places CSS in the correct location', async t => {
@@ -192,26 +191,23 @@ test('Compiling multiple CSS assets places CSS in the correct location', async t
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
-    t.false(File.exists(`test/fixtures/app/dist/dist/css/app.css`));
-    t.false(File.exists(`test/fixtures/app/dist/js/app.css`));
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/dist/css/app.css`).absent();
+    assert(t).file(`test/fixtures/app/dist/js/app.css`).absent();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.false(File.exists(`test/fixtures/app/dist/dist/js/app.js`));
+    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert(t).file(`test/fixtures/app/dist/dist/js/app.js`).absent();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/css/app.css': '/css/app.css'
+    });
 
-    assert.fileMatchesCss(
-        `test/fixtures/app/dist/css/app.css`,
-        `body{color:red;}.app{color:red;background:url('/absolute/image.jpg');}`,
-        t
-    );
+    assert(t)
+        .file(`test/fixtures/app/dist/css/app.css`)
+        .matchesCss(
+            `body{color:red;}.app{color:red;background:url('/absolute/image.jpg');}`
+        );
 });
 
 test('SASS/SCSS with imports does not place files in the wrong output dir', async t => {
@@ -223,18 +219,15 @@ test('SASS/SCSS with imports does not place files in the wrong output dir', asyn
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/import.css`));
-    t.false(File.exists(`test/fixtures/app/dist/js/import.css`));
+    assert(t).file(`test/fixtures/app/dist/css/import.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/js/import.css`).absent();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/css/import.css': '/css/import.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/css/import.css': '/css/import.css'
+    });
 
-    assert.fileNotEmpty(`test/fixtures/app/dist/css/import.css`, t);
+    assert(t).file(`test/fixtures/app/dist/css/import.css`).notEmpty();
 });
 
 test('Sass url resolution can be configured per-file', async t => {
@@ -248,14 +241,14 @@ test('Sass url resolution can be configured per-file', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/font-and-image.css`));
-    t.true(File.exists(`test/fixtures/app/dist/css/image.css`));
+    assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/image.css`).exists();
 
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.true(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).exists();
 
-    t.false(File.exists(`test/fixtures/app/dist/fonts/font.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/fonts/awesome.svg`));
+    assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).absent();
 });
 
 test('Sass url resolution can be disabled: globally (before)', async t => {
@@ -264,8 +257,8 @@ test('Sass url resolution can be disabled: globally (before)', async t => {
 
     await webpack.compile();
 
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test('Sass url resolution can be disabled: globally (after)', async t => {
@@ -274,8 +267,8 @@ test('Sass url resolution can be disabled: globally (after)', async t => {
 
     await webpack.compile();
 
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test('CSS url resolution can be disabled for PostCSS: individually', async t => {
@@ -285,9 +278,9 @@ test('CSS url resolution can be disabled for PostCSS: individually', async t => 
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test('CSS url resolution can be disabled for PostCSS: globally (before)', async t => {
@@ -296,9 +289,9 @@ test('CSS url resolution can be disabled for PostCSS: globally (before)', async 
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test('CSS url resolution can be disabled for PostCSS: globally (after)', async t => {
@@ -307,9 +300,9 @@ test('CSS url resolution can be disabled for PostCSS: globally (after)', async t
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img.svg`));
-    t.false(File.exists(`test/fixtures/app/dist/images/img2.svg`));
+    assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test('CSS imported in JS does not result in separate files by default', async t => {
@@ -317,6 +310,6 @@ test('CSS imported in JS does not result in separate files by default', async t 
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/import-css-module.js`));
-    t.false(File.exists(`test/fixtures/app/dist/js/import-css-module.css`));
+    assert(t).file(`test/fixtures/app/dist/js/import-css-module.js`).exists();
+    assert(t).file(`test/fixtures/app/dist/js/import-css-module.css`).absent();
 });
