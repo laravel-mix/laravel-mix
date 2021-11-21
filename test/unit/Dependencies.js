@@ -5,7 +5,6 @@ import sinon from 'sinon';
 
 import Dependencies from '../../src/Dependencies.js';
 import PackageManager from '../../src/PackageManager.js';
-import '../../src/helpers.js';
 import { createRequire } from 'module';
 
 /** @type {Dependencies} */

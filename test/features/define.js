@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('Code is left alone where there are no replacements defined', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.js('test/fixtures/app/src/js/app.js', 'test/fixtures/app/dist/js');
 
     await webpack.compile();
@@ -13,6 +15,8 @@ test('Code is left alone where there are no replacements defined', async t => {
 });
 
 test('Code replacements can be defined', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.js('test/fixtures/app/src/js/app.js', 'test/fixtures/app/dist/js');
     mix.define({
         __FEATURE_1__: true,

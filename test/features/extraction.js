@@ -1,12 +1,17 @@
 import test from 'ava';
 
-import File from '../../src/File.js';
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
 
-test.beforeEach(async () => await setupVueAliases(2));
+test.beforeEach(async t => {
+    const { Mix } = context(t);
+
+    await setupVueAliases(2, Mix);
+});
 
 test('JS compilation with vendor extraction config', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
         .vue()
         .extract(['vue2'], 'js/libraries.js');
@@ -26,6 +31,8 @@ test('JS compilation with vendor extraction config', async t => {
 });
 
 test('vendor extraction with no requested JS compilation will throw an error', async t => {
+    const { mix, webpack } = context(t);
+
     mix.extract(['vue']);
 
     await t.throwsAsync(() => webpack.compile(), {
@@ -34,6 +41,8 @@ test('vendor extraction with no requested JS compilation will throw an error', a
 });
 
 test('JS compilation with vendor extraction with default config', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js').vue().extract(['vue2']);
 
     await webpack.compile();
@@ -46,6 +55,8 @@ test('JS compilation with vendor extraction with default config', async t => {
 });
 
 test('JS compilation with total vendor extraction', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js').vue().extract();
 
     await webpack.compile();
@@ -59,6 +70,8 @@ test('JS compilation with total vendor extraction', async t => {
 });
 
 test('async chunk splitting works', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
         .extract(['vue', 'lodash', 'core-js'])
@@ -82,6 +95,8 @@ test('async chunk splitting works', async t => {
 });
 
 test('async chunks are placed in the right directory', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
     mix.extract();
@@ -94,16 +109,14 @@ test('async chunks are placed in the right directory', async t => {
     await webpack.compile();
 
     assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    t.true(
-        File.exists(
-            `test/fixtures/app/dist/js/test_fixtures_app_src_extract_dynamic_js.js`
-        )
-    );
-    t.false(
-        File.exists(
+    assert(t)
+        .file(`test/fixtures/app/dist/js/test_fixtures_app_src_extract_dynamic_js.js`)
+        .exists();
+    assert(t)
+        .file(
             `test/fixtures/app/dist/dist/js/test_fixtures_app_src_extract_dynamic_js.js`
         )
-    );
+        .absent();
 
     assert(t).manifestEquals({
         '/js/app.js': '/js/app.js',
@@ -114,6 +127,8 @@ test('async chunks are placed in the right directory', async t => {
 });
 
 test('custom runtime chunk path can be provided', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
     mix.extract();
@@ -139,6 +154,8 @@ test('custom runtime chunk path can be provided', async t => {
 });
 
 test('custom runtime chunk path can be placed in the public path root', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'dist/js');
     mix.extract();
@@ -161,6 +178,8 @@ test('custom runtime chunk path can be placed in the public path root', async t 
 });
 
 test('multiple extractions work', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')
         .extract(['vue', 'lodash'], 'js/vendor-vue-lodash.js')
@@ -186,6 +205,8 @@ test('multiple extractions work', async t => {
 });
 
 test('configurable extractions work', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js');
 
@@ -222,6 +243,8 @@ test('configurable extractions work', async t => {
 });
 
 test('default vendor extractions are handled after normal extractions when given a custom name', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.vue();
     mix.js('test/fixtures/app/src/extract/app.js', 'js');
     mix.extract(['core-js'], 'js/vendor-backend.js');

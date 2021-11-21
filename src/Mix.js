@@ -32,7 +32,7 @@ class Mix {
         this.chunks = new Chunks(this);
         this.components = new Components();
         this.dispatcher = new Dispatcher();
-        this.manifest = new Manifest();
+        this.manifest = new Manifest('mix-manifest.json', this);
         this.paths = new Paths();
         this.registrar = new ComponentRegistrar(this);
         this.webpackConfig = new WebpackConfig(this);
@@ -135,7 +135,7 @@ class Mix {
     }
 
     /**
-     * @returns {import("laravel-mix")}
+     * @return {import("laravel-mix").Api}
      */
     get api() {
         if (!this._api) {

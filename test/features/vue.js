@@ -4,13 +4,11 @@ import sinon from 'sinon';
 import { createRequire } from 'module';
 import { pathToFileURL } from 'url';
 
-import { assert, fs, mix, Mix, webpack } from '../helpers/test.js';
-
 /**
- *
  * @param {string|number} version
+ * @param {import('../../src/Mix.js')} Mix
  */
-export function setupVueAliases(version) {
+export function setupVueAliases(version, Mix) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueCompiler = version === 3 ? '@vue/compiler-dom' : 'vue-template-compiler';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
@@ -20,7 +18,7 @@ export function setupVueAliases(version) {
     Mix.resolver.alias('vue-compiler', vueCompiler);
 
     const require = createRequire(import.meta.url);
-    mix.alias({ vue: require.resolve(vueModule) });
+    Mix.api.alias({ vue: require.resolve(vueModule) });
 }
 
 /**
@@ -238,7 +236,7 @@ export function setupVueTests({ version, dir }) {
         // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
         await fs(t).stub({
             [path.resolve(
-                'postcss.config.js'
+                'postcss.config.cjs'
             )]: `module.exports = { plugins: [require('postcss-custom-properties')] };`
         });
 
@@ -271,7 +269,7 @@ export function setupVueTests({ version, dir }) {
         // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
         await fs(t).stub({
             [path.resolve(
-                'postcss.config.js'
+                'postcss.config.cjs'
             )]: `module.exports = { plugins: [require('postcss-custom-properties')] };`
         });
 

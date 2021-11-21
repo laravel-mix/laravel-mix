@@ -1,12 +1,13 @@
 import test from 'ava';
 
-import Log from '../../src/Log.js';
-import { mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('mix.dumpWebpackConfig()', async t => {
+    const { mix, Mix, webpack } = context(t);
+
     let config;
 
-    Log.info = webpackConfig => {
+    Mix.logger.info = webpackConfig => {
         config = JSON.parse(webpackConfig);
     };
 

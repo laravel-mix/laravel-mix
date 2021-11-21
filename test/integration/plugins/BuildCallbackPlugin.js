@@ -1,19 +1,14 @@
 import test from 'ava';
-import path from 'path';
 import sinon from 'sinon';
-import { fileURLToPath } from 'url';
 
+import { fs, webpack } from '../../helpers/test.js';
 import BuildCallbackPlugin from '../../../src/webpackPlugins/BuildCallbackPlugin.js';
-import { fs } from '../../helpers/fs.js';
-import * as webpack from '../../helpers/webpack.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test('that it triggers a callback handler when the Webpack compiler is done', async t => {
     const paths = {
-        'src/index.js': path.resolve(__dirname, './tmp/src/index.js'),
-        dist: path.resolve(__dirname, './tmp/dist'),
-        'dist/main.js': path.resolve(__dirname, './tmp/dist/main.js')
+        'src/index.js': t.context.disk.join('./tmp/src/index.js'),
+        dist: t.context.disk.join('./tmp/dist'),
+        'dist/main.js': t.context.disk.join('./tmp/dist/main.js')
     };
 
     await fs(t).stub({

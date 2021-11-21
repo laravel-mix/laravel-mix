@@ -1,14 +1,18 @@
 import test from 'ava';
 
-import { assert, mix, Mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('mix.setResourceRoot()', t => {
+    const { mix } = context(t);
+
     mix.setResourceRoot('some/path');
 
     t.is('some/path', Mix.config.resourceRoot);
 });
 
 test('mix.setResourceRoot() rewrites processed asset urls', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.setResourceRoot('https://www.example.com/');
     mix.postCss(`test/fixtures/app/src/css/app-and-image.css`, 'css');
 

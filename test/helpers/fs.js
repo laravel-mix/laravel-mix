@@ -23,7 +23,7 @@ export function fs(t) {
 
             // 3. Remove all written files when the test is done
             t.teardown(async () => {
-                await Promise.all(entries.map(entry => fsx.remove(entry[0])));
+                // await Promise.all(entries.map(entry => fsx.remove(entry[0])));
             });
         }
     };

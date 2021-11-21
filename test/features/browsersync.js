@@ -2,7 +2,8 @@ import test from 'ava';
 import mockRequire from 'mock-require';
 
 import BrowserSync from '../../src/components/BrowserSync.js';
-import { assert, mix, Mix, webpack } from '../helpers/test.js';
+import MixClass from '../../src/Mix.js';
+import { context } from '../helpers/test.js';
 
 mockRequire(
     'browser-sync-webpack-plugin',
@@ -12,6 +13,8 @@ mockRequire(
 );
 
 test('it handles Browsersync reloading', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.browserSync('app.dev');
 
     const config = await webpack.buildConfig();
@@ -20,7 +23,7 @@ test('it handles Browsersync reloading', async t => {
 });
 
 test('it injects the snippet in the right place', t => {
-    let regex = new BrowserSync(Mix).regex();
+    let regex = new BrowserSync(new MixClass()).regex();
 
     t.is(regex.exec(`<div></div>`), null);
     t.is(regex.exec(`<body></body>`).index, 6);
@@ -61,7 +64,7 @@ test('it configures Browsersync server', t => {
 });
 
 let browserSyncConfig = userConfig => {
-    let plugin = new BrowserSync(Mix);
+    let plugin = new BrowserSync(new MixClass());
 
     plugin.register(userConfig);
 

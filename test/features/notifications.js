@@ -1,12 +1,14 @@
 import test from 'ava';
 
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test.beforeEach(() => {
     process.env.DISABLE_NOTIFICATIONS = '';
 });
 
 test('it displays OS notifications', async t => {
+    const { webpack, assert } = context(t);
+
     const config = await webpack.buildConfig();
 
     assert(t)
@@ -18,6 +20,8 @@ test('it displays OS notifications', async t => {
 });
 
 test('it disables OS notifications', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.disableNotifications();
 
     const config = await webpack.buildConfig();
@@ -31,6 +35,8 @@ test('it disables OS notifications', async t => {
 });
 
 test('it disables OS success notifications', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.disableSuccessNotifications();
 
     const config = await webpack.buildConfig();

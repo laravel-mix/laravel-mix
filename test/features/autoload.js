@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('it handles library autoloading', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.autoload({
         jquery: ['$', 'window.jQuery'],
         'lodash.map': '_map'

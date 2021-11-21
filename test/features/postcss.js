@@ -1,83 +1,80 @@
 import test from 'ava';
-import path from 'path';
 
-import { mix, Mix, webpack } from '../helpers/test.js';
-import File from '../../src/File.js';
 import Stub from '../helpers/Stub.js';
+import { context } from '../helpers/test.js';
 
-/** @type {File} */
-let postCssConfigFile;
-
-test.beforeEach(() => {
-    // Stub a postcss.config.js file that should be read by Mix.
-    postCssConfigFile = new File(path.resolve('postcss.config.js')).write(
-        `module.exports = {
-            plugins: [require('postcss-custom-properties')]
-        };`
-    );
+test.beforeEach(async t => {
+    const { mix } = context(t);
 
     mix.options({ autoprefixer: {} });
 });
 
-test.after.always(() => {
-    postCssConfigFile.delete();
-});
-
 test('basic mix.postCss() compilation', async t => {
-    let css = 'body { color: red; }';
+    const { assert, mix, fs, webpack } = context(t);
 
-    let file = new Stub('css/basic-compilation.css', css);
+    await fs(t).stub({
+        'postcss.config.cjs': `module.exports = { plugins: [require('postcss-custom-properties')] };`,
+        'css/basic-compilation.css': 'body { color: red; }'
+    });
 
-    mix.postCss(file.relativePath(), 'css');
+    mix.postCss('stubs/basic-compilation.css', 'css');
 
     await webpack.compile();
 
-    t.true(file.hasCompiledContent(css));
+    assert(t).file('css/basic-compilation.css').exists();
+    assert(t).file('css/basic-compilation.css').matchesCss('body { color: red; }');
 });
 
 test('mix.css() is an alias for mix.postCss()', async t => {
-    let css = 'body { color: red; }';
+    const { assert, mix, fs, webpack } = context(t);
 
-    let file = new Stub('css/basic-compilation.css', css);
+    await fs(t).stub({
+        'css/basic-compilation.css': 'body { color: red; }',
+        'stubs/test.txt': 'test'
+    });
 
-    mix.css(file.relativePath(), 'css');
+    mix.postCss('stubs/basic-compilation.css', 'css');
 
     await webpack.compile();
 
-    t.true(file.hasCompiledContent(css));
+    assert(t).file('css/basic-compilation.css').exists();
+    assert(t).file('css/basic-compilation.css').matchesCss('body { color: red; }');
 });
 
-test('it applies autoprefixer to compiled CSS', async t => {
-    let css = `
-        @keyframes testing {
-            to { color: red; }
-        }`;
+test.only('it applies autoprefixer to compiled CSS', async t => {
+    const { assert, mix, fs, webpack } = context(t);
 
-    let expected = `
+    await fs(t).stub({
+        'css/autoprefixer.css': `@keyframes testing { to { color: red; } }`,
+        'stubs/test.txt': 'test'
+    });
+
+    mix.postCss('stubs/autoprefixer.css', 'css');
+
+    const { config } = await webpack.compile().catch(err => err);
+
+    assert(t).file('css/autoprefixer.css').exists();
+    assert(t).file('css/autoprefixer.css').matchesCss(`
         @-webkit-keyframes testing {
             to { color: red; }
         }
         @keyframes testing {
             to { color: red; }
-        }`;
-
-    let file = new Stub('css/autoprefixer.css', css);
-
-    mix.postCss(file.relativePath(), 'css');
-
-    await webpack.compile();
-
-    t.true(file.hasCompiledContent(expected));
+        }
+    `);
 });
 
 test('it applies autoprefixer with custom configuration', async t => {
-    let css = `
-        div {
-            -webkit-box-shadow: 0 0 4px black;
-            box-shadow: 0 0 4px black;
-        }`;
+    const { mix, webpack } = context(t);
 
-    let file = new Stub('css/autoprefixer.css', css);
+    let file = new Stub(
+        'css/autoprefixer.css',
+        `
+    div {
+        -webkit-box-shadow: 0 0 4px black;
+        box-shadow: 0 0 4px black;
+    }`
+    );
 
     mix.postCss(file.relativePath(), 'css');
 
@@ -88,10 +85,18 @@ test('it applies autoprefixer with custom configuration', async t => {
 
     await webpack.compile();
 
-    t.true(file.hasCompiledContent(css));
+    t.true(
+        file.hasCompiledContent(`
+    div {
+        -webkit-box-shadow: 0 0 4px black;
+        box-shadow: 0 0 4px black;
+    }`)
+    );
 });
 
 test('it disables autoprefixer', async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     let css = `
         @keyframes testing {
             to { color: red; }
@@ -114,6 +119,8 @@ test('it disables autoprefixer', async t => {
 });
 
 test('it disables autoprefixer but still loads postcss.config.js', async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     let css = `
         :root {
             --some-color: red;
@@ -155,6 +162,8 @@ test('it disables autoprefixer but still loads postcss.config.js', async t => {
 });
 
 test('it applies CSSNano minification during production', async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     Mix.config.production = true;
 
     let css = `
@@ -174,6 +183,8 @@ test('it applies CSSNano minification during production', async t => {
 });
 
 test('it disables CSSNano minification', async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     Mix.config.production = true;
 
     let css = `
@@ -206,6 +217,8 @@ test('it disables CSSNano minification', async t => {
 });
 
 test('it applies CSSNano minification with configuration options', async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     Mix.config.production = true;
 
     let css = `
@@ -231,6 +244,8 @@ test('it applies CSSNano minification with configuration options', async t => {
 });
 
 test("it merge Mix's default postcss plugins with any found in the user's postcss.config.js.", async t => {
+    const { assert, mix, fs, webpack } = context(t);
+
     Mix.config.production = true;
 
     let css = `

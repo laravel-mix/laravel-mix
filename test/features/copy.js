@@ -1,22 +1,12 @@
 import test from 'ava';
 
-import { assert, mix, Mix, webpack } from '../helpers/test.js';
-
-test('it adds to the tasks array', t => {
-    mix.copy('this/file.js', 'this/other/location.js');
-
-    t.is(1, Mix.tasks.length);
-
-    mix.copyDirectory('this/folder', 'this/other/folder');
-
-    t.is(2, Mix.tasks.length);
-});
+import { context } from '../helpers/test.js';
 
 test('it compiles JavaScript and copies the output to a new location.', async t => {
-    mix.js(`test/fixtures/app/src/js/app.js`, 'js').copy(
-        `test/fixtures/app/dist/js/app.js`,
-        `test/fixtures/app/dist/somewhere`
-    );
+    const { mix, assert, webpack } = context(t);
+
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+    mix.copy(`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/somewhere`);
 
     await webpack.compile();
 
@@ -29,6 +19,8 @@ test('it compiles JavaScript and copies the output to a new location.', async t 
 });
 
 test('It can copy files and handle versioning.', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
     mix.copy(
         `test/fixtures/app/src/copy/file-1.txt`,
@@ -47,6 +39,8 @@ test('It can copy files and handle versioning.', async t => {
 });
 
 test('It can copy directories and handle versioning.', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
     mix.copy(`test/fixtures/app/src/copy`, `test/fixtures/app/dist/copy`);
     mix.version();
@@ -66,6 +60,8 @@ test('It can copy directories and handle versioning.', async t => {
 });
 
 test('It can copy dot files.', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.copy(`test/fixtures/app/src/.dotfile`, `test/fixtures/app/dist/.dotfile`);
 
     await webpack.compile();

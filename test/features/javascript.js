@@ -2,9 +2,11 @@ import test from 'ava';
 import path from 'path';
 
 import File from '../../src/File.js';
-import { assert, mix, Mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js('js/app.js', 'dist/js');
 
     const config = await webpack.buildConfig();
@@ -27,6 +29,8 @@ test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
 });
 
 test('it compiles JavaScript', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
 
     await webpack.compile();
@@ -39,6 +43,8 @@ test('it compiles JavaScript', async t => {
 });
 
 test('it compiles JavaScript with dynamic import', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/dynamic/dynamic.js`, 'js');
 
     await webpack.compile();
@@ -53,6 +59,8 @@ test('it compiles JavaScript with dynamic import', async t => {
 });
 
 test('it compiles JavaScript and Sass', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').sass(
         `test/fixtures/app/src/sass/app.scss`,
         'css'
@@ -70,6 +78,8 @@ test('it compiles JavaScript and Sass', async t => {
 });
 
 test('basic JS compilation config.', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js');
 
     let config = await webpack.buildConfig();
@@ -94,6 +104,8 @@ test('basic JS compilation config.', async t => {
 });
 
 test('basic JS compilation with output dist directory omitted config.', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js');
 
     const config = await webpack.buildConfig();
@@ -107,6 +119,8 @@ test('basic JS compilation with output dist directory omitted config.', async t 
 });
 
 test('basic JS compilation with a different dist path', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'dist/js').setPublicPath('dist-html');
 
     let config = await webpack.buildConfig();
@@ -124,6 +138,8 @@ test('basic JS compilation with a different dist path', async t => {
 });
 
 test('basic JS compilation with a specific output path config.', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js/output.js');
 
     const config = await webpack.buildConfig();

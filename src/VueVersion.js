@@ -1,5 +1,3 @@
-let Log = require('./Log');
-
 class VueVersion {
     /**
      *
@@ -47,7 +45,7 @@ class VueVersion {
      * @returns {never}
      */
     fail() {
-        Log.error(
+        this.mix.logger.error(
             `We couldn't find a supported version of Vue in your project. ` +
                 `Please ensure that it's installed (npm install vue).`
         );

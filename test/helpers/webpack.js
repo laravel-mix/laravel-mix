@@ -1,27 +1,11 @@
 import webpack from 'webpack';
 
-import { Mix } from './mix.js';
-
 /**
- *
- * @param {*} shouldInit
- * @returns {Promise<import('webpack').Configuration>}
- */
-export async function buildConfig(shouldInit = true) {
-    if (shouldInit) {
-        await Mix.init();
-    }
-
-    return await Mix.build();
-}
-
-/**
- *
- * @param {import('webpack').Configuration} [override]
+ * @param {import('webpack').Configuration | Promise<import('webpack').Configuration>} configOrPromise
  * @returns {Promise<{config: import('webpack').Configuration, err: Error | undefined, stats: import('webpack').Stats | undefined}>}
  */
-export async function compile(override) {
-    const config = override || (await buildConfig());
+export async function compile(configOrPromise) {
+    const config = await configOrPromise;
     const compiler = webpack(config);
 
     return new Promise((resolve, reject) => {
@@ -53,5 +37,3 @@ export async function compile(override) {
         });
     });
 }
-
-export default { buildConfig, compile };

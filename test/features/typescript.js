@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('mix.ts()', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.ts(`test/fixtures/app/src/dynamic-ts/app.ts`, 'dist');
 
     const config = await webpack.buildConfig();
@@ -19,6 +21,8 @@ test('mix.ts()', async t => {
 });
 
 test('it is able to apply options to ts-loader', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.ts(`test/fixtures/app/src/dynamic-ts/app.ts`, 'dist', { transpileOnly: true });
 
     const config = await webpack.buildConfig();
@@ -30,6 +34,8 @@ test('it is able to apply options to ts-loader', async t => {
 });
 
 test('it compiles TypeScript with dynamic import', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.ts(`test/fixtures/app/src/dynamic-ts/dynamic.ts`, 'js', {
         transpileOnly: true,
 

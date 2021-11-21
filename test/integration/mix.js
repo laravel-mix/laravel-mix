@@ -1,6 +1,7 @@
 import test from 'ava';
 import Koa from 'koa';
 import serveFilesFrom from 'koa-static';
+import path from 'path';
 import { chromium } from 'playwright';
 
 import { mix, webpack } from '../helpers/test.js';
@@ -12,18 +13,18 @@ let browser;
 /** @type {import("http").Server} */
 let server;
 
-test.before(async () => {
-    browser = await chromium.launch();
+test.before(async () => (browser = await chromium.launch()));
+test.after.always(() => browser?.close());
 
-    const app = new Koa();
-    app.use(serveFilesFrom('test/fixtures/integration/dist'));
-    server = app.listen(1337);
+test.beforeEach(async t => {
+    const serveFromDisk = serveFilesFrom(
+        path.join(t.context.disk.root, 'test/fixtures/integration/dist')
+    );
+
+    server = new Koa().use(serveFromDisk).listen(1337);
 });
 
-test.after.always(async () => {
-    browser && (await browser.close());
-    server && server.close();
-});
+test.afterEach.always(() => server?.close());
 
 /** @type {string[]} */
 let logEvents = [];

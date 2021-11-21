@@ -1,13 +1,20 @@
 import test from 'ava';
 
-import File from '../../src/File.js';
-import { assert, mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
 
-test.beforeEach(async () => await setupVueAliases(2));
+test.beforeEach(async t => {
+    const { Mix } = context(t);
+
+    await setupVueAliases(2, Mix);
+});
 
 test('the kitchen sink', async t => {
-    new File(`test/fixtures/app/dist/file.js`).write('var foo');
+    const { mix, fs, assert, webpack } = context(t);
+
+    await fs(t).stub({
+        'test/fixtures/app/dist/file.js': 'var foo'
+    });
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
         .extract(['vue2'])
@@ -43,6 +50,8 @@ test('the kitchen sink', async t => {
 });
 
 test('it resolves image- and font-urls and distinguishes between them even if we deal with svg', async t => {
+    const { mix, fs, assert, webpack } = context(t);
+
     // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
     mix.sass(`test/fixtures/app/src/sass/font-and-image.scss`, 'css');
     // When we compile it

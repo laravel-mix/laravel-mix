@@ -9,8 +9,11 @@ class Manifest {
      * Create a new Manifest instance.
      *
      * @param {string} name
+     * @param {import('./Mix.js')} [mix]
      */
-    constructor(name = 'mix-manifest.json') {
+    constructor(name = 'mix-manifest.json', mix = undefined) {
+        this.mix = mix || global.Mix;
+
         /** @type {Record<string, string>} */
         this.manifest = {};
         this.name = name;
@@ -163,11 +166,6 @@ class Manifest {
         }
 
         return filePath;
-    }
-
-    /** @type {import("./Mix")} */
-    get mix() {
-        return global.Mix;
     }
 }
 

@@ -6,9 +6,16 @@ let originalBabelLoader;
 export async function recordConfigs() {
     originalBabelLoader = originalBabelLoader || (await import('babel-loader'));
 
+    return recordConfigsImpl(originalBabelLoader);
+}
+
+/**
+ * @param {any} loader
+ */
+export function recordConfigsImpl(loader) {
     /** @type {Record<string,import("@babel/core").PartialConfig>} config */
     const resolvedConfigs = {};
-    const customLoader = originalBabelLoader.custom(function () {
+    const customLoader = loader.custom(function () {
         return {
             /** @param {import("@babel/core").PartialConfig} config */
             config(config) {

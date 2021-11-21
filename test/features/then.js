@@ -1,9 +1,11 @@
 import test from 'ava';
 import sinon from 'sinon';
 
-import { mix, Mix } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('mix.then()', t => {
+    const { mix, Mix } = context(t);
+
     const spy = sinon.spy();
 
     // mix.then() registers a "build" event listener.

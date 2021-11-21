@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { assert, mix, Mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('mix.sourceMaps()', t => {
+    const { mix, Mix } = context(t);
+
     t.false(Mix.config.sourcemaps);
 
     mix.sourceMaps();
@@ -25,7 +27,9 @@ test('mix.sourceMaps()', t => {
     t.is('hidden-source-map', Mix.config.sourcemaps);
 });
 
-test('it works fine with cache busting chunk filenames', async t => {
+test.serial('it works fine with cache busting chunk filenames', async t => {
+    const { mix, Mix, assert, webpack } = context(t);
+
     Mix.config.production = true;
     mix.js(`test/fixtures/app/src/js/chunk.js`, 'js')
         .webpackConfig({
