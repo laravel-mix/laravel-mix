@@ -11,6 +11,10 @@ module.exports = class Notifications extends Component {
             return [];
         }
 
+        if (process.env.DISABLE_NOTIFICATIONS === '1') {
+            return [];
+        }
+
         const WebpackNotifierPlugin = require('webpack-notifier');
 
         return [

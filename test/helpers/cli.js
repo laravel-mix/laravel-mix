@@ -89,6 +89,7 @@ export function cli(opts) {
             env: {
                 ...process.env,
                 ...env,
+                DISABLE_NOTIFICATIONS: '1',
                 TESTING: testing ? '1' : undefined
             }
         });

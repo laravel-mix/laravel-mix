@@ -17,6 +17,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.chdir(__dirname + '/../../');
 
 test.beforeEach(async () => {
+    // By default we disable notifcations during tests because it's annoying
+    process.env.DISABLE_NOTIFICATIONS = '1';
+
     Mix = new MixClass().boot();
     mix = Mix.api;
 

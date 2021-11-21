@@ -2,6 +2,10 @@ import test from 'ava';
 
 import { assert, mix, webpack } from '../helpers/test.js';
 
+test.beforeEach(() => {
+    process.env.DISABLE_NOTIFICATIONS = '';
+});
+
 test('it displays OS notifications', async t => {
     const config = await webpack.buildConfig();
 
