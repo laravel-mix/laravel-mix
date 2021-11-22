@@ -21,7 +21,8 @@ class HotReloading {
             `${this.http()}://${this.mix.config.hmrOptions.host}:${this.port()}`
         );
 
-        process.on('exit', () => this.clean());
+        process.on('SIGINT', () => this.clean());
+        process.on('SIGHUP', () => this.clean());
     }
 
     hotFile() {
