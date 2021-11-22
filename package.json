@@ -6,7 +6,7 @@
     "types": "types/index.d.ts",
     "scripts": {
         "mix": "./bin/cli.js",
-        "test": "cd test && ava --verbose --serial --timeout=30s --no-worker-threads",
+        "test": "cd test && ava --verbose --timeout=30s --no-worker-threads",
         "eslint": "eslint setup/ src/ test/ --max-warnings=0"
     },
     "husky": {
