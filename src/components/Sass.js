@@ -10,7 +10,7 @@ class Sass extends Preprocessor {
         const deps = ['sass-loader@^12.1.0', 'sass'];
 
         if (Config.processCssUrls) {
-            deps.push('resolve-url-loader@^4.0.0');
+            deps.push('resolve-url-loader@^5.0.0');
         }
 
         return deps;
