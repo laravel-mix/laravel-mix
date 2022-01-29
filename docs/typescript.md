@@ -40,7 +40,7 @@ Of course, you'll still want to make any appropriate TypeScript-specific tweaks,
 Enabling TypeScript compilation within your Vue single file components is a cinch. Begin by updating your `webpack.mix.js` file to specify that you wish to compile TypeScript while also enabling support for Vue single file components.
 
 ```js
-mix.ts('resources/js/app.js', 'public/js').vue();
+mix.ts('resources/js/app.ts', 'public/js').vue();
 ```
 
 Next, update your single file component(s) to allow TypeScript to infer types.
