@@ -42,7 +42,7 @@ class Manifest {
     add(filePath) {
         filePath = this.normalizePath(filePath);
 
-        let original = filePath.replace(/\?id=\w{20}/, '');
+        let original = filePath.replace(/\?id=\w+/, '');
 
         this.manifest[original] = filePath;
 
