@@ -224,7 +224,7 @@ class File {
      * Calculate the proper version hash for the file.
      */
     version() {
-        return md5(this.read()).substr(0, 20);
+        return md5(this.read());
     }
 
     /**
