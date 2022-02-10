@@ -143,7 +143,7 @@ test('it can calculate a unique versioned hash for the file', t => {
 
     file.write('foobar');
 
-    t.true(file.version().length === 20);
+    t.true(!!file.version().length);
 });
 
 test('it can minify JS files.', async t => {
