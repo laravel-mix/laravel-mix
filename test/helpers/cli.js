@@ -1,8 +1,5 @@
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import path from 'path';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
 
 /**
  * @typedef {object} CliResult
@@ -13,7 +10,19 @@ const execAsync = promisify(exec);
  */
 
 /**
- * @typedef {(process: import("child_process").ChildProcess) => Promise<void>} CliRunCallback
+ * @typedef {object} CliHookHelpers
+ * @property {import("child_process").ChildProcess} child
+ * @property {() => Promise<void>} kill
+ */
+
+/**
+ * @typedef {(helpers: CliHookHelpers) => Promise<void>} CliHook
+ */
+
+/**
+ * @typedef {object} CliHoks
+ * @property {CliHook} [onRun]
+ * @property {CliHook} [onFirstOutput]
  */
 
 /**
@@ -33,13 +42,27 @@ export function cli(opts) {
      * Run the Mix CLI
      *
      * @param {string[]} args
-     * @param {CliRunCallback} onRun
+     * @param {CliHoks} hooks
      * @returns {Promise<CliResult>}
      */
-    async function run(args, onRun) {
-        let cmd = [`node ${path.resolve('./bin/cli')}`, ...args];
+    async function run(args, hooks) {
+        let cmd = [path.resolve('./bin/cli.js'), ...args];
+        let result = {
+            /** @type {import('child_process').ExecException | null} */
+            error: null,
 
-        const promise = execAsync(cmd.join(' '), {
+            /** @type {NodeJS.Signals | null} */
+            signal: null,
+
+            code: 0,
+            stdout: '',
+            stderr: ''
+        };
+
+        cmd = cmd.flatMap(arg => arg.split(' '));
+
+        const child = spawn('node', cmd, {
+            detached: true,
             cwd,
             env: {
                 ...process.env,
@@ -48,37 +71,65 @@ export function cli(opts) {
             }
         });
 
-        await onRun(promise.child);
+        async function kill() {
+            if (
+                child.exitCode !== null ||
+                child.signalCode !== null ||
+                child.pid === undefined
+            ) {
+                return;
+            }
 
-        try {
-            const { stdout, stderr } = await promise;
-
-            return {
-                error: null,
-                code: 0,
-                stdout,
-                stderr
-            };
-        } catch (error) {
-            const { code, stdout, stderr } = error;
-
-            return {
-                error,
-                code: code === null || code === undefined ? 1 : code,
-                stdout,
-                stderr
-            };
+            process.kill(-child.pid);
         }
+
+        child.stdin.end();
+        child.stdout.on('data', data => (result.stdout += data));
+        child.stderr.on('data', data => (result.stderr += data));
+
+        child.on('error', err => (result.error = err));
+        child.on('close', (code, signal) => {
+            result.code = code || 0;
+            result.signal = signal;
+        });
+
+        const promise = new Promise((resolve, reject) => {
+            child.on('error', () => reject(result));
+            child.on('close', () => resolve(result));
+        });
+
+        if (hooks.onRun) {
+            await hooks.onRun({ child, kill });
+        }
+
+        // Wait for some kind of output
+        while (true) {
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            if (result.stdout.length > 0 || result.stderr.length > 0) {
+                break;
+            }
+
+            if (result.error !== null || result.signal !== null || result.code !== 0) {
+                break;
+            }
+        }
+
+        if (hooks.onFirstOutput) {
+            await hooks.onFirstOutput({ child, kill });
+        }
+
+        return promise;
     }
 
     /**
      * Run the Mix and build in assertions
      *
      * @param {string[]} args
-     * @param {CliRunCallback} [onRun]
+     * @param {CliHoks} [hooks]
      */
-    async function testRun(args = [], onRun = undefined) {
-        const result = await run(args, onRun || (async () => {}));
+    async function testRun(args = [], hooks = {}) {
+        const result = await run(args, hooks);
         const stdout = testing ? JSON.parse(result.stdout) : { script: null, env: {} };
 
         return {
