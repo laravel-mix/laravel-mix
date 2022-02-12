@@ -26,6 +26,35 @@ import path from 'path';
  */
 
 /**
+ * @param {import("child_process").ChildProcess} child
+ * @returns {Promise<void>}
+ */
+async function killProcessTree(child) {
+    if (
+        child.exitCode !== null ||
+        child.signalCode !== null ||
+        child.pid === undefined
+    ) {
+        return
+    }
+
+    if (! /^win/.test(process.platform)) {
+        process.kill(-child.pid)
+        return
+    }
+
+    return new Promise((resolve, reject) => {
+        exec(`taskkill /pid ${child.pid} /T /F`, (err) => {
+            if (err) {
+                return reject(err)
+            }
+
+            resolve()
+        })
+    })
+}
+
+/**
  * Return a helper function appropriately configured to run the Mix CLI
  *
  * @param {{testing?: boolean, cwd?: string, env?: Record<string, string>}} opts
@@ -70,17 +99,7 @@ export function cli(opts) {
             }
         });
 
-        async function kill() {
-            if (
-                child.exitCode !== null ||
-                child.signalCode !== null ||
-                child.pid === undefined
-            ) {
-                return;
-            }
-
-            process.kill(-child.pid);
-        }
+        const kill = () => killProcessTree(child)
 
         child.stdin.end();
         child.stdout.on('data', data => (result.stdout += data));
