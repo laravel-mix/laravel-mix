@@ -4,6 +4,8 @@ import sinon from 'sinon';
 import { createRequire } from 'module';
 import { pathToFileURL } from 'url';
 
+import { context } from '../helpers/test.js';
+
 /**
  * @param {string|number} version
  * @param {import('../../src/Mix.js')} Mix
@@ -38,14 +40,18 @@ export function setupVueTests({ version, dir }) {
         version === 2 ? 'vue/dist/vue.esm.js' : 'vue/dist/vue.esm-bundler.js';
     let compilerName = version === 2 ? 'vue-template-compiler' : '@vue/compiler-sfc';
 
-    test.beforeEach(async () => {
-        await setupVueAliases(version);
+    test.beforeEach(async t => {
+        const { mix, Mix } = context(t);
+
+        await setupVueAliases(version, Mix);
         mix.options({ processCssUrls: false });
 
-        compiler = await compilerSpy();
+        compiler = await compilerSpy(Mix);
     });
 
     test('it adds the Vue resolve alias', async t => {
+        const { mix, webpack } = context(t);
+
         mix.vue({ extractStyles: true });
 
         const config = await webpack.buildConfig();
@@ -53,7 +59,9 @@ export function setupVueTests({ version, dir }) {
         t.is(normalAliasPath, config.resolve.alias.vue$);
     });
 
-    test('non-feature-flag use of mix.vue throws an error', t => {
+    test.serial('non-feature-flag use of mix.vue throws an error', async t => {
+        const { mix } = context(t);
+
         // @ts-expect-error
         t.throws(() => mix.vue('js/app.js', 'js'), {
             message: /mix.vue\(\) is a feature flag/
@@ -61,6 +69,8 @@ export function setupVueTests({ version, dir }) {
     });
 
     test('it adds the Vue runtime resolve alias', async t => {
+        const { mix, webpack } = context(t);
+
         mix.vue({ runtimeOnly: true });
 
         const config = await webpack.buildConfig();
@@ -68,7 +78,9 @@ export function setupVueTests({ version, dir }) {
         t.is(runtimeAliasPath, config.resolve.alias.vue$);
     });
 
-    test('it knows the Vue compiler name', t => {
+    test.serial('it knows the Vue compiler name', async t => {
+        const { mix } = context(t);
+
         mix.vue();
 
         let dependencies = Mix.components.get('vue').dependencies();
@@ -77,6 +89,8 @@ export function setupVueTests({ version, dir }) {
     });
 
     test('it switches to vue-style-loader when requested and not extracting styles', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: false, useVueStyleLoader: true });
 
         const config = await webpack.buildConfig();
@@ -89,6 +103,8 @@ export function setupVueTests({ version, dir }) {
     });
 
     test('it does not switch to vue-style-loader when requested and extracting styles', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: true, useVueStyleLoader: true });
 
         const config = await webpack.buildConfig();
@@ -100,13 +116,17 @@ export function setupVueTests({ version, dir }) {
     });
 
     test('it does not use vue-style-loader when not using .vue', async t => {
+        const { assert, webpack } = context(t);
+
         const config = await webpack.buildConfig();
 
         assert(t).loader(config, 'vue-style-loader').absent();
         assert(t).loader(config, 'style-loader').exists();
     });
 
-    test('it appends vue styles to your sass compiled file', async t => {
+    test.serial('it appends vue styles to your sass compiled file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: true });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-scss.js`, 'js/app.js').sass(
             `test/fixtures/app/src/sass/app.scss`,
@@ -125,7 +145,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/app.css`).matchesCss(expected);
     });
 
-    test('it appends vue styles to your less compiled file', async t => {
+    test.serial('it appends vue styles to your less compiled file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: true });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-scss.js`, 'js/app.js').less(
             `test/fixtures/app/src/less/main.less`,
@@ -144,20 +166,29 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/app.css`).matchesCss(expected);
     });
 
-    test('it appends vue styles to a vue-styles.css file, if no preprocessor is used', async t => {
-        mix.vue({ extractStyles: true });
-        mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-scss.js`, 'js/app.js');
+    test.serial(
+        'it appends vue styles to a vue-styles.css file, if no preprocessor is used',
+        async t => {
+            const { assert, mix, webpack } = context(t);
 
-        await webpack.compile();
+            mix.vue({ extractStyles: true });
+            mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-scss.js`, 'js/app.js');
 
-        assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/css/vue-styles.css`).exists();
+            await webpack.compile();
 
-        let expected = `.hello { color: blue; background: url(./does-not-exist.png); }`;
-        assert(t).file(`test/fixtures/app/dist/css/vue-styles.css`).matchesCss(expected);
-    });
+            assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+            assert(t).file(`test/fixtures/app/dist/css/vue-styles.css`).exists();
 
-    test('it extracts vue vanilla CSS styles to a dedicated file', async t => {
+            let expected = `.hello { color: blue; background: url(./does-not-exist.png); }`;
+            assert(t)
+                .file(`test/fixtures/app/dist/css/vue-styles.css`)
+                .matchesCss(expected);
+        }
+    );
+
+    test.serial('it extracts vue vanilla CSS styles to a dedicated file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: 'css/components.css' });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
 
@@ -169,7 +200,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it extracts vue Stylus styles to a dedicated file', async t => {
+    test.serial('it extracts vue Stylus styles to a dedicated file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: 'css/components.css' });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-stylus.js`, 'js/app.js');
 
@@ -182,6 +215,8 @@ export function setupVueTests({ version, dir }) {
     });
 
     test('it does also add the vue webpack rules with typescript component', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue();
         mix.ts('js/app.ts', 'public');
 
@@ -192,7 +227,9 @@ export function setupVueTests({ version, dir }) {
             .exists();
     });
 
-    test('it extracts vue .scss styles to a dedicated file', async t => {
+    test.serial('it extracts vue .scss styles to a dedicated file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: 'css/components.css' });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-scss.js`, 'js/app.js').sass(
             `test/fixtures/app/src/sass/app.scss`,
@@ -212,7 +249,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it extracts vue .sass styles to a dedicated file', async t => {
+    test.serial('it extracts vue .sass styles to a dedicated file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: 'css/components.css' });
         mix.js(
             `test/fixtures/app/src/${dir}/app-with-vue-and-indented-sass.js`,
@@ -232,7 +271,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it extracts vue PostCSS styles to a dedicated file', async t => {
+    test.serial('it extracts vue PostCSS styles to a dedicated file', async t => {
+        const { assert, fs, mix, webpack } = context(t);
+
         // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
         await fs(t).stub({
             [path.resolve(
@@ -253,7 +294,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it extracts vue Less styles to a dedicated file', async t => {
+    test.serial('it extracts vue Less styles to a dedicated file', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ extractStyles: 'css/components.css' });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-less.js`, 'js/app.js');
 
@@ -265,7 +308,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it supports global Vue styles for sass', async t => {
+    test.serial('it supports global Vue styles for sass', async t => {
+        const { assert, fs, mix, webpack } = context(t);
+
         // Given the user has a postcss.config.js file with the postcss-custom-properties plugin...
         await fs(t).stub({
             [path.resolve(
@@ -305,7 +350,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
     });
 
-    test('it supports Vue SFCs with separate files', async t => {
+    test.serial('it supports Vue SFCs with separate files', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue();
         mix.js(
             `test/fixtures/app/src/${dir}/app-with-vue-separate-files.js`,
@@ -317,7 +364,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
     });
 
-    test('Vue-loader options via mix.options.vue', async t => {
+    test.serial('Vue-loader options via mix.options.vue', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue();
         mix.options({ vue: { compiler } });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
@@ -328,7 +377,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
     });
 
-    test('Vue-loader options via mix.vue', async t => {
+    test.serial('Vue-loader options via mix.vue', async t => {
+        const { assert, mix, webpack } = context(t);
+
         mix.vue({ options: { compiler } });
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
 
@@ -338,7 +389,9 @@ export function setupVueTests({ version, dir }) {
         assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
     });
 
-    test('References to feature flags are replaced', async t => {
+    test.serial('References to feature flags are replaced', async t => {
+        const { assert, mix, webpack } = context(t);
+
         if (version !== 3) {
             t.pass.skip('Skipping for vue 2');
             return;
@@ -357,7 +410,9 @@ export function setupVueTests({ version, dir }) {
             ]);
     });
 
-    test('The default Vue feature flags can be overridden', async t => {
+    test.serial('The default Vue feature flags can be overridden', async t => {
+        const { assert, mix, webpack } = context(t);
+
         if (version !== 3) {
             t.pass.skip('Skipping for vue 2');
             return;
@@ -378,7 +433,7 @@ export function setupVueTests({ version, dir }) {
     });
 }
 
-async function compilerSpy() {
+async function compilerSpy(Mix) {
     const compiler = await import(pathToFileURL(Mix.resolve('vue-compiler')).toString());
     const spy = sinon.spy();
 

@@ -2,7 +2,7 @@ import test from 'ava';
 
 import { context } from '../helpers/test.js';
 
-test('it accepts a src directory', async t => {
+test.serial('it accepts a src directory', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.scripts(
@@ -17,7 +17,7 @@ test('it accepts a src directory', async t => {
         .matchesCss("alert('foo1');alert('foo2');");
 });
 
-test('it accepts a src wildcard', async t => {
+test.serial('it accepts a src wildcard', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.scripts(
@@ -32,7 +32,7 @@ test('it accepts a src wildcard', async t => {
         .matchesCss("alert('foo1');alert('foo2');");
 });
 
-test('it accepts a src array of wildcards', async t => {
+test.serial('it accepts a src array of wildcards', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.scripts(
@@ -50,7 +50,7 @@ test('it accepts a src array of wildcards', async t => {
         .matchesCss("alert('foo1');alert('foo2');alert('bar1');alert('bar2');");
 });
 
-test('it compiles JS and then combines the bundles files.', async t => {
+test.serial('it compiles JS and then combines the bundles files.', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
@@ -71,29 +71,32 @@ test('it compiles JS and then combines the bundles files.', async t => {
     });
 });
 
-test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
-    const { mix, assert, webpack } = context(t);
+test.serial(
+    'it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode',
+    async t => {
+        const { mix, assert, webpack } = context(t);
 
-    mix.options({ production: true });
+        mix.options({ production: true });
 
-    mix.scripts(
-        [
-            `test/fixtures/app/src/combine/foo/one.js`,
-            `test/fixtures/app/src/combine/foo/two.js`
-        ],
-        'test/fixtures/app/dist/output/combined-scripts.js'
-    );
+        mix.scripts(
+            [
+                `test/fixtures/app/src/combine/foo/one.js`,
+                `test/fixtures/app/src/combine/foo/two.js`
+            ],
+            'test/fixtures/app/dist/output/combined-scripts.js'
+        );
 
-    mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
+        mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
 
-    await webpack.compile();
+        await webpack.compile();
 
-    assert(t)
-        .file('test/fixtures/app/dist/js/combined-scripts.js')
-        .matchesCss('alert("foo1"),alert("foo2");');
-});
+        assert(t)
+            .file('test/fixtures/app/dist/js/combined-scripts.js')
+            .matchesCss('alert("foo1"),alert("foo2");');
+    }
+);
 
-test('it minifies a file', async t => {
+test.serial('it minifies a file', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').minify(
@@ -110,7 +113,7 @@ test('it minifies a file', async t => {
     });
 });
 
-test('it minifies an array of files', async t => {
+test.serial('it minifies an array of files', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.minify([
@@ -131,7 +134,7 @@ test('it minifies an array of files', async t => {
     });
 });
 
-test('it can concat files produced by the build', async t => {
+test.serial('it can concat files produced by the build', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.postCss(`test/fixtures/app/src/css/app.css`, `test/fixtures/app/dist/app.css`);
@@ -154,7 +157,7 @@ test('it can concat files produced by the build', async t => {
     `);
 });
 
-test('combine with missing files throws an error', async t => {
+test.serial('combine with missing files throws an error', async t => {
     const { mix, webpack } = context(t);
 
     mix.combine(

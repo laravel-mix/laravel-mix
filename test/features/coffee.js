@@ -2,7 +2,7 @@ import test from 'ava';
 
 import { context } from '../helpers/test.js';
 
-test('it compiles', async t => {
+test.serial('it compiles', async t => {
     const { mix, fs, webpack, assert } = context(t);
 
     await fs(t).stub({

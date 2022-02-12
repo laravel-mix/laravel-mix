@@ -2,23 +2,26 @@ import test from 'ava';
 
 import { context } from '../helpers/test.js';
 
-test('it compiles JavaScript and copies the output to a new location.', async t => {
-    const { mix, assert, webpack } = context(t);
+test.serial(
+    'it compiles JavaScript and copies the output to a new location.',
+    async t => {
+        const { mix, assert, webpack } = context(t);
 
-    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
-    mix.copy(`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/somewhere`);
+        mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+        mix.copy(`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/somewhere`);
 
-    await webpack.compile();
+        await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/somewhere/app.js`).exists();
+        assert(t).file(`test/fixtures/app/dist/somewhere/app.js`).exists();
 
-    assert(t).manifestEquals({
-        '/js/app.js': '/js/app.js',
-        '/somewhere/app.js': '/somewhere/app.js'
-    });
-});
+        assert(t).manifestEquals({
+            '/js/app.js': '/js/app.js',
+            '/somewhere/app.js': '/somewhere/app.js'
+        });
+    }
+);
 
-test('It can copy files and handle versioning.', async t => {
+test.serial('It can copy files and handle versioning.', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
@@ -38,7 +41,7 @@ test('It can copy files and handle versioning.', async t => {
     });
 });
 
-test('It can copy directories and handle versioning.', async t => {
+test.serial('It can copy directories and handle versioning.', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
@@ -59,7 +62,7 @@ test('It can copy directories and handle versioning.', async t => {
     });
 });
 
-test('It can copy dot files.', async t => {
+test.serial('It can copy dot files.', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.copy(`test/fixtures/app/src/.dotfile`, `test/fixtures/app/dist/.dotfile`);

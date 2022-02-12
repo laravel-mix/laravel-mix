@@ -1,7 +1,7 @@
 import test from 'ava';
 import { context } from '../helpers/test.js';
 
-test('it can version an entire directory or regex of files.', async t => {
+test.serial('it can version an entire directory or regex of files.', async t => {
     const { mix, fs, webpack, assert } = context(t);
 
     await fs(t).stub({
@@ -21,7 +21,7 @@ test('it can version an entire directory or regex of files.', async t => {
     });
 });
 
-test('it compiles JavaScript and Sass with versioning', async t => {
+test.serial('it compiles JavaScript and Sass with versioning', async t => {
     const { mix, fs, webpack, assert } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
@@ -36,7 +36,7 @@ test('it compiles JavaScript and Sass with versioning', async t => {
     });
 });
 
-test('it can build for production with versioning', async t => {
+test.serial('it can build for production with versioning', async t => {
     const { mix, webpack, assert } = context(t);
 
     mix.options({

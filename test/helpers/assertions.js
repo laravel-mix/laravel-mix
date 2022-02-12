@@ -140,6 +140,9 @@ export function assert(t) {
                 /**
                  * Assert that a file path matches the given CSS.
                  *
+                 * TODO: Use postcss to parse the trees to make sure they match instead
+                 * This is super janky
+                 *
                  * @param {string} path
                  * @param {string} expected
                  * @param {import("ava").Assertions} t

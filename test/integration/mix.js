@@ -1,48 +1,83 @@
 import test from 'ava';
 import Koa from 'koa';
 import serveFilesFrom from 'koa-static';
-import path from 'path';
 import { chromium } from 'playwright';
 
-import { mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 import { setupVueAliases } from '../features/vue.js';
+import { TestContext } from '../helpers/TestContext.js'
+
+/**
+ * @typedef {object} TestContextMetadata
+ * @property {number} port
+ * @property {import('http').Server|null} server
+ * @property {string[]} logEvents
+*/
 
 /** @type {import("playwright").Browser} */
 let browser;
 
-/** @type {import("http").Server} */
-let server;
+let port = 1337;
 
-test.before(async () => (browser = await chromium.launch()));
-test.after.always(() => browser?.close());
-
-test.beforeEach(async t => {
-    const serveFromDisk = serveFilesFrom(
-        path.join(t.context.disk.root, 'test/fixtures/integration/dist')
-    );
-
-    server = new Koa().use(serveFromDisk).listen(1337);
-});
-
-test.afterEach.always(() => server?.close());
-
-/** @type {string[]} */
-let logEvents = [];
-
-test.beforeEach(() => {
-    logEvents = [];
-    mix.setPublicPath('test/fixtures/integration/dist');
-});
-
-test.afterEach.always(t => {
-    if (!t.passed) {
-        logEvents.forEach(log => console.log(log));
+// Setup the browser used by all tests
+test.serial.before(async t => (browser = await chromium.launch()));
+test.serial.after.always(async () => {
+    if (browser) {
+        await browser.close()
     }
 });
 
-test('compiling just js', async t => {
+// Setup the server used by individual tests
+test.serial.beforeEach(async t => {
+    /** @type {TestContext<TestContextMetadata>} */
+    const { disk, metadata } = context(t, {
+        port: port++,
+        server: null,
+        logEvents: [],
+    });
+
+    const serveFromDisk = serveFilesFrom(disk.join('test/fixtures/integration/dist'));
+
+    metadata.server = new Koa().use(serveFromDisk).listen(metadata.port);
+});
+
+test.serial.afterEach.always(async t => {
+    /** @type {TestContext<TestContextMetadata>} */
+    const { metadata } = context(t, {
+        port: port++,
+        server: null,
+        logEvents: [],
+    });
+
+    if (metadata.server) {
+        await metadata.server.close()
+    }
+});
+
+test.serial.beforeEach(t => {
+    /** @type {TestContext<TestContextMetadata>} */
+    const { mix, metadata } = context(t);
+
+    metadata.logEvents = [];
+    mix.setPublicPath('test/fixtures/integration/dist');
+});
+
+test.serial.afterEach.always(t => {
+    if (t.passed) {
+        return
+    }
+
+    /** @type {TestContext<TestContextMetadata>} */
+    const { metadata } = context(t);
+
+    metadata.logEvents.forEach(log => console.log(log));
+});
+
+test.serial('compiling just js', async t => {
+    const { mix, Mix, webpack } = context(t);
+
     // Build a simple mix setup
-    await setupVueAliases(3);
+    await setupVueAliases(3, Mix);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
     mix.vue({ extractStyles: 'css/vue-styles.css' });
@@ -53,8 +88,10 @@ test('compiling just js', async t => {
     await assertProducesLogs(t, ['loaded: app.js']);
 });
 
-test('compiling js and css together', async t => {
-    await setupVueAliases(3);
+test.serial('compiling js and css together', async t => {
+    const { mix, Mix, webpack } = context(t);
+
+    await setupVueAliases(3, Mix);
 
     // Build a simple mix setup
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
@@ -76,13 +113,16 @@ test('compiling js and css together', async t => {
     ]);
 });
 
-test('node browser polyfills: enabled', async t => {
-    await setupVueAliases(3);
+test.serial('node browser polyfills: enabled', async t => {
+    const { mix, Mix, webpack } = context(t);
+
+    await setupVueAliases(3, Mix);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
     mix.vue({ extractStyles: 'css/vue-styles.css' });
     mix.react();
     mix.extract();
+    mix.options({ legacyNodePolyfills: true });
 
     await webpack.compile();
     await assertProducesLogs(t, [
@@ -94,8 +134,10 @@ test('node browser polyfills: enabled', async t => {
     ]);
 });
 
-test('node browser polyfills: disabled', async t => {
-    await setupVueAliases(3);
+test.serial('node browser polyfills: disabled', async t => {
+    const { mix, Mix, webpack } = context(t);
+
+    await setupVueAliases(3, Mix);
 
     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
     mix.vue({ extractStyles: 'css/vue-styles.css' });
@@ -118,14 +160,17 @@ test('node browser polyfills: disabled', async t => {
  * @param {string[]} logs
  **/
 async function assertProducesLogs(t, logs) {
-    const uri = `http://localhost:1337/index.html`;
+    /** @type {TestContext<TestContextMetadata>} */
+    const { metadata } = context(t);
+
+    const uri = `http://localhost:${metadata.port}/index.html`;
 
     // Verify in the browser
     const page = await browser.newPage();
 
-    page.on('request', req => logEvents.push(`[browser request] ${req.url()}`));
+    page.on('request', req => metadata.logEvents.push(`[browser request] ${req.url()}`));
     page.on('console', msg =>
-        logEvents.push(`[browser console] ${msg.type()}: ${msg.text()}`)
+        metadata.logEvents.push(`[browser console] ${msg.type()}: ${msg.text()}`)
     );
 
     /** @type Promise<import('playwright').ConsoleMessage | import('playwright').Response | null>[] */

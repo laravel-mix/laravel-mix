@@ -5,9 +5,11 @@ import * as babel from './babel.js';
 import { fs } from './fs.js';
 import { Disk } from './Disk.js';
 import { assert } from './assertions.js';
-
 import Mix from '../../src/Mix.js';
 
+/**
+ * @template {object} MetadataType
+ */
 export class TestContext {
     /**
      * @param {import('ava').ExecutionContext} t
@@ -18,19 +20,20 @@ export class TestContext {
         this.Mix = new Mix();
         this.publicPath = 'test/fixtures/app/dist';
 
+        /** @type {MetadataType} */
+        this.metadata = {};
+
         /** @type {ReturnType<typeof babel.recordConfigsImpl>} */
         // @ts-ignore
         this.babel = null;
+    }
 
-        /**
-         * @param {import('ava').ExecutionContext} t
-         */
-        this.fs = fs(t);
+    get fs() {
+        return () => fs(this.t);
+    }
 
-        /**
-         * @param {import('ava').ExecutionContext} t
-         */
-        this.assert = assert(t);
+    get assert() {
+        return () => assert(this.t);
     }
 
     async setup() {
@@ -52,9 +55,9 @@ export class TestContext {
         this.mix.options({ autoprefixer: false });
     }
 
-    async teardown() {
-        if (this.t.passed) {
-            await this.disk.cleanup();
+    teardown() {
+        if (!this.t.passed) {
+            this.disk.keepAfterExit();
         }
     }
 
@@ -89,12 +92,19 @@ export class TestContext {
 }
 
 /**
+ * @template {object} T
  * @param {import('ava').ExecutionContext} t
+ * @param {T} [metadata]
+ * @returns {TestContext<T>}
  */
-export const context = t => {
+export const context = (t, metadata = undefined) => {
     if (t.context instanceof TestContext) {
-        return t.context;
+        t.context.t = t;
+   } else {
+        t.context = new TestContext(t)
     }
 
-    return (t.context = new TestContext(t));
+    Object.assign(t.context.metadata, metadata || {});
+
+    return t.context;
 };

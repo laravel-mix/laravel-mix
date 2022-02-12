@@ -18,7 +18,7 @@ test('mix can be extended with new functionality as a callback', async t => {
     t.true(registration.calledWith(config, 'baz', 'buzz'));
 });
 
-test('mix can be extended with new functionality as a class', t => {
+test('mix can be extended with new functionality as a class', async t => {
     const { mix } = context(t);
 
     mix.extend(

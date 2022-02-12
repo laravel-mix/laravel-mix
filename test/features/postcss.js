@@ -3,7 +3,7 @@ import test from 'ava';
 import { context } from '../helpers/test.js';
 import { TestContext } from '../helpers/TestContext.js';
 
-test(
+test.serial(
     'basic mix.postCss() compilation',
     buildTest({
         file: 'basic-compilation.css',
@@ -12,7 +12,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'mix.css() is an alias for mix.postCss()',
     buildTest({
         run: ({ mix }) => mix.css('stubs/basic-compilation.css', 'css'),
@@ -23,7 +23,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it applies autoprefixer to compiled CSS',
     buildTest({
         file: 'autoprefixer.css',
@@ -35,7 +35,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it applies autoprefixer with custom configuration',
     buildTest({
         prepare: ({ mix }) => mix.options({ autoprefixer: { remove: false } }),
@@ -46,7 +46,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it disables autoprefixer',
     buildTest({
         prepare: ({ mix }) => mix.options({ autoprefixer: false }),
@@ -57,7 +57,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it disables autoprefixer but still loads postcss.config.js',
     buildTest({
         prepare: ({ mix }) => mix.options({ autoprefixer: false }),
@@ -80,7 +80,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it applies CSSNano minification during production',
     buildTest({
         prepare: ({ mix }) => mix.options({ production: true }),
@@ -91,7 +91,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it disables CSSNano minification',
     buildTest({
         prepare: ({ mix }) => mix.options({ production: true, cssNano: false }),
@@ -109,7 +109,7 @@ test(
     })
 );
 
-test(
+test.serial(
     'it applies CSSNano minification with configuration options',
     buildTest({
         // By default, PostCss will discard empty rules. Let's turn it
@@ -123,7 +123,7 @@ test(
     })
 );
 
-test(
+test.serial(
     "it merge Mix's default postcss plugins with any found in the user's postcss.config.js.",
     buildTest({
         prepare: ({ mix }) => mix.options({ production: true }),

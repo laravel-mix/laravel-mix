@@ -7,9 +7,6 @@ import Dependencies from '../../src/Dependencies.js';
 import PackageManager from '../../src/PackageManager.js';
 import { createRequire } from 'module';
 
-/** @type {Dependencies} */
-let dependencies;
-
 /** @type {sinon.SinonStub<Parameters<childProcess.exec>>} */
 let exec;
 
@@ -17,21 +14,22 @@ test.beforeEach(() => {
     PackageManager.detect = () => 'npm';
     console.log = () => {};
 
-    dependencies = new Dependencies();
     exec = sinon.stub(childProcess, 'exec').yields(undefined);
 });
 
-test.afterEach.always(() => {
-    exec.restore();
-});
+test.afterEach.always(() => exec.restore());
 
-test('it installs a single dependency', async t => {
+test.serial('it installs a single dependency', async t => {
+    const dependencies = new Dependencies();
+
     await dependencies.enqueue(['browser-sync']).install();
 
     assertRanCommand(t, 'npm install browser-sync --save-dev --legacy-peer-deps');
 });
 
-test('it installs multiple dependencies', async t => {
+test.serial('it installs multiple dependencies', async t => {
+    const dependencies = new Dependencies();
+
     await dependencies.enqueue(['browser-sync', 'browser-sync-webpack-plugin']).install();
 
     assertRanCommand(
@@ -40,7 +38,9 @@ test('it installs multiple dependencies', async t => {
     );
 });
 
-test('it can install dependencies using yarn', async t => {
+test.serial('it can install dependencies using yarn', async t => {
+    const dependencies = new Dependencies();
+
     PackageManager.detect = () => 'yarn';
 
     await dependencies.enqueue(['browser-sync']).install();
@@ -48,7 +48,9 @@ test('it can install dependencies using yarn', async t => {
     assertRanCommand(t, 'yarn add browser-sync --dev');
 });
 
-test('it can install all queued dependencies at once', async t => {
+test.serial('it can install all queued dependencies at once', async t => {
+    const dependencies = new Dependencies();
+
     dependencies.enqueue(['pkg1', 'pkg2']);
     dependencies.enqueue(['pkg3']);
     dependencies.enqueue(['pkg4'], true);
@@ -61,7 +63,9 @@ test('it can install all queued dependencies at once', async t => {
     );
 });
 
-test('it can utilize custom checks for a dependency: false', async t => {
+test.serial('it can utilize custom checks for a dependency: false', async t => {
+    const dependencies = new Dependencies();
+
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
     const stub = sinon.stub().returns(true);
@@ -79,7 +83,9 @@ test('it can utilize custom checks for a dependency: false', async t => {
     t.false(exec.calledWith(cmd, sinon.match.func));
 });
 
-test('it can utilize custom checks for a dependency: true', async t => {
+test.serial('it can utilize custom checks for a dependency: true', async t => {
+    const dependencies = new Dependencies();
+
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
     const spy = sinon.spy();

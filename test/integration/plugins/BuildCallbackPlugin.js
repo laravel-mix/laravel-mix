@@ -1,17 +1,20 @@
 import test from 'ava';
 import sinon from 'sinon';
 
-import { fs, webpack } from '../../helpers/test.js';
+import { context } from '../../helpers/test.js';
+import * as webpack from '../../helpers/webpack.js';
 import BuildCallbackPlugin from '../../../src/webpackPlugins/BuildCallbackPlugin.js';
 
 test('that it triggers a callback handler when the Webpack compiler is done', async t => {
+    const { disk, fs } = context(t);
+
     const paths = {
-        'src/index.js': t.context.disk.join('./tmp/src/index.js'),
-        dist: t.context.disk.join('./tmp/dist'),
-        'dist/main.js': t.context.disk.join('./tmp/dist/main.js')
+        'src/index.js': disk.join('./tmp/src/index.js'),
+        dist: disk.join('./tmp/dist'),
+        'dist/main.js': disk.join('./tmp/dist/main.js')
     };
 
-    await fs(t).stub({
+    await fs().stub({
         [paths['src/index.js']]: `module.exports = 'index.js';`,
         [paths['dist/main.js']]: ``
     });

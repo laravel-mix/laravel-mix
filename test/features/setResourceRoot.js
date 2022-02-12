@@ -10,7 +10,7 @@ test('mix.setResourceRoot()', t => {
     t.is('some/path', Mix.config.resourceRoot);
 });
 
-test('mix.setResourceRoot() rewrites processed asset urls', async t => {
+test.serial('mix.setResourceRoot() rewrites processed asset urls', async t => {
     const { mix, webpack, assert } = context(t);
 
     mix.setResourceRoot('https://www.example.com/');

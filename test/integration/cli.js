@@ -40,7 +40,7 @@ test('An empty mix file results in a successful build with a warning', async t =
 });
 
 /*
-test('it removes the hot reloading file when the process is finished', async t => {
+test.serial('it removes the hot reloading file when the process is finished', async t => {
     let hotFilePath = path.join(__dirname, './fixture/public/hot');
 
     await mix(['watch --hot'], {
@@ -50,7 +50,7 @@ test('it removes the hot reloading file when the process is finished', async t =
     t.false(File.exists(hotFilePath));
 });
 
-test('Can run HMR', async t => {
+test.serial('Can run HMR', async t => {
     const req = request('http://localhost:1339');
 
     const { code, stdout } = await mix(['watch --hot -- --port 1339'], {

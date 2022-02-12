@@ -33,7 +33,7 @@ test('it is able to apply options to ts-loader', async t => {
     t.truthy(loader && loader.options && loader.options.transpileOnly);
 });
 
-test('it compiles TypeScript with dynamic import', async t => {
+test.serial('it compiles TypeScript with dynamic import', async t => {
     const { mix, webpack, assert } = context(t);
 
     mix.ts(`test/fixtures/app/src/dynamic-ts/dynamic.ts`, 'js', {

@@ -26,25 +26,28 @@ test('Custom webpack config can be merged as a callback function', async t => {
     t.deepEqual(['foo'], config.externals);
 });
 
-test('Custom webpack config is called and merged *after* all plugins and extensions', async t => {
-    const { mix, webpack } = context(t);
+test.serial(
+    'Custom webpack config is called and merged *after* all plugins and extensions',
+    async t => {
+        const { mix, webpack } = context(t);
 
-    mix.extend('extension', {
-        webpackConfig(config) {
-            config.externals = ['extension foo'];
-        }
-    });
+        mix.extend('extension', {
+            webpackConfig(config) {
+                config.externals = ['extension foo'];
+            }
+        });
 
-    // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
-    mix.extension();
+        // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
+        mix.extension();
 
-    mix.webpackConfig(() => {
-        return {
-            externals: ['webpackConfig foo']
-        };
-    });
+        mix.webpackConfig(() => {
+            return {
+                externals: ['webpackConfig foo']
+            };
+        });
 
-    const { config } = await webpack.compile();
+        const { config } = await webpack.compile();
 
-    t.deepEqual(['extension foo', 'webpackConfig foo'], config.externals);
-});
+        t.deepEqual(['extension foo', 'webpackConfig foo'], config.externals);
+    }
+);

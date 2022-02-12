@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { mix, webpack } from '../helpers/test.js';
+import { context } from '../helpers/test.js';
 
 test('it configures hot reloading dev server options', async t => {
+    const { mix, webpack } = context(t);
+
     mix.options({
         hmr: true
     });
@@ -22,6 +24,8 @@ test('it configures hot reloading dev server options', async t => {
 });
 
 test('it configures hot reloading dev server options for https', async t => {
+    const { mix, webpack } = context(t);
+
     mix.options({
         hmr: true,
         hmrOptions: {

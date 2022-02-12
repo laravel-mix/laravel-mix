@@ -28,7 +28,7 @@ test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
         .exists();
 });
 
-test('it compiles JavaScript', async t => {
+test.serial('it compiles JavaScript', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
@@ -42,7 +42,7 @@ test('it compiles JavaScript', async t => {
     });
 });
 
-test('it compiles JavaScript with dynamic import', async t => {
+test.serial('it compiles JavaScript with dynamic import', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/dynamic/dynamic.js`, 'js');
@@ -58,7 +58,7 @@ test('it compiles JavaScript with dynamic import', async t => {
     });
 });
 
-test('it compiles JavaScript and Sass', async t => {
+test.serial('it compiles JavaScript and Sass', async t => {
     const { mix, assert, webpack } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').sass(
@@ -77,7 +77,7 @@ test('it compiles JavaScript and Sass', async t => {
     });
 });
 
-test('basic JS compilation config.', async t => {
+test.serial('basic JS compilation config.', async t => {
     const { mix, webpack } = context(t);
 
     mix.js('js/app.js', 'js');
@@ -103,20 +103,23 @@ test('basic JS compilation config.', async t => {
     );
 });
 
-test('basic JS compilation with output dist directory omitted config.', async t => {
-    const { mix, webpack } = context(t);
+test.serial(
+    'basic JS compilation with output dist directory omitted config.',
+    async t => {
+        const { mix, webpack } = context(t);
 
-    mix.js('js/app.js', 'js');
+        mix.js('js/app.js', 'js');
 
-    const config = await webpack.buildConfig();
+        const config = await webpack.buildConfig();
 
-    t.deepEqual(
-        {
-            '/js/app': [path.resolve('js/app.js')]
-        },
-        config.entry
-    );
-});
+        t.deepEqual(
+            {
+                '/js/app': [path.resolve('js/app.js')]
+            },
+            config.entry
+        );
+    }
+);
 
 test('basic JS compilation with a different dist path', async t => {
     const { mix, webpack } = context(t);
@@ -137,7 +140,7 @@ test('basic JS compilation with a different dist path', async t => {
     );
 });
 
-test('basic JS compilation with a specific output path config.', async t => {
+test.serial('basic JS compilation with a specific output path config.', async t => {
     const { mix, webpack } = context(t);
 
     mix.js('js/app.js', 'js/output.js');
@@ -152,7 +155,9 @@ test('basic JS compilation with a specific output path config.', async t => {
     );
 });
 
-test('mix.js()', t => {
+test('mix.js()', async t => {
+    const { mix, Mix } = context(t);
+
     mix.js('js/app.js', 'dist/js');
 
     let jsComponent = Mix.components.get('js');
