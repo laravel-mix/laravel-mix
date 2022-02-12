@@ -180,7 +180,7 @@ async function assertProducesLogs(t, logs) {
         ...logs.map(log =>
             page.waitForEvent('console', {
                 predicate: msg => msg.text() === log,
-                timeout: 1000
+                timeout: 10000
             })
         )
     );
