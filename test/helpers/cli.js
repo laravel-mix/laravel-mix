@@ -46,7 +46,7 @@ export function cli(opts) {
      * @returns {Promise<CliResult>}
      */
     async function run(args, hooks) {
-        let cmd = [path.resolve('./bin/cli.js'), ...args];
+        let cmd = ['node', path.resolve('./bin/cli.js'), ...args].join(' ');
         let result = {
             /** @type {import('child_process').ExecException | null} */
             error: null,
@@ -59,9 +59,8 @@ export function cli(opts) {
             stderr: ''
         };
 
-        cmd = cmd.flatMap(arg => arg.split(' '));
-
-        const child = spawn('node', cmd, {
+        const child = spawn(cmd, {
+            shell: true,
             detached: true,
             cwd,
             env: {
