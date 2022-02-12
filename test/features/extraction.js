@@ -4,7 +4,7 @@ import File from '../../src/File.js';
 import { assert, mix, webpack } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
 
-test.beforeEach(() => setupVueAliases(2));
+test.beforeEach(async () => await setupVueAliases(2));
 
 test('JS compilation with vendor extraction config', async t => {
     mix.js(`test/fixtures/app/src/extract/app.js`, 'js')

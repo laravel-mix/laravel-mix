@@ -1,10 +1,13 @@
 import test from 'ava';
 import fs from 'fs-extra';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import File from '../../src/File.js';
 import Manifest from '../../src/Manifest.js';
 import { assert, mix, Mix, webpack } from '../helpers/test.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test.beforeEach(() => {
     Mix.manifest = new Manifest();

@@ -10,6 +10,12 @@ export let Mix;
 /** @type {import('../../src/Mix')['api']} */
 export let mix;
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+process.chdir(__dirname + '/../../');
+
 test.beforeEach(async () => {
     Mix = new MixClass().boot();
     mix = Mix.api;

@@ -1,6 +1,8 @@
 import test from 'ava';
 import path from 'path';
 import sinon from 'sinon';
+import { createRequire } from 'module';
+import { pathToFileURL } from 'url';
 
 import { assert, fs, mix, Mix, webpack } from '../helpers/test.js';
 
@@ -17,6 +19,7 @@ export function setupVueAliases(version) {
     Mix.resolver.alias('vue-loader', vueLoaderModule);
     Mix.resolver.alias('vue-compiler', vueCompiler);
 
+    const require = createRequire(import.meta.url);
     mix.alias({ vue: require.resolve(vueModule) });
 }
 
@@ -37,11 +40,11 @@ export function setupVueTests({ version, dir }) {
         version === 2 ? 'vue/dist/vue.esm.js' : 'vue/dist/vue.esm-bundler.js';
     let compilerName = version === 2 ? 'vue-template-compiler' : '@vue/compiler-sfc';
 
-    test.beforeEach(() => {
-        setupVueAliases(version);
+    test.beforeEach(async () => {
+        await setupVueAliases(version);
         mix.options({ processCssUrls: false });
 
-        compiler = compilerSpy();
+        compiler = await compilerSpy();
     });
 
     test('it adds the Vue resolve alias', async t => {
@@ -377,8 +380,8 @@ export function setupVueTests({ version, dir }) {
     });
 }
 
-function compilerSpy() {
-    const compiler = require(Mix.resolve('vue-compiler'));
+async function compilerSpy() {
+    const compiler = await import(pathToFileURL(Mix.resolve('vue-compiler')).toString());
     const spy = sinon.spy();
 
     // We don't use sinon.spy directly because if you create a spy

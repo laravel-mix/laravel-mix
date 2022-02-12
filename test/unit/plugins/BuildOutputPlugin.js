@@ -1,5 +1,5 @@
 import test from 'ava';
-import colors from 'colors/safe';
+import colors from 'colors/safe.js';
 
 import BuildOutputPlugin from '../../../src/webpackPlugins/BuildOutputPlugin.js';
 

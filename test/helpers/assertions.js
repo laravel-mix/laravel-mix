@@ -1,5 +1,5 @@
 import eol from 'eol';
-import { concat } from 'lodash';
+import _ from 'lodash';
 import File from '../../src/File.js';
 
 /**
@@ -157,7 +157,7 @@ export function assert(t) {
                 contains: str => {
                     const content = eol.lf(file.read());
 
-                    for (const snippet of concat([], str)) {
+                    for (const snippet of _.concat([], str)) {
                         t.true(content.includes(snippet));
                     }
                 },
@@ -172,7 +172,7 @@ export function assert(t) {
                 doesNotContain: str => {
                     const content = eol.lf(file.read());
 
-                    for (const snippet of concat([], str)) {
+                    for (const snippet of _.concat([], str)) {
                         t.false(content.includes(snippet));
                     }
                 }

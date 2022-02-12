@@ -1,3 +1,2 @@
-*
-!src
-!.gitignore
+dist/
+manifest.json

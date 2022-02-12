@@ -1,13 +1,16 @@
 import test from 'ava';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { mix, Mix, fs, webpack, babel } from '../helpers/test.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {ReturnType<babel.recordConfigs>} */
 let babelConfig;
 
-test.beforeEach(() => {
-    babelConfig = babel.recordConfigs();
+test.beforeEach(async () => {
+    babelConfig = await babel.recordConfigs();
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
 });
@@ -54,7 +57,7 @@ test('Babel config files can be read from the project root', async t => {
 
     await fs(t).stub({
         [Mix.paths.root('babel.config.js')]:
-            'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }',
+            'export default { "plugins": ["@babel/plugin-syntax-json-strings"] }',
         [Mix.paths.root('.babelrc')]:
             '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
     });

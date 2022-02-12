@@ -2,11 +2,13 @@ import test from 'ava';
 import fsx from 'fs-extra';
 import path from 'path';
 import sinon from 'sinon';
+import { fileURLToPath } from 'url';
 
 import File from '../../src/File.js';
 import FileCollection from '../../src/FileCollection.js';
 import { assert, fs } from '../helpers/test.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const stubsDir = path.resolve(__dirname, 'stubs');
 
 test.before(() => fsx.ensureDirSync(stubsDir));

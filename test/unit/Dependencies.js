@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import Dependencies from '../../src/Dependencies.js';
 import PackageManager from '../../src/PackageManager.js';
 import '../../src/helpers.js';
+import { createRequire } from 'module';
 
 /** @type {Dependencies} */
 let dependencies;
@@ -83,6 +84,7 @@ test('it can utilize custom checks for a dependency: true', async t => {
     const cmd = 'npm install postcss@^8.1 --save-dev --legacy-peer-deps';
 
     const spy = sinon.spy();
+    const require = createRequire(import.meta.url);
 
     dependencies.enqueue([
         {

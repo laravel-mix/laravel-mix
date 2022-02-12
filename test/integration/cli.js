@@ -1,9 +1,11 @@
 import test from 'ava';
 import path from 'path';
 import request from 'supertest';
-import File from '../../src/File.js';
+import { fileURLToPath } from 'url';
 
 import { cli } from '../helpers/cli.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mix = cli({
     testing: false,

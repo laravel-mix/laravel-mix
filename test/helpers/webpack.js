@@ -22,9 +22,10 @@ export async function buildConfig(shouldInit = true) {
  */
 export async function compile(override) {
     const config = override || (await buildConfig());
+    const compiler = webpack(config);
 
     return new Promise((resolve, reject) => {
-        webpack(config, (err, stats) => {
+        compiler.run((err, stats) => {
             if (err) {
                 reject(
                     Object.create(err, {

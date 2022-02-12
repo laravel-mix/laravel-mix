@@ -1,5 +1,6 @@
 import test from 'ava';
 import path from 'path';
+import { createRequire } from 'module';
 
 import { cli } from '../helpers/cli.js';
 
@@ -9,6 +10,8 @@ const mix = cli({ testing: true });
 let configPath = '';
 
 test.before(() => {
+    const require = createRequire(import.meta.url);
+
     configPath = path.relative(
         process.cwd(),
         require.resolve('../../setup/webpack.config.js')

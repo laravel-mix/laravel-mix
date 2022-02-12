@@ -1,7 +1,10 @@
 import test from 'ava';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import MixDefinitionsPlugin from '../../../src/webpackPlugins/MixDefinitionsPlugin.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test('it fetches the MIX_ definitions properly', t => {
     let plugin = new MixDefinitionsPlugin(path.resolve(__dirname, 'testing.env'));

@@ -1,10 +1,12 @@
 import test from 'ava';
 import fsx from 'fs-extra';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import File from '../../src/File.js';
 import { assert, fs, mix, Mix } from '../helpers/test.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const stubsDir = path.resolve(__dirname, 'stubs');
 
 test.beforeEach(() => {

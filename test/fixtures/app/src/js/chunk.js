@@ -1,1 +1,1 @@
-() => import(/* webpackChunkName: "test" */ './another');
+() => import(/* webpackChunkName: "test" */ './another.js');

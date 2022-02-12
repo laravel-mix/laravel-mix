@@ -3,8 +3,8 @@ import mockRequire from 'mock-require';
 /** @type {any} */
 let originalBabelLoader;
 
-export function recordConfigs() {
-    originalBabelLoader = originalBabelLoader || require('babel-loader');
+export async function recordConfigs() {
+    originalBabelLoader = originalBabelLoader || (await import('babel-loader'));
 
     /** @type {Record<string,import("@babel/core").PartialConfig>} config */
     const resolvedConfigs = {};

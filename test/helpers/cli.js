@@ -1,5 +1,8 @@
-import { exec, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {object} CliResult
@@ -67,7 +70,7 @@ export function cli(opts) {
      * @returns {Promise<CliResult>}
      */
     async function run(args, hooks) {
-        let cmd = ['node', path.resolve('./bin/cli.js'), ...args].join(' ');
+        let cmd = ['node', path.resolve(__dirname, '../../bin/cli.js'), ...args].join(' ');
         let result = {
             /** @type {import('child_process').ExecException | null} */
             error: null,

@@ -9,7 +9,7 @@ new Vue({
     },
 
     async mounted() {
-        const mod = await import('./dynamic');
+        const mod = await import('./dynamic.js');
         mod.default();
     }
 }).$mount('#app');

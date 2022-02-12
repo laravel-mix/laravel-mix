@@ -4,7 +4,7 @@ import File from '../../src/File.js';
 import { assert, mix, webpack } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
 
-test.beforeEach(() => setupVueAliases(2));
+test.beforeEach(async () => await setupVueAliases(2));
 
 test('the kitchen sink', async t => {
     new File(`test/fixtures/app/dist/file.js`).write('var foo');
