@@ -1,7 +1,8 @@
 const semver = require('semver');
+const { Component } = require('./Component');
 const File = require('../File');
 
-class React {
+module.exports = class React extends Component {
     /** @type {import('laravel-mix').ReactConfig} */
     options = {
         extractStyles: false
@@ -62,7 +63,7 @@ class React {
 
         const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-        return new ReactRefreshPlugin({ overlay: { sockPath: 'ws' } });
+        return [new ReactRefreshPlugin({ overlay: { sockPath: 'ws' } })];
     }
 
     /**
@@ -70,7 +71,7 @@ class React {
      */
     babelConfig() {
         const plugins = this.supportsFastRefreshing()
-            ? [Mix.resolve('react-refresh/babel')]
+            ? [this.context.resolve('react-refresh/babel')]
             : [];
 
         return {
@@ -83,7 +84,9 @@ class React {
      * Determine if the React version supports fast refreshing.
      */
     supportsFastRefreshing() {
-        return Mix.isHot() && semver.satisfies(this.library().version, '>=16.9.0');
+        return (
+            this.context.isHot() && semver.satisfies(this.library().version, '>=16.9.0')
+        );
     }
 
     /**
@@ -174,12 +177,6 @@ class React {
                 ? this.options.extractStyles
                 : '/css/react-styles.css';
 
-        return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+        return fileName.replace(this.context.config.publicPath, '').replace(/^\//, '');
     }
-
-    get context() {
-        return global.Mix;
-    }
-}
-
-module.exports = React;
+};

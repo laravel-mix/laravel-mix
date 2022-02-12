@@ -1,24 +1,17 @@
-let path = require('path');
-let File = require('../File');
-let { Chunks } = require('../Chunks');
+const path = require('path');
+const File = require('../File');
+const { Component } = require('./Component');
 
 /** @typedef {import('../../types/extract').Extraction} Extraction */
 /** @typedef {import('../../types/extract').ExtractConfig} ExtractConfig */
-/** @typedef {import('../builder/Entry').Entry} Entry */
+/** @typedef {import('../builder/Entry')} Entry */
 
-class Extract {
-    /**
-     * Create a new component instance.
-     */
-    constructor() {
-        /** @type {Entry|null} */
-        this.entry = null;
+module.exports = class Extract extends Component {
+    /** @type {Entry|null} */
+    entry = null;
 
-        /** @type {Extraction[]} */
-        this.extractions = [];
-        this.chunks = Chunks.instance();
-        this.chunks.runtime = true;
-    }
+    /** @type {Extraction[]} */
+    extractions = [];
 
     /**
      * The name of the component.
@@ -36,6 +29,7 @@ class Extract {
      * @param {string} [output]
      */
     register(config = null, output = null) {
+        this.context.chunks.runtime = true;
         this.extractions.push(this.normalizeExtraction(config, output));
     }
 
@@ -46,9 +40,9 @@ class Extract {
      */
     webpackEntry(entry) {
         this.entry = entry;
-        this.chunks.entry = entry;
+        this.context.chunks.entry = entry;
 
-        if (!Mix.bundlingJavaScript) {
+        if (!this.context.bundlingJavaScript) {
             throw new Error('You must compile JS to extract vendor code');
         }
 
@@ -60,7 +54,7 @@ class Extract {
                 extraction.test.source ===
                     '(?<!node_modules)[\\\\/]node_modules[\\\\/]()';
 
-            this.chunks.add(
+            this.context.chunks.add(
                 `vendor${this.extractions.indexOf(extraction)}`,
                 path.replace(/\.js$/, ''),
                 extraction.test,
@@ -132,6 +126,4 @@ class Extract {
 
         return new RegExp(`${pattern}(${extra})`, 'i');
     }
-}
-
-module.exports = Extract;
+};

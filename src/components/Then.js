@@ -1,4 +1,6 @@
-class Then {
+const { Component } = require('./Component');
+
+module.exports = class Then extends Component {
     /**
      * The API name for the component.
      */
@@ -6,11 +8,10 @@ class Then {
         return ['then', 'after'];
     }
 
+    /**
+     * @param {() => void | Promise<void>} callback
+     */
     register(callback) {
-        Mix.listen('build', callback);
-
-        return this;
+        this.context.listen('build', callback);
     }
-}
-
-module.exports = Then;
+};

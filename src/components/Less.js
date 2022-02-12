@@ -1,6 +1,6 @@
-let Preprocessor = require('./Preprocessor');
+const Preprocessor = require('./Preprocessor');
 
-class Less extends Preprocessor {
+module.exports = class Less extends Preprocessor {
     /**
      * Required dependencies for the component.
      */
@@ -23,6 +23,4 @@ class Less extends Preprocessor {
     chunkRegex() {
         return /\.(css|less)$/;
     }
-}
-
-module.exports = Less;
+};

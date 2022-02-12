@@ -1,9 +1,11 @@
-class Override {
+const { Component } = require('./Component');
+
+module.exports = class Override extends Component {
+    /**
+     *
+     * @param {()=>void|Promise<void>} callback
+     */
     register(callback) {
-        Mix.listen('configReadyForUser', callback);
-
-        return this;
+        this.context.listen('configReadyForUser', callback);
     }
-}
-
-module.exports = Override;
+};

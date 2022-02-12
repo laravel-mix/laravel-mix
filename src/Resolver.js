@@ -23,6 +23,25 @@ class Resolver {
     /**
      *
      * @param {string} name
+     * @returns {boolean}
+     */
+    has(name) {
+        if (this.aliases[name] !== undefined) {
+            return true;
+        }
+
+        try {
+            require.resolve(name);
+
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param {string} name
      * @param {string} newName
      * @internal
      */

@@ -1,6 +1,6 @@
-let Preprocessor = require('./Preprocessor');
+const Preprocessor = require('./Preprocessor');
 
-class Sass extends Preprocessor {
+module.exports = class Sass extends Preprocessor {
     /**
      * Required dependencies for the component.
      */
@@ -9,7 +9,7 @@ class Sass extends Preprocessor {
 
         const deps = ['sass-loader@^12.1.0', 'sass'];
 
-        if (Config.processCssUrls) {
+        if (this.context.config.processCssUrls) {
             deps.push('resolve-url-loader@^5.0.0');
         }
 
@@ -56,6 +56,4 @@ class Sass extends Preprocessor {
     chunkRegex() {
         return /\.(css|s[ac]ss)$/;
     }
-}
-
-module.exports = Sass;
+};

@@ -1,12 +1,10 @@
-class PostCssPluginsFactory {
+module.exports = class PostCssPluginsFactory {
     /**
      * Create a new instance.
-     * @param {import('./components/Preprocessor').Detail} preprocessor
-     * @param {Config} Config
+     * @param {import('./Mix.js')} context
      */
-    constructor(preprocessor, Config) {
-        this.preprocessor = preprocessor;
-        this.Config = Config;
+    constructor(context) {
+        this.context = context;
 
         /** @type {import('postcss').AcceptedPlugin[]} */
         this.plugins = [];
@@ -14,9 +12,14 @@ class PostCssPluginsFactory {
 
     /**
      * Load all relevant PostCSS plugins.
+     *
+     * @param {import('postcss').AcceptedPlugin[] | undefined} plugins
      */
-    load() {
-        this.loadGlobalPlugins().loadLocalPlugins().loadAutoprefixer().loadCssNano();
+    load(plugins = []) {
+        this.loadGlobalPlugins();
+        this.loadLocalPlugins(plugins);
+        this.loadAutoprefixer();
+        this.loadCssNano();
 
         return this.plugins;
     }
@@ -34,57 +37,47 @@ class PostCssPluginsFactory {
         } catch (e) {
             // No postcss.config.js file exists.
         }
-
-        return this;
     }
 
     /**
      * Load any global postcss plugins that have been passed to Mix.
      */
     loadGlobalPlugins() {
-        if (this.Config.postCss && this.Config.postCss.length) {
-            this.plugins = [...this.plugins, ...this.Config.postCss];
+        if (this.context.config.postCss && this.context.config.postCss.length) {
+            this.plugins = [...this.plugins, ...this.context.config.postCss];
         }
-
-        return this;
     }
 
     /**
      * Load any postcss plugins that were passed to the Mix command.
+     *
+     * @param {import('postcss').AcceptedPlugin[] | undefined} plugins
      */
-    loadLocalPlugins() {
-        if (this.preprocessor.postCssPlugins && this.preprocessor.postCssPlugins.length) {
-            this.plugins = [...this.plugins, ...this.preprocessor.postCssPlugins];
+    loadLocalPlugins(plugins) {
+        if (plugins && plugins.length) {
+            this.plugins = [...this.plugins, ...plugins];
         }
-
-        return this;
     }
 
     /**
      * Add autoprefixer to the plugins list.
      */
     loadAutoprefixer() {
-        if (this.Config.autoprefixer) {
-            this.plugins.push(require('autoprefixer')(this.Config.autoprefixer));
+        if (this.context.config.autoprefixer) {
+            this.plugins.push(require('autoprefixer')(this.context.config.autoprefixer));
         }
-
-        return this;
     }
 
     /**
      * Add CSSNano to the plugins list.
      */
     loadCssNano() {
-        if (this.Config.production && this.Config.cssNano !== false) {
+        if (this.context.config.production && this.context.config.cssNano !== false) {
             this.plugins.push(
                 require('cssnano')({
-                    preset: ['default', this.Config.cssNano]
+                    preset: ['default', this.context.config.cssNano]
                 })
             );
         }
-
-        return this;
     }
-}
-
-module.exports = PostCssPluginsFactory;
+};

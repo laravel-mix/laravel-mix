@@ -1,11 +1,10 @@
-const webpack = require('webpack');
 const { Component } = require('./Component');
 
 /** @typedef {undefined | null | string | number | bigint | boolean} CodeValuePrimitive */
 /** @typedef {() => CodeValuePrimitive} LazyCodeValue */
 /** @typedef {CodeValuePrimitive | LazyCodeValue} CodeValue */
 
-class Define extends Component {
+module.exports = class Define extends Component {
     /**
      * @type {Record<string, CodeValue>}
      * @internal
@@ -45,8 +44,10 @@ class Define extends Component {
     }
 
     webpackPlugins() {
+        const { DefinePlugin } = require('webpack');
+
         return [
-            new webpack.DefinePlugin(
+            new DefinePlugin(
                 this.resolve({
                     ...this.defaults,
                     ...this.definitions
@@ -54,6 +55,4 @@ class Define extends Component {
             )
         ];
     }
-}
-
-module.exports = Define;
+};

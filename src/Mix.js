@@ -11,6 +11,7 @@ let Manifest = require('./Manifest');
 let Paths = require('./Paths');
 let WebpackConfig = require('./builder/WebpackConfig');
 let { Resolver } = require('./Resolver');
+const Log = require('./Log');
 
 /** @typedef {import("./tasks/Task")} Task */
 
@@ -38,6 +39,7 @@ class Mix {
         this.hot = new HotReloading(this);
         this.resolver = new Resolver();
         this.dependencies = new Dependencies();
+        this.logger = Log;
 
         /** @type {Task[]} */
         this.tasks = [];
@@ -54,7 +56,7 @@ class Mix {
 
         /**
          * @internal
-         * @type {Record<string, string|string[]>|string|null}
+         * @type {false | null | string | string[] | Record<string, string | string[]>}
          */
         this.globalStyles = null;
 
@@ -193,6 +195,7 @@ class Mix {
      * Determine if Mix sees a particular tool or framework.
      *
      * @param {string} tool
+     * @deprecated
      */
     sees(tool) {
         if (tool === 'laravel') {
@@ -206,15 +209,10 @@ class Mix {
      * Determine if the given npm package is installed.
      *
      * @param {string} npmPackage
+     * @deprecated
      */
     seesNpmPackage(npmPackage) {
-        try {
-            require.resolve(npmPackage);
-
-            return true;
-        } catch (e) {
-            return false;
-        }
+        return this.resolver.has(npmPackage);
     }
 
     /**

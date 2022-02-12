@@ -4,6 +4,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 import * as webpack from 'webpack';
+import { Options } from 'ts-loader';
 import { TransformOptions as BabelConfig } from '@babel/core';
 import { Options as BrowserSyncConfig } from './browsersync';
 import * as ExtractTypes from './extract';
@@ -82,7 +83,7 @@ type CodeValue = CodeValuePrimitive | LazyCodeValue;
 // Assorted capabilities
 interface Api {
     /** Add webpack-resolution aliases */
-    alias(paths: Record<string, string>): Api;
+    alias(paths: Record<string, string | { raw: string }>): Api;
 
     /** Autoload libraries */
     autoload(libraries: Record<string, string | string[]>): Api;
@@ -131,14 +132,14 @@ interface Api {
      *
      * `src` may be a glob pattern
      **/
-    ts(src: string | string[], output: string): Api;
+    ts(src: string | string[], output: string, options?: Partial<Options>): Api;
 
     /**
      * Compile TypeScript into JS
      *
      * `src` may be a glob pattern
      **/
-    typeScript(src: string | string[], output: string): Api;
+    typeScript(src: string | string[], output: string, options?: Partial<Options>): Api;
 
     /**
      * Compile CoffeeScript into JS
@@ -261,7 +262,7 @@ type VueConfig = {
     version?: number;
 
     /** A file to include w/ every vue style block. */
-    globalStyles?: false | string | string[] | Record<string, string | string[]>;
+    globalStyles?: false | string | string[] | Record<string, string | string[]> | null;
 
     /** Whether or not to extract vue styles. If given a string the name of the file to extract to. */
     extractStyles?: boolean | string;

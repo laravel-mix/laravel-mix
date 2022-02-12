@@ -1,9 +1,10 @@
-class SetResourceRoot {
+const { Component } = require('./Component');
+
+module.exports = class SetResourceRoot extends Component {
+    /**
+     * @param {string} path
+     */
     register(path) {
-        Config.resourceRoot = path;
-
-        return this;
+        this.context.config.resourceRoot = path;
     }
-}
-
-module.exports = SetResourceRoot;
+};

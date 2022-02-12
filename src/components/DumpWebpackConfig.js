@@ -1,6 +1,6 @@
-let Log = require('../Log');
+const { Component } = require('./Component');
 
-class DumpWebpackConfig {
+module.exports = class DumpWebpackConfig extends Component {
     /**
      * The optional name to be used when called by Mix.
      */
@@ -12,12 +12,8 @@ class DumpWebpackConfig {
      * Register the component.
      */
     register() {
-        Mix.listen('configReadyForUser', config => {
-            RegExp.prototype.toJSON = function () {
-                return this.toString();
-            };
-
-            Log.info(this.circularStringify(config));
+        this.context.listen('configReadyForUser', config => {
+            this.context.logger.info(this.circularStringify(config));
         });
     }
 
@@ -31,6 +27,10 @@ class DumpWebpackConfig {
         return JSON.stringify(
             item,
             (_, value) => {
+                if (value instanceof RegExp) {
+                    return value.toString();
+                }
+
                 if (typeof value === 'object' && value !== null) {
                     if (cache.has(value)) {
                         return undefined;
@@ -44,6 +44,4 @@ class DumpWebpackConfig {
             2
         );
     }
-}
-
-module.exports = DumpWebpackConfig;
+};

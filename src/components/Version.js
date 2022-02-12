@@ -6,11 +6,9 @@ module.exports = class Version extends Component {
     /**
      * Register the component.
      *
-     * @param {string[]} paths
+     * @param {string|string[]} paths
      */
     register(paths = []) {
         this.context.addTask(new VersionFilesTask({ files: concat([], paths) }));
     }
 };
-
-module.exports = Version;

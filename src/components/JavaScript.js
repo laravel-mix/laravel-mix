@@ -1,11 +1,11 @@
-let glob = require('glob');
-let File = require('../File');
-let Assert = require('../Assert');
+const glob = require('glob');
+const File = require('../File');
+const Assert = require('../Assert');
+const { Component } = require('./Component');
 
-class JavaScript {
-    constructor() {
-        this.toCompile = [];
-    }
+module.exports = class JavaScript extends Component {
+    /** @type {{entry: File[], output: File}[]} */
+    toCompile = [];
 
     /**
      * The API name for the component.
@@ -13,7 +13,7 @@ class JavaScript {
     name() {
         let name = this.constructor.name.toLowerCase();
 
-        return name === 'javascript' ? 'js' : name;
+        return [name === 'javascript' ? 'js' : name];
     }
 
     /**
@@ -30,17 +30,16 @@ class JavaScript {
         Assert.js(entry, output);
 
         entry = [].concat(entry).map(file => new File(file));
-        output = new File(output);
 
-        this.toCompile.push({ entry, output });
+        this.toCompile.push({ entry, output: new File(output) });
 
-        Mix.bundlingJavaScript = true;
+        this.context.bundlingJavaScript = true;
     }
 
     /**
      * Assets to append to the webpack entry.
      *
-     * @param {Entry} entry
+     * @param {import('../builder/Entry')} entry
      */
     webpackEntry(entry) {
         this.toCompile.forEach(js => {
@@ -62,13 +61,11 @@ class JavaScript {
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
-                        loader: Mix.resolve('babel-loader'),
-                        options: Config.babel()
+                        loader: this.context.resolve('babel-loader'),
+                        options: this.context.config.babel()
                     }
                 ]
             }
         ];
     }
-}
-
-module.exports = JavaScript;
+};

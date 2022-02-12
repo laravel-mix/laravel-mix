@@ -1,11 +1,10 @@
-class BabelConfig {
+const { Component } = require('./Component');
+
+module.exports = class BabelConfig extends Component {
     /**
-     *
-     * @param {BabelConfig} config
+     * @param {import('@babel/core').TransformOptions} config
      */
     register(config) {
-        Config.babelConfig = config;
+        this.context.config.babelConfig = config;
     }
-}
-
-module.exports = BabelConfig;
+};

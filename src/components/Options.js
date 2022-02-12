@@ -1,12 +1,13 @@
-const Log = require('../Log');
+const { Component } = require('./Component');
 
-class Options {
+module.exports = class Options extends Component {
+    /**
+     * @param {Record<string, any>} options
+     */
     register(options) {
-        Config.merge(options);
+        this.context.config.merge(options);
 
-        this.messages(options).forEach(Log.message);
-
-        return this;
+        this.messages(options).forEach(msg => this.context.logger.message(msg));
     }
 
     /**
@@ -20,16 +21,14 @@ class Options {
         if ('extractVueStyles' in options) {
             messages.push({
                 type: 'warn',
-                text:
-                    'The option extractVueStyles has been moved. Please pass the extractStyles option to mix.vue() instead.'
+                text: 'The option extractVueStyles has been moved. Please pass the extractStyles option to mix.vue() instead.'
             });
         }
 
         if ('globalVueStyles' in options) {
             messages.push({
                 type: 'warn',
-                text:
-                    'The option globalVueStyles has been moved. Please pass the globalStyles option to mix.vue() instead.'
+                text: 'The option globalVueStyles has been moved. Please pass the globalStyles option to mix.vue() instead.'
             });
         }
 
@@ -61,6 +60,4 @@ class Options {
 
         return `mix.vue(${JSON.stringify(props, null, 2)}})`;
     }
-}
-
-module.exports = Options;
+};

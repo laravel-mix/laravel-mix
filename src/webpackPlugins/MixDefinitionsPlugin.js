@@ -1,4 +1,3 @@
-let webpack = require('webpack');
 let dotenv = require('dotenv');
 let expand = require('dotenv-expand');
 
@@ -6,11 +5,11 @@ let expand = require('dotenv-expand');
 class MixDefinitionsPlugin {
     /**
      *
-     * @param {string} [envPath]
+     * @param {string} envPath
      * @param {Record<string, string>} [additionalEnv]
      */
-    constructor(envPath = undefined, additionalEnv = {}) {
-        this.envPath = envPath || global.Mix.paths.root('.env');
+    constructor(envPath, additionalEnv = {}) {
+        this.envPath = envPath;
         this.additionalEnv = additionalEnv;
     }
 
@@ -49,7 +48,9 @@ class MixDefinitionsPlugin {
      * Build up the necessary definitions and add them to the DefinePlugin.
      */
     get plugin() {
-        return new webpack.EnvironmentPlugin(this.env);
+        const { EnvironmentPlugin } = require('webpack');
+
+        return new EnvironmentPlugin(this.env);
     }
 
     /**
@@ -75,7 +76,8 @@ class MixDefinitionsPlugin {
      * @param {Record<string, string>} additionalEnv
      */
     static build(additionalEnv) {
-        return new MixDefinitionsPlugin(undefined, additionalEnv).plugin;
+        return new MixDefinitionsPlugin(global.Mix.paths.root('.env'), additionalEnv)
+            .plugin;
     }
 }
 

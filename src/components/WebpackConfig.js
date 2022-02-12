@@ -1,22 +1,22 @@
-let merge = require('../builder/MergeWebpackConfig');
-let webpack = require('webpack');
+const { Component } = require('./Component');
 
 /** @typedef {import('webpack').Configuration} Configuration */
 /** @typedef {import('webpack')} webpack */
 
-class WebpackConfig {
+module.exports = class WebpackConfig extends Component {
     /**
      *
-     * @param {((webpack: webpack, config: Configuration) => Configuration)|Configuration} config
+     * @param {((webpack: webpack, config: Configuration) => Configuration) | Configuration} config
      */
     register(config) {
-        global.Mix.api.override(webpackConfig => {
+        const merge = require('../builder/MergeWebpackConfig');
+        const webpack = require('webpack');
+
+        this.context.api.override(webpackConfig => {
             config =
-                typeof config == 'function' ? config(webpack, webpackConfig) : config;
+                typeof config === 'function' ? config(webpack, webpackConfig) : config;
 
             Object.assign(webpackConfig, merge(webpackConfig, config));
         });
     }
-}
-
-module.exports = WebpackConfig;
+};

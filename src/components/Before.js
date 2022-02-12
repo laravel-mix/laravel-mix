@@ -1,4 +1,6 @@
-class Before {
+const { Component } = require('./Component');
+
+module.exports = class Before extends Component {
     /**
      * Register the component.
      *
@@ -6,8 +8,6 @@ class Before {
      * @return {void}
      */
     register(callback) {
-        Mix.listen('init', callback);
+        this.context.listen('init', callback);
     }
-}
-
-module.exports = Before;
+};
