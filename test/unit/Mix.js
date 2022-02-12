@@ -1,30 +1,38 @@
 import test from 'ava';
 import sinon from 'sinon';
-
-import File from '../../src/File.js';
 import Task from '../../src/tasks/Task.js';
-import { mix, Mix } from '../helpers/mix.js';
+import { fs } from '../helpers/fs.js';
+import MixClass from '../../src/Mix.js';
 
 test('that it knows if it is being executed in a production environment', t => {
+    const Mix = new MixClass();
+
     Mix.config.production = true;
 
     t.true(Mix.inProduction());
+    t.true(Mix.api.inProduction());
 });
 
 test('that it can check if a certain config item is truthy', t => {
+    const Mix = new MixClass();
+
     Mix.config.processCssUrls = true;
 
     t.true(Mix.isUsing('processCssUrls'));
 });
 
 test('that it knows if it should watch files for changes', t => {
+    const Mix = new MixClass();
+
     process.argv.push('--watch');
 
     t.true(Mix.isWatching());
 });
 
 test('that it can dispatch events', t => {
-    let callback = sinon.spy();
+    const Mix = new MixClass();
+
+    const callback = sinon.spy();
 
     Mix.listen('some-event', callback);
     Mix.dispatch('some-event');
@@ -33,7 +41,9 @@ test('that it can dispatch events', t => {
 });
 
 test('that it can dispatch events using a function to determine the data', t => {
-    let callback = sinon.spy();
+    const Mix = new MixClass();
+
+    const callback = sinon.spy();
 
     Mix.listen('some-event', callback);
     Mix.dispatch('some-event', () => 'foo');
@@ -41,24 +51,30 @@ test('that it can dispatch events using a function to determine the data', t => 
     t.true(callback.calledWith('foo'));
 });
 
-test('that it can see if we are using a Laravel app', t => {
+test('that it can see if we are using a Laravel app', async t => {
+    const Mix = new MixClass();
+
     t.false(Mix.sees('laravel'));
 
-    new File('./artisan').write('all laravel apps have one');
+    await fs(t).stub({
+        './artisan': 'all laravel apps have one'
+    });
 
     t.true(Mix.sees('laravel'));
-
-    // Clean up.
-    File.find('./artisan').delete();
 });
 
 test('that it can add a task', t => {
+    const Mix = new MixClass();
+
     Mix.addTask(new Task({ foo: 'bar' }));
 
     t.is(1, Mix.tasks.length);
 });
 
 test('that it can fetch a registered component', t => {
+    const Mix = new MixClass();
+    const mix = Mix.api;
+
     let component = {
         register() {}
     };
@@ -73,20 +89,23 @@ test('that it can fetch a registered component', t => {
 });
 
 test('that it can check for an installed npm package', t => {
+    const Mix = new MixClass();
+
     t.false(Mix.seesNpmPackage('does-not-exist'));
 
     t.true(Mix.seesNpmPackage('webpack'));
 });
 
 test('that it listens for when the webpack configuration object has been fully generated', t => {
-    let called = false;
+    const Mix = new MixClass();
+    const mix = Mix.api;
 
-    mix.override(() => {
-        called = true;
-    });
+    const spy = sinon.spy();
+
+    mix.override(spy);
 
     Mix.dispatch('build');
     Mix.dispatch('configReadyForUser');
 
-    t.true(called);
+    t.true(spy.called);
 });

@@ -1,23 +1,22 @@
 import test from 'ava';
+import sinon from 'sinon';
 
-import { mix } from '../helpers/mix.js';
+import { context } from '../helpers/test.js';
 
 test('it executes the callback based on the condition', t => {
-    let called = false;
+    const { mix } = context(t);
 
-    mix.when(false, () => {
-        called = true;
-    });
+    const spy = sinon.spy();
 
-    t.false(called);
+    mix.when(false, spy);
+    t.false(spy.called);
 
-    mix.when(true, () => {
-        called = true;
-    });
-
-    t.true(called);
+    mix.when(true, spy);
+    t.true(spy.called);
 });
 
 test('it passes the mix instance to the callback', t => {
-    mix.when(true, _mix => t.deepEqual(mix, _mix));
+    const { mix } = context(t);
+
+    mix.when(true, _mix => t.is(mix, _mix));
 });

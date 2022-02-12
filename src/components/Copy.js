@@ -1,7 +1,8 @@
-let File = require('../File');
-let CopyFilesTask = require('../tasks/CopyFilesTask');
+const File = require('../File');
+const CopyFilesTask = require('../tasks/CopyFilesTask');
+const { Component } = require('./Component');
 
-class Copy {
+module.exports = class Copy extends Component {
     /**
      * The API name for the component.
      */
@@ -16,8 +17,6 @@ class Copy {
      * @param {string} to
      */
     register(from, to) {
-        Mix.addTask(new CopyFilesTask({ from, to: new File(to) }));
+        this.context.addTask(new CopyFilesTask({ from, to: new File(to) }));
     }
-}
-
-module.exports = Copy;
+};

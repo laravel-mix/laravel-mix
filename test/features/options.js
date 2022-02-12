@@ -1,8 +1,10 @@
 import test from 'ava';
 
-import { mix, Mix } from '../helpers/mix.js';
+import { context } from '../helpers/test.js';
 
 test('mix.options()', t => {
+    const { mix, Mix } = context(t);
+
     mix.options({
         foo: 'bar'
     });

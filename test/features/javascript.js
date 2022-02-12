@@ -1,56 +1,66 @@
 import test from 'ava';
 import path from 'path';
 
-import assert from '../helpers/assertions.js';
 import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
 test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js('js/app.js', 'dist/js');
 
-    let rules = (await webpack.buildConfig()).module.rules;
+    const config = await webpack.buildConfig();
 
-    t.true(rules.some(rule => rule.test.test('file.js')));
-    t.true(rules.some(rule => rule.test.test('file.cjs')));
-    t.true(rules.some(rule => rule.test.test('file.mjs')));
-    t.true(rules.some(rule => rule.test.test('file.ts')));
-    t.true(rules.some(rule => rule.test.test('file.tsx')));
+    assert(t)
+        .rule(config, rule => rule.test.test('file.js'))
+        .exists();
+    assert(t)
+        .rule(config, rule => rule.test.test('file.cjs'))
+        .exists();
+    assert(t)
+        .rule(config, rule => rule.test.test('file.mjs'))
+        .exists();
+    assert(t)
+        .rule(config, rule => rule.test.test('file.ts'))
+        .exists();
+    assert(t)
+        .rule(config, rule => rule.test.test('file.tsx'))
+        .exists();
 });
 
-test('it compiles JavaScript', async t => {
+test.serial('it compiles JavaScript', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
+    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js'
+    });
 });
 
-test('it compiles JavaScript with dynamic import', async t => {
+test.serial('it compiles JavaScript with dynamic import', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/dynamic/dynamic.js`, 'js');
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/dynamic.js`));
+    assert(t).file(`test/fixtures/app/dist/js/dynamic.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/absolute.js': '/js/absolute.js',
-            '/js/dynamic.js': '/js/dynamic.js',
-            '/js/named.js': '/js/named.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/absolute.js': '/js/absolute.js',
+        '/js/dynamic.js': '/js/dynamic.js',
+        '/js/named.js': '/js/named.js'
+    });
 });
 
-test('it compiles JavaScript and Sass', async t => {
+test.serial('it compiles JavaScript and Sass', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').sass(
         `test/fixtures/app/src/sass/app.scss`,
         'css'
@@ -58,85 +68,97 @@ test('it compiles JavaScript and Sass', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/css/app.css': '/css/app.css'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/css/app.css': '/css/app.css'
+    });
 });
 
-test('basic JS compilation config.', async t => {
+test.serial('basic JS compilation config.', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js');
 
-    let webpackConfig = await webpack.buildConfig();
+    let config = await webpack.buildConfig();
 
     t.deepEqual(
         {
             '/js/app': [path.resolve('js/app.js')]
         },
-        webpackConfig.entry
+        config.entry
     );
 
     t.deepEqual(
         {
             path: path.resolve(`test/fixtures/app/dist`),
             filename: '[name].js',
-            chunkFilename: webpackConfig.output.chunkFilename,
+            chunkFilename: config.output.chunkFilename,
             hashFunction: 'xxhash64',
             publicPath: '/'
         },
-        webpackConfig.output
+        config.output
     );
 });
 
-test('basic JS compilation with output dist directory omitted config.', async t => {
-    mix.js('js/app.js', 'js');
+test.serial(
+    'basic JS compilation with output dist directory omitted config.',
+    async t => {
+        const { mix, webpack } = context(t);
 
-    t.deepEqual(
-        {
-            '/js/app': [path.resolve('js/app.js')]
-        },
-        (await webpack.buildConfig()).entry
-    );
-});
+        mix.js('js/app.js', 'js');
+
+        const config = await webpack.buildConfig();
+
+        t.deepEqual(
+            {
+                '/js/app': [path.resolve('js/app.js')]
+            },
+            config.entry
+        );
+    }
+);
 
 test('basic JS compilation with a different dist path', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'dist/js').setPublicPath('dist-html');
 
-    let webpackConfig = await webpack.buildConfig();
+    let config = await webpack.buildConfig();
 
     t.deepEqual(
         {
             path: path.resolve('dist-html'),
             filename: '[name].js',
-            chunkFilename: webpackConfig.output.chunkFilename,
+            chunkFilename: config.output.chunkFilename,
             hashFunction: 'xxhash64',
             publicPath: '/'
         },
-        webpackConfig.output
+        config.output
     );
 });
 
-test('basic JS compilation with a specific output path config.', async t => {
+test.serial('basic JS compilation with a specific output path config.', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js/output.js');
+
+    const config = await webpack.buildConfig();
 
     t.deepEqual(
         {
             '/js/output': [path.resolve('js/app.js')]
         },
-        (await webpack.buildConfig()).entry
+        config.entry
     );
 });
 
-test('mix.js()', t => {
-    let response = mix.js('js/app.js', 'dist/js');
+test('mix.js()', async t => {
+    const { mix, Mix } = context(t);
 
-    t.deepEqual(mix, response);
+    mix.js('js/app.js', 'dist/js');
 
     let jsComponent = Mix.components.get('js');
 

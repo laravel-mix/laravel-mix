@@ -42,7 +42,7 @@ class Assert {
     /**
      * Assert that calls to mix.combine() are valid.
      *
-     * @param {string} src
+     * @param {string|string[]} src
      * @param {File}   output
      */
     static combine(src, output) {

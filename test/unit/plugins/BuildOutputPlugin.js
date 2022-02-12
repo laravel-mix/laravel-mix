@@ -1,9 +1,9 @@
-import test, { beforeEach } from 'ava';
-import colors from 'colors/safe';
+import test from 'ava';
+import colors from 'colors/safe.js';
 
 import BuildOutputPlugin from '../../../src/webpackPlugins/BuildOutputPlugin.js';
 
-beforeEach(() => colors.disable());
+test.beforeEach(() => colors.disable());
 
 test('The build output table renders as expected', async t => {
     const plugin = new BuildOutputPlugin({ clearConsole: true, showRelated: true });

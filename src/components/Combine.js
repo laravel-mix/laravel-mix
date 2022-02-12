@@ -1,8 +1,10 @@
-let File = require('../File');
-let Assert = require('../Assert');
-let ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
+const File = require('../File');
+const Assert = require('../Assert');
+const ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
+const { Component } = require('./Component');
+const { concat } = require('lodash');
 
-class Combine {
+module.exports = class Combine extends Component {
     /**
      * The API name for the component.
      */
@@ -13,67 +15,63 @@ class Combine {
     /**
      * Register the component.
      *
-     * @param {String|Array} src
-     * @param {String} output
-     * @param {Boolean} babel
+     * @param {string|string[]} src
+     * @param {string} [output]
+     * @param {boolean} babel
      */
     register(src, output = '', babel = false) {
-        this.src = src;
-        this.output = output;
-        this.babel = babel || this.caller === 'babel';
+        // Do we need to perform compilation?
+        babel = babel || this.caller === 'babel';
 
-        if (this.caller === 'minify') {
-            this.registerMinify();
+        const sources = concat([], src);
+        const hasOutputPath = output !== undefined && output !== '';
+
+        if (hasOutputPath) {
+            this.context.addTask(
+                this.createTask({
+                    src: sources,
+                    dst: output,
+                    babel
+                })
+            );
+
+            return;
         }
 
-        this.addTask();
-    }
-
-    /**
-     * Register the minify task.
-     */
-    registerMinify() {
-        if (Array.isArray(this.src)) {
-            this.src.forEach(file => this.register(file));
+        if (this.caller !== 'minify') {
+            throw new Error(
+                `An output file path is required when using mix.${this.caller}()`
+            );
         }
 
-        this.output = this.src.replace(/\.([a-z]{2,})$/i, '.min.$1');
+        // We've we're minifying an array of files then the output is the same as the input with a .min extension added
+        for (const source of sources) {
+            this.context.addTask(
+                this.createTask({
+                    src: source,
+                    dst: source.replace(/\.([a-z]{2,})$/i, '.min.$1'),
+                    babel
+                })
+            );
+        }
     }
 
     /**
-     * Add a new ConcatFiles task.
+     * @param {object} param0
+     * @param {string|string[]} param0.src
+     * @param {string} param0.dst
+     * @param {boolean} param0.babel
      */
-    addTask() {
-        this.output = new File(this.output);
+    createTask({ src, dst, babel }) {
+        const output = new File(dst);
 
-        Assert.combine(this.src, this.output);
+        Assert.combine(src, output);
 
-        Mix.addTask(
-            new ConcatFilesTask({
-                src: this.src,
-                output: this.output,
-                babel: this.babel,
-                ignore: [this.output.relativePath()]
-            })
-        );
+        return new ConcatFilesTask({
+            src,
+            output,
+            babel,
+            ignore: [output.relativePath()]
+        });
     }
-
-    /**
-     * Find all relevant files matching the given source path.
-     *
-     * @param   {string|string[]} src
-     * @returns {string[]}
-     */
-    glob(src) {
-        const paths = Array.isArray(src) ? src : [src];
-
-        return paths.flatMap(srcPath =>
-            glob.sync(
-                File.find(srcPath).isDirectory() ? path.join(srcPath, '**/*') : srcPath,
-                { nodir: true }
-            )
-        );
-    }
-}
-
-module.exports = Combine;
+};

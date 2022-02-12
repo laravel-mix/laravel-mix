@@ -43,6 +43,13 @@ class File {
         return fs.existsSync(file);
     }
 
+    /**
+     * Determine if the given file exists.
+     */
+    exists() {
+        return fs.existsSync(this.path());
+    }
+
     normalizedOutputPath() {
         let path = this.pathFromPublic(this.mix.config.publicPath);
 
@@ -231,7 +238,7 @@ class File {
      * Create all nested directories.
      */
     makeDirectories() {
-        fs.ensureDirSync(this.base());
+        fs.mkdirSync(this.base(), { mode: 0o777, recursive: true });
 
         return this;
     }

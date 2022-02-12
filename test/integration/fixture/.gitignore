@@ -1,0 +1,5 @@
+*
+!js
+!.gitignore
+!package.json
+!webpack.mix.*

@@ -1,29 +1,31 @@
 import test from 'ava';
-import { TempSandbox } from 'temp-sandbox';
+import sinon from 'sinon';
 
+import { context } from '../../helpers/test.js';
+import * as webpack from '../../helpers/webpack.js';
 import BuildCallbackPlugin from '../../../src/webpackPlugins/BuildCallbackPlugin.js';
-import webpack from '../../helpers/webpack.js';
-
-const sandbox = new TempSandbox({ randomDir: true });
-
-test.beforeEach(async () => {
-    await sandbox.clean();
-});
-
-test.after(async () => {
-    await sandbox.destroySandbox();
-});
 
 test('that it triggers a callback handler when the Webpack compiler is done', async t => {
-    let called = false;
+    const { disk, fs } = context(t);
 
-    await sandbox.createFile(`src/index.js`, `module.exports = 'index.js';`);
+    const paths = {
+        'src/index.js': disk.join('./tmp/src/index.js'),
+        dist: disk.join('./tmp/dist'),
+        'dist/main.js': disk.join('./tmp/dist/main.js')
+    };
 
-    await webpack.compile({
-        entry: sandbox.path.resolve('src/index.js'),
-        output: { path: sandbox.path.resolve('dist') },
-        plugins: [new BuildCallbackPlugin(() => (called = true))]
+    await fs().stub({
+        [paths['src/index.js']]: `module.exports = 'index.js';`,
+        [paths['dist/main.js']]: ``
     });
 
-    t.true(called);
+    const spy = sinon.spy();
+
+    await webpack.compile({
+        entry: [paths['src/index.js']],
+        output: { path: paths['dist'] },
+        plugins: [new BuildCallbackPlugin(spy)]
+    });
+
+    t.true(spy.called);
 });

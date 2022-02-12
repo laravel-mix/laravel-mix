@@ -1,11 +1,10 @@
 import test from 'ava';
 
-import assert from '../helpers/assertions.js';
-import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
-test('it accepts a src directory', async t => {
+test.serial('it accepts a src directory', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.scripts(
         'test/fixtures/app/src/combine/foo',
         'test/fixtures/app/dist/js/combined-scripts.js'
@@ -13,14 +12,14 @@ test('it accepts a src directory', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');");
 });
 
-test('it accepts a src wildcard', async t => {
+test.serial('it accepts a src wildcard', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.scripts(
         'test/fixtures/app/src/combine/foo/*.js',
         'test/fixtures/app/dist/js/combined-scripts.js'
@@ -28,14 +27,14 @@ test('it accepts a src wildcard', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');");
 });
 
-test('it accepts a src array of wildcards', async t => {
+test.serial('it accepts a src array of wildcards', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.scripts(
         [
             'test/fixtures/app/src/combine/foo/*.js',
@@ -46,14 +45,14 @@ test('it accepts a src array of wildcards', async t => {
 
     await webpack.compile();
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        "alert('foo1');alert('foo2');alert('bar1');alert('bar2');",
-        t
-    );
+    assert(t)
+        .file('test/fixtures/app/dist/js/combined-scripts.js')
+        .matchesCss("alert('foo1');alert('foo2');alert('bar1');alert('bar2');");
 });
 
-test('it compiles JS and then combines the bundles files.', async t => {
+test.serial('it compiles JS and then combines the bundles files.', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js')
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .scripts(
@@ -63,59 +62,60 @@ test('it compiles JS and then combines the bundles files.', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/all.js`));
+    assert(t).file(`test/fixtures/app/dist/js/all.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/js/another.js': '/js/another.js',
-            '/js/all.js': '/js/all.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/js/another.js': '/js/another.js',
+        '/js/all.js': '/js/all.js'
+    });
 });
 
-test('it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode', async t => {
-    Mix.config.production = true;
+test.serial(
+    'it concatenates a directory of files, copies the output to a new location, and then minifies it in production mode',
+    async t => {
+        const { mix, assert, webpack } = context(t);
 
-    mix.scripts(
-        [
-            `test/fixtures/app/src/combine/foo/one.js`,
-            `test/fixtures/app/src/combine/foo/two.js`
-        ],
-        'test/fixtures/app/dist/output/combined-scripts.js'
-    );
+        mix.options({ production: true });
 
-    mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
+        mix.scripts(
+            [
+                `test/fixtures/app/src/combine/foo/one.js`,
+                `test/fixtures/app/src/combine/foo/two.js`
+            ],
+            'test/fixtures/app/dist/output/combined-scripts.js'
+        );
 
-    await webpack.compile();
+        mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
 
-    assert.fileMatchesCss(
-        'test/fixtures/app/dist/js/combined-scripts.js',
-        'alert("foo1"),alert("foo2");',
-        t
-    );
-});
+        await webpack.compile();
 
-test('it minifies a file', async t => {
+        assert(t)
+            .file('test/fixtures/app/dist/js/combined-scripts.js')
+            .matchesCss('alert("foo1"),alert("foo2");');
+    }
+);
+
+test.serial('it minifies a file', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.js(`test/fixtures/app/src/js/app.js`, 'js').minify(
         `test/fixtures/app/dist/js/app.js`
     );
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.min.js`));
+    assert(t).file(`test/fixtures/app/dist/js/app.min.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/app.js': '/js/app.js',
-            '/js/app.min.js': '/js/app.min.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/app.js': '/js/app.js',
+        '/js/app.min.js': '/js/app.min.js'
+    });
 });
 
-test('it minifies an array of files', async t => {
+test.serial('it minifies an array of files', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.minify([
         `test/fixtures/app/src/combine/foo/one.js`,
         `test/fixtures/app/src/combine/foo/two.js`
@@ -123,25 +123,20 @@ test('it minifies an array of files', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/src/combine/foo/one.min.js`));
-    t.true(File.exists(`test/fixtures/app/src/combine/foo/two.min.js`));
+    assert(t).file(`test/fixtures/app/src/combine/foo/one.min.js`).exists();
+    assert(t).file(`test/fixtures/app/src/combine/foo/two.min.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/test/fixtures/app/src/combine/foo/one.min.js':
-                '/test/fixtures/app/src/combine/foo/one.min.js',
-            '/test/fixtures/app/src/combine/foo/two.min.js':
-                '/test/fixtures/app/src/combine/foo/two.min.js'
-        },
-        t
-    );
-
-    // Clean Up
-    File.find(`test/fixtures/app/src/combine/foo/one.min.js`).delete();
-    File.find(`test/fixtures/app/src/combine/foo/two.min.js`).delete();
+    assert(t).manifestEquals({
+        '/test/fixtures/app/src/combine/foo/one.min.js':
+            '/test/fixtures/app/src/combine/foo/one.min.js',
+        '/test/fixtures/app/src/combine/foo/two.min.js':
+            '/test/fixtures/app/src/combine/foo/two.min.js'
+    });
 });
 
-test('it can concat files produced by the build', async t => {
+test.serial('it can concat files produced by the build', async t => {
+    const { mix, assert, webpack } = context(t);
+
     mix.postCss(`test/fixtures/app/src/css/app.css`, `test/fixtures/app/dist/app.css`);
     mix.styles(
         [`test/fixtures/app/src/css/global.css`, `test/fixtures/app/dist/app.css`],
@@ -150,11 +145,8 @@ test('it can concat files produced by the build', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/all.css`));
-
-    assert.fileMatchesCss(
-        `test/fixtures/app/dist/all.css`,
-        `
+    assert(t).file(`test/fixtures/app/dist/all.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/all.css`).matchesCss(`
         :root {
             --shared-color: rebeccapurple;
         }
@@ -162,12 +154,12 @@ test('it can concat files produced by the build', async t => {
             color: red;
             background: url('/absolute/image.jpg');
         }
-    `,
-        t
-    );
+    `);
 });
 
-test('combine with missing files throws an error', async t => {
+test.serial('combine with missing files throws an error', async t => {
+    const { mix, webpack } = context(t);
+
     mix.combine(
         [`test/fixtures/app/src/css/i-do-not-exist.css`],
         `test/fixtures/app/dist/all.css`

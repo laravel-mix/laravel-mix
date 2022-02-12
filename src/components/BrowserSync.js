@@ -1,17 +1,24 @@
-class BrowserSync {
+const { Component } = require('./Component');
+
+/** @typedef {import('../../types/browsersync').Options} BrowserSyncOptions */
+
+module.exports = class BrowserSync extends Component {
+    requiresReload = true;
+
+    /** @type {BrowserSyncOptions} */
+    userConfig = {};
+
     /**
      * Required dependencies for the component.
      */
     dependencies() {
-        this.requiresReload = true;
-
         return ['browser-sync', 'browser-sync-webpack-plugin@^2.3.0'];
     }
 
     /**
      * Register the component.
      *
-     * @param {Object} userConfig
+     * @param {string|BrowserSyncOptions} userConfig
      */
     register(userConfig) {
         this.userConfig =
@@ -24,7 +31,7 @@ class BrowserSync {
     webpackPlugins() {
         let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-        return new BrowserSyncPlugin(this.config(), { reload: false });
+        return [new BrowserSyncPlugin(this.config(), { reload: false })];
     }
 
     /**
@@ -47,7 +54,7 @@ class BrowserSync {
             files: [
                 'app/**/*.php',
                 'resources/views/**/*.php',
-                `${Config.publicPath || 'public'}/**/*.(js|css)`
+                `${this.context.config.publicPath || 'public'}/**/*.(js|css)`
             ],
             snippetOptions: {
                 rule: {
@@ -65,6 +72,4 @@ class BrowserSync {
 
         return Object.assign(defaultConfig, userConfig);
     }
-}
-
-module.exports = BrowserSync;
+};

@@ -9,8 +9,9 @@
  *
  * mix.foo();
  */
+const { Component } = require('./Component');
 
-class Example {
+module.exports = class Example {
     /**
      * The optional name to be used when called by Mix.
      * Defaults to the class name, lowercased.
@@ -59,7 +60,7 @@ class Example {
      */
     boot() {
         // Example:
-        // if (Config.options.foo) {}
+        // if (this.context.config.foo) {}
     }
 
     /**
@@ -116,7 +117,7 @@ class Example {
         // Example:
         // return { presets: ['@babel/preset-react'] };
     }
-}
+};
 
 // Usage:
 // mix.extend('example', new Example());

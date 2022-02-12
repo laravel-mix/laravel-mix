@@ -1,4 +1,4 @@
-# Snapshot report for `test/unit/plugins/BuildOutputPlugin.js`
+# Snapshot report for `unit/plugins/BuildOutputPlugin.js`
 
 The actual snapshot is saved in `BuildOutputPlugin.js.snap`.
 

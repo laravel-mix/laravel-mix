@@ -3,14 +3,14 @@ import test from 'ava';
 import path from 'path';
 import sinon from 'sinon';
 
-import assert from '../helpers/assertions.js';
-import { recordBabelConfigs } from '../helpers/babel.js';
 import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
+import { context } from '../helpers/test.js';
 import ReactComponent from '../../src/components/React.js';
-import webpack from '../helpers/webpack.js';
+import { createRequire } from 'module';
 
 test('mix.react()', t => {
+    const { mix, Mix } = context(t);
+
     mix.react().js('src/app.js', 'dist');
 
     t.deepEqual(
@@ -24,39 +24,47 @@ test('mix.react()', t => {
     );
 });
 
-test('it compiles React and a preprocessor properly', async t => {
+test.serial('it compiles React and a preprocessor properly', async t => {
+    const { assert, mix, webpack } = context(t);
+
     mix.react()
         .js(`test/fixtures/app/src/js/app.js`, 'js')
         .sass(`test/fixtures/app/src/sass/app.scss`, 'css');
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/app.js`));
-    t.true(File.exists(`test/fixtures/app/dist/css/app.css`));
+    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
 });
 
-test('it sets the webpack entry correctly', async t => {
+test.serial('it sets the webpack entry correctly', async t => {
+    const { mix, webpack } = context(t);
+
     mix.js('js/app.js', 'js').react();
+
+    const config = await webpack.buildConfig();
 
     t.deepEqual(
         {
             '/js/app': [path.resolve('js/app.js')]
         },
-        (await webpack.buildConfig()).entry
+        config.entry
     );
 });
 
-test('it sets the babel config correctly', async t => {
-    const babel = recordBabelConfigs();
+test.serial('it sets the babel config correctly', async t => {
+    const { mix, webpack, babelConfig } = context(t);
 
     mix.react().js(`test/fixtures/app/src/js/app.js`, 'js');
 
     await webpack.compile();
 
-    t.true(babel.hasPreset('@babel/preset-react'));
+    t.true(babelConfig.hasPreset('@babel/preset-react'));
 });
 
 test('non-feature-flag use of mix.react throws an error', t => {
+    const { mix } = context(t);
+
     // @ts-expect-error
     t.throws(() => mix.react('js/app.js', 'js'), {
         message: /mix.react\(\) is now a feature flag/
@@ -64,6 +72,8 @@ test('non-feature-flag use of mix.react throws an error', t => {
 });
 
 test('non-feature-flag use of mix.preact throws an error', t => {
+    const { mix } = context(t);
+
     // @ts-expect-error
     t.throws(() => mix.react('js/app.js', 'js'), {
         message: /mix.react\(\) is now a feature flag/
@@ -71,14 +81,18 @@ test('non-feature-flag use of mix.preact throws an error', t => {
 });
 
 test('fast refreshing is disabled when not in hot mode', t => {
-    t.false(new ReactComponent().supportsFastRefreshing());
+    const { Mix } = context(t);
+
+    t.false(new ReactComponent(Mix).supportsFastRefreshing());
 });
 
 test('it supports fast refreshing in hot mode if the React version is 16.9.0 or higher', t => {
+    const { Mix } = context(t);
+
     // Fake hot mode.
     Mix.isHot = () => true;
 
-    let react = new ReactComponent();
+    let react = new ReactComponent(Mix);
     let library = sinon.stub(react, 'library');
 
     library.onFirstCall().returns({ version: '15.0.0' });
@@ -89,7 +103,9 @@ test('it supports fast refreshing in hot mode if the React version is 16.9.0 or 
 });
 
 test('it adds the necessary fast refreshing dependencies', t => {
-    let react = new ReactComponent();
+    const { Mix } = context(t);
+
+    let react = new ReactComponent(Mix);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 
@@ -105,15 +121,21 @@ test('it adds the necessary fast refreshing dependencies', t => {
 });
 
 test('it adds the necessary fast refreshing webpack plugins', t => {
-    let react = new ReactComponent();
+    const { Mix } = context(t);
+
+    let react = new ReactComponent(Mix);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 
-    t.true(react.webpackPlugins() instanceof ReactRefreshPlugin);
+    t.true(react.webpackPlugins().length > 0);
+    t.true(react.webpackPlugins()[0] instanceof ReactRefreshPlugin);
 });
 
 test('it adds the necessary babel config', t => {
-    let react = new ReactComponent();
+    const { Mix } = context(t);
+
+    let react = new ReactComponent(Mix);
+    let require = createRequire(import.meta.url);
 
     sinon.stub(react, 'supportsFastRefreshing').returns(true);
 
@@ -123,51 +145,44 @@ test('it adds the necessary babel config', t => {
     t.true(babelConfig.plugins[0].includes(require.resolve('react-refresh/babel')));
 });
 
-test('it extracts css to a seperate file', async t => {
+test.serial('it extracts css to a seperate file', async t => {
+    const { assert, mix, webpack } = context(t);
+
     mix.react({ extractStyles: true });
-    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css.js`, 'js');
 
     await webpack.compile();
 
-    let expected = `.component {
-color: red;
-}
-
-`;
-
-    t.true(File.exists(`test/fixtures/app/dist/css/react-styles.css`));
-    assert.fileMatchesCss(`test/fixtures/app/dist/css/react-styles.css`, expected, t);
+    let expected = `.component { color: red; }`;
+    assert(t).file(`test/fixtures/app/dist/css/react-styles.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/react-styles.css`).matchesCss(expected);
 });
 
-test('it extracts css to a named dedicated file', async t => {
+test.serial('it extracts css to a named dedicated file', async t => {
+    const { assert, mix, webpack } = context(t);
+
     mix.react({ extractStyles: 'css/components.css' });
-    mix.js(`test/fixtures/app/src/react/app-with-react-and-css`, 'js');
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css.js`, 'js');
 
     await webpack.compile();
 
-    let expected = `.component {
-color: red;
-}
+    let expected = `.component { color: red; }`;
 
-`;
-
-    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
-    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
+    assert(t).file(`test/fixtures/app/dist/css/components.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
 });
 
-test('it extracts css classes with a specified localIdentName', async t => {
+test.serial('it extracts css classes with a specified localIdentName', async t => {
+    const { assert, mix, webpack } = context(t);
+
     mix.react({ extractStyles: 'css/components.css' });
     mix.options({ cssModuleIdentifier: 'test' });
-    mix.js(`test/fixtures/app/src/react/app-with-react-and-css-module`, 'js');
+    mix.js(`test/fixtures/app/src/react/app-with-react-and-css-module.js`, 'js');
 
     await webpack.compile();
 
-    let expected = `.test {
-color: red;
-}
+    let expected = `.test { color: red; }`;
 
-`;
-
-    t.true(File.exists(`test/fixtures/app/dist/css/components.css`));
-    assert.fileMatchesCss(`test/fixtures/app/dist/css/components.css`, expected, t);
+    assert(t).file(`test/fixtures/app/dist/css/components.css`).exists();
+    assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
 });

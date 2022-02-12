@@ -1,6 +1,6 @@
-let JavaScript = require('./JavaScript');
+const JavaScript = require('./JavaScript');
 
-class Coffee extends JavaScript {
+module.exports = class Coffee extends JavaScript {
     /**
      * Required dependencies for the component.
      */
@@ -15,10 +15,9 @@ class Coffee extends JavaScript {
         return [
             {
                 test: /\.coffee$/,
-                use: [{ loader: Mix.resolve('coffee-loader') }]
-            }
-        ].concat(super.webpackRules());
+                use: [{ loader: this.context.resolve('coffee-loader') }]
+            },
+            ...super.webpackRules()
+        ];
     }
-}
-
-module.exports = Coffee;
+};

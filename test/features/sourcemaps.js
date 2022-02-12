@@ -1,16 +1,15 @@
 import test from 'ava';
 
-import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
 test('mix.sourceMaps()', t => {
+    const { mix, Mix } = context(t);
+
     t.false(Mix.config.sourcemaps);
 
-    let response = mix.sourceMaps();
+    mix.sourceMaps();
 
     // Sourcemaps should use a sensible type as the default for dev.
-    t.deepEqual(mix, response);
     t.is('eval-source-map', Mix.config.sourcemaps);
 
     // For production builds, we should use a more performant type.
@@ -28,7 +27,9 @@ test('mix.sourceMaps()', t => {
     t.is('hidden-source-map', Mix.config.sourcemaps);
 });
 
-test('it works fine with cache busting chunk filenames', async t => {
+test.serial('it works fine with cache busting chunk filenames', async t => {
+    const { mix, Mix, assert, webpack } = context(t);
+
     Mix.config.production = true;
     mix.js(`test/fixtures/app/src/js/chunk.js`, 'js')
         .webpackConfig({
@@ -40,5 +41,5 @@ test('it works fine with cache busting chunk filenames', async t => {
         .sourceMaps();
 
     await t.notThrowsAsync(() => webpack.compile());
-    t.true(File.exists(`test/fixtures/app/dist/js/chunk.js.map`));
+    assert(t).file(`test/fixtures/app/dist/js/chunk.js.map`).exists();
 });

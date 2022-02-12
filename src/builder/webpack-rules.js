@@ -16,7 +16,7 @@ module.exports = function (mix) {
         use: [{ loader: mix.resolve('html-loader') }]
     });
 
-    if (Config.imgLoaderOptions) {
+    if (mix.config.imgLoaderOptions) {
         // Add support for loading images.
         rules.push({
             // only include svg that doesn't have font in the path or file name by using negative lookahead

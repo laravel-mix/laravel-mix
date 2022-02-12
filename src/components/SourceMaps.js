@@ -1,19 +1,18 @@
-class SourceMaps {
+const { Component } = require('./Component');
+
+module.exports = class SourceMaps extends Component {
     register(
         generateForProduction = true,
         devType = 'eval-source-map',
         productionType = 'source-map'
     ) {
+        /** @type {string|false} */
         let type = devType;
 
-        if (Mix.inProduction()) {
+        if (this.context.api.inProduction()) {
             type = generateForProduction ? productionType : false;
         }
 
-        Config.sourcemaps = type;
-
-        return this;
+        this.context.config.sourcemaps = type;
     }
-}
-
-module.exports = SourceMaps;
+};

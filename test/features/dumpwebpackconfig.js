@@ -1,19 +1,19 @@
 import test from 'ava';
 
-import Log from '../../src/Log.js';
-import { mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
 test('mix.dumpWebpackConfig()', async t => {
+    const { mix, Mix, webpack } = context(t);
+
     let config;
 
-    Log.info = webpackConfig => {
+    Mix.logger.info = webpackConfig => {
         config = JSON.parse(webpackConfig);
     };
 
     mix.js('test/fixtures/app/src/js/app.js', 'js').dumpWebpackConfig();
 
-    await webpack.compile();
+    await webpack.buildConfig();
 
     // Quick test to ensure that a webpack config object was logged.
     t.truthy(config.context);

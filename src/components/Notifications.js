@@ -1,24 +1,40 @@
-let AutomaticComponent = require('./AutomaticComponent');
+const { Component } = require('./Component');
 
-class Notifications extends AutomaticComponent {
+module.exports = class Notifications extends Component {
+    passive = true;
+
     /**
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        if (Mix.isUsing('notifications')) {
-            let WebpackNotifierPlugin = require('webpack-notifier');
+        if (!this.enabled) {
+            return [];
+        }
 
-            return new WebpackNotifierPlugin({
+        if (process.env.DISABLE_NOTIFICATIONS === '1') {
+            return [];
+        }
+
+        const WebpackNotifierPlugin = require('webpack-notifier');
+
+        return [
+            new WebpackNotifierPlugin({
                 appID: 'Laravel Mix',
 
                 title: 'Laravel Mix',
-                alwaysNotify: Config.notifications.onSuccess,
+                alwaysNotify: this.context.config.notifications.onSuccess,
                 timeout: false,
                 hint: process.platform === 'linux' ? 'int:transient:1' : undefined,
-                contentImage: Mix.paths.root('node_modules/laravel-mix/icons/laravel.png')
-            });
-        }
+                contentImage: this.context.paths.root(
+                    'node_modules/laravel-mix/icons/laravel.png'
+                )
+            })
+        ];
     }
-}
 
-module.exports = Notifications;
+    get enabled() {
+        const { notifications } = this.context.config;
+
+        return notifications && (notifications.onSuccess || notifications.onFailure);
+    }
+};

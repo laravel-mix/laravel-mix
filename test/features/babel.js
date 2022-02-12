@@ -1,104 +1,105 @@
-import test, { beforeEach } from 'ava';
-import path from 'path';
+import test from 'ava';
 
-import { recordBabelConfigs } from '../helpers/babel.js';
-import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
-/** @type {ReturnType<recordBabelConfigs>} */
-let babel;
-
-beforeEach(() => {
-    babel = recordBabelConfigs();
+test.serial('mix.babelConfig() can be used to merge custom Babel options.', async t => {
+    const { mix, webpack, babelConfig } = context(t);
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
-});
-
-test('mix.babelConfig() can be used to merge custom Babel options.', async t => {
     mix.babelConfig({
         plugins: ['@babel/plugin-proposal-unicode-property-regex']
     });
 
     await webpack.compile();
 
-    t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
 
-test('Default Babel plugins/presets are set', async t => {
+test.serial('Default Babel plugins/presets are set', async t => {
+    const { mix, webpack, babelConfig } = context(t);
+
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+
     await webpack.compile();
 
-    t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
-    t.true(seeBabelPreset('@babel/preset-env'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
+    t.true(babelConfig.hasPreset('@babel/preset-env'));
 });
 
-test('Babel reads the project .babelrc / config files', async t => {
+test.serial('Babel reads the project .babelrc / config files', async t => {
+    const { mix, webpack, disk, fs, babelConfig } = context(t);
+
     // Setup a test .babelrc file.
-    const configFile = __dirname + '/.testbabelrc';
+    const configFile = disk.join('/.testbabelrc');
 
-    new File(configFile).write('{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }');
+    await fs(t).stub({
+        [configFile]: '{ "plugins": ["@babel/plugin-syntax-dynamic-import"] }'
+    });
 
-    Mix.config.babelConfig = { configFile };
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+    mix.options({
+        babelConfig: { configFile }
+    });
 
     await webpack.compile();
 
-    t.true(seeBabelPlugin('@babel/plugin-syntax-dynamic-import'));
-
-    // Cleanup.
-    File.find(configFile).delete();
+    t.true(babelConfig.hasPlugin('@babel/plugin-syntax-dynamic-import'));
 });
 
-test('Babel config files can be read from the project root', async t => {
+test.serial('Babel config files can be read from the project root', async t => {
+    const { mix, webpack, fs, babelConfig } = context(t);
+
     // .babelrc files are relative-location based on the location / ancestor of the compiled source file
     // As such the root path needs to be the tests directory as it is an ancestor of the file being compiled
     // The config file doesn't have this restriction but we'll treat it the same for simplicity
-    Mix.paths.setRootPath(path.resolve(__dirname + '/../'));
+    // The root path is _already_ set to the root of the disk during test setup
+    await fs(t).stub({
+        [Mix.paths.root('babel.config.cjs')]:
+            'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }',
+        [Mix.paths.root('.babelrc')]:
+            '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
+    });
 
-    const configs = [
-        {
-            path: Mix.paths.root('babel.config.js'),
-            content:
-                'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }'
-        },
-        {
-            path: Mix.paths.root('.babelrc'),
-            content: '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
-        }
-    ];
-
-    configs.forEach(config => new File(config.path).write(config.content));
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
 
     await webpack.compile();
 
-    t.true(seeBabelPlugin('@babel/plugin-syntax-json-strings'));
-    t.true(seeBabelPlugin('@babel/plugin-transform-sticky-regex'));
-
-    configs.forEach(config => File.find(config.path).delete());
+    t.true(babelConfig.hasPlugin('@babel/plugin-syntax-json-strings'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-sticky-regex'));
 });
 
-test('Values from duplicate keys in the .babelrc file override the defaults entirely.', async t => {
-    // Setup a test .babelrc file.
-    const configFile = __dirname + '/.testbabelrc';
+test.serial(
+    'Values from duplicate keys in the .babelrc file override the defaults entirely.',
+    async t => {
+        const { mix, webpack, fs, babelConfig, disk } = context(t);
 
-    Mix.config.babelConfig = { configFile };
+        // Setup a test .babelrc file.
+        const configFile = disk.join('/.testbabelrc');
 
-    new File(configFile).write(
-        '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage", "corejs": 3}] ] }'
-    );
+        await fs(t).stub({
+            [configFile]:
+                '{ "presets": [ ["@babel/preset-env", {"useBuiltIns": "usage", "corejs": 3}] ] }'
+        });
 
-    await webpack.compile();
+        mix.js(`test/fixtures/app/src/js/app.js`, 'js');
 
-    const presets = babel.getPresets();
+        mix.options({
+            babelConfig: { configFile }
+        });
 
-    t.is(1, presets.length);
-    t.true(babel.hasPreset('@babel/preset-env'));
-    t.deepEqual({ useBuiltIns: 'usage', corejs: 3 }, presets[0].options);
+        await webpack.compile();
 
-    // Cleanup.
-    File.find(configFile).delete();
-});
+        const presets = babelConfig.getPresets();
 
-test('Babel config from Mix extensions is merged with the defaults', async t => {
+        t.is(1, presets.length);
+        t.true(babelConfig.hasPreset('@babel/preset-env'));
+        t.deepEqual({ useBuiltIns: 'usage', corejs: 3 }, presets[0].options);
+    }
+);
+
+test.serial('Babel config from Mix extensions is merged with the defaults', async t => {
+    const { mix, webpack, babelConfig } = context(t);
+
     mix.extend('extensionWithBabelConfig', {
         babelConfig() {
             return {
@@ -110,24 +111,10 @@ test('Babel config from Mix extensions is merged with the defaults', async t => 
     // @ts-ignore - there's no way to do declaration merging with JSDoc afaik
     mix.extensionWithBabelConfig();
 
+    mix.js(`test/fixtures/app/src/js/app.js`, 'js');
+
     await webpack.compile();
 
-    t.true(seeBabelPlugin('@babel/plugin-proposal-object-rest-spread'));
-    t.true(seeBabelPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });
-
-/**
- *
- * @param {string} name
- */
-const seeBabelPlugin = name => {
-    return babel.hasPlugin(name);
-};
-
-/**
- *
- * @param {string} name
- */
-const seeBabelPreset = name => {
-    return babel.hasPreset(name);
-};

@@ -1,4 +1,5 @@
 const { concat } = require('lodash');
+const { Component } = require('./Component');
 const { createFunctionalComponent } = require('./FunctionalComponent');
 
 /**
@@ -6,10 +7,10 @@ const { createFunctionalComponent } = require('./FunctionalComponent');
  * @typedef {import('../../types/component').ComponentInterface} ComponentInterface
  * @typedef {import('../../types/component').FunctionalComponent} FunctionalComponent
  * @typedef {import('../../types/component').InstallableComponent} InstallableComponent
- * @typedef {import('../../types/component').Component} Component
+ * @typedef {import('../../types/component').Component} MixComponent
  **/
 
-class Extend {
+module.exports = class Extend extends Component {
     /**
      * Register the component.
      *
@@ -35,7 +36,7 @@ class Extend {
     /**
      * Register the component.
      *
-     * @param {Component} component
+     * @param {MixComponent} component
      * @returns {component is FunctionalComponent} component
      */
     looksLikeSimpleCallback(component) {
@@ -55,10 +56,4 @@ class Extend {
             typeof component.prototype.dependencies !== 'function'
         );
     }
-
-    get context() {
-        return global.Mix;
-    }
-}
-
-module.exports = Extend;
+};

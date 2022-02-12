@@ -1,12 +1,12 @@
 import test from 'ava';
 import path from 'path';
 
-import { mix, Mix } from '../helpers/mix.js';
+import { context } from '../helpers/test.js';
 
 test('mix.setPublicPath()', t => {
-    let response = mix.setPublicPath('somewhere/else');
+    const { mix, Mix } = context(t);
 
-    t.deepEqual(mix, response);
+    mix.setPublicPath('somewhere/else');
 
     t.is(path.normalize('somewhere/else'), Mix.config.publicPath);
 

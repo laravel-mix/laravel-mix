@@ -1,10 +1,11 @@
 import test from 'ava';
 import sinon from 'sinon';
 
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
 test('mix can be extended with new functionality as a callback', async t => {
+    const { mix, webpack } = context(t);
+
     let registration = sinon.spy();
 
     mix.extend('foobar', registration);
@@ -17,7 +18,9 @@ test('mix can be extended with new functionality as a callback', async t => {
     t.true(registration.calledWith(config, 'baz', 'buzz'));
 });
 
-test('mix can be extended with new functionality as a class', t => {
+test('mix can be extended with new functionality as a class', async t => {
+    const { mix } = context(t);
+
     mix.extend(
         'foobar',
         class {
@@ -28,11 +31,15 @@ test('mix can be extended with new functionality as a class', t => {
         }
     );
 
+    t.plan(1);
+
     // @ts-ignore - No declaration merging with JSDoc
     mix.foobar('baz');
 });
 
 test('mix can be extended with new functionality as a class instance', t => {
+    const { mix } = context(t);
+
     mix.extend(
         'foobar',
         new (class {
@@ -43,11 +50,15 @@ test('mix can be extended with new functionality as a class instance', t => {
         })()
     );
 
+    t.plan(1);
+
     // @ts-ignore - No declaration merging with JSDoc
     mix.foobar('baz');
 });
 
 test('dependencies can be requested for download', async t => {
+    const { mix, Mix } = context(t);
+
     Mix.dependencies.enqueue = sinon.spy();
     Mix.dependencies.install = sinon.spy();
 
@@ -90,6 +101,8 @@ test('dependencies can be requested for download', async t => {
 });
 
 test('webpack entry may be appended to', async t => {
+    const { mix, webpack } = context(t);
+
     mix.extend(
         'foobar',
         class {
@@ -110,6 +123,8 @@ test('webpack entry may be appended to', async t => {
 });
 
 test('webpack rules may be added', async t => {
+    const { mix, webpack, assert } = context(t);
+
     let rule = {
         test: /\.ext/,
         loaders: ['example-loader']
@@ -131,10 +146,14 @@ test('webpack rules may be added', async t => {
 
     const config = await webpack.buildConfig();
 
-    t.deepEqual(config.module.rules.pop(), rule);
+    assert(t)
+        .rule(config, aRule => aRule === rule)
+        .exists();
 });
 
 test('webpack plugins may be added', async t => {
+    const { mix, webpack } = context(t);
+
     let plugin = sinon.stub();
 
     mix.extend(
@@ -157,6 +176,8 @@ test('webpack plugins may be added', async t => {
 });
 
 test('the fully constructed webpack config object is available for modification, if needed', async t => {
+    const { mix, webpack } = context(t);
+
     mix.extend(
         'extension',
         class {
@@ -168,15 +189,16 @@ test('the fully constructed webpack config object is available for modification,
         }
     );
 
-    t.false((await webpack.buildConfig(false)).stats.performance);
-
     // @ts-ignore - No declaration merging with JSDoc
     mix.extension();
 
-    t.true((await webpack.buildConfig(true)).stats.performance);
+    const config = await webpack.buildConfig();
+    t.true(config.stats.performance);
 });
 
 test('prior Mix components can be overwritten', t => {
+    const { mix } = context(t);
+
     let component = {
         register: sinon.spy()
     };
@@ -197,6 +219,8 @@ test('prior Mix components can be overwritten', t => {
 });
 
 test('components can be passive', t => {
+    const { mix } = context(t);
+
     let stub = sinon.spy();
 
     mix.extend(
@@ -227,6 +251,8 @@ test('components can be passive', t => {
 });
 
 test('components can manually hook into the mix API', t => {
+    const { mix, webpack } = context(t);
+
     mix.extend(
         'example',
         class {
@@ -258,6 +284,8 @@ test('components can manually hook into the mix API', t => {
 });
 
 test('components can be booted, after the webpack.mix.js configuration file has processed', async t => {
+    const { mix, Mix } = context(t);
+
     let stub = sinon.spy();
 
     mix.extend(
@@ -280,6 +308,8 @@ test('components can be booted, after the webpack.mix.js configuration file has 
 });
 
 test('can register plugin with anonymous closure', async t => {
+    const { mix, Mix, webpack } = context(t);
+
     let stub = sinon.spy();
 
     mix.extend('example', () => stub());

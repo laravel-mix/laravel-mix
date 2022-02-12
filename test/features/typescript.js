@@ -1,69 +1,52 @@
 import test from 'ava';
 
-import assert from '../helpers/assertions.js';
-import File from '../../src/File.js';
-import { mix, Mix } from '../helpers/mix.js';
-import webpack from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
 
-test('mix.ts()', t => {
-    let response = mix.ts('src/app.ts', 'dist');
+test('mix.ts()', async t => {
+    const { mix, webpack, assert } = context(t);
 
-    t.deepEqual(mix, response);
+    mix.ts(`test/fixtures/app/src/dynamic-ts/app.ts`, 'dist');
 
-    t.deepEqual(
-        [
-            {
-                entry: [new File('src/app.ts')],
-                output: new File('dist')
-            }
-        ],
-        Mix.components.get('ts').toCompile
-    );
+    const config = await webpack.buildConfig();
 
-    // There's also a mix.typeScript() alias.
-    t.deepEqual(mix, mix.typeScript('src/app.ts', 'dist'));
-});
-
-test('it applies the correct extensions and aliases to the webpack config', async t => {
-    mix.ts(`test/fixtures/app/src/js/app.js`, 'dist');
-
-    let { config } = await webpack.compile();
-
+    // Proper extensions…
     t.true(config.resolve.extensions.includes('.ts'));
     t.true(config.resolve.extensions.includes('.tsx'));
-});
 
-test('it applies Babel transformation', async t => {
-    mix.ts('js/app.js', 'dist');
-
-    t.true(
-        (await webpack.buildConfig()).module.rules
-            .find(rule => {
-                return rule.test.test('foo.tsx');
-            })
-            .use.some(loader => loader.loader === 'babel-loader')
-    );
+    // And babel transformations…
+    assert(t)
+        .rule(config, rule => /** @type {RegExp} */ (rule.test).test('foo.tsx'))
+        .loader(/babel-loader/)
+        .exists();
 });
 
 test('it is able to apply options to ts-loader', async t => {
-    mix.ts('js/app.js', 'dist', { transpileOnly: true });
+    const { mix, webpack, assert } = context(t);
 
-    t.truthy(
-        (await webpack.buildConfig()).module.rules.find(
-            rule => rule.loader === 'ts-loader'
-        ).options.transpileOnly
-    );
+    mix.ts(`test/fixtures/app/src/dynamic-ts/app.ts`, 'dist', { transpileOnly: true });
+
+    const config = await webpack.buildConfig();
+    const loader = assert(t)
+        .loader(config, /ts-loader/)
+        .get();
+
+    t.truthy(loader && loader.options && loader.options.transpileOnly);
 });
 
-test.only('it compiles TypeScript with dynamic import', async t => {
+test.serial('it compiles TypeScript with dynamic import', async t => {
+    const { mix, webpack, assert } = context(t);
+
     mix.ts(`test/fixtures/app/src/dynamic-ts/dynamic.ts`, 'js', {
         transpileOnly: true,
 
         // These would normally be in tsconfig.json but are here because
         // we'll eventually have one and the options won't match these
         compilerOptions: {
+            // @ts-ignore
             target: 'esnext',
+            // @ts-ignore
             module: 'esnext',
+            // @ts-ignore
             moduleResolution: 'node',
             noEmit: false
         }
@@ -71,14 +54,11 @@ test.only('it compiles TypeScript with dynamic import', async t => {
 
     await webpack.compile();
 
-    t.true(File.exists(`test/fixtures/app/dist/js/dynamic.js`));
+    assert(t).file(`test/fixtures/app/dist/js/dynamic.js`).exists();
 
-    assert.manifestEquals(
-        {
-            '/js/absolute.js': '/js/absolute.js',
-            '/js/dynamic.js': '/js/dynamic.js',
-            '/js/named.js': '/js/named.js'
-        },
-        t
-    );
+    assert(t).manifestEquals({
+        '/js/absolute.js': '/js/absolute.js',
+        '/js/dynamic.js': '/js/dynamic.js',
+        '/js/named.js': '/js/named.js'
+    });
 });

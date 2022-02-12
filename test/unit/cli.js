@@ -1,5 +1,6 @@
 import test from 'ava';
 import path from 'path';
+import { createRequire } from 'module';
 
 import { cli } from '../helpers/cli.js';
 
@@ -9,6 +10,8 @@ const mix = cli({ testing: true });
 let configPath = '';
 
 test.before(() => {
+    const require = createRequire(import.meta.url);
+
     configPath = path.relative(
         process.cwd(),
         require.resolve('../../setup/webpack.config.js')
@@ -70,7 +73,7 @@ test('it calls webpack with quoted key value pair command arguments', async t =>
     result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'development' });
 });
 
-test('it calls webpack with custom node_env', async t => {
+test.serial('it calls webpack with custom node_env', async t => {
     const oldEnv = process.env.NODE_ENV;
 
     process.env.NODE_ENV = 'foobar';
@@ -83,7 +86,7 @@ test('it calls webpack with custom node_env', async t => {
     result.assertEnv(t, { MIX_FILE: 'webpack.mix', NODE_ENV: 'foobar' });
 });
 
-test('it disables progress reporting when not using a terminal', async t => {
+test.serial('it disables progress reporting when not using a terminal', async t => {
     process.env.IS_TTY = '0';
 
     const result = await mix();

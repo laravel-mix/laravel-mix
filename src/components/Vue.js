@@ -1,19 +1,27 @@
-let File = require('../File');
-let VueVersion = require('../VueVersion');
-let AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
+const { Component } = require('./Component');
+const File = require('../File');
+const VueVersion = require('../VueVersion');
+const AppendVueStylesPlugin = require('../webpackPlugins/Css/AppendVueStylesPlugin');
 
-/** @typedef {import("vue").VueLoaderOptions} VueLoaderOptions */
+module.exports = class Vue extends Component {
+    version = 2;
 
-class Vue {
+    /**
+     * @type {import('laravel-mix').VueConfig} options
+     */
+    options = {
+        version: undefined,
+        runtimeOnly: false,
+        options: null,
+        globalStyles: null,
+        extractStyles: false,
+        useVueStyleLoader: false
+    };
+
     /**
      * Register the component.
      *
-     * @param {object} options
-     * @param {number} [options.version] Which version of Vue to support. Detected automatically if not given.
-     * @param {string|null} [options.globalStyles] A file to include w/ every vue style block.
-     * @param {boolean|string} [options.extractStyles] Whether or not to extract vue styles. If given a string the name of the file to extract to.
-     * @param {boolean} [options.useVueStyleLoader] Use vue-style-loader to extract Vue Styles.
-     * @param {VueLoaderOptions} [options.options] Options to pass to Vue Loader
+     * @param {import('laravel-mix').VueConfig} options
      */
     register(options = {}) {
         if (
@@ -26,23 +34,26 @@ class Vue {
             );
         }
 
-        this.version = new VueVersion(this.context).detect(options.version);
+        Object.assign(this.options, options);
 
-        this.options = Object.assign(
-            {
-                options: null,
-                globalStyles: null,
-                extractStyles: false,
-                useVueStyleLoader: false
-            },
-            options
-        );
+        this.version = new VueVersion(this.context).detect(this.options.version);
 
-        this.context.globalStyles = this.options.globalStyles;
-        this.context.extractingStyles =
-            this.context.extractingStyles || !!this.options.extractStyles;
+        if (this.options.globalStyles !== undefined) {
+            this.context.globalStyles = this.options.globalStyles;
+        }
+
+        if (this.options.extractStyles !== undefined) {
+            this.context.extractingStyles =
+                this.context.extractingStyles || !!this.options.extractStyles;
+        }
 
         this.addDefines();
+
+        this.context.api.alias({
+            vue$: {
+                raw: this.aliasPath()
+            }
+        });
     }
 
     /**
@@ -66,30 +77,31 @@ class Vue {
     /**
      * Override the generated webpack configuration.
      *
-     * @param {Object} webpackConfig
+     * @param {import('webpack').Configuration} config
      */
-    webpackConfig(webpackConfig) {
+    webpackConfig(config) {
+        config.module = config.module || {};
+        config.module.rules = config.module.rules || [];
+        config.resolve = config.resolve || {};
+        config.resolve.extensions = config.resolve.extensions || [];
+
         // push -> unshift to combat vue loader webpack 5 bug
-        webpackConfig.module.rules.unshift({
+        config.module.rules.unshift({
             test: /\.vue$/,
             use: [
                 {
                     loader: this.context.resolve('vue-loader'),
-                    options: this.options.options || Config.vue || {}
+                    options: this.options.options || this.context.config.vue || {}
                 }
             ]
         });
 
         // Alias Vue to its ESM build if the user has not already given an alias
-        webpackConfig.resolve.alias = webpackConfig.resolve.alias || {};
-
-        if (!webpackConfig.resolve.alias['vue$']) {
-            webpackConfig.resolve.alias['vue$'] = this.aliasPath();
-        }
-
-        webpackConfig.resolve.extensions.push('.vue');
+        config.resolve.extensions.push('.vue');
 
         this.updateChunks();
+
+        return config;
     }
 
     aliasPath() {
@@ -183,7 +195,7 @@ class Vue {
                 ? this.options.extractStyles
                 : '/css/vue-styles.css';
 
-        return fileName.replace(Config.publicPath, '').replace(/^\//, '');
+        return fileName.replace(this.context.config.publicPath, '').replace(/^\//, '');
     }
 
     /**
@@ -201,13 +213,4 @@ class Vue {
             __VUE_PROD_DEVTOOLS__: 'false'
         });
     }
-
-    /**
-     * @internal
-     **/
-    get context() {
-        return global.Mix;
-    }
-}
-
-module.exports = Vue;
+};

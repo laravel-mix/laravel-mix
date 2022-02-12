@@ -1,30 +1,32 @@
-class Autoload {
+const { concat } = require('lodash');
+const { Component } = require('./Component');
+
+module.exports = class Autoload extends Component {
+    /** @type {Record<string, string|string[]>} */
+    aliases = {};
+
     /**
      * Register the component.
      *
-     * @param  {Object} libs
+     * @param  {Record<string, string>} libs
      * @return {void}
      */
     register(libs) {
-        let aliases = {};
-
         Object.keys(libs).forEach(library => {
-            [].concat(libs[library]).forEach(alias => {
-                aliases[alias] = library.includes('.') ? library.split('.') : library;
+            concat([], libs[library]).forEach(alias => {
+                this.aliases[alias] = library.includes('.')
+                    ? library.split('.')
+                    : library;
             });
         });
-
-        this.aliases = aliases;
     }
 
     /**
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        let webpack = require('webpack');
+        const { ProvidePlugin } = require('webpack');
 
-        return new webpack.ProvidePlugin(this.aliases);
+        return [new ProvidePlugin(this.aliases)];
     }
-}
-
-module.exports = Autoload;
+};
