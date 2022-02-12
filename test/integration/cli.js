@@ -37,6 +37,7 @@ test('An empty mix file results in a successful build with a warning', async t =
     t.regex(stderr, /not set up correctly/i);
 });
 
+/*
 test('it removes the hot reloading file when the process is finished', async t => {
     let hotFilePath = path.join(__dirname, './fixture/public/hot');
 
@@ -47,7 +48,6 @@ test('it removes the hot reloading file when the process is finished', async t =
     t.false(File.exists(hotFilePath));
 });
 
-/*
 test('Can run HMR', async t => {
     const req = request('http://localhost:1339');
 

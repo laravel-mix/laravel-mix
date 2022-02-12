@@ -38,10 +38,10 @@ async function killProcessTree(child) {
         return
     }
 
-    if (! /^win/.test(process.platform)) {
-        process.kill(-child.pid)
-        return
-    }
+    // if (! /^win/.test(process.platform)) {
+    //     process.kill(-child.pid)
+    //     return
+    // }
 
     child.kill('SIGTERM')
 }
