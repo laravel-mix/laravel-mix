@@ -20,16 +20,14 @@ class Options {
         if ('extractVueStyles' in options) {
             messages.push({
                 type: 'warn',
-                text:
-                    'The option extractVueStyles has been moved. Please pass the extractStyles option to mix.vue() instead.'
+                text: 'The option extractVueStyles has been moved. Please pass the extractStyles option to mix.vue() instead.'
             });
         }
 
         if ('globalVueStyles' in options) {
             messages.push({
                 type: 'warn',
-                text:
-                    'The option globalVueStyles has been moved. Please pass the globalStyles option to mix.vue() instead.'
+                text: 'The option globalVueStyles has been moved. Please pass the globalStyles option to mix.vue() instead.'
             });
         }
 

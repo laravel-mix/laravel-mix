@@ -20,13 +20,13 @@ test('mix.setResourceRoot() rewrites processed asset urls', async t => {
     await webpack.compile();
 
     t.true(File.exists(`test/fixtures/app/dist/css/app-and-image.css`));
-    t.true(File.exists(`test/fixtures/app/dist/images/img.svg`));
+    t.true(File.exists(`test/fixtures/app/dist/images/img.66162863.svg`));
 
     assert.fileMatchesCss(
         `test/fixtures/app/dist/css/app-and-image.css`,
         `.app {
             color: red;
-            background-image: url(https://www.example.com/images/img.svg?66162863e7583212a5d4fd6cdc2426ed);
+            background-image: url(https://www.example.com/images/img.66162863.svg?66162863);
         }`,
         t
     );
