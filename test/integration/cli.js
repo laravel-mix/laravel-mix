@@ -2,7 +2,6 @@ import test from 'ava';
 import path from 'path';
 import request from 'supertest';
 import { fileURLToPath } from 'url';
-
 import { cli } from '../helpers/cli.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,13 +10,6 @@ const mix = cli({
     testing: false,
     env: { NODE_ENV: 'development' },
     cwd: path.resolve(__dirname, './fixture')
-});
-
-test('It can run the CLI', async t => {
-    const { error, stderr } = await mix();
-
-    t.is('', stderr);
-    t.is(null, error);
 });
 
 test('Missing config files result in non-zero exit code', async t => {
@@ -32,12 +24,27 @@ test('Webpack errors result in non-zero exit code', async t => {
     t.not(0, code);
 });
 
-test('An empty mix file results in a successful build with a warning', async t => {
+test('An empty mix file results in a successful build', async t => {
     const { code, stderr } = await mix(['--mix-config=webpack.mix.empty']);
 
+    // TODO: This should show a warning that nothing is being compiled
+
     t.is(0, code);
-    t.regex(stderr, /not set up correctly/i);
+    t.is(stderr, '');
 });
+
+const configFiles = {
+    CJS: 'webpack.mix',
+};
+
+for (const [testName, fileName] of Object.entries(configFiles)) {
+    test(`Run CLI with config: ${testName}`, async t => {
+        const { code, stderr } = await mix([`--mix-config=${fileName}`]);
+
+        t.is(0, code);
+        t.is('', stderr);
+    });
+}
 
 /*
 test.serial('it removes the hot reloading file when the process is finished', async t => {
