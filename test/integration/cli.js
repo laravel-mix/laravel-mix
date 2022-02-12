@@ -1,6 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import request from 'supertest';
+import File from '../../src/File.js';
 
 import { cli } from '../helpers/cli.js';
 
@@ -37,20 +38,34 @@ test('An empty mix file results in a successful build with a warning', async t =
 });
 
 /*
-test('Can run HMR', async t => {
-    const req = request('http://localhost:8080');
+test('it removes the hot reloading file when the process is finished', async t => {
+    let hotFilePath = path.join(__dirname, './fixture/public/hot');
 
-    const { code, stdout } = await mix(['watch --hot'], async child => {
+    await mix(['watch --hot'], {
+        onFirstOutput: ({ kill }) => kill()
+    });
+
+    t.false(File.exists(hotFilePath));
+});
+
+test('Can run HMR', async t => {
+    const req = request('http://localhost:1339');
+
+    const { code, stdout } = await mix(['watch --hot -- --port 1339'], {
         // Give the server some time to start
-        await new Promise(resolve => setTimeout(resolve, 3500));
+        onRun: () => new Promise(resolve => setTimeout(resolve, 3500)),
 
         // Make sure requesting assets works…
-        const response = await req.get('/js/app.js').timeout(10000);
-        t.is(200, response.statusCode);
+        onFirstOutput: async ({ kill }) => {
+            const response = await req.get('/js/app.js').timeout(10000)
+            t.is(200, response.statusCode)
 
-        // Then stop the server
-        child.kill('SIGINT');
+            // Then stop the server
+            return kill()
+        },
     });
+
+    console.log(stdout)
 
     t.is(0, code);
     t.regex(stdout, /webpack compiled successfully/i);
