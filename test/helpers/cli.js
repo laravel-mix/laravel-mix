@@ -20,7 +20,7 @@ import path from 'path';
  */
 
 /**
- * @typedef {object} CliHoks
+ * @typedef {object} CliHooks
  * @property {CliHook} [onRun]
  * @property {CliHook} [onFirstOutput]
  */
@@ -71,7 +71,7 @@ export function cli(opts) {
      * Run the Mix CLI
      *
      * @param {string[]} args
-     * @param {CliHoks} hooks
+     * @param {CliHooks} hooks
      * @returns {Promise<CliResult>}
      */
     async function run(args, hooks) {
@@ -90,7 +90,6 @@ export function cli(opts) {
 
         const child = spawn(cmd, {
             shell: true,
-            detached: true,
             cwd,
             env: {
                 ...process.env,
@@ -144,7 +143,7 @@ export function cli(opts) {
      * Run the Mix and build in assertions
      *
      * @param {string[]} args
-     * @param {CliHoks} [hooks]
+     * @param {CliHooks} [hooks]
      */
     async function testRun(args = [], hooks = {}) {
         const result = await run(args, hooks);
