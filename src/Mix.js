@@ -17,7 +17,7 @@ const Log = require('./Log');
 
 class Mix {
     /** @type {Mix|null} */
-    static _primary = null;
+    static #instance = null;
 
     /** @type {Record<string, boolean>} */
     static _hasWarned = {};
@@ -44,8 +44,6 @@ class Mix {
         /** @type {Task[]} */
         this.tasks = [];
 
-        this.booted = false;
-
         this.bundlingJavaScript = false;
 
         /**
@@ -70,47 +68,52 @@ class Mix {
     /**
      * @internal
      */
-    static get primary() {
-        return Mix._primary || (Mix._primary = new Mix());
+    static get shared() {
+        if (this.#instance) {
+            return this.#instance;
+        }
+
+        // @ts-ignore
+        return (this.#instance = new Mix());
+    }
+
+    /**
+     * Load the user's Mix config
+     */
+    async load() {
+        const { ConfigLoader } = await import('./ConfigLoader.mjs');
+
+        const loader = new ConfigLoader(this.paths.root());
+
+        const mod = await loader.load();
+
+        // Allow the user to `export default function (mix) { … }` from their config file
+        if (typeof mod.default === 'function') {
+            await mod.default(this.api);
+        }
     }
 
     /**
      * @internal
      */
     async build() {
-        if (!this.booted) {
-            console.warn(
-                'Mix was not set up correctly. Please ensure you import or require laravel-mix in your mix config.'
-            );
-
-            this.boot();
-        }
-
         return this.webpackConfig.build();
     }
 
     /**
      * @internal
      */
-    boot() {
-        if (this.booted) {
-            return this;
-        }
-
-        this.booted = true;
-
+    async boot() {
         // Load .env
         Dotenv.config();
 
         // If we're using Laravel set the public path by default
-        if (this.sees('laravel')) {
+        if (File.exists('./artisan')) {
             this.config.publicPath = 'public';
         }
 
         this.listen('init', () => this.hot.record());
         this.makeCurrent();
-
-        return this;
     }
 
     /**

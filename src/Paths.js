@@ -25,25 +25,6 @@ class Paths {
     }
 
     /**
-     * Determine the path to the user's webpack.mix.js file.
-     */
-    mix() {
-        const path = this.root(
-            process.env && process.env.MIX_FILE ? process.env.MIX_FILE : 'webpack.mix'
-        );
-
-        try {
-            require.resolve(`${path}.cjs`);
-
-            return `${path}.cjs`;
-        } catch (err) {
-            //
-        }
-
-        return path;
-    }
-
-    /**
      * Determine the project root.
      *
      * @param {string} [append]

@@ -35,6 +35,11 @@ test('An empty mix file results in a successful build', async t => {
 
 const configFiles = {
     CJS: 'webpack.mix',
+    'CJS with replaced export': 'webpack.mix.fn.raw',
+    'CJS with default export': 'webpack.mix.fn.default',
+
+    ESM: 'webpack.mix.esm',
+    'ESM with default export': 'webpack.mix.esm.fn.raw'
 };
 
 for (const [testName, fileName] of Object.entries(configFiles)) {

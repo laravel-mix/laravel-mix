@@ -1,4 +1,5 @@
 const { assertSupportedNodeVersion } = require('../src/Engine');
+const Mix = require('../src/Mix');
 
 module.exports = async () => {
     // @ts-ignore
@@ -6,12 +7,20 @@ module.exports = async () => {
 
     assertSupportedNodeVersion();
 
-    const mix = require('../src/Mix').primary;
+    const mix = Mix.primary;
 
-    require(mix.paths.mix());
+    // Boot mix
+    await mix.boot();
 
+    // Load the user's mix config
+    await mix.load();
+
+    // Install any missing dependencies
     await mix.installDependencies();
+
+    // Start running
     await mix.init();
 
-    return mix.build();
+    // Turn everything into a config
+    return await mix.build();
 };

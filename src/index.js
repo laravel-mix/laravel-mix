@@ -13,8 +13,4 @@ require('./helpers');
  |
  */
 
-let mix = Mix.primary;
-
-mix.boot();
-
-module.exports = mix.api;
+module.exports = Mix.shared.api;

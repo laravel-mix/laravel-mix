@@ -77,6 +77,10 @@ async function executeScript(cmd, opts, args = []) {
     ].join(' ');
 
     const scriptEnv = {
+        // Allow dynamic ESM imports
+        // This is an unfortunate workaround but it's the simplest way
+        // to get dynamic ESM imports & webpack-cli to play together
+        DISABLE_V8_COMPILE_CACHE: '1',
         NODE_ENV: env,
         MIX_FILE: opts.mixConfig
     };
