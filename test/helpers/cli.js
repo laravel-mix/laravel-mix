@@ -38,13 +38,17 @@ async function killProcessTree(child) {
         return
     }
 
+    let pid = child.pid
+
+    child.kill('SIGTERM')
+
     if (! /^win/.test(process.platform)) {
-        process.kill(-child.pid)
+        process.kill(-pid)
         return
     }
 
     return new Promise((resolve, reject) => {
-        exec(`taskkill /pid ${child.pid} /T /F`, (err) => {
+        exec(`taskkill /pid ${pid} /T /F`, (err) => {
             if (err) {
                 return reject(err)
             }
