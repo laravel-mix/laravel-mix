@@ -36,7 +36,7 @@ class ComponentRegistrar {
      * @param {string[]} [names]
      */
     install(ComponentDefinition, names) {
-        const record = new ComponentRecord(this.mix, ComponentDefinition, names);
+        const record = new ComponentRecord(this.mix.currentGroup, ComponentDefinition, names);
         const instance = record.instance();
 
         this.registerComponent(instance);

@@ -7,7 +7,7 @@ let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 class CssWebpackConfig extends Component {
     passive = true;
 
-    /** @returns {import('../Dependencies').DependencyObject[]} */
+    /** @returns {import('../PackageDependency.js').Dependency[]} */
     dependencies() {
         this.requiresReload = true;
 
@@ -121,7 +121,7 @@ class CssWebpackConfig extends Component {
             ...CssWebpackConfig.afterLoaders({
                 method: 'auto',
                 location: 'default',
-                context: this.context
+                context: this.context.mix,
             }),
             {
                 loader: this.context.resolve('css-loader'),
@@ -143,14 +143,14 @@ class CssWebpackConfig extends Component {
                 loader: this.context.resolve('postcss-loader'),
                 options: {
                     postcssOptions: {
-                        plugins: new PostCssPluginsFactory(this.context).load(),
+                        plugins: new PostCssPluginsFactory(this.context.mix).load(),
                         hideNothingWarning: true
                     }
                 }
             },
             rule.loader,
             ...CssWebpackConfig.beforeLoaders({
-                context: this.context,
+                context: this.context.mix,
                 type: rule.type,
                 injectGlobalStyles: true
             })
@@ -163,7 +163,7 @@ class CssWebpackConfig extends Component {
      * @param {string} command
      */
     excludePathsFor(command) {
-        let exclusions = this.context.components.get(command);
+        let exclusions = this.context.mix.components.get(command);
 
         if (command === 'css' || !exclusions) {
             return [];

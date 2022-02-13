@@ -1,8 +1,11 @@
 import test from 'ava';
 import path from 'path';
+import { fileURLToPath } from 'url'
 
 import { context } from '../helpers/test.js';
 import { setupVueAliases } from './vue.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test('it can build multiple configs at once', async t => {
     const { Mix, mix, webpack } = context(t);
@@ -24,7 +27,7 @@ test('it can build multiple configs at once', async t => {
         mix.vue({ version: 2 });
     });
 
-    const { configs } = await webpack.compile();
+    const configs = await webpack.buildConfigs();
 
     t.deepEqual(configs[0].resolve && configs[0].resolve.alias, {
         '@': path.resolve(__dirname, '../../foobar')

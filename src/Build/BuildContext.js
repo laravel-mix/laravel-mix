@@ -44,6 +44,13 @@ exports.BuildContext = class BuildContext {
     }
 
     /**
+     * @param {string} name
+     */
+    resolve(name) {
+        return this.mix.resolve(name)
+    }
+
+    /**
      * Queue up a new task.
      *
      * @param {Task<any>} task

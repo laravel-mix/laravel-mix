@@ -58,9 +58,6 @@ class Mix {
         /** @type {BuildGroup[]} */
         this.groups = [defaultGroup];
 
-        /** @type {Task[]} */
-        this.tasks = [];
-
         this.bundlingJavaScript = false;
 
         /**
@@ -80,6 +77,14 @@ class Mix {
          * @type {boolean|string}
          **/
         this.extractingStyles = false;
+    }
+
+    get tasks() {
+        return this.currentGroup.context.tasks
+    }
+
+    set tasks(newTasks) {
+        this.currentGroup.context.tasks = newTasks
     }
 
     /**
@@ -246,7 +251,7 @@ class Mix {
      * @param {Task} task
      */
     addTask(task) {
-        this.tasks.push(task);
+        this.currentGroup.context.addTask(task, { when: 'after' });
     }
 
     /**
@@ -288,7 +293,9 @@ class Mix {
      * @param {BuildGroup} group
      **/
     pushCurrent(group) {
-        this.#current.push(group.makeCurrent());
+        this.#registerGroupGlobals(group);
+
+        this.#current.push(group);
     }
 
     /** @internal */
@@ -298,7 +305,8 @@ class Mix {
         }
 
         this.#current.pop();
-        this.currentGroup.makeCurrent();
+
+        this.#registerGroupGlobals(this.currentGroup);
     }
 
     /**
@@ -311,18 +319,27 @@ class Mix {
 
     /**
      * @internal
+     * @deprecated
      */
     makeCurrent() {
         // Set up some globals
 
         global.Mix = this;
         global.webpackConfig = this.webpackConfig;
-
-        let group = this.currentGroup;
-        global.Config = group.context.config
-        group.context.chunks.makeCurrent();
+        this.#registerGroupGlobals(this.currentGroup)
 
         return this;
+    }
+
+    /**
+     * @deprecated
+     * @param {BuildGroup} group
+     */
+    #registerGroupGlobals(group) {
+        // Set up some globals
+
+        global.Config = group.context.config
+        group.context.chunks.makeCurrent();
     }
 }
 

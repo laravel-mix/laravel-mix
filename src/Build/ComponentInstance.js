@@ -60,12 +60,12 @@ module.exports.ComponentInstance = class ComponentInstance {
             return;
         }
 
-        /** @type {import('../Dependencies').Dependency[]} */
+        /** @type {import('../PackageDependency.js').Dependency[]} */
         const deps = this.instance.dependencies
             ? concat([], await this.instance.dependencies())
             : [];
 
-        Dependencies.queue(deps, this.instance.requiresReload || false);
+        this.mix.dependencies.enqueue(deps, this.instance.requiresReload || false);
     }
 
     /**
@@ -104,8 +104,8 @@ module.exports.ComponentInstance = class ComponentInstance {
             ? (await this.instance.babelConfig()) || {}
             : {};
 
-        this.mix.config.merge({
-            babelConfig: extend(this.mix.config.babelConfig, config)
+        this.context.config.merge({
+            babelConfig: extend(this.context.config.babelConfig, config)
         });
     }
 
@@ -156,7 +156,11 @@ module.exports.ComponentInstance = class ComponentInstance {
         return this.instance.webpackConfig && this.instance.webpackConfig(config);
     }
 
+    get context() {
+        return this.record.group.context;
+    }
+
     get mix() {
-        return global.Mix;
+        return this.record.group.mix;
     }
 };

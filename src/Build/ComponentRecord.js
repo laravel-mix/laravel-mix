@@ -1,4 +1,5 @@
 const { concat } = require('lodash');
+const { BuildGroup } = require('./BuildGroup.js')
 const { ComponentInstance } = require('./ComponentInstance');
 
 /**
@@ -15,12 +16,12 @@ module.exports.ComponentRecord = class ComponentRecord {
     #instances = new Map();
 
     /**
-     * @param {import('../Mix')} mix
+     * @param {BuildGroup} group
      * @param {InstallableComponent} component
      * @param {string[]} [names]
      */
-    constructor(mix, component, names) {
-        this.mix = mix;
+    constructor(group, component, names) {
+        this.group = group;
 
         /** @type {InstallableComponent} */
         this.component = component;
@@ -43,7 +44,7 @@ module.exports.ComponentRecord = class ComponentRecord {
         const component = this.component;
 
         const [createdNewInstance, ci] = this.isInstantiable(component)
-            ? [true, new component(global.Mix)]
+            ? [true, new component(this.group.context)]
             : [false, component];
 
         if (!createdNewInstance) {

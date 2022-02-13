@@ -3,6 +3,7 @@
 import * as webpack from 'webpack';
 import { TransformOptions as BabelConfig } from '@babel/core';
 import Entry from '../src/builder/Entry';
+import { BuildContext } from '../src/Build/BuildContext'
 
 export type DependencyObject = {
     /** The name of the package */
@@ -23,12 +24,13 @@ export type Dependency = string | DependencyObject;
 
 export interface ClassComponent {
     prototype: ComponentInterface;
-    new (): ComponentInterface;
+
+    new (context: BuildContext): ComponentInterface;
 
     /**
      * The public API name(s) for this component.
      *
-     * These get attached to the mix object and when called will register this compoent.
+     * These get attached to the mix object and when called will register this component.
      *
      * For example if name returns `['foo', 'bar']` then you may
      * register this component via both `mix.foo()` and `mix.bar()`
