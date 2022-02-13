@@ -23,3 +23,13 @@ module.exports = global.Mix.api;
 
 // Allow ESM: import mix from 'laravel-mix'
 module.exports.default = global.Mix.api;
+
+/**
+ * Define typescript config helper for ESM & CJS:
+ *
+ * const { defineConfig } = import('laravel-mix')
+ * import { defineConfig } from 'laravel-mix'
+ *
+ * @type {import('laravel-mix').defineConfig}
+ */
+module.exports.defineConfig = fn => fn;

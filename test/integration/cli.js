@@ -37,9 +37,11 @@ const configFiles = {
     CJS: 'webpack.mix',
     'CJS with replaced export': 'webpack.mix.fn.raw',
     'CJS with default export': 'webpack.mix.fn.default',
+    'CJS with default export + defineConfig': 'webpack.mix.fn.define',
 
     ESM: 'webpack.mix.esm',
-    'ESM with default export': 'webpack.mix.esm.fn.raw'
+    'ESM with default export': 'webpack.mix.esm.fn.raw',
+    'ESM with default export + defineConfig': 'webpack.mix.esm.fn.define'
 };
 
 for (const [testName, fileName] of Object.entries(configFiles)) {
