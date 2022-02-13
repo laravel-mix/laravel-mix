@@ -115,14 +115,6 @@ class Mix {
      * @returns {Promise<import('webpack').Configuration[]>}
      */
     async build() {
-        if (!this.booted) {
-            console.warn(
-                'Mix was not set up correctly. Please ensure you import or require laravel-mix in your mix config.'
-            );
-
-            this.boot();
-        }
-
         return await Promise.all(this.buildableGroups.map(group => group.config()));
     }
 
@@ -132,7 +124,6 @@ class Mix {
 
     /**
      * @internal
-     * @returns {Mix}
      */
     async boot() {
         // Load .env
