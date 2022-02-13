@@ -11,16 +11,18 @@ import { context } from '../helpers/test.js';
  * @param {import('../../src/Mix.js')} Mix
  */
 export function setupVueAliases(version, Mix) {
+    const context = global.Mix;
+
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueCompiler = version === 3 ? '@vue/compiler-dom' : 'vue-template-compiler';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
 
-    Mix.resolver.alias('vue', vueModule);
-    Mix.resolver.alias('vue-loader', vueLoaderModule);
-    Mix.resolver.alias('vue-compiler', vueCompiler);
+    context.resolver.alias('vue', vueModule);
+    context.resolver.alias('vue-loader', vueLoaderModule);
+    context.resolver.alias('vue-compiler', vueCompiler);
 
     const require = createRequire(import.meta.url);
-    Mix.api.alias({ vue: require.resolve(vueModule) });
+    context.api.alias({ vue: require.resolve(vueModule) });
 }
 
 /**
