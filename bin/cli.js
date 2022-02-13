@@ -67,7 +67,7 @@ async function executeScript(cmd, opts, args = []) {
     // containg spaces on Windows (yarn does)
     const configPath = path.relative(
         process.cwd(),
-        require.resolve('../setup/webpack.config.js')
+        require.resolve('../setup/webpack.config.mjs')
     );
 
     const script = [
@@ -77,6 +77,10 @@ async function executeScript(cmd, opts, args = []) {
     ].join(' ');
 
     const scriptEnv = {
+        // Allow dynamic ESM imports
+        // This is an unfortunate workaround but it's the simplest way
+        // to get dynamic ESM imports & webpack-cli to play together
+        DISABLE_V8_COMPILE_CACHE: '1',
         NODE_ENV: env,
         MIX_FILE: opts.mixConfig
     };

@@ -1,7 +1,3 @@
-const Mix = require('./Mix');
-
-require('./helpers');
-
 /*
  |--------------------------------------------------------------------------
  | Welcome to Laravel Mix!
@@ -13,8 +9,27 @@ require('./helpers');
  |
  */
 
-let mix = Mix.primary;
+if (!global.Mix) {
+    throw new Error(
+        'Importing / requiring laravel-mix should only happen when building your code.'
+    );
+}
 
-mix.boot();
+// TODO: Remove in next major version — none of these are used by mix itself
+require('./helpers');
 
-module.exports = mix.api;
+// Allow CJS: const mix = import('laravel-mix')
+module.exports = global.Mix.api;
+
+// Allow ESM: import mix from 'laravel-mix'
+module.exports.default = global.Mix.api;
+
+/**
+ * Define typescript config helper for ESM & CJS:
+ *
+ * const { defineConfig } = import('laravel-mix')
+ * import { defineConfig } from 'laravel-mix'
+ *
+ * @type {import('laravel-mix').defineConfig}
+ */
+module.exports.defineConfig = fn => fn;

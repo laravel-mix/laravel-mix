@@ -1,17 +1,9 @@
 const { assertSupportedNodeVersion } = require('../src/Engine');
 
 module.exports = async () => {
-    // @ts-ignore
-    process.noDeprecation = true;
-
     assertSupportedNodeVersion();
 
-    const mix = require('../src/Mix').primary;
+    const config = await import('./webpack.config.mjs');
 
-    require(mix.paths.mix());
-
-    await mix.installDependencies();
-    await mix.init();
-
-    return mix.build();
+    return await config.default();
 };

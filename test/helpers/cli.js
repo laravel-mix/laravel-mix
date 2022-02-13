@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * @typedef {object} CliResult
  * @property {Error|null} error
+ * @property {number} elapsed
  * @property {number} code
  * @property {string} stdout
  * @property {string} stderr
@@ -83,6 +84,8 @@ export function cli(opts) {
             stderr: ''
         };
 
+        const start = process.hrtime.bigint();
+
         const child = spawn(cmd, {
             shell: true,
             cwd,
@@ -102,6 +105,7 @@ export function cli(opts) {
 
         child.on('error', err => (result.error = err));
         child.on('close', (code, signal) => {
+            result.elapsed = Number(process.hrtime.bigint() - start) / 1_000_000;
             result.code = code || 0;
             result.signal = signal;
         });
