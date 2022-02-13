@@ -56,7 +56,7 @@ exports.BuildContext = class BuildContext {
      * @param {Task<any>} task
      * @param {{ when: "before" | "during" | "after"}} options
      */
-    addTask(task, options) {
+    addTask(task, options = { when: "after" }) {
         this.tasks.push(new TaskRecord({ task, when: options.when }));
     }
 

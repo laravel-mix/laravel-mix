@@ -80,11 +80,14 @@ class Mix {
     }
 
     get tasks() {
-        return this.currentGroup.context.tasks
+        return this.currentGroup.context.tasks.map(r => r.task);
     }
 
     set tasks(newTasks) {
-        this.currentGroup.context.tasks = newTasks
+        this.currentGroup.context.tasks = []
+        newTasks.forEach(task => {
+            this.currentGroup.context.addTask(task, { when: 'after' });
+        });
     }
 
     /**

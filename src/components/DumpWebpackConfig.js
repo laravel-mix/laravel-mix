@@ -12,8 +12,8 @@ module.exports = class DumpWebpackConfig extends Component {
      * Register the component.
      */
     register() {
-        this.context.listen('configReadyForUser', config => {
-            this.context.logger.info(this.circularStringify(config));
+        this.context.mix.listen('configReadyForUser', config => {
+            this.context.mix.logger.info(this.circularStringify(config));
         });
     }
 
