@@ -12,6 +12,6 @@ module.exports = class Then extends Component {
      * @param {() => void | Promise<void>} callback
      */
     register(callback) {
-        this.context.listen('build', callback);
+        this.context.mix.listen('build', callback);
     }
 };
