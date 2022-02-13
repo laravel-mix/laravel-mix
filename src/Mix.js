@@ -115,11 +115,11 @@ class Mix {
      * @returns {Promise<import('webpack').Configuration[]>}
      */
     async build() {
-        return await Promise.all(this.buildableGroups.map(group => group.config()));
+        return await Promise.all(this.enabledGroups.map(group => group.config()));
     }
 
-    get buildableGroups() {
-        return this.groups.filter(group => group.shouldBeBuilt);
+    get enabledGroups() {
+        return this.groups.filter(group => group.enabled);
     }
 
     /**
@@ -150,7 +150,7 @@ class Mix {
      * @internal
      */
     async setup() {
-        await Promise.all(this.buildableGroups.map(group => group.setup()));
+        await Promise.all(this.enabledGroups.map(group => group.setup()));
     }
 
     /**
@@ -163,7 +163,6 @@ class Mix {
 
         this.initialized = true;
 
-        // And then kick things off
         await this.dispatch('init', this);
     }
 
@@ -312,22 +311,6 @@ class Mix {
 
     /**
      * @internal
-     * @template T
-     * @param {string} name
-     * @param {import('./Build/BuildGroup').GroupCallback} callback
-     */
-    addGroup(name, callback) {
-        this.groups.push(
-            new BuildGroup({
-                name,
-                mix: this,
-                callback
-            })
-        );
-    }
-
-    /**
-     * @internal
      */
     makeCurrent() {
         // Set up some globals
@@ -335,7 +318,9 @@ class Mix {
         global.Mix = this;
         global.webpackConfig = this.webpackConfig;
 
-        this.groups[0].makeCurrent();
+        let group = this.currentGroup;
+        global.Config = group.context.config
+        group.context.chunks.makeCurrent();
 
         return this;
     }

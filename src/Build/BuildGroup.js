@@ -40,10 +40,6 @@ exports.BuildGroup = class BuildGroup {
      * @internal
      */
     async config() {
-        // TODO: We should run setup as early as possible
-        // Maybe in Mix.init?
-        await this.setup();
-
         return new WebpackConfig(this.mix).build();
     }
 
@@ -69,21 +65,10 @@ exports.BuildGroup = class BuildGroup {
         }
     }
 
-    get shouldBeBuilt() {
+    get enabled() {
         // TODO: Support simple wildcards? like foo_* and support regex when using slashes /foo_.*/
         const pattern = new RegExp(`^${process.env.MIX_GROUP || '.*'}$`, 'i');
 
         return !!this.name.match(pattern);
-    }
-
-    /**
-     * @internal
-     * @deprecated
-     */
-    makeCurrent() {
-        global.Config = this.context.config;
-        this.context.chunks.makeCurrent();
-
-        return this;
     }
 };

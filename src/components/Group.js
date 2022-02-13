@@ -1,40 +1,22 @@
-/**
- * @typedef {(mix: import("../../types/index"), context: import("../Build/BuildContext").BuildContext) => void} GroupCallback
- */
+const { Component } = require("./Component.js")
+const { BuildGroup } = require("../Build/BuildGroup.js")
 
-class Group {
-    /**
-     *
-     * @param {import('../Build/BuildContext').BuildContext} context
-     */
-    constructor(context) {
-        this.context = context;
-    }
-
+module.exports = class Group extends Component {
     /**
      * Add resolution aliases to webpack's config
      *
      * @param {string} name
-     * @param {GroupCallback} [callback]
+     * @param {import('../Build/BuildGroup.js').GroupCallback} [callback]
      */
     register(name, callback) {
         if (!callback) {
-            throw new Error('A callback must be passed to mix.group()');
+            throw new Error('Using mix.group() requires a callback to configure the group');
         }
 
-        // TODO: All groups should be registered all the time
-        // The filtering should happen when we get ready to build
-        // This could potentially allow group callbacks to be asynchronous
-        const shouldBuild = name === process.env.MIX_GROUP || !process.env.MIX_GROUP;
-
-        if (!shouldBuild) {
-            return;
-        }
-
-        this.context.mix.addGroup(name, group =>
-            callback(group.context.api, group.context)
-        );
+        this.context.mix.groups.push(new BuildGroup({
+            name,
+            mix: this.context.mix,
+            callback,
+        }))
     }
 }
-
-module.exports = Group;

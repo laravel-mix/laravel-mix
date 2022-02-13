@@ -10,6 +10,7 @@ class ComponentRegistrar {
     constructor(mix) {
         this.mix = mix || global.Mix;
 
+        /** @type {Record<string,any>} */
         this.components = {};
     }
 

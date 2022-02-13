@@ -5,5 +5,5 @@ module.exports = async () => {
 
     const config = await import('./webpack.config.mjs');
 
-    return await config.default();
+    return config.default();
 };

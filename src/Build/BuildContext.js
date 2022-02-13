@@ -1,6 +1,7 @@
 const { Chunks } = require('../Chunks');
 const Task = require('../tasks/Task');
 const { Manifest } = require('./Manifest');
+const { TaskRecord } = require('./TaskRecord');
 
 /**
  * Holds all the data necessary for the current build
@@ -22,7 +23,11 @@ exports.BuildContext = class BuildContext {
         /**
          * @public
          */
-        this.chunks = new Chunks(mix);
+        this.chunks = new Chunks(Object.create(mix, {
+            config: {
+                get: () => this.config,
+            }
+        }));
 
         /**
          * @public
@@ -30,42 +35,37 @@ exports.BuildContext = class BuildContext {
         this.manifest = new Manifest();
 
         /**
-         * @type {Task[]}
-         * @internal
+         * @type {TaskRecord[]}
          **/
         this.tasks = [];
 
         /** Record<string, any> */
         this.metadata = {};
-
-        // TODO: Do we want an event dispatcher here?
-        // How would we implement mix.before on a per-group basis
-        // Maybe it is only meant to be top-level?
     }
 
     /**
      * Queue up a new task.
-     * TODO: Add a "stage" to tasks so they can run at different points during the build
      *
-     * @param {Task} task
+     * @param {Task<any>} task
      * @param {{ when: "before" | "during" | "after"}} options
      */
     addTask(task, options) {
-        this.tasks.push(task);
+        this.tasks.push(new TaskRecord({ task, when: options.when }));
+    }
+
+    #createApi() {
+        const api = this.mix.registrar.installAll()
+
+        // @ts-ignore: Legacy — move this to a component?
+        api.inProduction = () => this.config.production;
+
+        return api
     }
 
     /**
-     * @returns {import("../../types/index")}
+     * @returns {import("laravel-mix")}
      */
     get api() {
-        if (!this._api) {
-            this._api = this.mix.registrar.installAll();
-
-            // @ts-ignore
-            this._api.inProduction = () => this.config.production;
-        }
-
-        // @ts-ignore
-        return this._api;
+        return this._api = this._api || this.#createApi();
     }
 };
