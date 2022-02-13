@@ -10,9 +10,7 @@ import { context } from '../helpers/test.js';
  * @param {string|number} version
  * @param {import('../../src/Mix.js')} Mix
  */
-export function setupVueAliases(version, Mix) {
-    const context = global.Mix;
-
+export function setupVueAliases(version, context) {
     const vueModule = version === 3 ? 'vue3' : 'vue2';
     const vueCompiler = version === 3 ? '@vue/compiler-dom' : 'vue-template-compiler';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';

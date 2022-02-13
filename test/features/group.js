@@ -1,11 +1,13 @@
 import test from 'ava';
 import path from 'path';
 
-import { mix } from '../helpers/mix.js';
-import webpack, { setupVueAliases } from '../helpers/webpack.js';
+import { context } from '../helpers/test.js';
+import { setupVueAliases } from './vue.js';
 
 test('it can build multiple configs at once', async t => {
-    setupVueAliases(2);
+    const { Mix, mix, webpack } = context(t);
+
+    setupVueAliases(2, Mix);
 
     mix.group('one', mix => {
         mix.js('test/fixtures/app/src/js/app.js', 'js/app1.js');
@@ -15,8 +17,6 @@ test('it can build multiple configs at once', async t => {
     });
 
     mix.group('two', mix => {
-        setupVueAliases(2);
-
         mix.js('test/fixtures/app/src/extract/app.js', 'js/app2.js');
         mix.alias({
             '@': './foobaz'
