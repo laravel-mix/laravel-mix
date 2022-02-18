@@ -54,7 +54,7 @@
         "babel-loader": "^8.2.3",
         "chalk": "^4.1.2",
         "chokidar": "^3.5.2",
-        "clean-css": "^4.2.3 || ^5.1.2",
+        "clean-css": "^5.2.4",
         "cli-table3": "^0.6.0",
         "collect.js": "^4.28.5",
         "commander": "^7.2.0",
