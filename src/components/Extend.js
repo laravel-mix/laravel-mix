@@ -14,23 +14,23 @@ module.exports = class Extend extends Component {
     /**
      * Register the component.
      *
-     * @param {string | string[] | FunctionalComponent} name
-     * @param {Component} component
+     * @param {string|ClassComponent} name
+     * @param {FunctionalComponent | ComponentInterface} component
      */
     register(name, component) {
         if (typeof name === 'function') {
-            return this.context.registrar.install(component);
+            return this.context.mix.registrar.install(component);
         }
 
         const names = concat([], name);
 
         if (this.looksLikeSimpleCallback(component)) {
-            return this.context.registrar.install(
+            return this.context.mix.registrar.install(
                 createFunctionalComponent(names, component)
             );
         }
 
-        return this.context.registrar.install(component, names);
+        return this.context.mix.registrar.install(component, names);
     }
 
     /**

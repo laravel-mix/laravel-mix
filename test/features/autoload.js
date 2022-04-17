@@ -16,8 +16,8 @@ test('it handles library autoloading', async t => {
         .get() || { definitions: {} };
 
     t.deepEqual(plugin.definitions, {
-        $: 'jquery',
-        'window.jQuery': 'jquery',
+        $: ['jquery'],
+        'window.jQuery': ['jquery'],
         _map: ['lodash', 'map']
     });
 });

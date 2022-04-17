@@ -53,7 +53,7 @@ module.exports = class Preprocessor extends Component {
         /** @type {import('webpack').RuleSetRule[]} */
         let loaders = [
             ...CssWebpackConfig.afterLoaders({
-                context: this.context,
+                context: this.context.mix,
                 method: 'extract',
                 location: 'per-file'
             }),
@@ -71,7 +71,7 @@ module.exports = class Preprocessor extends Component {
 
                         return processUrls;
                     },
-                    sourceMap: this.context.isUsing('sourcemaps'),
+                    sourceMap: this.context.config.sourcemaps !== false,
                     importLoaders: 1
                 }
             },
@@ -99,7 +99,7 @@ module.exports = class Preprocessor extends Component {
 
         loaders.push(
             ...CssWebpackConfig.beforeLoaders({
-                context: this.context,
+                context: this.context.mix,
                 type: preprocessor.type,
                 injectGlobalStyles: false
             })
@@ -119,7 +119,7 @@ module.exports = class Preprocessor extends Component {
             sourceMap:
                 preprocessor.type === 'sass' && processUrls
                     ? true
-                    : this.context.isUsing('sourcemaps')
+                    : this.context.config.sourcemaps !== false
         });
     }
 
@@ -130,9 +130,9 @@ module.exports = class Preprocessor extends Component {
      */
     postCssLoaderOptions(preprocessor) {
         return {
-            sourceMap: this.context.isUsing('sourcemaps'),
+            sourceMap: this.context.config.sourcemaps !== false,
             postcssOptions: {
-                plugins: new PostCssPluginsFactory(this.context).load(
+                plugins: new PostCssPluginsFactory(this.context.mix).load(
                     preprocessor.postCssPlugins
                 ),
                 hideNothingWarning: true

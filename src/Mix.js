@@ -11,6 +11,7 @@ let Manifest = require('./Manifest');
 let Paths = require('./Paths');
 let WebpackConfig = require('./builder/WebpackConfig');
 let { Resolver } = require('./Resolver');
+const { BuildGroup } = require('./Build/BuildGroup');
 const Log = require('./Log');
 
 /** @typedef {import("./tasks/Task")} Task */
@@ -21,6 +22,9 @@ class Mix {
 
     /** @type {Record<string, boolean>} */
     static _hasWarned = {};
+
+    /** @type {BuildGroup[]} */
+    #current;
 
     /**
      * Create a new instance.
@@ -41,8 +45,18 @@ class Mix {
         this.dependencies = new Dependencies();
         this.logger = Log;
 
-        /** @type {Task[]} */
-        this.tasks = [];
+        const defaultGroup = new BuildGroup({
+            name: 'Mix',
+            mix: this,
+            callback: () => {}
+        });
+
+        defaultGroup.context.config = this.config;
+
+        this.#current = [defaultGroup];
+
+        /** @type {BuildGroup[]} */
+        this.groups = [defaultGroup];
 
         this.bundlingJavaScript = false;
 
@@ -63,6 +77,17 @@ class Mix {
          * @type {boolean|string}
          **/
         this.extractingStyles = false;
+    }
+
+    get tasks() {
+        return this.currentGroup.context.tasks.map(r => r.task);
+    }
+
+    set tasks(newTasks) {
+        this.currentGroup.context.tasks = []
+        newTasks.forEach(task => {
+            this.currentGroup.context.addTask(task, { when: 'after' });
+        });
     }
 
     /**
@@ -89,15 +114,20 @@ class Mix {
 
         // Allow the user to `export default function (mix) { … }` from their config file
         if (typeof mod.default === 'function') {
-            await mod.default(this.api);
+            await this.currentGroup.whileCurrent(mod.default);
         }
     }
 
     /**
      * @internal
+     * @returns {Promise<import('webpack').Configuration[]>}
      */
     async build() {
-        return this.webpackConfig.build();
+        return await Promise.all(this.enabledGroups.map(group => group.config()));
+    }
+
+    get enabledGroups() {
+        return this.groups.filter(group => group.enabled);
     }
 
     /**
@@ -127,35 +157,35 @@ class Mix {
     /**
      * @internal
      */
-    init() {
+    async setup() {
+        await Promise.all(this.enabledGroups.map(group => group.setup()));
+    }
+
+    /**
+     * @internal
+     */
+    async init() {
         if (this.initialized) {
             return;
         }
 
         this.initialized = true;
 
-        return this.dispatch('init', this);
+        await this.dispatch('init', this);
     }
 
     /**
-     * @return {import("laravel-mix").Api}
+     * @return {import("laravel-mix")}
      */
     get api() {
-        if (!this._api) {
-            this._api = this.registrar.installAll();
-
-            // @ts-ignore
-            this._api.inProduction = () => this.config.production;
-        }
-
-        // @ts-ignore
-        return this._api;
+        return this.currentGroup.context.api;
     }
 
     /**
      * Determine if the given config item is truthy.
      *
      * @param {string} tool
+     * @deprecated Please check the mix config directly instead
      */
     isUsing(tool) {
         // @ts-ignore
@@ -224,7 +254,7 @@ class Mix {
      * @param {Task} task
      */
     addTask(task) {
-        this.tasks.push(task);
+        this.currentGroup.context.addTask(task, { when: 'after' });
     }
 
     /**
@@ -244,11 +274,13 @@ class Mix {
      * @param {any | (() => any)}      [data]
      */
     async dispatch(event, data) {
-        if (typeof data === 'function') {
-            data = data();
-        }
+        return this.currentGroup.whileCurrent(() => {
+            if (typeof data === 'function') {
+                data = data();
+            }
 
-        return this.dispatcher.fire(event, data);
+            return this.dispatcher.fire(event, data);
+        });
     }
 
     /**
@@ -261,22 +293,56 @@ class Mix {
 
     /**
      * @internal
+     * @param {BuildGroup} group
+     **/
+    pushCurrent(group) {
+        this.#registerGroupGlobals(group);
+
+        this.#current.push(group);
+    }
+
+    /** @internal */
+    popCurrent() {
+        if (this.#current.length === 1) {
+            return;
+        }
+
+        this.#current.pop();
+
+        this.#registerGroupGlobals(this.currentGroup);
+    }
+
+    /**
+     * @internal
+     * @type {BuildGroup}
+     */
+    get currentGroup() {
+        return this.#current[this.#current.length - 1];
+    }
+
+    /**
+     * @internal
+     * @deprecated
      */
     makeCurrent() {
         // Set up some globals
 
-        // @ts-ignore
-        global.Config = this.config;
-
-        // @ts-ignore
         global.Mix = this;
-
-        // @ts-ignore
         global.webpackConfig = this.webpackConfig;
-
-        this.chunks.makeCurrent();
+        this.#registerGroupGlobals(this.currentGroup)
 
         return this;
+    }
+
+    /**
+     * @deprecated
+     * @param {BuildGroup} group
+     */
+    #registerGroupGlobals(group) {
+        // Set up some globals
+
+        global.Config = group.context.config
+        group.context.chunks.makeCurrent();
     }
 }
 

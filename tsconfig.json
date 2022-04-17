@@ -5,7 +5,8 @@
         "node_modules/@types/*/*",
         "test/integration/fixture/public",
         "test/fixtures/integration/dist",
-        "test/fixtures/app/dist"
+        "test/fixtures/app/dist",
+        "test/disks"
     ],
 
     "compilerOptions": {

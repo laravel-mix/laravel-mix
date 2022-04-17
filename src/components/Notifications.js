@@ -25,7 +25,7 @@ module.exports = class Notifications extends Component {
                 alwaysNotify: this.context.config.notifications.onSuccess,
                 timeout: false,
                 hint: process.platform === 'linux' ? 'int:transient:1' : undefined,
-                contentImage: this.context.paths.root(
+                contentImage: this.context.mix.paths.root(
                     'node_modules/laravel-mix/icons/laravel.png'
                 )
             })

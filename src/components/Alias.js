@@ -22,7 +22,7 @@ module.exports = class Alias extends Component {
 
         for (const [alias, path] of Object.entries(this.aliases)) {
             const resolvedPath =
-                typeof path === 'object' ? path.raw : this.context.paths.root(path);
+                typeof path === 'object' ? path.raw : this.context.mix.paths.root(path);
 
             config.resolve.alias[alias] = resolvedPath;
         }

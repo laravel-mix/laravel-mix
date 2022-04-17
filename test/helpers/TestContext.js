@@ -61,7 +61,7 @@ export class TestContext {
         }
     }
 
-    async config() {
+    async configs() {
         // By default we disable notifications during tests because it's annoying
         if (process.env.DISABLE_NOTIFICATIONS === undefined) {
             process.env.DISABLE_NOTIFICATIONS = '1';
@@ -72,7 +72,7 @@ export class TestContext {
     }
 
     async build() {
-        return webpack.compile(this.config());
+        return webpack.compile(this.configs());
     }
 
     get mix() {
@@ -81,7 +81,8 @@ export class TestContext {
 
     get webpack() {
         return {
-            buildConfig: () => this.config(),
+            buildConfig: () => this.configs().then(configs => configs[0]),
+            buildConfigs: () => this.configs(),
             compile: () => this.build()
         };
     }

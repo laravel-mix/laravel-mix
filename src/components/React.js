@@ -85,7 +85,7 @@ module.exports = class React extends Component {
      */
     supportsFastRefreshing() {
         return (
-            this.context.isHot() && semver.satisfies(this.library().version, '>=16.9.0')
+            this.context.mix.isHot() && semver.satisfies(this.library().version, '>=16.9.0')
         );
     }
 

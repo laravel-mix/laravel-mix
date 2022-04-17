@@ -8,17 +8,16 @@ module.exports = class Autoload extends Component {
     /**
      * Register the component.
      *
-     * @param  {Record<string, string>} libs
-     * @return {void}
+     * @param  {Record<string, string | string[]>} libs
      */
     register(libs) {
-        Object.keys(libs).forEach(library => {
-            concat([], libs[library]).forEach(alias => {
-                this.aliases[alias] = library.includes('.')
-                    ? library.split('.')
-                    : library;
-            });
-        });
+        for (let [library, aliases] of Object.entries(libs)) {
+            const lib = library.includes('.') ? library.split('.') : [library];
+
+            for (const alias of Array.isArray(aliases) ? aliases : [aliases]) {
+                this.aliases[alias] = lib;
+            }
+        }
     }
 
     /**

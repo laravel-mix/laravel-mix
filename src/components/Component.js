@@ -18,17 +18,17 @@ class Component {
 
     /**
      *
-     * @param {import("../Mix")} mix
+     * @param {import("../Build/BuildContext").BuildContext} context
      */
-    constructor(mix) {
-        this.context = mix;
+    constructor(context) {
+        this.context = context;
     }
 
     /**
-     * Specifiy one or more dependencies that must
+     * Specify one or more dependencies that must
      * be installed for this component to work
      *
-     * @returns {import("../Dependencies").Dependency[]}
+     * @returns {import("../PackageDependency.js").Dependency[]}
      **/
     dependencies() {
         return [];

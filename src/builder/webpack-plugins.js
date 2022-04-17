@@ -50,7 +50,7 @@ module.exports = function (mix) {
     );
 
     if (process.env.NODE_ENV !== 'test') {
-        plugins.push(new WebpackBar({ name: 'Mix' }));
+        plugins.push(new WebpackBar({ name: mix.options.name }));
     }
 
     return plugins;
