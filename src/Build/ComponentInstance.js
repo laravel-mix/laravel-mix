@@ -126,7 +126,7 @@ module.exports.ComponentInstance = class ComponentInstance {
      */
     async applyRules(rules) {
         const newRules = this.instance.webpackRules
-            ? concat((await this.instance.webpackRules()) || [])
+            ? concat(await this.instance.webpackRules())
             : [];
 
         rules.push(...newRules);
@@ -140,7 +140,7 @@ module.exports.ComponentInstance = class ComponentInstance {
      */
     async applyPlugins(plugins) {
         const newPlugins = this.instance.webpackPlugins
-            ? concat((await this.instance.webpackPlugins()) || [])
+            ? concat(await this.instance.webpackPlugins())
             : [];
 
         plugins.push(...newPlugins);
