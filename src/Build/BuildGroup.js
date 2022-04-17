@@ -1,3 +1,4 @@
+const { escapeRegExp } = require('lodash')
 const WebpackConfig = require('../builder/WebpackConfig');
 const { BuildContext } = require('./BuildContext');
 
@@ -66,9 +67,37 @@ exports.BuildGroup = class BuildGroup {
     }
 
     get enabled() {
-        // TODO: Support simple wildcards? like foo_* and support regex when using slashes /foo_.*/
-        const pattern = new RegExp(`^${process.env.MIX_GROUP || '.*'}$`, 'i');
+        let requestedGroup = `${process.env.MIX_GROUP}`.trim()
 
-        return !!this.name.match(pattern);
+        // All groups should be built when no group is specified
+        if (requestedGroup.length === 0) {
+            return true;
+        }
+
+        // This group name matches exactly so it should be built
+        if (this.name === requestedGroup) {
+            return true;
+        }
+
+        // Check this group against the requested group
+        return this.toPattern(requestedGroup).test(this.name);
+    }
+
+    /**
+     *
+     * @private
+     * @param {string} requestedGroup
+     */
+    toPattern(requestedGroup) {
+        // The user has specified their own regex pattern
+        if (requestedGroup.startsWith('/') && requestedGroup.endsWith('/')) {
+            return new RegExp(`${requestedGroup.slice(1, -1)}`, 'i');
+        }
+
+        // This is a simple string so replace wildcards with a zero-or-more wildcard
+        // Lifted from Illuminate\Support\Str::is(…)
+        requestedGroup = escapeRegExp(requestedGroup).replace('\*', '.*');
+
+        return new RegExp(`^${requestedGroup}\\z`, 'u');
     }
 };

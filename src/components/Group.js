@@ -13,10 +13,6 @@ module.exports = class Group extends Component {
             throw new Error('Using mix.group() requires a callback to configure the group');
         }
 
-        this.context.mix.groups.push(new BuildGroup({
-            name,
-            mix: this.context.mix,
-            callback,
-        }))
+        this.context.mix.addGroup(name, callback);
     }
 }

@@ -20,6 +20,8 @@ test('it can build multiple configs at once', async t => {
     });
 
     mix.group('two', mix => {
+        setupVueAliases(2, Mix);
+
         mix.js('test/fixtures/app/src/extract/app.js', 'js/app2.js');
         mix.alias({
             '@': './foobaz'

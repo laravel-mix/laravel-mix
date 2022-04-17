@@ -175,7 +175,7 @@ class Mix {
     }
 
     /**
-     * @return {import("laravel-mix").Api}
+     * @return {import("laravel-mix")}
      */
     get api() {
         return this.currentGroup.context.api;
