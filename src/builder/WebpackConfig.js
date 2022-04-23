@@ -102,6 +102,8 @@ class WebpackConfig {
             return;
         }
 
+        // TODO: Centralize this code between HotReloading and here…
+        // It's duplicated
         const { https, host, port } = this.mix.config.hmrOptions;
         const protocol = https ? 'https' : 'http';
         const url = `${protocol}://${host}:${port}/`;

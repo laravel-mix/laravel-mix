@@ -17,9 +17,11 @@ class HotReloading {
             return;
         }
 
-        this.hotFile().write(
-            `${this.http()}://${this.mix.config.hmrOptions.host}:${this.port()}`
-        );
+        const { https, host, port } = this.mix.config.hmrOptions;
+        const protocol = https ? 'https' : 'http';
+        const url = `${protocol}://${host}:${port}`;
+
+        this.hotFile().write(url);
 
         process.on('exit', () => this.clean());
         process.on('SIGINT', () => this.clean());
@@ -30,14 +32,14 @@ class HotReloading {
         return new File(path.join(this.mix.config.publicPath, 'hot'));
     }
 
+    /** @deprecated */
     http() {
-        return process.argv.includes('--https') ? 'https' : 'http';
+        return this.mix.config.hmrOptions.https ? 'https' : 'http';
     }
 
+    /** @deprecated */
     port() {
-        return process.argv.includes('--port')
-            ? process.argv[process.argv.indexOf('--port') + 1]
-            : this.mix.config.hmrOptions.port;
+        return this.mix.config.hmrOptions.port;
     }
 
     clean() {
