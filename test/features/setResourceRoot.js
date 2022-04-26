@@ -24,7 +24,7 @@ test.serial('mix.setResourceRoot() rewrites processed asset urls', async t => {
     assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).matchesCss(`
         .app {
             color: red;
-            background-image: url(https://www.example.com/images/img.svg?66162863e7583212a5d4fd6cdc2426ed);
+            background-image: url(https://www.example.com/images/img.svg?1538a77b2687265b);
         }
     `);
 });

@@ -27,7 +27,7 @@ module.exports = function (mix) {
                     const relativePath = pathData.filename;
 
                     if (!/node_modules|bower_components/.test(relativePath)) {
-                        return mix.config.fileLoaderDirs.images + '/[name].[ext]?[hash]';
+                        return mix.config.fileLoaderDirs.images + '/[name][ext]?[hash]';
                     }
 
                     return (
@@ -41,7 +41,8 @@ module.exports = function (mix) {
                             ) +
                         '?[hash]'
                     );
-                }
+                },
+                publicPath: mix.config.resourceRoot
             },
             use: [
                 {
@@ -61,7 +62,7 @@ module.exports = function (mix) {
                 const relativePath = pathData.filename;
 
                 if (!/node_modules|bower_components/.test(relativePath)) {
-                    return mix.config.fileLoaderDirs.fonts + '/[name].[ext]?[hash]';
+                    return mix.config.fileLoaderDirs.fonts + '/[name][ext]?[hash]';
                 }
 
                 return (
@@ -75,7 +76,8 @@ module.exports = function (mix) {
                         ) +
                     '?[hash]'
                 );
-            }
+            },
+            publicPath: mix.config.resourceRoot
         }
     });
 
@@ -84,7 +86,8 @@ module.exports = function (mix) {
         test: /\.(cur|ani)$/,
         type: 'asset/resource',
         generator: {
-            filename: mix.config.resourceRoot + '/[name].[ext]?[hash]'
+            filename: '[name][ext]?[hash]',
+            publicPath: mix.config.resourceRoot
         }
     });
 
