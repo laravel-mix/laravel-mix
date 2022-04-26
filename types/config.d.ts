@@ -89,11 +89,24 @@ interface MixConfig {
         svgo?: SvgoConfig;
     };
 
-    /** File Loader directory defaults. */
+    /**
+     * File Loader directory defaults.
+     *
+     * @deprecated Use `assetModules: true` and `assetDirs` instead
+     **/
     fileLoaderDirs?: {
         images?: string;
         fonts?: string;
     };
+
+    /** Asset directory defaults. */
+    assetDirs?: {
+        images?: string;
+        fonts?: string;
+    };
+
+    /** Use Webpack asset modules instead of File Loader. */
+    assetModules?: boolean;
 
     /**
      * Determine if CSS relative url()s should be resolved by webpack.
