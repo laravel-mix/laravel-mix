@@ -7,6 +7,30 @@ module.exports = function (mix) {
     // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
     mix = mix || global.Mix;
 
+    return Array.from(buildRules(mix));
+};
+
+function isFromPackageManager(filename) {
+    return /node_modules|bower_components/.test(filename)
+}
+
+function normalizedPackageFilename(filename, dirs) {
+    const WINDOWS_PATH_SEPARATORS = /\\/g;
+
+    const patternTemplate = /((.*(node_modules|bower_components))|__DIRS__)\//g
+    const vendoredPath = new RegExp(patternTemplate.replace('__DIRS__', dirs.join('|')), 'g')
+
+    return filename
+        .replace(WINDOWS_PATH_SEPARATORS, '/')
+        .replace(vendoredPath, '')
+}
+
+/**
+ *
+ * @param {import("../Mix")} mix
+ * @returns {Iterable<import("webpack").RuleSetRule>}
+ */
+function* buildRules(mix) {
     /** @returns {import("webpack").RuleSetRule[]} */
     function asset({ when = true, test, name, loaders = [] }) {
         if (! when) {
@@ -43,72 +67,55 @@ module.exports = function (mix) {
         }]
     }
 
-    function isFromPackageManager(filename) {
-        return /node_modules|bower_components/.test(filename)
+    // Add support for loading HTML files.
+    yield {
+        test: /\.html$/,
+        resourceQuery: { not: [/\?vue/i] },
+        use: [{ loader: mix.resolve('html-loader') }]
     }
 
-    function normalizedPackageFilename(filename, dirs) {
-        const WINDOWS_PATH_SEPARATORS = /\\/g;
+    // Add support for loading images.
+    yield* asset({
+        when: mix.config.imgLoaderOptions,
 
-        const patternTemplate = /((.*(node_modules|bower_components))|__DIRS__)\//g
-        const vendoredPath = new RegExp(patternTemplate.replace('__DIRS__', dirs.join('|')), 'g')
+        // only include svg that doesn't have font in the path or file name by using negative lookahead
+        test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
 
-        return filename
-            .replace(WINDOWS_PATH_SEPARATORS, '/')
-            .replace(vendoredPath, '')
-    }
+        loaders: [
+            {
+                loader: mix.resolve('img-loader'),
+                options: mix.config.imgLoaderOptions || {}
+            },
+        ],
 
-    return [
-        // Add support for loading HTML files.
-        {
-            test: /\.html$/,
-            resourceQuery: { not: [/\?vue/i] },
-            use: [{ loader: mix.resolve('html-loader') }]
+        name: ({ filename }, { dirs }) => {
+            if (isFromPackageManager(filename)) {
+                filename = normalizedPackageFilename(filename, ['images', 'image', 'img', 'assets'])
+
+                return `${dir.images}/vendor/${filename}?[hash]`;
+            }
+
+            return `${dirs.images}/[name][ext]?[hash]`;
         },
+    })
 
-        // Add support for loading images.
-        ...asset({
-            when: mix.config.imgLoaderOptions,
+    // Add support for loading fonts.
+    yield* asset({
+        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
+        name: ({ filename }, { dirs }) => {
+            if (isFromPackageManager(filename)) {
+                filename = normalizedPackageFilename(filename, ['fonts', 'font', 'assets'])
 
-            // only include svg that doesn't have font in the path or file name by using negative lookahead
-            test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
+                return `${dir.fonts}/vendor/${filename}?[hash]`;
+            }
 
-            loaders: [
-                {
-                    loader: mix.resolve('img-loader'),
-                    options: mix.config.imgLoaderOptions || {}
-                },
-            ],
+            return `${dirs.fonts}/[name][ext]?[hash]`;
+        },
+    })
 
-            name: ({ filename }, { dirs }) => {
-                if (isFromPackageManager(filename)) {
-                    filename = normalizedPackageFilename(filename, ['images', 'image', 'img', 'assets'])
-
-                    return `${dir.images}/vendor/${filename}?[hash]`;
-                }
-
-                return `${dirs.images}/[name][ext]?[hash]`;
-            },
-        }),
-
-        // Add support for loading fonts.
-        ...asset({
-            test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
-            name: ({ filename }, { dirs }) => {
-                if (isFromPackageManager(filename)) {
-                    filename = normalizedPackageFilename(filename, ['fonts', 'font', 'assets'])
-
-                    return `${dir.fonts}/vendor/${filename}?[hash]`;
-                }
-
-                return `${dirs.fonts}/[name][ext]?[hash]`;
-            },
-        }),
-
-        // Add support for loading cursor files.
-        ...asset({
-            test: /\.(cur|ani)$/,
-            name: () => '[name][ext]?[hash]'
-        }),
-    ]
+    // Add support for loading cursor files.
+    yield* asset({
+        test: /\.(cur|ani)$/,
+        name: () => '[name][ext]?[hash]'
+    })
 };
