@@ -6,6 +6,37 @@ module.exports = function (mix) {
     // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
     mix = mix || global.Mix;
 
+    function buildRule({ test, name = null, loaders = [] }) {
+        if (mix.config.assetModules) {
+            return {
+                test,
+                type: 'asset/resource',
+                generator: {
+                    filename: (pathData) => name(pathData, { dirs: mix.config.assetDirs }),
+                    publicPath: mix.config.resourceRoot
+                },
+                use: loaders,
+            }
+        }
+
+        return {
+            test,
+            use: [
+                {
+                    loader: mix.resolve('file-loader'),
+                    options: {
+                        // we're somewhat mimic-ing the asset module API here to simply name resolution further down
+                        name: (path) =>
+                            name({ filename: path }, { dirs: mix.config.fileLoaderDirs || mix.config.assetDirs })
+                                .replace('[ext]', '.[ext]'),
+                        publicPath: mix.config.resourceRoot
+                    }
+                },
+                ...loaders,
+            ]
+        }
+    }
+
     /** @type {import("webpack").RuleSetRule[]} */
     let rules = [];
 
@@ -16,177 +47,65 @@ module.exports = function (mix) {
         use: [{ loader: mix.resolve('html-loader') }]
     });
 
-    if (mix.config.imgLoaderOptions) {
-        const imageRuleOptions = mix.config.assetModules
-            ? {
-                  type: 'asset/resource',
-                  generator: {
-                      filename: pathData => {
-                          const relativePath = pathData.filename;
-
-                          if (!/node_modules|bower_components/.test(relativePath)) {
-                              return mix.config.assetDirs.images + '/[name][ext]?[hash]';
-                          }
-
-                          return (
-                              mix.config.assetDirs.images +
-                              '/vendor/' +
-                              relativePath
-                                  .replace(/\\/g, '/')
-                                  .replace(
-                                      /((.*(node_modules|bower_components))|images|image|img|assets)\//g,
-                                      ''
-                                  ) +
-                              '?[hash]'
-                          );
-                      },
-                      publicPath: mix.config.resourceRoot
-                  },
-                  use: [
-                      {
-                          loader: mix.resolve('img-loader'),
-                          options: mix.config.imgLoaderOptions || {}
-                      }
-                  ]
-              }
-            : {
-                  use: [
-                      {
-                          loader: mix.resolve('file-loader'),
-                          options: {
-                              /**
-                               * @param {string} path
-                               */
-                              name: path => {
-                                  if (!/node_modules|bower_components/.test(path)) {
-                                      return (
-                                          mix.config.fileLoaderDirs.images +
-                                          '/[name].[ext]?[hash]'
-                                      );
-                                  }
-
-                                  return (
-                                      mix.config.fileLoaderDirs.images +
-                                      '/vendor/' +
-                                      path
-                                          .replace(/\\/g, '/')
-                                          .replace(
-                                              /((.*(node_modules|bower_components))|images|image|img|assets)\//g,
-                                              ''
-                                          ) +
-                                      '?[hash]'
-                                  );
-                              },
-                              publicPath: mix.config.resourceRoot
-                          }
-                      },
-
-                      {
-                          loader: mix.resolve('img-loader'),
-                          options: mix.config.imgLoaderOptions || {}
-                      }
-                  ]
-              };
-
-        // Add support for loading images.
-        rules.push({
-            // only include svg that doesn't have font in the path or file name by using negative lookahead
-            test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
-            ...imageRuleOptions
-        });
+    function isFromPackageManager(filename) {
+        return /node_modules|bower_components/.test(filename)
     }
 
-    const fontRuleOptions = mix.config.assetModules
-        ? {
-              type: 'asset/resource',
-              generator: {
-                  filename: pathData => {
-                      const relativePath = pathData.filename;
+    function normalizedPackageFilename(filename, dirs) {
+        const WINDOWS_PATH_SEPARATORS = /\\/g;
 
-                      if (!/node_modules|bower_components/.test(relativePath)) {
-                          return mix.config.fileLoaderDirs.fonts + '/[name][ext]?[hash]';
-                      }
+        const patternTemplate = /((.*(node_modules|bower_components))|__DIRS__)\//g
+        const vendoredPath = new RegExp(patternTemplate.replace('__DIRS__', dirs.join('|')), 'g')
 
-                      return (
-                          mix.config.fileLoaderDirs.fonts +
-                          '/vendor/' +
-                          relativePath
-                              .replace(/\\/g, '/')
-                              .replace(
-                                  /((.*(node_modules|bower_components))|fonts|font|assets)\//g,
-                                  ''
-                              ) +
-                          '?[hash]'
-                      );
-                  },
-                  publicPath: mix.config.resourceRoot
-              }
-          }
-        : {
-              use: [
-                  {
-                      loader: mix.resolve('file-loader'),
-                      options: {
-                          /**
-                           * @param {string} path
-                           */
-                          name: path => {
-                              if (!/node_modules|bower_components/.test(path)) {
-                                  return (
-                                      mix.config.fileLoaderDirs.fonts +
-                                      '/[name].[ext]?[hash]'
-                                  );
-                              }
+        return filename
+            .replace(WINDOWS_PATH_SEPARATORS, '/')
+            .replace(vendoredPath, '')
+    }
 
-                              return (
-                                  mix.config.fileLoaderDirs.fonts +
-                                  '/vendor/' +
-                                  path
-                                      .replace(/\\/g, '/')
-                                      .replace(
-                                          /((.*(node_modules|bower_components))|fonts|font|assets)\//g,
-                                          ''
-                                      ) +
-                                  '?[hash]'
-                              );
-                          },
-                          publicPath: mix.config.resourceRoot
-                      }
-                  }
-              ]
-          };
+    if (mix.config.imgLoaderOptions) {
+        // Add support for loading images.
+        rules.push(buildRule({
+            // only include svg that doesn't have font in the path or file name by using negative lookahead
+            test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
+
+            loaders: [
+                {
+                    loader: mix.resolve('img-loader'),
+                    options: mix.config.imgLoaderOptions || {}
+                },
+            ],
+
+            name: ({ filename }, { dirs }) => {
+                if (!isFromPackageManager(filename)) {
+                    return `${dirs.images}/[name][ext]?[hash]`;
+                }
+
+                filename = normalizedPackageFilename(filename, ['images', 'image', 'img', 'assets'])
+
+                return `${dir.images}/vendor/${filename}?[hash]`;
+            },
+        }));
+    }
 
     // Add support for loading fonts.
-    rules.push({
+    rules.push(buildRule({
         test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
-        ...fontRuleOptions
-    });
+        name: ({ filename }, { dirs }) => {
+            if (!isFromPackageManager(filename)) {
+                return `${dirs.fonts}/[name][ext]?[hash]`;
+            }
 
-    const cursorRuleOptions = mix.config.assetModules
-        ? {
-              type: 'asset/resource',
-              generator: {
-                  filename: '[name][ext]?[hash]',
-                  publicPath: mix.config.resourceRoot
-              }
-          }
-        : {
-              use: [
-                  {
-                      loader: mix.resolve('file-loader'),
-                      options: {
-                          name: '[name].[ext]?[hash]',
-                          publicPath: mix.config.resourceRoot
-                      }
-                  }
-              ]
-          };
+            filename = normalizedPackageFilename(filename, ['fonts', 'font', 'assets'])
+
+            return `${dir.fonts}/vendor/${filename}?[hash]`;
+        },
+    }));
 
     // Add support for loading cursor files.
-    rules.push({
+    rules.push(buildRule({
         test: /\.(cur|ani)$/,
-        ...cursorRuleOptions
-    });
+        name: () => '[name][ext]?[hash]'
+    }));
 
     return rules;
 };
