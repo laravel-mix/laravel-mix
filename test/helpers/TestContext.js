@@ -44,15 +44,19 @@ export class TestContext {
         await this.Mix.boot();
         await this.disk.setup();
 
-        const publicPath = this.disk.join(this.publicPath)
+        const publicPath = this.disk.join(this.publicPath);
 
         // Set the output path to the appropriate directory in the temporary disk
-        await fsx.mkdir(publicPath, { mode: 0o777, recursive: true })
+        await fsx.mkdir(publicPath, { mode: 0o777, recursive: true });
         this.mix.setPublicPath(this.publicPath);
 
         // We also disable autoprefixer
         // Under profiling loading autoprefixer takes 2.5s
         this.mix.options({ autoprefixer: false });
+
+        // We also enable assetModules
+        // TODO: Remove in Mix 7 -- this should be the default then
+        this.mix.options({ assetModules: true });
     }
 
     teardown() {
@@ -100,8 +104,8 @@ export class TestContext {
 export const context = (t, metadata = undefined) => {
     if (t.context instanceof TestContext) {
         t.context.t = t;
-   } else {
-        t.context = new TestContext(t)
+    } else {
+        t.context = new TestContext(t);
     }
 
     Object.assign(t.context.metadata, metadata || {});

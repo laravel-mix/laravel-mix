@@ -20,6 +20,7 @@ module.exports = function (mix) {
         entry: {},
 
         output: {
+            assetModuleFilename: '[name][ext]?[hash]',
             chunkFilename: '[name].[hash:5].js'
         },
 

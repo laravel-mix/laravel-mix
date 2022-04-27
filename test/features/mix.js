@@ -73,3 +73,30 @@ test.serial(
         assert(t).file(`test/fixtures/app/dist/images/awesome.svg`).absent();
     }
 );
+
+test.serial(
+    'it resolves image- and font-urls and distinguishes between them even if we deal with svg (using legacy file-loader)',
+    async t => {
+        const { mix, fs, assert, webpack } = context(t);
+
+        mix.options({ assetModules: false });
+
+        // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
+        mix.sass(`test/fixtures/app/src/sass/font-and-image.scss`, 'css');
+        // When we compile it
+        await webpack.compile();
+
+        // Then we expect the css to be built
+        assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
+        // Along with the referred image in the images folder
+        assert(t).file(`test/fixtures/app/dist/images/img.svg`).exists();
+        // And the referred fonts in the fonts folder
+        assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).exists();
+        assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
+        // And we expect the image NOT to be in the fonts folder:
+        assert(t).file(`test/fixtures/app/dist/fonts/img.svg`).absent();
+        // And the fonts NOT to be in the image folder
+        assert(t).file(`test/fixtures/app/dist/images/font.svg`).absent();
+        assert(t).file(`test/fixtures/app/dist/images/awesome.svg`).absent();
+    }
+);

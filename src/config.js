@@ -106,7 +106,7 @@ module.exports = function (mix) {
          * Image Loader defaults.
          * See: https://github.com/thetalecrafter/img-loader#options
          *
-         * @type {Boolean|Object}
+         * @type {Object}
          */
         imgLoaderOptions: {
             enabled: true,
@@ -118,8 +118,28 @@ module.exports = function (mix) {
 
         /**
          * File Loader directory defaults.
+         *
+         * @deprecated Use `assetModules: true` and `assetDirs` instead
+         * @type {{images: string, fonts: string}}
          */
         fileLoaderDirs: {
+            images: 'images',
+            fonts: 'fonts'
+        },
+
+        /**
+         * Use Webpack asset modules instead of File Loader.
+         *
+         * @type {Boolean}
+         */
+        assetModules: false,
+
+        /**
+         * Asset directory defaults.
+         *
+         * @type {{images: string, fonts: string}}
+         */
+        assetDirs: {
             images: 'images',
             fonts: 'fonts'
         },
