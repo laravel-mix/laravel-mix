@@ -1,14 +1,20 @@
 /**
  *
  * @param {import("../Mix")} mix
+ * @returns {import("webpack").RuleSetRule[]}
  */
 module.exports = function (mix) {
     // TODO: Remove in Mix 7 -- Here for backwards compat if a plugin requires this file
     mix = mix || global.Mix;
 
-    function buildRule({ test, name = null, loaders = [] }) {
+    /** @returns {import("webpack").RuleSetRule[]} */
+    function asset({ when = true, test, name, loaders = [] }) {
+        if (! when) {
+            return []
+        }
+
         if (mix.config.assetModules) {
-            return {
+            return [{
                 test,
                 type: 'asset/resource',
                 generator: {
@@ -16,10 +22,10 @@ module.exports = function (mix) {
                     publicPath: mix.config.resourceRoot
                 },
                 use: loaders,
-            }
+            }]
         }
 
-        return {
+        return [{
             test,
             use: [
                 {
@@ -34,18 +40,8 @@ module.exports = function (mix) {
                 },
                 ...loaders,
             ]
-        }
+        }]
     }
-
-    /** @type {import("webpack").RuleSetRule[]} */
-    let rules = [];
-
-    // Add support for loading HTML files.
-    rules.push({
-        test: /\.html$/,
-        resourceQuery: { not: [/\?vue/i] },
-        use: [{ loader: mix.resolve('html-loader') }]
-    });
 
     function isFromPackageManager(filename) {
         return /node_modules|bower_components/.test(filename)
@@ -62,9 +58,18 @@ module.exports = function (mix) {
             .replace(vendoredPath, '')
     }
 
-    if (mix.config.imgLoaderOptions) {
+    return [
+        // Add support for loading HTML files.
+        {
+            test: /\.html$/,
+            resourceQuery: { not: [/\?vue/i] },
+            use: [{ loader: mix.resolve('html-loader') }]
+        },
+
         // Add support for loading images.
-        rules.push(buildRule({
+        ...asset({
+            when: mix.config.imgLoaderOptions,
+
             // only include svg that doesn't have font in the path or file name by using negative lookahead
             test: /(\.(png|jpe?g|gif|webp|avif)$|^((?!font).)*\.svg$)/,
 
@@ -76,36 +81,34 @@ module.exports = function (mix) {
             ],
 
             name: ({ filename }, { dirs }) => {
-                if (!isFromPackageManager(filename)) {
-                    return `${dirs.images}/[name][ext]?[hash]`;
+                if (isFromPackageManager(filename)) {
+                    filename = normalizedPackageFilename(filename, ['images', 'image', 'img', 'assets'])
+
+                    return `${dir.images}/vendor/${filename}?[hash]`;
                 }
 
-                filename = normalizedPackageFilename(filename, ['images', 'image', 'img', 'assets'])
-
-                return `${dir.images}/vendor/${filename}?[hash]`;
+                return `${dirs.images}/[name][ext]?[hash]`;
             },
-        }));
-    }
+        }),
 
-    // Add support for loading fonts.
-    rules.push(buildRule({
-        test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
-        name: ({ filename }, { dirs }) => {
-            if (!isFromPackageManager(filename)) {
+        // Add support for loading fonts.
+        ...asset({
+            test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
+            name: ({ filename }, { dirs }) => {
+                if (isFromPackageManager(filename)) {
+                    filename = normalizedPackageFilename(filename, ['fonts', 'font', 'assets'])
+
+                    return `${dir.fonts}/vendor/${filename}?[hash]`;
+                }
+
                 return `${dirs.fonts}/[name][ext]?[hash]`;
-            }
+            },
+        }),
 
-            filename = normalizedPackageFilename(filename, ['fonts', 'font', 'assets'])
-
-            return `${dir.fonts}/vendor/${filename}?[hash]`;
-        },
-    }));
-
-    // Add support for loading cursor files.
-    rules.push(buildRule({
-        test: /\.(cur|ani)$/,
-        name: () => '[name][ext]?[hash]'
-    }));
-
-    return rules;
+        // Add support for loading cursor files.
+        ...asset({
+            test: /\.(cur|ani)$/,
+            name: () => '[name][ext]?[hash]'
+        }),
+    ]
 };
