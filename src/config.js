@@ -120,6 +120,7 @@ module.exports = function (mix) {
          * File Loader directory defaults.
          *
          * @deprecated Use `assetModules: true` and `assetDirs` instead
+         * @type {{images: string, fonts: string}}
          */
         fileLoaderDirs: {
             images: 'images',
@@ -135,6 +136,8 @@ module.exports = function (mix) {
 
         /**
          * Asset directory defaults.
+         *
+         * @type {{images: string, fonts: string}}
          */
         assetDirs: {
             images: 'images',
