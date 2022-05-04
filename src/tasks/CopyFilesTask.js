@@ -11,12 +11,12 @@ class CopyFilesTask extends Task {
     /**
      * Run the task.
      */
-    run() {
+    async run() {
         let copy = this.data;
 
         this.files = new FileCollection(copy.from);
 
-        this.files.copyTo(copy.to);
+        await this.files.copyTo(copy.to);
 
         this.assets = this.files.assets;
     }
@@ -26,7 +26,7 @@ class CopyFilesTask extends Task {
      *
      * @param {string} updatedFile
      */
-    onChange(updatedFile) {
+    async onChange(updatedFile) {
         let destination = this.data.to;
 
         // If we're copying a src directory recursively, we have to calculate
@@ -39,7 +39,7 @@ class CopyFilesTask extends Task {
 
         Log.feedback(`Copying ${updatedFile} to ${destination.path()}`);
 
-        this.files.copyTo(destination, new File(updatedFile));
+        await this.files.copyTo(destination, new File(updatedFile));
     }
 }
 
