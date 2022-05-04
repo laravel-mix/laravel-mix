@@ -92,6 +92,7 @@ class CustomTasksPlugin {
     async minifyAssets() {
         const assets = collect(this.mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
+            .where('constructor.name', '!==', 'CopyFilesTask')
             .flatMap(({ assets }) => assets);
 
         const tasks = assets.map(async asset => {
