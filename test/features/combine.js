@@ -92,7 +92,7 @@ test.serial(
 
         assert()
             .file('test/fixtures/app/dist/js/combined-scripts.js')
-            .matchesCss('alert("foo1"),alert("foo2");');
+            .matchesCss("alert('foo1');alert('foo2');");
     }
 );
 
