@@ -12,7 +12,7 @@ test.beforeEach(async t => {
 test.serial('the kitchen sink', async t => {
     const { mix, fs, assert, webpack } = context(t);
 
-    await fs(t).stub({
+    await fs().stub({
         'test/fixtures/app/dist/file.js': 'var foo'
     });
 
@@ -34,9 +34,9 @@ test.serial('the kitchen sink', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/all.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/all.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/another.js': '/js/another.js\\?id=\\w{20}',
         '/css/app.css': '/css/app.css\\?id=\\w{20}',
         '/css/example.css': '/css/example.css\\?id=\\w{20}',
@@ -52,7 +52,7 @@ test.serial('the kitchen sink', async t => {
 test.serial(
     'it resolves image- and font-urls and distinguishes between them even if we deal with svg',
     async t => {
-        const { mix, fs, assert, webpack } = context(t);
+        const { mix, assert, webpack } = context(t);
 
         // Given we have a sass file that refers to ../font.svg, ../font/awesome.svg and to ../img/img.svg
         mix.sass(`test/fixtures/app/src/sass/font-and-image.scss`, 'css');
@@ -60,24 +60,24 @@ test.serial(
         await webpack.compile();
 
         // Then we expect the css to be built
-        assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
+        assert().file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
         // Along with the referred image in the images folder
-        assert(t).file(`test/fixtures/app/dist/images/img.svg`).exists();
+        assert().file(`test/fixtures/app/dist/images/img.svg`).exists();
         // And the referred fonts in the fonts folder
-        assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).exists();
-        assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
+        assert().file(`test/fixtures/app/dist/fonts/font.svg`).exists();
+        assert().file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
         // And we expect the image NOT to be in the fonts folder:
-        assert(t).file(`test/fixtures/app/dist/fonts/img.svg`).absent();
+        assert().file(`test/fixtures/app/dist/fonts/img.svg`).absent();
         // And the fonts NOT to be in the image folder
-        assert(t).file(`test/fixtures/app/dist/images/font.svg`).absent();
-        assert(t).file(`test/fixtures/app/dist/images/awesome.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/font.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/awesome.svg`).absent();
     }
 );
 
 test.serial(
     'it resolves image- and font-urls and distinguishes between them even if we deal with svg (using legacy file-loader)',
     async t => {
-        const { mix, fs, assert, webpack } = context(t);
+        const { mix, assert, webpack } = context(t);
 
         mix.options({ assetModules: false });
 
@@ -87,16 +87,16 @@ test.serial(
         await webpack.compile();
 
         // Then we expect the css to be built
-        assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
+        assert().file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
         // Along with the referred image in the images folder
-        assert(t).file(`test/fixtures/app/dist/images/img.svg`).exists();
+        assert().file(`test/fixtures/app/dist/images/img.svg`).exists();
         // And the referred fonts in the fonts folder
-        assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).exists();
-        assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
+        assert().file(`test/fixtures/app/dist/fonts/font.svg`).exists();
+        assert().file(`test/fixtures/app/dist/fonts/awesome.svg`).exists();
         // And we expect the image NOT to be in the fonts folder:
-        assert(t).file(`test/fixtures/app/dist/fonts/img.svg`).absent();
+        assert().file(`test/fixtures/app/dist/fonts/img.svg`).absent();
         // And the fonts NOT to be in the image folder
-        assert(t).file(`test/fixtures/app/dist/images/font.svg`).absent();
-        assert(t).file(`test/fixtures/app/dist/images/awesome.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/font.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/awesome.svg`).absent();
     }
 );

@@ -21,9 +21,9 @@ test.serial('it compiles PostCSS without JS', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/css/app.css': '/css/app.css'
     });
 });
@@ -35,9 +35,9 @@ test.serial('it compiles .pcss files without JS', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/css/app.css': '/css/app.css'
     });
 });
@@ -49,9 +49,9 @@ test.serial('it compiles Sass without JS', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/css/app.css': '/css/app.css'
     });
 });
@@ -86,7 +86,7 @@ test('Generic Sass rules are applied', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, rule => String(rule.test).toString() === '/\\.scss$/')
         .exists();
 });
@@ -98,7 +98,7 @@ test('Generic Less rules are applied', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, rule => String(rule.test).toString() === '/\\.less$/')
         .exists();
 });
@@ -110,7 +110,7 @@ test('Generic CSS rules are applied', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, rule => String(rule.test).toString() === '/\\.p?css$/')
         .exists();
 });
@@ -122,7 +122,7 @@ test('Generic Stylus rules are applied', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, rule => String(rule.test).toString() === '/\\.styl(us)?$/')
         .exists();
 });
@@ -146,7 +146,7 @@ test('Unique PostCSS plugins can be applied for each mix.sass/less/stylus() call
      * @param {string} pluginName
      */
     function seePostCssPluginFor(file, pluginName) {
-        const loader = assert(t)
+        const loader = assert()
             .rule(config, rule => String(rule.test).includes(file))
             .loader(/postcss-loader/)
             .get();
@@ -174,9 +174,9 @@ test.serial('Sass is extracted properly', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert(t).manifestEquals({ '/css/app.css': '/css/app.css' });
+    assert().manifestEquals({ '/css/app.css': '/css/app.css' });
 });
 
 test.serial('Stylus is extracted properly', async t => {
@@ -186,8 +186,8 @@ test.serial('Stylus is extracted properly', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
-    assert(t).manifestEquals({ '/css/app.css': '/css/app.css' });
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().manifestEquals({ '/css/app.css': '/css/app.css' });
 });
 
 test.serial('CSS output paths are normalized', async t => {
@@ -198,13 +198,13 @@ test.serial('CSS output paths are normalized', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/dist/css/app.css`).absent();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/dist/css/app.css`).absent();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/dist/js/app.js`).absent();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/dist/js/app.js`).absent();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/css/app.css': '/css/app.css'
     });
@@ -221,19 +221,19 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
-        assert(t).file(`test/fixtures/app/dist/dist/css/app.css`).absent();
-        assert(t).file(`test/fixtures/app/dist/js/app.css`).absent();
+        assert().file(`test/fixtures/app/dist/css/app.css`).exists();
+        assert().file(`test/fixtures/app/dist/dist/css/app.css`).absent();
+        assert().file(`test/fixtures/app/dist/js/app.css`).absent();
 
-        assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/dist/js/app.js`).absent();
+        assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+        assert().file(`test/fixtures/app/dist/dist/js/app.js`).absent();
 
-        assert(t).manifestEquals({
+        assert().manifestEquals({
             '/js/app.js': '/js/app.js',
             '/css/app.css': '/css/app.css'
         });
 
-        assert(t)
+        assert()
             .file(`test/fixtures/app/dist/css/app.css`)
             .matchesCss(
                 `body{color:red;}.app{color:red;background:url('/absolute/image.jpg');}`
@@ -254,15 +254,15 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/css/import.css`).exists();
-        assert(t).file(`test/fixtures/app/dist/js/import.css`).absent();
+        assert().file(`test/fixtures/app/dist/css/import.css`).exists();
+        assert().file(`test/fixtures/app/dist/js/import.css`).absent();
 
-        assert(t).manifestEquals({
+        assert().manifestEquals({
             '/js/app.js': '/js/app.js',
             '/css/import.css': '/css/import.css'
         });
 
-        assert(t).file(`test/fixtures/app/dist/css/import.css`).notEmpty();
+        assert().file(`test/fixtures/app/dist/css/import.css`).notEmpty();
     }
 );
 
@@ -279,14 +279,14 @@ test.serial('Sass url resolution can be configured per-file', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/image.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/font-and-image.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/image.css`).exists();
 
-    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).exists();
+    assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img2.svg`).exists();
 
-    assert(t).file(`test/fixtures/app/dist/fonts/font.svg`).absent();
-    assert(t).file(`test/fixtures/app/dist/fonts/awesome.svg`).absent();
+    assert().file(`test/fixtures/app/dist/fonts/font.svg`).absent();
+    assert().file(`test/fixtures/app/dist/fonts/awesome.svg`).absent();
 });
 
 test.serial('Sass url resolution can be disabled: globally (before)', async t => {
@@ -297,8 +297,8 @@ test.serial('Sass url resolution can be disabled: globally (before)', async t =>
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test.serial('Sass url resolution can be disabled: globally (after)', async t => {
@@ -309,8 +309,8 @@ test.serial('Sass url resolution can be disabled: globally (after)', async t => 
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test.serial('CSS url resolution can be disabled for PostCSS: individually', async t => {
@@ -322,9 +322,9 @@ test.serial('CSS url resolution can be disabled for PostCSS: individually', asyn
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-    assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
+    assert().file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+    assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+    assert().file(`test/fixtures/app/dist/images/img2.svg`).absent();
 });
 
 test.serial(
@@ -337,9 +337,9 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
-        assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-        assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
+        assert().file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+        assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/img2.svg`).absent();
     }
 );
 
@@ -353,9 +353,9 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
-        assert(t).file(`test/fixtures/app/dist/images/img.svg`).absent();
-        assert(t).file(`test/fixtures/app/dist/images/img2.svg`).absent();
+        assert().file(`test/fixtures/app/dist/css/app-and-image.css`).exists();
+        assert().file(`test/fixtures/app/dist/images/img.svg`).absent();
+        assert().file(`test/fixtures/app/dist/images/img2.svg`).absent();
     }
 );
 
@@ -368,7 +368,7 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/js/import-css-module.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/js/import-css-module.css`).absent();
+        assert().file(`test/fixtures/app/dist/js/import-css-module.js`).exists();
+        assert().file(`test/fixtures/app/dist/js/import-css-module.css`).absent();
     }
 );

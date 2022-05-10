@@ -11,19 +11,19 @@ test('it applies a rule for js, cjs, mjs, and tsx extensions', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, rule => rule.test.test('file.js'))
         .exists();
-    assert(t)
+    assert()
         .rule(config, rule => rule.test.test('file.cjs'))
         .exists();
-    assert(t)
+    assert()
         .rule(config, rule => rule.test.test('file.mjs'))
         .exists();
-    assert(t)
+    assert()
         .rule(config, rule => rule.test.test('file.ts'))
         .exists();
-    assert(t)
+    assert()
         .rule(config, rule => rule.test.test('file.tsx'))
         .exists();
 });
@@ -35,9 +35,9 @@ test.serial('it compiles JavaScript', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js'
     });
 });
@@ -49,9 +49,9 @@ test.serial('it compiles JavaScript with dynamic import', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/dynamic.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/dynamic.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/absolute.js': '/js/absolute.js',
         '/js/dynamic.js': '/js/dynamic.js',
         '/js/named.js': '/js/named.js'
@@ -68,10 +68,10 @@ test.serial('it compiles JavaScript and Sass', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/css/app.css': '/css/app.css'
     });

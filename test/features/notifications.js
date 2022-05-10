@@ -11,7 +11,7 @@ test('it displays OS notifications', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .webpackPlugin(
             config,
             plugin => plugin.options && plugin.options.alwaysNotify === true
@@ -26,7 +26,7 @@ test('it disables OS notifications', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .webpackPlugin(
             config,
             plugin => plugin.options && plugin.options.alwaysNotify === true
@@ -42,7 +42,7 @@ test('it disables OS success notifications', async t => {
     const config = await webpack.buildConfig();
 
     // To disable success notifications, we only have to set the alwaysNotify option on the webpack plugin to false.
-    assert(t)
+    assert()
         .webpackPlugin(
             config,
             plugin => plugin.options && plugin.options.alwaysNotify === false

@@ -11,7 +11,7 @@ test('it handles library autoloading', async t => {
     });
 
     const config = await webpack.buildConfig();
-    const plugin = assert(t)
+    const plugin = assert()
         .webpackPlugin(config, /ProvidePlugin/)
         .get() || { definitions: {} };
 

@@ -20,7 +20,7 @@ Object.defineProperty(global, 'tap', {
  * Add tap to arrays.
  * @deprecated
  **/
-if (!Array.prototype.hasOwnProperty('tap')) {
+if (!Object.prototype.hasOwnProperty.call(Array, 'tap')) {
     Object.defineProperty(Array.prototype, 'tap', {
         /**
          * @param {(arr: self) => void} callback
@@ -40,7 +40,7 @@ if (!Array.prototype.hasOwnProperty('tap')) {
  * Add wrap to arrays.
  * @deprecated
  **/
-if (!Array.hasOwnProperty('wrap')) {
+if (!Object.prototype.hasOwnProperty.call(Array, 'wrap')) {
     Object.defineProperty(Array, 'wrap', {
         /**
          * @template T

@@ -19,7 +19,7 @@ test('it handles Browsersync reloading', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t).webpackPlugin(config, 'BrowserSyncPluginStub').exists();
+    assert().webpackPlugin(config, 'BrowserSyncPluginStub').exists();
 });
 
 test('it injects the snippet in the right place', t => {

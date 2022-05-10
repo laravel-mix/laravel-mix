@@ -146,7 +146,7 @@ test('webpack rules may be added', async t => {
 
     const config = await webpack.buildConfig();
 
-    assert(t)
+    assert()
         .rule(config, aRule => aRule === rule)
         .exists();
 });
@@ -251,7 +251,7 @@ test('components can be passive', t => {
 });
 
 test('components can manually hook into the mix API', t => {
-    const { mix, webpack } = context(t);
+    const { mix } = context(t);
 
     mix.extend(
         'example',

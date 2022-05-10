@@ -38,11 +38,11 @@ test('it knows if a file exists', async t => {
 
     const file = disk.join('filethatexists.js');
 
-    assert(t).file(file).absent();
+    assert().file(file).absent();
 
     new File(file).write('foobar');
 
-    assert(t).file(file).exists();
+    assert().file(file).exists();
 });
 
 test('it knows the size of a file', async t => {
@@ -52,7 +52,7 @@ test('it knows the size of a file', async t => {
 
     new File(file).write('123456'); // plus newline equals size of 7.
 
-    assert(t).file(file).exists();
+    assert().file(file).exists();
 
     // Windows newline is a carriage return + linefeed
     const expected = process.platform === 'win32' ? 8 : 7;
@@ -141,10 +141,10 @@ test('it can read and write to a file', async t => {
     const file = new File(filePath);
 
     file.write('foobar');
-    assert(t).file(filePath).contains('foobar\n');
+    assert().file(filePath).contains('foobar\n');
 
     file.write('changed');
-    assert(t).file(filePath).contains('changed\n');
+    assert().file(filePath).contains('changed\n');
 });
 
 test('it can calculate a unique versioned hash for the file', async t => {
@@ -164,7 +164,7 @@ test('it can minify JS files.', async t => {
 
     const filePath = disk.join('file.js');
 
-    await fs(t).stub({
+    await fs().stub({
         [filePath]: `
             var one = 'one';
             var two = 'two';
@@ -173,7 +173,7 @@ test('it can minify JS files.', async t => {
 
     await new File(filePath).minify();
 
-    assert(t).file(filePath).contains('var one="one",two="two";\n');
+    assert().file(filePath).contains('var one="one",two="two";\n');
 });
 
 test('it can minify CSS files.', async t => {
@@ -191,7 +191,7 @@ test('it can minify CSS files.', async t => {
 
     await file.minify();
 
-    assert(t).file(filePath).contains('body{color:red}\n');
+    assert().file(filePath).contains('body{color:red}\n');
 });
 
 test('it can copy a file to a new location', async t => {
@@ -203,8 +203,8 @@ test('it can copy a file to a new location', async t => {
 
     file.copyTo(copiedPath);
 
-    assert(t).file(copiedPath).exists();
-    assert(t).file(filePath).contains('.foo {}\n');
+    assert().file(copiedPath).exists();
+    assert().file(filePath).contains('.foo {}\n');
 });
 
 test('it knows if its path contains a set of chars', async t => {

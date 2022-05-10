@@ -73,7 +73,7 @@ class ComponentRegistrar {
         let component;
 
         // If we're extending from the internal `Component` class then we provide the mix API object
-        if (Component.isPrototypeOf(ComponentDefinition)) {
+        if (Object.prototype.isPrototypeOf.call(Component, ComponentDefinition)) {
             // @ts-ignore
             // This API is not finalized which is why we've restricted to to the internal component class for now
             component = new ComponentDefinition(this.mix);
@@ -189,9 +189,8 @@ class ComponentRegistrar {
      * Install the component's dependencies.
      *
      * @deprecated
-     * @param {Component} component
      */
-    installDependencies(component) {
+    installDependencies() {
         throw new Error(
             'ComponentRegistrar.installDependencies is an implementation detail and no longer used'
         );

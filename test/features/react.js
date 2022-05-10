@@ -33,8 +33,8 @@ test.serial('it compiles React and a preprocessor properly', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/app.css`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 });
 
 test.serial('it sets the webpack entry correctly', async t => {
@@ -154,8 +154,8 @@ test.serial('it extracts css to a seperate file', async t => {
     await webpack.compile();
 
     let expected = `.component { color: red; }`;
-    assert(t).file(`test/fixtures/app/dist/css/react-styles.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/react-styles.css`).matchesCss(expected);
+    assert().file(`test/fixtures/app/dist/css/react-styles.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/react-styles.css`).matchesCss(expected);
 });
 
 test.serial('it extracts css to a named dedicated file', async t => {
@@ -168,8 +168,8 @@ test.serial('it extracts css to a named dedicated file', async t => {
 
     let expected = `.component { color: red; }`;
 
-    assert(t).file(`test/fixtures/app/dist/css/components.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
+    assert().file(`test/fixtures/app/dist/css/components.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
 });
 
 test.serial('it extracts css classes with a specified localIdentName', async t => {
@@ -183,6 +183,6 @@ test.serial('it extracts css classes with a specified localIdentName', async t =
 
     let expected = `.test { color: red; }`;
 
-    assert(t).file(`test/fixtures/app/dist/css/components.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
+    assert().file(`test/fixtures/app/dist/css/components.css`).exists();
+    assert().file(`test/fixtures/app/dist/css/components.css`).matchesCss(expected);
 });

@@ -12,7 +12,7 @@ test.serial('it accepts a src directory', async t => {
 
     await webpack.compile();
 
-    assert(t)
+    assert()
         .file('test/fixtures/app/dist/js/combined-scripts.js')
         .matchesCss("alert('foo1');alert('foo2');");
 });
@@ -27,7 +27,7 @@ test.serial('it accepts a src wildcard', async t => {
 
     await webpack.compile();
 
-    assert(t)
+    assert()
         .file('test/fixtures/app/dist/js/combined-scripts.js')
         .matchesCss("alert('foo1');alert('foo2');");
 });
@@ -45,7 +45,7 @@ test.serial('it accepts a src array of wildcards', async t => {
 
     await webpack.compile();
 
-    assert(t)
+    assert()
         .file('test/fixtures/app/dist/js/combined-scripts.js')
         .matchesCss("alert('foo1');alert('foo2');alert('bar1');alert('bar2');");
 });
@@ -62,9 +62,9 @@ test.serial('it compiles JS and then combines the bundles files.', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/all.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/all.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/js/another.js': '/js/another.js',
         '/js/all.js': '/js/all.js'
@@ -90,7 +90,7 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t)
+        assert()
             .file('test/fixtures/app/dist/js/combined-scripts.js')
             .matchesCss('alert("foo1"),alert("foo2");');
     }
@@ -105,9 +105,9 @@ test.serial('it minifies a file', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.min.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.min.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/js/app.min.js': '/js/app.min.js'
     });
@@ -123,10 +123,10 @@ test.serial('it minifies an array of files', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/src/combine/foo/one.min.js`).exists();
-    assert(t).file(`test/fixtures/app/src/combine/foo/two.min.js`).exists();
+    assert().file(`test/fixtures/app/src/combine/foo/one.min.js`).exists();
+    assert().file(`test/fixtures/app/src/combine/foo/two.min.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/test/fixtures/app/src/combine/foo/one.min.js':
             '/test/fixtures/app/src/combine/foo/one.min.js',
         '/test/fixtures/app/src/combine/foo/two.min.js':
@@ -145,8 +145,8 @@ test.serial('it can concat files produced by the build', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/all.css`).exists();
-    assert(t).file(`test/fixtures/app/dist/all.css`).matchesCss(`
+    assert().file(`test/fixtures/app/dist/all.css`).exists();
+    assert().file(`test/fixtures/app/dist/all.css`).matchesCss(`
         :root {
             --shared-color: rebeccapurple;
         }

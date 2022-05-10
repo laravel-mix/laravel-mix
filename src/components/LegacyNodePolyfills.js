@@ -24,10 +24,9 @@ module.exports = class LegacyNodePolyfills extends Component {
 
     /**
      *
-     * @param {import('webpack').Configuration} _
      * @returns {import('webpack').Configuration}
      */
-    webpackConfig(_) {
+    webpackConfig() {
         if (!this.context.config.legacyNodePolyfills) {
             return {
                 resolve: {

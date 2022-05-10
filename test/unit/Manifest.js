@@ -95,7 +95,7 @@ test.serial('A manifest is created by default ', async t => {
 
     await webpack.compile();
 
-    assert(t).file('test/fixtures/app/dist/mix-manifest.json').exists();
+    assert().file('test/fixtures/app/dist/mix-manifest.json').exists();
 });
 
 test.serial('The name of the manifest can be changed', async t => {
@@ -105,8 +105,8 @@ test.serial('The name of the manifest can be changed', async t => {
 
     await webpack.compile();
 
-    assert(t).file('test/fixtures/app/dist/manifest.json').exists();
-    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
+    assert().file('test/fixtures/app/dist/manifest.json').exists();
+    assert().file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test.serial('You can change the manfest path to a relative path', async t => {
@@ -116,8 +116,8 @@ test.serial('You can change the manfest path to a relative path', async t => {
 
     await webpack.compile();
 
-    assert(t).file('test/fixtures/app/manifest.json').exists();
-    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
+    assert().file('test/fixtures/app/manifest.json').exists();
+    assert().file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test.serial('Manifest generation can be disabled', async t => {
@@ -129,7 +129,7 @@ test.serial('Manifest generation can be disabled', async t => {
 
     await webpack.compile();
 
-    assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
+    assert().file('test/fixtures/app/dist/mix-manifest.json').absent();
 });
 
 test.serial(
@@ -142,8 +142,8 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file('test/fixtures/app/dist/mix-manifest.json').absent();
-        assert(t).file('test/fixtures/app/dist/foo.json').absent();
-        assert(t).file('test/fixtures/app/dist/bar.json').exists();
+        assert().file('test/fixtures/app/dist/mix-manifest.json').absent();
+        assert().file('test/fixtures/app/dist/foo.json').absent();
+        assert().file('test/fixtures/app/dist/bar.json').exists();
     }
 );

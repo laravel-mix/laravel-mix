@@ -1,7 +1,11 @@
 import test from 'ava';
 
 import { context } from '../helpers/test.js';
-import { TestContext } from '../helpers/TestContext.js';
+
+/**
+ * @template  MetadataType
+ * @typedef {import('../helpers/TestContext.js').TestContext<MetadataType>} TestContext<MetadataType>
+ **/
 
 test.serial(
     'basic mix.postCss() compilation',

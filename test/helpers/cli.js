@@ -33,12 +33,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @returns {Promise<void>}
  */
 async function killProcessTree(child) {
-    if (
-        child.exitCode !== null ||
-        child.signalCode !== null ||
-        child.pid === undefined
-    ) {
-        return
+    if (child.exitCode !== null || child.signalCode !== null || child.pid === undefined) {
+        return;
     }
 
     // if (! /^win/.test(process.platform)) {
@@ -46,7 +42,7 @@ async function killProcessTree(child) {
     //     return
     // }
 
-    child.kill('SIGTERM')
+    child.kill('SIGTERM');
 }
 
 /**
@@ -70,7 +66,9 @@ export function cli(opts) {
      * @returns {Promise<CliResult>}
      */
     async function run(args, hooks) {
-        let cmd = ['node', path.resolve(__dirname, '../../bin/cli.js'), ...args].join(' ');
+        let cmd = ['node', path.resolve(__dirname, '../../bin/cli.js'), ...args].join(
+            ' '
+        );
         let result = {
             /** @type {import('child_process').ExecException | null} */
             error: null,
@@ -94,7 +92,7 @@ export function cli(opts) {
             }
         });
 
-        const kill = () => killProcessTree(child)
+        const kill = () => killProcessTree(child);
 
         child.stdin.end();
         child.stdout.on('data', data => (result.stdout += data));
@@ -116,6 +114,7 @@ export function cli(opts) {
         }
 
         // Wait for some kind of output
+        // eslint-disable-next-line no-constant-condition
         while (true) {
             await new Promise(resolve => setTimeout(resolve, 0));
 

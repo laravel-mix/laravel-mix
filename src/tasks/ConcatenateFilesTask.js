@@ -1,7 +1,8 @@
 let Task = require('./Task');
 let FileCollection = require('../FileCollection');
 const { FileGlob } = require('./FileGlob');
-const File = require('../File');
+
+/** @typedef {import('../File')} File */
 
 /**
  * @extends {Task<{ src: string|string[], output: File, babel: boolean, ignore?: string[] }>}

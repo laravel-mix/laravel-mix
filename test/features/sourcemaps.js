@@ -41,5 +41,5 @@ test.serial('it works fine with cache busting chunk filenames', async t => {
         .sourceMaps();
 
     await t.notThrowsAsync(() => webpack.compile());
-    assert(t).file(`test/fixtures/app/dist/js/chunk.js.map`).exists();
+    assert().file(`test/fixtures/app/dist/js/chunk.js.map`).exists();
 });

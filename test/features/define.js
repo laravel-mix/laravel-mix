@@ -9,7 +9,7 @@ test.serial('Code is left alone where there are no replacements defined', async 
 
     await webpack.compile();
 
-    assert(t)
+    assert()
         .file('test/fixtures/app/dist/js/app.js')
         .contains(['console.log(__FEATURE_1__)', 'console.log(__FEATURE_2__)']);
 });
@@ -25,7 +25,7 @@ test.serial('Code replacements can be defined', async t => {
 
     await webpack.compile();
 
-    assert(t)
+    assert()
         .file('test/fixtures/app/dist/js/app.js')
         .contains(['console.log(true)', 'console.log(`auto`)']);
 });

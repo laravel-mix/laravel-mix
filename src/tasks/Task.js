@@ -1,7 +1,7 @@
 let chokidar = require('chokidar');
-let File = require('../File');
 let FileCollection = require('../FileCollection');
-let NOOP = () => {};
+
+/** @typedef {import('../File')} File */
 
 /**
  * @template {object} TData
@@ -60,6 +60,7 @@ class Task {
 
     /**
      *
+     * @abstract
      * @param {string} filepath
      */
     onChange(filepath) {

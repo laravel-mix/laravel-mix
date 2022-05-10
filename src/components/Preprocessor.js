@@ -3,7 +3,8 @@ const path = require('path');
 const File = require('../File');
 const CssWebpackConfig = require('./CssWebpackConfig');
 const PostCssPluginsFactory = require('../PostCssPluginsFactory');
-const Entry = require('../builder/Entry');
+
+/** @typedef {import('../builder/Entry')} Entry */
 
 /**
  * @typedef {object} Detail

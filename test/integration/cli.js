@@ -1,6 +1,6 @@
 import test from 'ava';
 import path from 'path';
-import request from 'supertest';
+// import request from 'supertest';
 import { fileURLToPath } from 'url';
 
 import { cli } from '../helpers/cli.js';

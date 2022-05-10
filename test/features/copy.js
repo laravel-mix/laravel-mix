@@ -12,9 +12,9 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/somewhere/app.js`).exists();
+        assert().file(`test/fixtures/app/dist/somewhere/app.js`).exists();
 
-        assert(t).manifestEquals({
+        assert().manifestEquals({
             '/js/app.js': '/js/app.js',
             '/somewhere/app.js': '/somewhere/app.js'
         });
@@ -33,9 +33,9 @@ test.serial('It can copy files and handle versioning.', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/copy/file-1.txt': '/copy/file-1.txt',
         '/js/app.js': '/js/app.js'
     });
@@ -50,12 +50,12 @@ test.serial('It can copy directories and handle versioning.', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
-    assert(t).file(`test/fixtures/app/dist/copy/file-2.txt`).exists();
-    assert(t).file(`test/fixtures/app/dist/copy/dir-1/file-1.txt`).exists();
-    assert(t).file(`test/fixtures/app/dist/copy/dir-1/file-2.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-2.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/dir-1/file-1.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/dir-1/file-2.txt`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/copy/file-1.txt': '/copy/file-1.txt',
         '/copy/file-2.txt': '/copy/file-2.txt',
         '/js/app.js': '/js/app.js'
@@ -69,5 +69,5 @@ test.serial('It can copy dot files.', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/.dotfile`).exists();
+    assert().file(`test/fixtures/app/dist/.dotfile`).exists();
 });

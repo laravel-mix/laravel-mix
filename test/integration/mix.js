@@ -5,14 +5,18 @@ import { chromium } from 'playwright';
 
 import { context } from '../helpers/test.js';
 import { setupVueAliases } from '../features/vue.js';
-import { TestContext } from '../helpers/TestContext.js'
+
+/**
+ * @template  MetadataType
+ * @typedef {import('../helpers/TestContext.js').TestContext<MetadataType>} TestContext<MetadataType>
+ **/
 
 /**
  * @typedef {object} TestContextMetadata
  * @property {number} port
  * @property {import('http').Server|null} server
  * @property {string[]} logEvents
-*/
+ */
 
 /** @type {import("playwright").Browser} */
 let browser;
@@ -20,10 +24,10 @@ let browser;
 let port = 1337;
 
 // Setup the browser used by all tests
-test.serial.before(async t => (browser = await chromium.launch()));
+test.serial.before(async () => (browser = await chromium.launch()));
 test.serial.after.always(async () => {
     if (browser) {
-        await browser.close()
+        await browser.close();
     }
 });
 
@@ -33,7 +37,7 @@ test.serial.beforeEach(async t => {
     const { disk, metadata } = context(t, {
         port: port++,
         server: null,
-        logEvents: [],
+        logEvents: []
     });
 
     const serveFromDisk = serveFilesFrom(disk.join('test/fixtures/integration/dist'));
@@ -46,11 +50,11 @@ test.serial.afterEach.always(async t => {
     const { metadata } = context(t, {
         port: port++,
         server: null,
-        logEvents: [],
+        logEvents: []
     });
 
     if (metadata.server) {
-        await metadata.server.close()
+        await metadata.server.close();
     }
 });
 
@@ -64,7 +68,7 @@ test.serial.beforeEach(t => {
 
 test.serial.afterEach.always(t => {
     if (t.passed) {
-        return
+        return;
     }
 
     /** @type {TestContext<TestContextMetadata>} */

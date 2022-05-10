@@ -22,15 +22,15 @@ test.serial('that it can merge multiple files into one.', async t => {
     const files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
     const outputPath = path.resolve(stubsDir, 'merged.js');
 
-    await fs(t).stub({
+    await fs().stub({
         [files[0]]: 'class Foo {}',
         [files[1]]: 'class Bar {}'
     });
 
     await new FileCollection(files).merge(new File(outputPath));
 
-    assert(t).file(outputPath).exists();
-    assert(t).file(outputPath).contains('class Foo {}\nclass Bar {}');
+    assert().file(outputPath).exists();
+    assert().file(outputPath).contains('class Foo {}\nclass Bar {}');
 });
 
 test.serial('that it can merge JS files and apply Babel compilation.', async t => {
@@ -39,7 +39,7 @@ test.serial('that it can merge JS files and apply Babel compilation.', async t =
     const files = [path.resolve(stubsDir, 'one.js'), path.resolve(stubsDir, 'two.js')];
     const outputPath = path.resolve(stubsDir, 'merged.js');
 
-    await fs(t).stub({
+    await fs().stub({
         [files[0]]: 'class Foo {}',
         [files[1]]: 'class Bar {}'
     });
@@ -50,8 +50,8 @@ test.serial('that it can merge JS files and apply Babel compilation.', async t =
 
     await collection.merge(new File(outputPath), true);
 
-    assert(t).file(outputPath).exists();
-    assert(t).file(outputPath).contains('fake minified output');
+    assert().file(outputPath).exists();
+    assert().file(outputPath).contains('fake minified output');
 });
 
 test.serial("that it throw an error if a file doesn't exist.", async t => {
@@ -62,5 +62,5 @@ test.serial("that it throw an error if a file doesn't exist.", async t => {
 
     await t.throwsAsync(() => new FileCollection(files).merge(new File(outputPath)));
 
-    assert(t).file(outputPath).absent();
+    assert().file(outputPath).absent();
 });

@@ -1,4 +1,4 @@
-import 'vue2';
+import Vue from 'vue2';
 import BasicWithGlobalStyles from './BasicWithGlobalStyles.vue';
 
 new Vue({

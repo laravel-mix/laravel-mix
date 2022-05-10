@@ -1,4 +1,4 @@
-import 'vue2';
+import Vue from 'vue2';
 import BasicWithIndentedSass from './BasicWithIndentedSass.vue';
 
 new Vue({

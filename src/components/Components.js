@@ -3,14 +3,15 @@ class Components {
      * Create a new Components instance.
      */
     constructor() {
-        this.components = [];
+        /** @type {Record<string, string>} */
+        this.components = {};
     }
 
     /**
      * Record a newly registered component.
      *
      * @param {string} name
-     * @param {Component} component
+     * @param {any} component
      */
     record(name, component) {
         this.components[name] = component;
@@ -27,9 +28,10 @@ class Components {
 
     /**
      * Determine if the given component name has been registered.
+     * @param {string} name
      */
     has(name) {
-        return this.components.hasOwnProperty(name);
+        return name in this.components;
     }
 
     /**

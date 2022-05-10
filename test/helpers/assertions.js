@@ -103,7 +103,7 @@ function findWebpackLoader(config, loader, forRule = undefined) {
     /** @type {(loader: string) => boolean} */
     const checkLoader =
         typeof loader === 'string'
-            ? str => new RegExp(`[\/\\\\]${loader}[\/\\\\]`).test(str)
+            ? str => new RegExp(`[/\\\\]${loader}[/\\\\]`).test(str)
             : loader instanceof RegExp
             ? str => loader.test(str)
             : loader;

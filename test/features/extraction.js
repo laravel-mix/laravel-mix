@@ -18,16 +18,16 @@ test.serial('JS compilation with vendor extraction config', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/manifest.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/libraries.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/manifest.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/libraries.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
     // We extracted vue to the library file
-    assert(t).file(`test/fixtures/app/dist/js/libraries.js`).contains('vue2');
+    assert().file(`test/fixtures/app/dist/js/libraries.js`).contains('vue2');
 
     // But not core-js
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).contains('core-js');
-    assert(t).file(`test/fixtures/app/dist/js/libraries.js`).doesNotContain('core-js');
+    assert().file(`test/fixtures/app/dist/js/app.js`).contains('core-js');
+    assert().file(`test/fixtures/app/dist/js/libraries.js`).doesNotContain('core-js');
 });
 
 test.serial(
@@ -50,11 +50,11 @@ test.serial('JS compilation with vendor extraction with default config', async t
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/manifest.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/manifest.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).contains('vue2');
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).contains('vue2');
 });
 
 test.serial('JS compilation with total vendor extraction', async t => {
@@ -64,12 +64,12 @@ test.serial('JS compilation with total vendor extraction', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/manifest.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/manifest.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).contains('vue2');
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).contains('core-js');
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).contains('vue2');
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).contains('core-js');
 });
 
 test.serial('async chunk splitting works', async t => {
@@ -87,9 +87,9 @@ test.serial('async chunk splitting works', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js\\?id=\\w{20}',
         '/js/manifest.js': '/manifest.js\\?id=\\w{20}',
         '/js/vendor.js': '/js/vendor.js\\?id=\\w{20}',
@@ -111,17 +111,17 @@ test.serial('async chunks are placed in the right directory', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t)
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert()
         .file(`test/fixtures/app/dist/js/test_fixtures_app_src_extract_dynamic_js.js`)
         .exists();
-    assert(t)
+    assert()
         .file(
             `test/fixtures/app/dist/dist/js/test_fixtures_app_src_extract_dynamic_js.js`
         )
         .absent();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/js/manifest.js': '/js/manifest.js',
         '/js/vendor.js': '/js/vendor.js',
@@ -141,13 +141,13 @@ test.serial('custom runtime chunk path can be provided', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/vendor.js`).exists();
-    assert(t)
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/vendor.js`).exists();
+    assert()
         .file(`test/fixtures/app/dist/custom/runtime/chunk/path/manifest.js`)
         .exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/custom/runtime/chunk/path/manifest.js':
             '/custom/runtime/chunk/path/manifest.js',
@@ -170,11 +170,11 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/js/vendor.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/manifest.js`).exists();
+        assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+        assert().file(`test/fixtures/app/dist/js/vendor.js`).exists();
+        assert().file(`test/fixtures/app/dist/manifest.js`).exists();
 
-        assert(t).manifestEquals({
+        assert().manifestEquals({
             '/js/app.js': '/js/app.js',
             '/manifest.js': '/manifest.js',
             '/js/vendor.js': '/js/vendor.js',
@@ -199,9 +199,9 @@ test.serial('multiple extractions work', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js\\?id=\\w{20}',
         '/js/manifest.js': '/js/manifest.js\\?id=\\w{20}',
         '/js/vendor-core-js.js': '/js/vendor-core-js.js\\?id=\\w{20}',
@@ -232,13 +232,13 @@ test.serial('configurable extractions work', async t => {
 
     await webpack.compile();
 
-    assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-    assert(t).file(`test/fixtures/app/dist/js/vendor-core-js.js`).contains('core-js');
-    assert(t).file(`test/fixtures/app/dist/js/vendor-vue-lodash.js`).contains('vue');
-    assert(t).file(`test/fixtures/app/dist/js/vendor-vue-lodash.js`).contains('uniq');
-    assert(t).file(`test/fixtures/app/dist/js/vendor-eol.js`).contains('auto');
+    assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+    assert().file(`test/fixtures/app/dist/js/vendor-core-js.js`).contains('core-js');
+    assert().file(`test/fixtures/app/dist/js/vendor-vue-lodash.js`).contains('vue');
+    assert().file(`test/fixtures/app/dist/js/vendor-vue-lodash.js`).contains('uniq');
+    assert().file(`test/fixtures/app/dist/js/vendor-eol.js`).contains('auto');
 
-    assert(t).manifestEquals({
+    assert().manifestEquals({
         '/js/app.js': '/js/app.js',
         '/js/split.js': '/js/split.js',
         '/js/vendor-core-js.js': '/js/vendor-core-js.js',
@@ -260,11 +260,11 @@ test.serial(
 
         await webpack.compile();
 
-        assert(t).file(`test/fixtures/app/dist/js/app.js`).exists();
-        assert(t).file(`test/fixtures/app/dist/js/vendor-backend.js`).contains('core-js');
-        assert(t).file(`test/fixtures/app/dist/js/vendor-frontend.js`).contains('uniq');
+        assert().file(`test/fixtures/app/dist/js/app.js`).exists();
+        assert().file(`test/fixtures/app/dist/js/vendor-backend.js`).contains('core-js');
+        assert().file(`test/fixtures/app/dist/js/vendor-frontend.js`).contains('uniq');
 
-        assert(t).manifestEquals({
+        assert().manifestEquals({
             '/js/app.js': '/js/app.js',
             '/js/split.js': '/js/split.js',
             '/js/vendor-backend.js': '/js/vendor-backend.js',
