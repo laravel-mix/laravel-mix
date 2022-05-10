@@ -7,7 +7,8 @@
     "scripts": {
         "mix": "./bin/cli.js",
         "test": "cd test && ava --verbose --timeout=30s --no-worker-threads",
-        "eslint": "eslint setup/ src/ test/ --max-warnings=0"
+        "lint:style": "eslint setup/ src/ test/ --max-warnings=0",
+        "lint:types": "tsc --noEmit --skipLibCheck -p ."
     },
     "husky": {
         "hooks": {
