@@ -46,12 +46,12 @@ test.serial('that it can merge JS files and apply Babel compilation.', async t =
 
     const collection = new FileCollection(files);
 
-    sinon.stub(collection, 'babelify').callsFake(() => 'fake minified output');
+    sinon.stub(collection, 'babelify').callsFake(() => `alert('fake minified output')`);
 
     await collection.merge(new File(outputPath), true);
 
     assert().file(outputPath).exists();
-    assert().file(outputPath).contains('fake minified output');
+    assert().file(outputPath).contains(`alert('fake minified output')`);
 });
 
 test.serial("that it throw an error if a file doesn't exist.", async t => {

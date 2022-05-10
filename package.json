@@ -143,7 +143,7 @@
         "temp-sandbox": "^4.0.1",
         "ts-loader": "^9.2.6",
         "tsc": "^2.0.3",
-        "typescript": "^4.4.4",
+        "typescript": "^4.6.4",
         "vue-loader15": "npm:vue-loader@^15.9.8",
         "vue-loader16": "npm:vue-loader@^16.8.2",
         "vue-template-compiler": "^2.6.14",

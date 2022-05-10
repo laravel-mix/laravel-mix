@@ -300,9 +300,11 @@ interface Api {
     vue(config?: VueConfig): Api;
 }
 
+declare type _Component = Component;
+
 declare const exports: Api;
 declare namespace exports {
-    export { Api, ReactConfig, VueConfig };
+    export { Api, ReactConfig, VueConfig, _Component as Component };
 }
 
 declare global {

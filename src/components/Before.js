@@ -4,7 +4,7 @@ module.exports = class Before extends Component {
     /**
      * Register the component.
      *
-     * @param  {Function} callback
+     * @param  {() => void|Promise<void>} callback
      * @return {void}
      */
     register(callback) {

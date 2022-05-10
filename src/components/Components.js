@@ -3,7 +3,7 @@ class Components {
      * Create a new Components instance.
      */
     constructor() {
-        /** @type {Record<string, string>} */
+        /** @type {Record<string, any>} */
         this.components = {};
     }
 

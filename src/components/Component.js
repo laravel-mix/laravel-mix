@@ -28,7 +28,7 @@ class Component {
      * Specifiy one or more dependencies that must
      * be installed for this component to work
      *
-     * @returns {import("../Dependencies").Dependency[]}
+     * @returns {import("../PackageDependency").Dependency[]}
      **/
     dependencies() {
         return [];

@@ -8,10 +8,11 @@ test('mix.ts()', async t => {
     mix.ts(`test/fixtures/app/src/dynamic-ts/app.ts`, 'dist');
 
     const config = await webpack.buildConfig();
+    const extensions = (config.resolve && config.resolve.extensions) || [];
 
     // Proper extensions…
-    t.true(config.resolve.extensions.includes('.ts'));
-    t.true(config.resolve.extensions.includes('.tsx'));
+    t.true(extensions.includes('.ts'));
+    t.true(extensions.includes('.tsx'));
 
     // And babel transformations…
     assert()

@@ -90,7 +90,10 @@ class BabelConfig {
             return Object.assign(prev, current, { presets, plugins });
         });
 
+        // @ts-ignore TODO: fix type
         options.plugins = this.filterConfigItems(options.plugins || []);
+
+        // @ts-ignore TODO: fix type
         options.presets = this.filterConfigItems(options.presets || []);
 
         return options;
@@ -100,21 +103,21 @@ class BabelConfig {
      * Filter merged presets or plugins
      *
      * @internal
-     * @param {import("@babel/core").PluginItem[]} items
-     * @returns {import("@babel/core").PluginItem[]}
+     * @param {import("@babel/core").ConfigItem[]} items
+     * @returns {import("@babel/core").ConfigItem[]}
      */
     filterConfigItems(items) {
         /**
          *
-         * @param {import("@babel/core").PluginItem[]} unique
-         * @param {import("@babel/core").PluginItem} item
-         * @returns
+         * @param {import("@babel/core").ConfigItem[]} unique
+         * @param {import("@babel/core").ConfigItem} item
          */
         function dedupe(unique, item) {
             if (item.file != null) {
                 const toDeleteIndex = unique.findIndex(
                     element =>
-                        element.file && element.file.resolved === item.file.resolved
+                        element.file &&
+                        element.file.resolved === (item.file && item.file.resolved)
                 );
 
                 if (toDeleteIndex >= 0) {
@@ -125,7 +128,14 @@ class BabelConfig {
             return [...unique, item];
         }
 
-        return items.reduce((unique, configItem) => dedupe(unique, configItem), []);
+        /** @type {import("@babel/core").ConfigItem[]} */
+        let unique = [];
+
+        for (const configItem of items) {
+            unique = dedupe(unique, configItem);
+        }
+
+        return unique;
     }
 
     /** @deprecated */
