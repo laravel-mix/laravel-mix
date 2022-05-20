@@ -38,7 +38,12 @@ test('it aborts if Vue is not installed', async t => {
 
     t.throws(() => vueVersion.detect());
 
-    t.true(mix.logger.received(`couldn't find a supported version of Vue`));
+    t.true(
+        mix.logger.received([
+            `Cannot find module 'vue'`,
+            `couldn't find a supported version of Vue`
+        ])
+    );
 });
 
 test('it aborts if an unsupported Vue version is provided', t => {
