@@ -129,12 +129,16 @@ class Log {
     /**
      * Determine if the given message was logged.
      *
-     * @param  {string} message
+     * @param  {string|string[]} messages
      */
-    static received(message) {
-        let result = Log.fakedLogs.some(log => log.includes(message));
+    static received(messages) {
+        messages = Array.isArray(messages) ? messages : [messages];
 
-        Log.restore();
+        let result = messages.every(message =>
+            this.fakedLogs.some(log => log.includes(message))
+        );
+
+        this.restore();
 
         return result;
     }
