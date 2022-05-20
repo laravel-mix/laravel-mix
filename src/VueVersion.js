@@ -29,6 +29,7 @@ class VueVersion {
             try {
                 return this.detect(require(this.mix.resolve('vue')).version);
             } catch (e) {
+                console.error(e);
                 this.fail();
             }
         }
