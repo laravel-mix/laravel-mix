@@ -99,6 +99,21 @@ module.exports = class Vue extends Component {
         // Alias Vue to its ESM build if the user has not already given an alias
         config.resolve.extensions.push('.vue');
 
+        // Disable es modules for file-loader on Vue 2
+        if (this.version === 2) {
+            for (const rule of config.module.rules || []) {
+                for (const loader of rule.use || []) {
+                    // TODO: This isn't the best check
+                    // We should check that the loader itself is correct
+                    // Not that file-loader is anywhere in it's absolute path
+                    // As this can produce false positives
+                    if (loader.loader.includes('file-loader')) {
+                        loader.options.esModule = false;
+                    }
+                }
+            }
+        }
+
         this.updateChunks();
 
         return config;

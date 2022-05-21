@@ -11,7 +11,7 @@ import { context } from '../helpers/test.js';
  * @param {import('../../src/Mix.js')} Mix
  */
 export function setupVueAliases(version, Mix) {
-    const vueModule = version === 3 ? 'vue3' : 'vue2';
+    const vueModule = version === 3 ? 'vue3/dist/vue.cjs.js' : 'vue2/dist/vue.common.js';
     const vueCompiler = version === 3 ? '@vue/compiler-dom' : 'vue-template-compiler';
     const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
 
@@ -20,7 +20,10 @@ export function setupVueAliases(version, Mix) {
     Mix.resolver.alias('vue-compiler', vueCompiler);
 
     const require = createRequire(import.meta.url);
-    Mix.api.alias({ vue: require.resolve(vueModule) });
+    Mix.api.alias({
+        vue: require.resolve(vueModule),
+        vue$: require.resolve(vueModule)
+    });
 }
 
 /**
