@@ -4,7 +4,7 @@
 - [Set Custom Autoprefixer Options](#set-custom-autoprefixer-options)
 - [Disable Autoprefixer](#disable-autoprefixer)
 
-By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). As such, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically.
+By default, Mix will pipe all of your CSS through the popular [Autoprefixer PostCSS plugin](https://github.com/postcss/autoprefixer). Autoprefixer has an [online version](https://goonlinetools.com/autoprefixer/) that allows you to enter your non-prefixed CSS and gives you a prefix-added CSS. As such, you are free to use the latest CSS 3 syntax with the understanding that we'll apply any necessary browser-prefixes automatically.
 
 ### Basic Usage
 
