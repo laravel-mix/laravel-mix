@@ -147,7 +147,7 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
-    const script = ['webpack'];
+    const script = ['webpack-cli'];
 
     if (cmd === 'build' && showProgress) {
         script.push('--progress');
