@@ -51,7 +51,7 @@
         "@types/imagemin-mozjpeg": "^8.0.1",
         "@types/imagemin-optipng": "^5.2.1",
         "@types/imagemin-svgo": "^8.0.0",
-        "autoprefixer": "^10.4.0",
+        "autoprefixer": "^10.4.7",
         "babel-loader": "^8.2.3",
         "chalk": "^4.1.2",
         "chokidar": "^3.5.2",
