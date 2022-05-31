@@ -36,18 +36,6 @@ class CustomTasksPlugin {
     }
 
     /**
-     * Execute the task.
-     *
-     * @param {import("../tasks/Task")} task
-     * @param {import("webpack").Stats} stats
-     */
-    async runTask(task, stats) {
-        await Promise.resolve(task.run());
-
-        await Promise.allSettled(task.assets.map(asset => this.addAsset(asset, stats)));
-    }
-
-    /**
      * Add asset to the webpack stats.
      *
      * @param {import("../File")} asset
@@ -76,14 +64,17 @@ class CustomTasksPlugin {
      * Execute potentially asynchronous tasks sequentially.
      *
      * @param stats
-     * @param index
      */
-    runTasks(stats, index = 0) {
-        if (index === this.mix.tasks.length) return Promise.resolve();
+    async runTasks(stats) {
+        let assets = []
 
-        const task = this.mix.tasks[index];
+        for (const task of this.mix.tasks) {
+            await Promise.resolve(task.run());
 
-        return this.runTask(task, stats).then(() => this.runTasks(stats, index + 1));
+            assets.push(...task.assets)
+        }
+
+        await Promise.allSettled(assets.map(asset => this.addAsset(asset, stats)));
     }
 
     /**
@@ -92,6 +83,7 @@ class CustomTasksPlugin {
     async minifyAssets() {
         const assets = collect(this.mix.tasks)
             .where('constructor.name', '!==', 'VersionFilesTask')
+            .where('constructor.name', '!==', 'CopyFilesTask')
             .flatMap(({ assets }) => assets);
 
         const tasks = assets.map(async asset => {
@@ -114,9 +106,9 @@ class CustomTasksPlugin {
      * Version all files that are present in the manifest.
      */
     applyVersioning() {
-        collect(this.mix.manifest.get()).each((value, key) =>
+        for (const [key, value] of Object.entries(this.mix.manifest.get())) {
             this.mix.manifest.hash(key)
-        );
+        }
     }
 }
 

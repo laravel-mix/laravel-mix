@@ -58,6 +58,8 @@ test.serial('It can copy directories and handle versioning.', async t => {
     assert().manifestEquals({
         '/copy/file-1.txt': '/copy/file-1.txt',
         '/copy/file-2.txt': '/copy/file-2.txt',
+        '/copy/dir-1/file-1.txt': '/copy/dir-1/file-1.txt',
+        '/copy/dir-1/file-2.txt': '/copy/dir-1/file-2.txt',
         '/js/app.js': '/js/app.js'
     });
 });

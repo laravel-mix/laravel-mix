@@ -236,7 +236,6 @@ export function assert(t) {
          * Verify that the mix manifest is the same as `expected`
          *
          * @param {Record<string, string>} expected
-         * @param {import("ava").Assertions} t
          */
         manifestEquals(expected) {
             let manifest = JSON.parse(

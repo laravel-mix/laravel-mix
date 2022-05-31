@@ -255,6 +255,18 @@ class File {
     }
 
     /**
+     * Copy the current file to a new location.
+     *
+     * @param {string} destination
+     * @internal
+     */
+    async copyToAsync(destination) {
+        await fs.copy(this.path(), destination, {
+            recursive: true,
+        });
+    }
+
+    /**
      * Minify the file, if it is CSS or JS.
      */
     async minify() {
@@ -353,6 +365,25 @@ class File {
 
         // 3. Pevious logic: No extension & does not end in a wildcard
         return !parsed.ext && !parsed.name.endsWith('*');
+    }
+
+    /**
+     * @returns {Promise<File[]>}
+     */
+    async listContentsAsync() {
+        const contents = await fs.promises.readdir(this.path(), {
+            withFileTypes: true,
+        });
+
+        const files = await Promise.all(contents.map(async (entry) => {
+            let file = new File(`${this.path()}/${entry.name}`)
+
+            return entry.isDirectory()
+                ? file.listContentsAsync()
+                : [file]
+        }))
+
+        return files.flat();
     }
 
     // TODO: Can we refactor this to remove the need for implicit global? Or does this one make sense to leave as is?

@@ -1,9 +1,10 @@
 let concat = require('concat');
 let path = require('path');
-let fs = require('fs');
+let fs = require('fs-extra');
 let babel = require('@babel/core');
 let glob = require('glob');
 let _ = require('lodash');
+let { promisify } = require('util');
 let Log = require('./Log');
 let File = require('./File');
 
@@ -73,52 +74,70 @@ class FileCollection {
     }
 
     /**
+     *
+     * @param {string|File|(string|File)[]} src
+     */
+    async normalizeSourceFiles(src) {
+        // 1. Always work with an array of sources
+        let sources = Array.isArray(src) ? src : [src]
+
+        // 2. Ensure we're working with File objects
+        let files = sources.map(file => {
+            return typeof file === 'string'
+                ? new File(file)
+                : file
+        })
+
+        let globAsync = promisify(glob)
+
+        // 3. Expand globs
+        let groups = await Promise.all(files.map(async file => {
+            if (! file.contains('*')) {
+                return [file]
+            }
+
+            let files = await globAsync(file.path(), { nodir: true });
+
+            if (!files.length) {
+                Log.feedback(`Notice: The ${file.path()} search produced no matches.`);
+            }
+
+            return files.map(filepath => new File(filepath))
+        }))
+
+        return groups.flat()
+    }
+
+    /**
      * Copy the src files to the given destination.
      *
      * @param {File} destination
      * @param {string[]|File} [src]
-     * @return {void|string}
+     * @return {Promise<void>}
      */
-    copyTo(destination, src = this.files) {
-        this.assets = this.assets || [];
+    async copyTo(destination, src = this.files) {
+        this.assets = this.assets || []
 
-        this.destination = destination;
+        let sourceFiles = await this.normalizeSourceFiles(src)
 
-        if (Array.isArray(src)) {
-            src.forEach(file => this.copyTo(destination, new File(file)));
+        // Copy an array of files to the destination file/directory
+        // file -> file: no change in destination file name
+        // directory -> file: this is an error
+        // file -> directory: change name
+        // directory -> directory: don't change name
+        await Promise.all(sourceFiles.map(async file => {
+            const dest = file.isFile() && destination.isDirectory()
+                ? destination.append(file.name())
+                : destination
 
-            return;
-        }
-
-        if (src.isDirectory()) {
-            src.copyTo(destination.path());
-
-            this.assets = fs.readdirSync(src.path()).map(file => {
-                return new File(path.resolve(destination.path(), file));
-            });
-
-            return;
-        }
-
-        if (src.contains('*')) {
-            let files = glob.sync(src.path(), { nodir: true });
-
-            if (!files.length) {
-                Log.feedback(`Notice: The ${src.path()} search produced no matches.`);
-            }
-
-            return this.copyTo(destination, files);
-        }
+            await file.copyToAsync(dest.path());
+        }))
 
         if (destination.isDirectory()) {
-            destination = destination.append(src.name());
+            this.assets = await destination.listContentsAsync()
+        } else {
+            this.assets = [destination]
         }
-
-        src.copyTo(destination.path());
-
-        this.assets = this.assets.concat(destination);
-
-        return destination.path();
     }
 
     get mix() {

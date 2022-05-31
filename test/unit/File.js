@@ -201,7 +201,7 @@ test('it can copy a file to a new location', async t => {
     const file = new File(filePath).write('.foo {}');
     const copiedPath = disk.join('new.css');
 
-    file.copyTo(copiedPath);
+    await file.copyTo(copiedPath);
 
     assert().file(copiedPath).exists();
     assert().file(filePath).contains('.foo {}\n');
