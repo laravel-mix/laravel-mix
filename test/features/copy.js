@@ -41,6 +41,26 @@ test.serial('It can copy files and handle versioning.', async t => {
     });
 });
 
+test.serial('It can copy files multiple files at once', async t => {
+    const { mix, assert, webpack } = context(t);
+
+    mix.copy(
+        [`test/fixtures/app/src/copy/dir-1`, `test/fixtures/app/src/copy/dir-2`],
+        `test/fixtures/app/dist/copy`
+    );
+
+    await webpack.compile();
+
+    assert().file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
+
+    assert().manifestEquals({
+        '/copy/file-1.txt': '/copy/file-1.txt',
+        '/copy/file-2.txt': '/copy/file-2.txt',
+        '/copy/file-3.txt': '/copy/file-3.txt',
+        '/copy/file-4.txt': '/copy/file-4.txt'
+    });
+});
+
 test.serial('It can copy directories and handle versioning.', async t => {
     const { mix, assert, webpack } = context(t);
 
@@ -54,12 +74,16 @@ test.serial('It can copy directories and handle versioning.', async t => {
     assert().file(`test/fixtures/app/dist/copy/file-2.txt`).exists();
     assert().file(`test/fixtures/app/dist/copy/dir-1/file-1.txt`).exists();
     assert().file(`test/fixtures/app/dist/copy/dir-1/file-2.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/dir-2/file-3.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/dir-2/file-4.txt`).exists();
 
     assert().manifestEquals({
         '/copy/file-1.txt': '/copy/file-1.txt',
         '/copy/file-2.txt': '/copy/file-2.txt',
         '/copy/dir-1/file-1.txt': '/copy/dir-1/file-1.txt',
         '/copy/dir-1/file-2.txt': '/copy/dir-1/file-2.txt',
+        '/copy/dir-2/file-3.txt': '/copy/dir-2/file-3.txt',
+        '/copy/dir-2/file-4.txt': '/copy/dir-2/file-4.txt',
         '/js/app.js': '/js/app.js'
     });
 });

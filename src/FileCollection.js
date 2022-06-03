@@ -125,13 +125,15 @@ class FileCollection {
         // directory -> file: this is an error
         // file -> directory: change name
         // directory -> directory: don't change name
-        await Promise.all(sourceFiles.map(async file => {
-            const dest = file.isFile() && destination.isDirectory()
-                ? destination.append(file.name())
-                : destination
+
+        for (const file of sourceFiles) {
+            const dest =
+                file.isFile() && destination.isDirectory()
+                    ? destination.append(file.name())
+                    : destination;
 
             await file.copyToAsync(dest.path());
-        }))
+        }
 
         if (destination.isDirectory()) {
             this.assets = await destination.listContentsAsync()
