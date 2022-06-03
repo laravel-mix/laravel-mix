@@ -262,7 +262,7 @@ class File {
      */
     async copyToAsync(destination) {
         await fs.copy(this.path(), destination, {
-            recursive: true,
+            recursive: true
         });
     }
 
@@ -368,20 +368,27 @@ class File {
     }
 
     /**
+     * @param {object} param0
+     * @param {boolean} [param0.hidden]
+     *
      * @returns {Promise<File[]>}
      */
-    async listContentsAsync() {
+    async listContentsAsync({ hidden = false }) {
         const contents = await fs.promises.readdir(this.path(), {
-            withFileTypes: true,
+            withFileTypes: true
         });
 
-        const files = await Promise.all(contents.map(async (entry) => {
-            let file = new File(`${this.path()}/${entry.name}`)
+        const files = await Promise.all(
+            contents.map(async entry => {
+                if (!hidden && entry.name.startsWith('.')) {
+                    return [];
+                }
 
-            return entry.isDirectory()
-                ? file.listContentsAsync()
-                : [file]
-        }))
+                let file = new File(`${this.path()}/${entry.name}`);
+
+                return entry.isDirectory() ? file.listContentsAsync({ hidden }) : [file];
+            })
+        );
 
         return files.flat();
     }

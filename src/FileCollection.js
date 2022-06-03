@@ -136,7 +136,7 @@ class FileCollection {
         }
 
         if (destination.isDirectory()) {
-            this.assets = await destination.listContentsAsync()
+            this.assets = await destination.listContentsAsync({ hidden: false });
         } else {
             this.assets = [destination]
         }

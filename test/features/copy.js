@@ -99,4 +99,33 @@ test.serial('It can copy dot files.', async t => {
     await webpack.compile();
 
     assert().file(`test/fixtures/app/dist/.dotfile`).exists();
+
+    assert().manifestEquals({
+        // TODO: This is a bug that the file isn't listed
+        // There's no extension so it's treated as a "directory" which results in zero files being listed
+    });
 });
+
+test.serial(
+    'It does not list hidden files in the manifest when copying directories',
+    async t => {
+        const { mix, assert, webpack } = context(t);
+
+        mix.copy(`test/fixtures/app/src/copy`, `test/fixtures/app/dist/copy`);
+
+        await webpack.compile();
+
+        assert().file(`test/fixtures/app/dist/copy/.hidden-1`).exists();
+        assert().file(`test/fixtures/app/dist/copy/dir-1/.hidden-1`).exists();
+        assert().file(`test/fixtures/app/dist/copy/dir-2/.hidden-1`).exists();
+
+        assert().manifestEquals({
+            '/copy/file-1.txt': '/copy/file-1.txt',
+            '/copy/file-2.txt': '/copy/file-2.txt',
+            '/copy/dir-1/file-1.txt': '/copy/dir-1/file-1.txt',
+            '/copy/dir-1/file-2.txt': '/copy/dir-1/file-2.txt',
+            '/copy/dir-2/file-3.txt': '/copy/dir-2/file-3.txt',
+            '/copy/dir-2/file-4.txt': '/copy/dir-2/file-4.txt'
+        });
+    }
+);

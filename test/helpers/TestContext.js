@@ -72,8 +72,8 @@ export class TestContext {
         }
 
         await this.Mix.init();
-        
-return this.Mix.build();
+
+        return this.Mix.build();
     }
 
     async build() {
