@@ -52,6 +52,9 @@ test.serial('It can copy files multiple files at once', async t => {
     await webpack.compile();
 
     assert().file(`test/fixtures/app/dist/copy/file-1.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-2.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-3.txt`).exists();
+    assert().file(`test/fixtures/app/dist/copy/file-4.txt`).exists();
 
     assert().manifestEquals({
         '/copy/file-1.txt': '/copy/file-1.txt',
