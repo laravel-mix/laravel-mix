@@ -384,6 +384,13 @@ class File {
                     return [];
                 }
 
+                // We don't want to list any special devices
+                // symlinks, etc…
+                // TODO: This needs a test
+                if (!entry.isFile() && !entry.isDirectory()) {
+                    return [];
+                }
+
                 let file = new File(`${this.path()}/${entry.name}`);
 
                 return entry.isDirectory() ? file.listContentsAsync({ hidden }) : [file];
