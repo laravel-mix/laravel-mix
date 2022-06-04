@@ -436,6 +436,90 @@ export function setupVueTests({ version, dir }) {
             .file(`test/fixtures/app/dist/js/app.js`)
             .contains(['false ? 0 : _vue_shared__']);
     });
+
+    test.serial(
+        'File loader has esModule disabled for Vue 2 and is not broken by custom loader rules',
+        async t => {
+            const { assert, mix, webpack } = context(t);
+
+            if (version === 3) {
+                t.pass.skip('Skipping for vue 3');
+
+                return;
+            }
+
+            // Using an extension so it modifies the rules before Vue processes them
+            mix.extend('foo', {
+                webpackRules() {
+                    return [
+                        {
+                            test: /\.something1$/,
+                            loader: 'css-loader'
+                        },
+                        {
+                            test: /\.something2$/,
+                            use: 'css-loader'
+                        },
+                        {
+                            test: /\.something3$/,
+                            use: ['css-loader']
+                        },
+                        {
+                            test: /\.something3$/,
+                            use: [{ ident: 'foobar' }]
+                        }
+                    ];
+                }
+            });
+
+            // @ts-ignore
+            mix.foo();
+
+            mix.options({ assetModules: false });
+            mix.vue();
+            mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
+
+            const config = await webpack.buildConfig();
+            const spy = sinon.spy();
+
+            // TODO: This is basically a copy of the module code in the Vue.js file
+            // That's not so great…
+            for (const rule of (config.module && config.module.rules) || []) {
+                if (typeof rule !== 'object') {
+                    continue;
+                }
+
+                let loaders = (rule && rule.use) || [];
+
+                if (!Array.isArray(loaders)) {
+                    continue;
+                }
+
+                for (const loader of loaders) {
+                    if (typeof loader !== 'object') {
+                        continue;
+                    }
+
+                    // TODO: This isn't the best check
+                    // We should check that the loader itself is correct
+                    // Not that file-loader is anywhere in it's absolute path
+                    // As this can produce false positives
+                    if (
+                        loader.loader &&
+                        loader.loader.includes('file-loader') &&
+                        loader.options
+                    ) {
+                        spy();
+
+                        // @ts-ignore
+                        t.falsy(loader.options.esModule);
+                    }
+                }
+            }
+
+            t.true(spy.called);
+        }
+    );
 }
 
 async function compilerSpy(Mix) {
