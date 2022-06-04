@@ -18,6 +18,13 @@ class File {
         this.segments = this.parse();
     }
 
+    /** @internal */
+    refresh() {
+        this.segments = this.parse();
+
+        return this;
+    }
+
     /**
      * Static constructor.
      *

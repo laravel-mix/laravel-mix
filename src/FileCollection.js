@@ -119,6 +119,7 @@ class FileCollection {
         this.assets = this.assets || []
 
         let sourceFiles = await this.normalizeSourceFiles(src)
+        let assets = [];
 
         // Copy an array of files to the destination file/directory
         // file -> file: no change in destination file name
@@ -128,18 +129,25 @@ class FileCollection {
 
         for (const file of sourceFiles) {
             const dest =
-                file.isFile() && destination.isDirectory()
+                file.isFile() &&
+                destination.isDirectory() &&
+                destination.name() !== file.name()
                     ? destination.append(file.name())
                     : destination;
 
             await file.copyToAsync(dest.path());
+
+            // TODO: Can we remove this? It's sync and also just shouldn't be necessary
+            dest.refresh();
+
+            if (dest.isDirectory()) {
+                assets.push(...(await dest.listContentsAsync({ hidden: false })));
+            } else {
+                assets.push(dest);
+            }
         }
 
-        if (destination.isDirectory()) {
-            this.assets = await destination.listContentsAsync({ hidden: false });
-        } else {
-            this.assets = [destination]
-        }
+        this.assets = assets;
     }
 
     get mix() {

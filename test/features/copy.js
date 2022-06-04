@@ -99,10 +99,10 @@ test.serial('It can copy dot files.', async t => {
     await webpack.compile();
 
     assert().file(`test/fixtures/app/dist/.dotfile`).exists();
+    assert().file(`test/fixtures/app/dist/.dotfile/.dotfile`).absent();
 
     assert().manifestEquals({
-        // TODO: This is a bug that the file isn't listed
-        // There's no extension so it's treated as a "directory" which results in zero files being listed
+        '/.dotfile': '/.dotfile'
     });
 });
 
@@ -126,6 +126,21 @@ test.serial(
             '/copy/dir-1/file-2.txt': '/copy/dir-1/file-2.txt',
             '/copy/dir-2/file-3.txt': '/copy/dir-2/file-3.txt',
             '/copy/dir-2/file-4.txt': '/copy/dir-2/file-4.txt'
+        });
+    }
+);
+
+test.serial(
+    'Copying files into a directory destination does not include that dir in the manifest',
+    async t => {
+        const { mix, assert, webpack } = context(t);
+
+        mix.copy(`test/fixtures/app/src/js/app.js`, `test/fixtures/app/src/copy`);
+
+        await webpack.compile();
+
+        assert().manifestEquals({
+            '/test/fixtures/app/src/copy/app.js': '/test/fixtures/app/src/copy/app.js'
         });
     }
 );
