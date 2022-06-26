@@ -3,6 +3,7 @@ const Assert = require('../Assert');
 const ConcatFilesTask = require('../tasks/ConcatenateFilesTask');
 const { Component } = require('./Component');
 const { concat } = require('lodash');
+const path = require('path');
 
 module.exports = class Combine extends Component {
     /**
@@ -27,10 +28,14 @@ module.exports = class Combine extends Component {
         const hasOutputPath = output !== undefined && output !== '';
 
         if (hasOutputPath) {
+            const outputPath = this.context.config.publicPath
+                ? path.resolve(this.context.config.publicPath, output)
+                : output;
+
             this.context.addTask(
                 this.createTask({
                     src: sources,
-                    dst: output,
+                    dst: outputPath,
                     babel
                 })
             );
