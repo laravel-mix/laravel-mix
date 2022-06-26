@@ -28,7 +28,7 @@ test.serial('the kitchen sink', async t => {
                 `test/fixtures/app/dist/somewhere/app.js`,
                 `test/fixtures/app/dist/js/another.js`
             ],
-            `test/fixtures/app/dist/js/all.js`
+            `js/all.js`
         )
         .version([`test/fixtures/app/dist/file.js`]);
 

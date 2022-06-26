@@ -5,10 +5,7 @@ import { context } from '../helpers/test.js';
 test.serial('it accepts a src directory', async t => {
     const { mix, assert, webpack } = context(t);
 
-    mix.scripts(
-        'test/fixtures/app/src/combine/foo',
-        'test/fixtures/app/dist/js/combined-scripts.js'
-    );
+    mix.scripts('test/fixtures/app/src/combine/foo', 'js/combined-scripts.js');
 
     await webpack.compile();
 
@@ -20,10 +17,7 @@ test.serial('it accepts a src directory', async t => {
 test.serial('it accepts a src wildcard', async t => {
     const { mix, assert, webpack } = context(t);
 
-    mix.scripts(
-        'test/fixtures/app/src/combine/foo/*.js',
-        'test/fixtures/app/dist/js/combined-scripts.js'
-    );
+    mix.scripts('test/fixtures/app/src/combine/foo/*.js', 'js/combined-scripts.js');
 
     await webpack.compile();
 
@@ -40,7 +34,7 @@ test.serial('it accepts a src array of wildcards', async t => {
             'test/fixtures/app/src/combine/foo/*.js',
             `test/fixtures/app/src/combine/bar/*.js`
         ],
-        'test/fixtures/app/dist/js/combined-scripts.js'
+        'js/combined-scripts.js'
     );
 
     await webpack.compile();
@@ -57,7 +51,7 @@ test.serial('it compiles JS and then combines the bundles files.', async t => {
         .js(`test/fixtures/app/src/js/another.js`, 'js')
         .scripts(
             [`test/fixtures/app/dist/js/app.js`, `test/fixtures/app/dist/js/another.js`],
-            `test/fixtures/app/dist/js/all.js`
+            `js/all.js`
         );
 
     await webpack.compile();
@@ -83,7 +77,7 @@ test.serial(
                 `test/fixtures/app/src/combine/foo/one.js`,
                 `test/fixtures/app/src/combine/foo/two.js`
             ],
-            'test/fixtures/app/dist/output/combined-scripts.js'
+            'output/combined-scripts.js'
         );
 
         mix.copyDirectory('test/fixtures/app/dist/output', 'test/fixtures/app/dist/js');
@@ -140,7 +134,7 @@ test.serial('it can concat files produced by the build', async t => {
     mix.postCss(`test/fixtures/app/src/css/app.css`, `test/fixtures/app/dist/app.css`);
     mix.styles(
         [`test/fixtures/app/src/css/global.css`, `test/fixtures/app/dist/app.css`],
-        `test/fixtures/app/dist/all.css`
+        `all.css`
     );
 
     await webpack.compile();
@@ -160,10 +154,7 @@ test.serial('it can concat files produced by the build', async t => {
 test.serial('combine with missing files throws an error', async t => {
     const { mix, webpack } = context(t);
 
-    mix.combine(
-        [`test/fixtures/app/src/css/i-do-not-exist.css`],
-        `test/fixtures/app/dist/all.css`
-    );
+    mix.combine([`test/fixtures/app/src/css/i-do-not-exist.css`], `all.css`);
 
     await t.throwsAsync(() => webpack.compile(), { code: 'ENOENT' });
 });
