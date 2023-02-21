@@ -225,10 +225,6 @@ function isTTY() {
 }
 
 function requiresLegacyOpenSSLProvider() {
-    if (!process.version.startsWith('v17.') && !process.version.startsWith('v18.')) {
-        return false;
-    }
-
     try {
         require('crypto').createHash('md4').update('test').digest('hex');
 
