@@ -74,7 +74,8 @@ class Entry {
         let name = output
             .pathFromPublic(this.mix.config.publicPath)
             .replace(/\.js$/, '')
-            .replace(/\\/g, '/');
+            .replace(/\\/g, '/')
+            .replace(/^\//, '');
 
         this.base = path.parse(name).dir;
 
