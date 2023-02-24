@@ -29,7 +29,7 @@ mix.copy([
 
 #### Copy a Directory
 
-A common usecase for this is when you wish to move a set of fonts, installed through NPM, to your public directory.
+A common use case for this is when you wish to move a set of fonts, installed through NPM, to your public directory.
 
 ```js
 mix.copy('node_modules/vendor/fonts', 'public');

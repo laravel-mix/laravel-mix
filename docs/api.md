@@ -33,7 +33,7 @@ mix.js('src/file.js', 'dist/file.js').vue();
 ```
 
 Vue 2 and 3 differ slightly in how they should be bundled. Mix will do its best to check which
-version you currently have installed; however, if you wish, you can be explict.
+version you currently have installed; however, if you wish, you can be explicit.
 
 ```js
 mix.js('src/file.js', 'dist/file.js').vue({ version: 2 });
