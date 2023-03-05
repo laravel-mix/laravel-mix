@@ -132,7 +132,7 @@ interface MixConfig {
      * cssnano-specific settings for Webpack.
      * Disabled if set to false.
      *
-     * See: https://cssnano.co/optimisations/
+     * See: https://cssnano.co/docs/what-are-optimisations/
      **/
     cssNano?: false | CssNanoConfig;
 
