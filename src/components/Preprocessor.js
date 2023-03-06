@@ -239,7 +239,8 @@ module.exports = class Preprocessor extends Component {
             enforce: true,
             type: 'css/mini-extract'
         };
+        const path = File.stripPublicDir(output.relativePathWithoutExtension());
 
-        this.context.chunks.add(name, output.normalizedOutputPath(), tests, attrs);
+        this.context.chunks.add(name, path, tests, attrs);
     }
 };
