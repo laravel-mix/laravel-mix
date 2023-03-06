@@ -3,7 +3,7 @@
 -   [Review Your Dependencies](#review-your-dependencies)
 -   [Check Your Node Version](#check-your-node-version)
 -   [Update Your NPM Scripts](#update-your-npm-scripts)
--   [Watch Ignores Node_Modules](#watch-ignores-node-modules)
+-   [Watch Ignores Node_Modules](#watch-ignores-node_modules)
 -   [API for JavaScript Frameworks](#api-for-javascript-frameworks)
 -   [Vue Configuration](#vue-configuration)
 -   [Legacy Node Polyfills](#legacy-node-polyfills)
