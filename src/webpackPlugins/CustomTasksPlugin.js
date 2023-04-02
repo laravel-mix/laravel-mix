@@ -16,8 +16,13 @@ class CustomTasksPlugin {
      * @param {import("webpack").Compiler} compiler
      */
     apply(compiler) {
+        let firstTime = true;
+
         compiler.hooks.done.tapPromise(this.constructor.name, async stats => {
-            await this.runTasks(stats);
+            if (firstTime) {
+                await this.runTasks(stats);
+                firstTime = false;
+            }
 
             if (this.mix.components.get('version') && !this.mix.isUsing('hmr')) {
                 this.applyVersioning();
