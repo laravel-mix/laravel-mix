@@ -410,7 +410,8 @@ export function setupVueTests({ version, dir }) {
             .file(`test/fixtures/app/dist/js/app.js`)
             .doesNotContain([
                 'typeof __VUE_OPTIONS_API__',
-                'typeof __VUE_PROD_DEVTOOLS__'
+                'typeof __VUE_PROD_DEVTOOLS__',
+                'typeof __VUE_PROD_HYDRATION_MISMATCH_DETAILS__'
             ]);
     });
 
