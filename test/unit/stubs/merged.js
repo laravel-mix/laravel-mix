@@ -1,0 +1,1 @@
+alert('fake minified output');

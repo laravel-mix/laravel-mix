@@ -1,7 +1,7 @@
 let semver = require('semver');
 let { concat, mapValues } = require('lodash');
 let { Component } = require('./Component');
-let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let { CssExtractRspackPlugin } = require('@rspack/core');
 let PostCssPluginsFactory = require('../PostCssPluginsFactory');
 
 class CssWebpackConfig extends Component {
@@ -177,7 +177,7 @@ class CssWebpackConfig extends Component {
      */
     webpackPlugins() {
         return [
-            new MiniCssExtractPlugin({
+            new CssExtractRspackPlugin({
                 filename: '[name].css',
                 chunkFilename: '[name].css'
             })
@@ -215,7 +215,7 @@ class CssWebpackConfig extends Component {
             }
         } else if (method === 'extract') {
             loaders.push({
-                loader: MiniCssExtractPlugin.loader,
+                loader: CssExtractRspackPlugin.loader,
                 options: {
                     esModule: true
                 }

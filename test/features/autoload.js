@@ -15,7 +15,7 @@ test('it handles library autoloading', async t => {
         .webpackPlugin(config, /ProvidePlugin/)
         .get() || { definitions: {} };
 
-    t.deepEqual(plugin.definitions, {
+    t.deepEqual(plugin._args[0], {
         $: 'jquery',
         'window.jQuery': 'jquery',
         _map: ['lodash', 'map']

@@ -3,7 +3,12 @@ const chalk = require('chalk');
 const Table = require('cli-table3');
 const readline = require('readline');
 const stripAnsi = require('strip-ansi');
-const { formatSize } = require('webpack/lib/SizeFormatHelpers');
+function formatSize(size) {
+    if (size <= 0) return '0 bytes';
+    const units = ['bytes', 'KiB', 'MiB', 'GiB'];
+    const i = Math.min(Math.floor(Math.log(size) / Math.log(1024)), units.length - 1);
+    return `${+(size / Math.pow(1024, i)).toPrecision(3)} ${units[i]}`;
+}
 const { version } = require('../../package.json');
 
 /**
@@ -62,7 +67,7 @@ class BuildOutputPlugin {
                 relatedAssets: this.options.showRelated
             });
 
-            this.heading(`Laravel Mix v${version}`);
+            this.heading(`Laravel Rikcix v${version}`);
 
             console.log(chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`));
 

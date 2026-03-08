@@ -147,16 +147,17 @@ async function executeScript(cmd, opts, args = []) {
  */
 function commandScript(cmd, opts) {
     const showProgress = isTTY() && opts.progress;
-    const script = ['webpack'];
+    const rspackBin = path.join(
+        path.dirname(require.resolve('@rspack/cli/package.json')),
+        'bin',
+        'rspack.js'
+    );
+    const script = [`node "${rspackBin}"`];
 
-    if (cmd === 'build' && showProgress) {
-        script.push('--progress');
+    if (cmd === 'build') {
+        // progress is handled by ProgressPlugin in config
     } else if (cmd === 'watch' && !opts.hot) {
         script.push('--watch');
-
-        if (showProgress) {
-            script.push('--progress');
-        }
     } else if (cmd === 'watch' && opts.hot) {
         script.push('serve', '--hot');
 

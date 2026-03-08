@@ -44,7 +44,7 @@ module.exports = class Define extends Component {
     }
 
     webpackPlugins() {
-        const { DefinePlugin } = require('webpack');
+        const { DefinePlugin } = require('@rspack/core');
 
         return [
             new DefinePlugin(

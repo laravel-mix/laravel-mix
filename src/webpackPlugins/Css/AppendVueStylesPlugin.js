@@ -9,7 +9,7 @@ class AppendVueStylesPlugin {
         const name = 'AppendVueStylesPlugin';
 
         compiler.hooks.compilation.tap(name, compilation => {
-            compilation.hooks.optimizeChunks.tap(name, chunks => {
+            compilation.hooks.optimizeChunkModules.tap(name, chunks => {
                 this.reorderModules(compilation.chunkGraph, chunks);
             });
         });
@@ -32,7 +32,7 @@ class AppendVueStylesPlugin {
 
         // Push all vue assets after it in their original order
         for (const { module, group } of queue) {
-            if (module.identifier().includes('?vue')) {
+            if (module.identifier().includes('?vue') && group.setModulePostOrderIndex) {
                 group.setModulePostOrderIndex(
                     module,
                     largestIndex + group.getModulePostOrderIndex(module)

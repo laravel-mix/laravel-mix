@@ -48,7 +48,7 @@ class MixDefinitionsPlugin {
      * Build up the necessary definitions and add them to the DefinePlugin.
      */
     get plugin() {
-        const { EnvironmentPlugin } = require('webpack');
+        const { EnvironmentPlugin } = require('@rspack/core');
 
         return new EnvironmentPlugin(this.env);
     }

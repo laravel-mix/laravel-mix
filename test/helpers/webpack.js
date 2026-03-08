@@ -1,12 +1,12 @@
-import webpack from 'webpack';
+import { rspack } from '@rspack/core';
 
 /**
- * @param {import('webpack').Configuration | Promise<import('webpack').Configuration>} configOrPromise
- * @returns {Promise<{config: import('webpack').Configuration, err: Error | undefined, stats: import('webpack').Stats | undefined}>}
+ * @param {import('@rspack/core').Configuration | Promise<import('@rspack/core').Configuration>} configOrPromise
+ * @returns {Promise<{config: import('@rspack/core').Configuration, err: Error | undefined, stats: import('@rspack/core').Stats | undefined}>}
  */
 export async function compile(configOrPromise) {
     const config = await configOrPromise;
-    const compiler = webpack(config);
+    const compiler = rspack(config);
 
     return new Promise((resolve, reject) => {
         compiler.run((err, stats) => {
@@ -19,9 +19,14 @@ export async function compile(configOrPromise) {
                     })
                 );
             } else if (stats && stats.hasErrors()) {
-                const { errors } = stats.toJson({ errors: true });
+                const { errors } = stats.toJson({ errors: true, errorDetails: true });
                 const err = new Error(
-                    (errors || []).map(error => error.message).join('\n')
+                    (errors || [])
+                        .map(
+                            error =>
+                                error.message || error.details || JSON.stringify(error)
+                        )
+                        .join('\n')
                 );
 
                 reject(

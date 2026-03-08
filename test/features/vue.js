@@ -101,7 +101,7 @@ export function setupVueTests({ version, dir }) {
         assert().loader(config, 'vue-style-loader').exists();
         assert().loader(config, 'style-loader').absent();
         assert()
-            .loader(config, /mini-css-extract-plugin/)
+            .loader(config, /cssExtractLoader/)
             .absent();
     });
 
@@ -114,7 +114,7 @@ export function setupVueTests({ version, dir }) {
 
         assert().loader(config, 'vue-style-loader').absent();
         assert()
-            .loader(config, /mini-css-extract-plugin/)
+            .loader(config, /cssExtractLoader/)
             .exists();
     });
 
@@ -142,8 +142,8 @@ export function setupVueTests({ version, dir }) {
         assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
         let expected = `
-            body { color: red; }
             .hello { color: blue; background: url(./does-not-exist.png); }
+            body { color: red; }
         `;
         assert().file(`test/fixtures/app/dist/css/app.css`).matchesCss(expected);
     });
@@ -163,8 +163,8 @@ export function setupVueTests({ version, dir }) {
         assert().file(`test/fixtures/app/dist/css/app.css`).exists();
 
         let expected = `
-            body { color: pink; }
             .hello { color: blue; background: url(./does-not-exist.png); }
+            body { color: pink; }
         `;
         assert().file(`test/fixtures/app/dist/css/app.css`).matchesCss(expected);
     });

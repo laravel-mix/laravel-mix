@@ -34,13 +34,14 @@ test('it detects Vue 3', t => {
 test('it aborts if Vue is not installed', async t => {
     const { vueVersion, mix } = t.context;
 
+    mix.resolver.aliases['vue'] = 'vue-not-installed';
     mix.logger.fake();
 
     t.throws(() => vueVersion.detect());
 
     t.true(
         mix.logger.received([
-            `Cannot find module 'vue'`,
+            `Cannot find module 'vue-not-installed'`,
             `couldn't find a supported version of Vue`
         ])
     );

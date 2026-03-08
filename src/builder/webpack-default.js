@@ -1,5 +1,5 @@
 let path = require('path');
-let TerserPlugin = require('terser-webpack-plugin');
+let { SwcJsMinimizerRspackPlugin } = require('@rspack/core');
 
 /**
  *
@@ -47,8 +47,7 @@ module.exports = function (mix) {
                   providedExports: true,
                   sideEffects: true,
                   usedExports: true,
-                  // @ts-ignore
-                  minimizer: [new TerserPlugin(mix.config.terser)]
+                  minimizer: [new SwcJsMinimizerRspackPlugin()]
               }
             : {},
 

@@ -10,7 +10,7 @@ module.exports = class WebpackConfig extends Component {
      */
     register(config) {
         const merge = require('../builder/MergeWebpackConfig');
-        const webpack = require('webpack');
+        const webpack = require('@rspack/core');
 
         this.context.api.override(webpackConfig => {
             config =

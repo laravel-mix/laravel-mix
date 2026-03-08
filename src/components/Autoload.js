@@ -25,7 +25,7 @@ module.exports = class Autoload extends Component {
      * webpack plugins to be appended to the master config.
      */
     webpackPlugins() {
-        const { ProvidePlugin } = require('webpack');
+        const { ProvidePlugin } = require('@rspack/core');
 
         return [new ProvidePlugin(this.aliases)];
     }

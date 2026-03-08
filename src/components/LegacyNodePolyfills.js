@@ -12,7 +12,7 @@ module.exports = class LegacyNodePolyfills extends Component {
             return [];
         }
 
-        const { ProvidePlugin } = require('webpack');
+        const { ProvidePlugin } = require('@rspack/core');
 
         return [
             new ProvidePlugin({

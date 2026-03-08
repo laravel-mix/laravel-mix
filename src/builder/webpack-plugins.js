@@ -4,7 +4,7 @@ let CustomTasksPlugin = require('../webpackPlugins/CustomTasksPlugin');
 let ManifestPlugin = require('../webpackPlugins/ManifestPlugin');
 let MockEntryPlugin = require('../webpackPlugins/MockEntryPlugin');
 let BuildOutputPlugin = require('../webpackPlugins/BuildOutputPlugin');
-let WebpackBar = require('webpackbar');
+let { ProgressPlugin } = require('@rspack/core');
 
 /**
  *
@@ -50,7 +50,7 @@ module.exports = function (mix) {
     );
 
     if (process.env.NODE_ENV !== 'test') {
-        plugins.push(new WebpackBar({ name: 'Mix' }));
+        plugins.push(new ProgressPlugin());
     }
 
     return plugins;
