@@ -157,16 +157,7 @@ class WebpackConfig {
                 }
             },
 
-            /**
-             * @param {object} devServer
-             * @param {Array} devServer.middlewares
-             */
-            setupMiddlewares(middlewares, devServer) {
-                console.log(
-                    '[mix] setupMiddlewares called, middleware count:',
-                    middlewares.length
-                );
-
+            setupMiddlewares(middlewares) {
                 middlewares.unshift({
                     name: 'fix-double-slash',
                     middleware: function (req, _, next) {
@@ -175,36 +166,31 @@ class WebpackConfig {
                     }
                 });
 
-                middlewares.splice(1, 0, {
-                    name: 'open-in-editor',
-                    middleware: function (req, res, next) {
-                        if (!req.url.startsWith('/__open-in-editor')) {
-                            return next();
-                        }
+                // Patch the built-in open-editor to handle
+                // /__open-in-editor?file= (used by Vue DevTools)
+                // instead of /webpack-dev-server/open-editor?fileName=
+                const builtin = middlewares.find(
+                    m => m.name === 'webpack-dev-server-open-editor'
+                );
 
+                if (builtin) {
+                    builtin.path = '/__open-in-editor';
+                    builtin.middleware = function (req, res) {
                         res.setHeader('Access-Control-Allow-Origin', '*');
-
-                        console.log('[mix] open-in-editor hit:', req.url);
 
                         const url = new URL(req.url, 'http://localhost');
                         const file = url.searchParams.get('file');
 
                         if (!file) {
                             res.statusCode = 500;
-                            res.end('launch-editor requires a file query param');
+                            res.end('requires a file query param');
                             return;
                         }
 
-                        console.log('[mix] opening file:', path.resolve(file));
                         require('launch-editor')(path.resolve(file));
                         res.end();
-                    }
-                });
-
-                console.log('[mix] final middleware count:', middlewares.length);
-                middlewares.forEach((m, i) =>
-                    console.log(`[mix]   ${i}: ${m.name || '(unnamed)'}`)
-                );
+                    };
+                }
 
                 return middlewares;
             },
