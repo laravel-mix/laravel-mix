@@ -15,10 +15,7 @@ let rspackBin = '';
 test.before(() => {
     const require = createRequire(import.meta.url);
 
-    configPath = path.relative(
-        process.cwd(),
-        require.resolve('../../setup/webpack.config.js')
-    );
+    configPath = require.resolve('../../setup/webpack.config.js');
 
     rspackBin = path.join(
         path.dirname(require.resolve('@rspack/cli/package.json')),

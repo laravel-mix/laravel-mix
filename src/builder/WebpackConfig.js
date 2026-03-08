@@ -1,3 +1,4 @@
+let fs = require('fs');
 let path = require('path');
 let Entry = require('./Entry');
 let webpackRules = require('./webpack-rules');
@@ -128,7 +129,24 @@ class WebpackConfig {
 
             liveReload: false,
 
-            https,
+            server: https
+                ? typeof https === 'object'
+                    ? {
+                          type: 'https',
+                          options: {
+                              key: https.key
+                                  ? fs.readFileSync(path.resolve(https.key))
+                                  : undefined,
+                              cert: https.cert
+                                  ? fs.readFileSync(path.resolve(https.cert))
+                                  : undefined,
+                              ca: https.ca
+                                  ? fs.readFileSync(path.resolve(https.ca))
+                                  : undefined
+                          }
+                      }
+                    : { type: 'https' }
+                : undefined,
 
             devMiddleware: {
                 headers: {
@@ -140,21 +158,55 @@ class WebpackConfig {
             },
 
             /**
-             *
-             * @param {{app: import("express").Application}} param0
+             * @param {object} devServer
+             * @param {Array} devServer.middlewares
              */
-            onBeforeSetupMiddleware({ app }) {
-                app.use(function (req, _, next) {
-                    // Something causes hot update chunks (except for the JSON payload)
-                    // to start with a double slash
-                    // e.g. GET http://localhost:8080//js/app.[hash].hot-update.js
+            setupMiddlewares(middlewares, devServer) {
+                console.log(
+                    '[mix] setupMiddlewares called, middleware count:',
+                    middlewares.length
+                );
 
-                    // This causes loading those chunks to fail so we patch it up here
-                    // This is super hacky and a proper solution should be found eventually
-                    req.url = req.url.replace(/^\/\//, '/');
-
-                    next();
+                middlewares.unshift({
+                    name: 'fix-double-slash',
+                    middleware: function (req, _, next) {
+                        req.url = req.url.replace(/^\/\//, '/');
+                        next();
+                    }
                 });
+
+                middlewares.splice(1, 0, {
+                    name: 'open-in-editor',
+                    middleware: function (req, res, next) {
+                        if (!req.url.startsWith('/__open-in-editor')) {
+                            return next();
+                        }
+
+                        res.setHeader('Access-Control-Allow-Origin', '*');
+
+                        console.log('[mix] open-in-editor hit:', req.url);
+
+                        const url = new URL(req.url, 'http://localhost');
+                        const file = url.searchParams.get('file');
+
+                        if (!file) {
+                            res.statusCode = 500;
+                            res.end('launch-editor requires a file query param');
+                            return;
+                        }
+
+                        console.log('[mix] opening file:', path.resolve(file));
+                        require('launch-editor')(path.resolve(file));
+                        res.end();
+                    }
+                });
+
+                console.log('[mix] final middleware count:', middlewares.length);
+                middlewares.forEach((m, i) =>
+                    console.log(`[mix]   ${i}: ${m.name || '(unnamed)'}`)
+                );
+
+                return middlewares;
             },
 
             ...this.webpackConfig.devServer

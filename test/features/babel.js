@@ -7,12 +7,12 @@ test.serial('mix.babelConfig() can be used to merge custom Babel options.', asyn
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
     mix.babelConfig({
-        plugins: ['@babel/plugin-proposal-unicode-property-regex']
+        plugins: ['@babel/plugin-transform-sticky-regex']
     });
 
     await webpack.compile();
 
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-sticky-regex'));
 });
 
 test.serial('Default Babel plugins/presets are set', async t => {
@@ -55,7 +55,7 @@ test.serial('Babel config files can be read from the project root', async t => {
     // The root path is _already_ set to the root of the disk during test setup
     await fs().stub({
         [Mix.paths.root('babel.config.cjs')]:
-            'module.exports = { "plugins": ["@babel/plugin-syntax-json-strings"] }',
+            'module.exports = { "plugins": ["@babel/plugin-transform-unicode-regex"] }',
         [Mix.paths.root('.babelrc')]:
             '{ "plugins": ["@babel/plugin-transform-sticky-regex"] }'
     });
@@ -64,7 +64,7 @@ test.serial('Babel config files can be read from the project root', async t => {
 
     await webpack.compile();
 
-    t.true(babelConfig.hasPlugin('@babel/plugin-syntax-json-strings'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-unicode-regex'));
     t.true(babelConfig.hasPlugin('@babel/plugin-transform-sticky-regex'));
 });
 
@@ -103,7 +103,7 @@ test.serial('Babel config from Mix extensions is merged with the defaults', asyn
     mix.extend('extensionWithBabelConfig', {
         babelConfig() {
             return {
-                plugins: ['@babel/plugin-proposal-unicode-property-regex']
+                plugins: ['@babel/plugin-transform-sticky-regex']
             };
         }
     });
@@ -116,5 +116,5 @@ test.serial('Babel config from Mix extensions is merged with the defaults', asyn
     await webpack.compile();
 
     t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-sticky-regex'));
 });

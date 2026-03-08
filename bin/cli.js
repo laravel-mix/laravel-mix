@@ -62,13 +62,7 @@ async function executeScript(cmd, opts, args = []) {
 
     const env = getEffectiveEnv(opts);
 
-    // We MUST use a relative path because the files
-    // created by npm dont correctly handle paths
-    // containg spaces on Windows (yarn does)
-    const configPath = path.relative(
-        process.cwd(),
-        require.resolve('../setup/webpack.config.js')
-    );
+    const configPath = require.resolve('../setup/webpack.config.js');
 
     const script = [
         commandScript(cmd, opts),
