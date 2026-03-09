@@ -67,7 +67,7 @@ class BuildOutputPlugin {
                 relatedAssets: this.options.showRelated
             });
 
-            this.heading(`Laravel Rikcix v${version}`);
+            this.heading(`Laravel RIX v${version}`);
 
             console.log(chalk.green.bold(`✔ Compiled Successfully in ${data.time}ms`));
 
