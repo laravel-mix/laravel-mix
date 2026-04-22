@@ -19,9 +19,8 @@ module.exports = class Notifications extends Component {
 
         return [
             new WebpackNotifierPlugin({
-                appID: 'Laravel Mix',
-
-                title: 'Laravel Mix',
+                appID: 'Laravel RIX',
+                title: 'Laravel RIX',
                 alwaysNotify: this.context.config.notifications.onSuccess,
                 timeout: false,
                 hint: process.platform === 'linux' ? 'int:transient:1' : undefined,

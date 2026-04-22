@@ -37,6 +37,8 @@ class CssWebpackConfig extends Component {
                 loader: {
                     loader: this.context.resolve('sass-loader'),
                     options: {
+                        api: 'modern-compiler',
+                        implementation: require('sass-embedded'),
                         sassOptions: {
                             precision: 8,
                             outputStyle: 'expanded'
@@ -51,10 +53,12 @@ class CssWebpackConfig extends Component {
                 loader: {
                     loader: this.context.resolve('sass-loader'),
                     options: {
+                        api: 'modern-compiler',
+                        implementation: require('sass-embedded'),
                         sassOptions: {
                             precision: 8,
                             outputStyle: 'expanded',
-                            indentedSyntax: true
+                            syntax: 'indented'
                         }
                     }
                 }

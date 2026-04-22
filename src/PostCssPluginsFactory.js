@@ -18,8 +18,7 @@ module.exports = class PostCssPluginsFactory {
     load(plugins = []) {
         this.loadGlobalPlugins();
         this.loadLocalPlugins(plugins);
-        this.loadAutoprefixer();
-        this.loadCssNano();
+        this.loadLightningCss();
 
         return this.plugins;
     }
@@ -60,24 +59,38 @@ module.exports = class PostCssPluginsFactory {
     }
 
     /**
-     * Add autoprefixer to the plugins list.
+     * Add LightningCSS plugin (replaces both autoprefixer and cssnano).
+     *
+     * Respects existing config options:
+     * - `autoprefixer: false` disables vendor prefixing
+     * - `cssNano: false` disables minification in production
      */
-    loadAutoprefixer() {
-        if (this.context.config.autoprefixer) {
-            this.plugins.push(require('autoprefixer')(this.context.config.autoprefixer));
-        }
-    }
+    loadLightningCss() {
+        const wantsAutoprefixer = this.context.config.autoprefixer !== false;
+        const wantsMinify =
+            this.context.config.production && this.context.config.cssNano !== false;
 
-    /**
-     * Add CSSNano to the plugins list.
-     */
-    loadCssNano() {
-        if (this.context.config.production && this.context.config.cssNano !== false) {
-            this.plugins.push(
-                require('cssnano')({
-                    preset: ['default', this.context.config.cssNano]
-                })
-            );
+        // If both are disabled, skip lightningcss entirely
+        if (!wantsAutoprefixer && !wantsMinify) {
+            return;
         }
+
+        const postcssLightningcss = require('postcss-lightningcss');
+
+        const options = {
+            lightningcssOptions: {
+                errorRecovery: true
+            }
+        };
+
+        if (wantsAutoprefixer) {
+            options.browsers = '>= .25%';
+        }
+
+        if (wantsMinify) {
+            options.minify = true;
+        }
+
+        this.plugins.push(postcssLightningcss(options));
     }
 };

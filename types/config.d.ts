@@ -21,14 +21,18 @@ interface MixConfig {
     /** Determine if we should enable hot reloading. */
     hmr?: boolean;
 
-    /** Hostname and port used for the hot reload module */
+    /** Hostname, port, and HTTPS options for the hot reload module */
     hmrOptions?: {
-        host: string;
-        port: string;
+        host?: string;
+        port?: string | number;
+        https?:
+            | boolean
+            | {
+                  key?: string;
+                  cert?: string;
+                  ca?: string;
+              };
     };
-
-    /** Determine if we should enable https on hot reloading. */
-    https?: boolean;
 
     /**
      * PostCSS plugins to be applied to compiled CSS.

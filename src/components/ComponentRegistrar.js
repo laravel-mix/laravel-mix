@@ -39,7 +39,8 @@ let components = [
     'Options',
     'When',
     'BabelConfig',
-    'Before'
+    'Before',
+    'Oxc'
 ];
 
 class ComponentRegistrar {

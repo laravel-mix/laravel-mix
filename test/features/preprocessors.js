@@ -236,7 +236,7 @@ test.serial(
         assert()
             .file(`test/fixtures/app/dist/css/app.css`)
             .matchesCss(
-                `body{color:red;}.app{color:red;background:url('/absolute/image.jpg');}`
+                `body{color:red}.app{color:red;background:url(/absolute/image.jpg)}`
             );
     }
 );

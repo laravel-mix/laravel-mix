@@ -93,7 +93,7 @@ module.exports = class Preprocessor extends Component {
 
         if (preprocessor.type !== 'postCss') {
             loaders.push({
-                loader: `${preprocessor.type}-loader`,
+                loader: this.context.resolve(`${preprocessor.type}-loader`),
                 options: this.loaderOptions(preprocessor, processUrls)
             });
         }

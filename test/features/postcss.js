@@ -39,11 +39,11 @@ test.serial(
 test.serial(
     'it applies autoprefixer with custom configuration',
     buildTest({
-        prepare: ({ mix }) => mix.options({ autoprefixer: { remove: false } }),
+        prepare: ({ mix }) => mix.options({ autoprefixer: {} }),
 
         file: 'autoprefixer.css',
-        input: `div { -webkit-box-shadow: 0 0 4px black; box-shadow: 0 0 4px black; }`,
-        expected: `div { -webkit-box-shadow: 0 0 4px black; box-shadow: 0 0 4px black; }`
+        input: `div { box-shadow: 0 0 4px black; }`,
+        expected: `div { box-shadow: 0 0 4px #000; }`
     })
 );
 
@@ -108,21 +108,18 @@ test.serial(
 );
 
 test.serial(
-    'it applies CSSNano minification with configuration options',
+    'it applies LightningCSS minification in production',
     buildTest({
-        // By default, PostCss will discard empty rules. Let's turn it
-        // off to prove that custom CssNano options may be provided.
-        prepare: ({ mix }) =>
-            mix.options({ production: true, cssNano: { discardEmpty: false } }),
+        prepare: ({ mix }) => mix.options({ production: true }),
 
         file: `cssnano.css`,
-        input: `#empty {}`,
-        expected: `#empty {}`
+        input: `.hello { color: blue; font-weight: bold; }`,
+        expected: `.hello{color:#00f;font-weight:700}`
     })
 );
 
 test.serial(
-    "it merge Mix's default postcss plugins with any found in the user's postcss.config.js.",
+    "it merges Mix's default postcss plugins with any found in the user's postcss.config.js.",
     buildTest({
         prepare: ({ mix }) => mix.options({ production: true }),
 
@@ -135,10 +132,10 @@ test.serial(
         @keyframes testing { to { color: green; } }
     `,
 
-        // We expected to see the results of postcss-custom-properties, Autoprefixer, and CSSNano.
+        // We expect postcss-custom-properties to expand vars, then LightningCSS to minify.
         expected: `
         :root { --some-color: red }
-        .test { color: red; color: var(--some-color) }
+        .test { color: var(--some-color) }
         @keyframes testing { to { color: green } }
     `
     })

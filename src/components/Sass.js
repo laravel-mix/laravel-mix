@@ -5,15 +5,7 @@ module.exports = class Sass extends Preprocessor {
      * Required dependencies for the component.
      */
     dependencies() {
-        this.requiresReload = true;
-
-        const deps = ['sass-loader@^12.1.0', 'sass'];
-
-        if (this.context.config.processCssUrls) {
-            deps.push('resolve-url-loader@^5.0.0');
-        }
-
-        return deps;
+        return [];
     }
 
     /**
@@ -43,6 +35,8 @@ module.exports = class Sass extends Preprocessor {
     pluginOptions(pluginOptions) {
         return Object.assign(
             {
+                api: 'modern-compiler',
+                implementation: require('sass-embedded'),
                 sassOptions: {
                     precision: 8,
                     outputStyle: 'expanded'

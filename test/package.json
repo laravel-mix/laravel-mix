@@ -1,3 +1,11 @@
 {
-    "type": "module"
+    "type": "module",
+    "devDependencies": {
+        "sass-embedded": "^1.98.0"
+    },
+    "dependencies": {
+        "lightningcss": "^1.32.0",
+        "postcss-lightningcss": "^1.0.2",
+        "sass-loader": "^16.0.7"
+    }
 }

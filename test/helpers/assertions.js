@@ -147,8 +147,15 @@ export function assert(t) {
                  * @param {string} expected
                  * @param {import("ava").Assertions} t
                  */
-                matchesCss: expected =>
-                    t.is(file.read().replace(/\s/g, ''), expected.replace(/\s/g, '')),
+                matchesCss: expected => {
+                    const normalize = str =>
+                        str
+                            .replace(/\s/g, '')
+                            .replace(/;}/g, '}')
+                            .replace(/url\(['"]([^'"]+)['"]\)/g, 'url($1)');
+
+                    t.is(normalize(file.read()), normalize(expected));
+                },
 
                 /**
                  * Assert that a file contains the given string

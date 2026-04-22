@@ -282,6 +282,33 @@ type ReactConfig = {
     extractStyles?: boolean | string;
 };
 
+// Loader alternatives
+interface Api {
+    /** Use oxc-transform instead of babel-loader for JS/TS compilation */
+    oxc(options?: OxcConfig): Api;
+}
+
+type OxcConfig = {
+    /** Compilation target (e.g., 'es2015', 'es2020') */
+    target?: string;
+
+    /** JSX transformation options */
+    jsx?: {
+        runtime?: 'automatic' | 'classic';
+        importSource?: string;
+        development?: boolean;
+    };
+
+    /** Source language override */
+    lang?: 'jsx' | 'tsx' | 'ts';
+
+    /** Enable source maps */
+    sourcemap?: boolean;
+
+    /** Use synchronous transform */
+    sync?: boolean;
+};
+
 // Third-party support "feature flags"
 interface Api {
     /** Enable support for Preact */
@@ -304,7 +331,7 @@ declare type _Component = Component;
 
 declare const exports: Api;
 declare namespace exports {
-    export { Api, ReactConfig, VueConfig, _Component as Component };
+    export { Api, OxcConfig, ReactConfig, VueConfig, _Component as Component };
 }
 
 declare global {
