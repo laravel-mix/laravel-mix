@@ -1,4 +1,3 @@
-let concat = require('concat');
 let path = require('path');
 let fs = require('fs-extra');
 let babel = require('@babel/core');
@@ -33,9 +32,10 @@ class FileCollection {
      * @param {boolean} wantsBabel
      */
     async merge(output, wantsBabel = false) {
-        /** @type {string} */
-        // @ts-ignore
-        const contents = await concat(this.files, output.makeDirectories().path());
+        const parts = await Promise.all(this.files.map(f => fs.readFile(f, 'utf8')));
+        const contents = parts.join('\n');
+
+        await fs.outputFile(output.makeDirectories().path(), contents);
 
         if (this.shouldCompileWithBabel(wantsBabel, output)) {
             const code = this.babelify(contents);

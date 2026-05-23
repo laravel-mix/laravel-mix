@@ -54,8 +54,6 @@ export class TestContext {
         // Under profiling loading autoprefixer takes 2.5s
         this.mix.options({ autoprefixer: false });
 
-        // We also enable assetModules
-        // TODO: Remove in Mix 7 -- this should be the default then
         this.mix.options({ assetModules: true });
     }
 

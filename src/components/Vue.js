@@ -99,8 +99,8 @@ module.exports = class Vue extends Component {
         // Alias Vue to its ESM build if the user has not already given an alias
         config.resolve.extensions.push('.vue');
 
-        // Disable es modules for file-loader on Vue 2
-        if (this.version === 2) {
+        // Disable es modules for file-loader on Vue 2 (only relevant in legacy assetModules: false mode)
+        if (this.version === 2 && !this.context.config.assetModules) {
             for (const rule of config.module.rules || []) {
                 if (typeof rule !== 'object') {
                     continue;

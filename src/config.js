@@ -103,18 +103,13 @@ module.exports = function (mix) {
         resourceRoot: '/',
 
         /**
-         * Image Loader defaults.
-         * See: https://github.com/thetalecrafter/img-loader#options
+         * Image optimization via img-loader (unmaintained). Disabled by default.
+         * To enable: install img-loader and its imagemin plugins, then set this to
+         * { enabled: true, gifsicle: {}, mozjpeg: {}, optipng: {}, svgo: {} }
          *
-         * @type {Object}
+         * @type {Object|null}
          */
-        imgLoaderOptions: {
-            enabled: true,
-            gifsicle: {},
-            mozjpeg: {},
-            optipng: {},
-            svgo: {}
-        },
+        imgLoaderOptions: null,
 
         /**
          * File Loader directory defaults.
@@ -128,11 +123,12 @@ module.exports = function (mix) {
         },
 
         /**
-         * Use Webpack asset modules instead of File Loader.
+         * Use Webpack asset modules instead of file-loader (deprecated).
+         * Set to false only if you need legacy file-loader behavior and have it installed.
          *
          * @type {Boolean}
          */
-        assetModules: false,
+        assetModules: true,
 
         /**
          * Asset directory defaults.
