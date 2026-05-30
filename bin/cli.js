@@ -33,6 +33,9 @@ async function run() {
     program
         .command('watch')
         .description('Build and watch files for changes.')
+        // Commander 15 errors on excess args by default; we forward any extra
+        // args (e.g. those after `--`) straight to the rspack CLI.
+        .allowExcessArguments()
         .option('--hot', 'Enable hot reloading.', false)
         .option('--https', 'Enable https.', false)
         .action((opts, cmd) =>
@@ -42,6 +45,7 @@ async function run() {
     program
         .command('build', { isDefault: true })
         .description('Compile Mix.')
+        .allowExcessArguments()
         .option('-p, --production', 'Run Mix in production mode.', false)
         .action((opts, cmd) =>
             executeScript('build', { ...program.opts(), ...opts }, cmd.args)
@@ -146,7 +150,10 @@ function commandScript(cmd, opts) {
         'bin',
         'rspack.js'
     );
-    const script = [`node "${rspackBin}"`];
+    // Rspack 2.0 is pure ESM, so loading it from our CommonJS source triggers
+    // Node's experimental `require(esm)` warning. It's internal noise the user
+    // can't act on, so we silence experimental warnings for the build process.
+    const script = [`node --disable-warning=ExperimentalWarning "${rspackBin}"`];
 
     if (cmd === 'build') {
         // progress is handled by ProgressPlugin in config

@@ -61,17 +61,23 @@ module.exports = class Preprocessor extends Component {
             {
                 loader: this.context.resolve('css-loader'),
                 options: {
-                    /**
-                     *
-                     * @param {string} url
-                     */
-                    url: url => {
-                        if (url.startsWith('/')) {
-                            return false;
-                        }
+                    url: {
+                        /**
+                         * @param {string} url
+                         */
+                        filter: url => {
+                            if (url.startsWith('/')) {
+                                return false;
+                            }
 
-                        return processUrls;
+                            return processUrls;
+                        }
                     },
+                    // On the legacy file-loader path (assetModules: false),
+                    // css-loader must emit CommonJS so url() references route
+                    // through file-loader rather than rspack's native `new URL`
+                    // asset handling (which ignores resourceRoot).
+                    esModule: this.context.config.assetModules !== false,
                     sourceMap: this.context.isUsing('sourcemaps'),
                     importLoaders: 1
                 }

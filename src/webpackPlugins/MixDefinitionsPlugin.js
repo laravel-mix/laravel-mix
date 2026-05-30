@@ -1,5 +1,6 @@
 let dotenv = require('dotenv');
-let expand = require('dotenv-expand');
+// dotenv-expand 13 exposes a named `expand` export.
+let { expand } = require('dotenv-expand');
 
 /** @internal */
 class MixDefinitionsPlugin {
@@ -25,8 +26,9 @@ class MixDefinitionsPlugin {
      * Build all MIX_ definitions for Webpack's DefinePlugin.
      */
     get env() {
-        // Load .env, if it exists, into process.env
-        expand(dotenv.config({ path: this.envPath }));
+        // Load .env, if it exists, into process.env. `quiet` silences dotenv
+        // 17's startup banner.
+        expand(dotenv.config({ path: this.envPath, quiet: true }));
 
         // Take everything from process.env that beings with MIX_
         const regex = /^MIX_/i;

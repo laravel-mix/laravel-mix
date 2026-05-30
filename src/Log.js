@@ -1,4 +1,5 @@
-const chalk = require('chalk');
+// chalk 5 is pure ESM; require(esm) returns the namespace, so grab the default.
+const chalk = require('chalk').default;
 
 /**
  * @typedef {object} LogMessage

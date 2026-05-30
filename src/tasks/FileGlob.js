@@ -1,9 +1,7 @@
 let path = require('path');
-let glob = require('glob');
+let { glob } = require('glob');
 let File = require('../File');
-let { promisify } = require('util');
 let { concat } = require('lodash');
-let globAsync = promisify(glob);
 
 /** @internal */
 module.exports.FileGlob = class FileGlob {
@@ -46,7 +44,8 @@ module.exports.FileGlob = class FileGlob {
         const isDir = File.find(src).isDirectory();
         const pattern = isDir ? path.join(src, '**/*') : src;
 
-        const matches = await globAsync(pattern, { nodir: true });
+        // glob 13's promise API no longer sorts results; sort for determinism.
+        const matches = (await glob(pattern, { nodir: true })).sort();
 
         return {
             isDir,

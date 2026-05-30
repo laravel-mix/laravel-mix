@@ -1,4 +1,4 @@
-// Type definitions for laravel-mix 6.0
+// Type definitions for laravel-rix
 
 import * as webpack from 'webpack';
 

@@ -47,8 +47,10 @@ test.serial('it compiles TypeScript with dynamic import', async t => {
             target: 'esnext',
             // @ts-ignore
             module: 'esnext',
+            // TS 6 errors on the deprecated `node`/`node10` resolution; pair
+            // esnext modules with bundler resolution (rspack does the bundling).
             // @ts-ignore
-            moduleResolution: 'node',
+            moduleResolution: 'bundler',
             noEmit: false
         }
     });

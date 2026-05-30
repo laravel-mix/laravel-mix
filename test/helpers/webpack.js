@@ -10,35 +10,45 @@ export async function compile(configOrPromise) {
 
     return new Promise((resolve, reject) => {
         compiler.run((err, stats) => {
-            if (err) {
-                reject(
-                    Object.create(err, {
-                        config: { value: config },
-                        stats: { value: stats },
-                        err: { value: err }
-                    })
-                );
-            } else if (stats && stats.hasErrors()) {
-                const { errors } = stats.toJson({ errors: true, errorDetails: true });
-                const err = new Error(
-                    (errors || [])
-                        .map(
-                            error =>
-                                error.message || error.details || JSON.stringify(error)
-                        )
-                        .join('\n')
-                );
+            // Release rspack's resources (thread pool, cache, watchers) so the
+            // AVA worker can exit cleanly — AVA 6 fails the run otherwise.
+            compiler.close(() => {
+                if (err) {
+                    // Attach context as own properties without wrapping the
+                    // error in a non-native object — AVA 6's t.throwsAsync
+                    // rejects values that aren't real Error instances.
+                    reject(
+                        Object.defineProperties(err, {
+                            config: { value: config },
+                            stats: { value: stats }
+                        })
+                    );
+                } else if (stats && stats.hasErrors()) {
+                    const { errors } = stats.toJson({
+                        errors: true,
+                        errorDetails: true
+                    });
+                    const buildError = new Error(
+                        (errors || [])
+                            .map(
+                                error =>
+                                    error.message ||
+                                    error.details ||
+                                    JSON.stringify(error)
+                            )
+                            .join('\n')
+                    );
 
-                reject(
-                    Object.create(err, {
-                        config: { value: config },
-                        stats: { value: stats },
-                        err: { value: err }
-                    })
-                );
-            } else {
-                resolve({ config, err, stats });
-            }
+                    reject(
+                        Object.defineProperties(buildError, {
+                            config: { value: config },
+                            stats: { value: stats }
+                        })
+                    );
+                } else {
+                    resolve({ config, err, stats });
+                }
+            });
         });
     });
 }

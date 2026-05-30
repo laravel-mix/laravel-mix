@@ -5,3 +5,5 @@ coverage
 .idea/
 *.log
 yarn.lock
+*.tgz
+.DS_Store

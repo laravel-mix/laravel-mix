@@ -1,5 +1,6 @@
 // @ts-check
 
+// yargs 18 ships a require-compatible build; `yargs/yargs` is the factory.
 const yargs = require('yargs/yargs');
 
 /** @typedef {import("@babel/core").TransformOptions} BabelConfig */
@@ -55,10 +56,11 @@ module.exports = function (mix) {
         postCss: [],
 
         /**
-         * Determine if we should enable autoprefixer by default.
-         * May be set to false to disable it.
+         * Determine if vendor prefixing should be enabled by default.
+         * May be set to false to disable it. Prefixing is handled by
+         * LightningCSS; option values are no longer read.
          *
-         * @type {false|import('autoprefixer').Options}
+         * @type {false|Record<string, any>}
          */
         autoprefixer: {},
 
@@ -179,12 +181,11 @@ module.exports = function (mix) {
         },
 
         /**
-         * cssnano-specific settings for Webpack.
-         * Disabled if set to false.
+         * Toggle production CSS minification. Disabled if set to false.
+         * Minification is handled by LightningCSS; option values are no
+         * longer read.
          *
-         * See: https://cssnano.co/docs/optimisations
-         *
-         * @type {false|Object}
+         * @type {false|Record<string, any>}
          */
         cssNano: {},
 

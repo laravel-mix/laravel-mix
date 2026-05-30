@@ -1,10 +1,7 @@
-// Type definitions for laravel-mix 6.0
+// Type definitions for laravel-rix
 
 import * as webpack from 'webpack';
-import { Options as AutoprefixerConfig } from 'autoprefixer';
 import { Options as CleanCssConfig } from 'clean-css';
-// import { CssNanoOptions as CssNanoConfig } from 'cssnano';
-import { CssNanoOptions as CssNanoConfig } from './cssnano';
 import { Options as GifsicleConfig } from 'imagemin-gifsicle';
 import { Options as MozjpegConfig } from 'imagemin-mozjpeg';
 import { Options as OptipngConfig } from 'imagemin-optipng';
@@ -42,10 +39,11 @@ interface MixConfig {
     postCss?: AcceptedPlugin[];
 
     /**
-     * Determine if we should enable autoprefixer by default.
-     * May be set to false to disable it.
+     * Determine if vendor prefixing should be enabled by default.
+     * May be set to false to disable it. Prefixing is handled by LightningCSS;
+     * option values are no longer read.
      **/
-    autoprefixer?: false | AutoprefixerConfig;
+    autoprefixer?: false | Record<string, any>;
 
     /** The public path for the build. */
     publicPath?: string;
@@ -133,12 +131,10 @@ interface MixConfig {
     cssModuleIdentifier?: string;
 
     /**
-     * cssnano-specific settings for Webpack.
-     * Disabled if set to false.
-     *
-     * See: https://cssnano.co/optimisations/
+     * Toggle production CSS minification. Disabled if set to false.
+     * Minification is handled by LightningCSS; option values are no longer read.
      **/
-    cssNano?: false | CssNanoConfig;
+    cssNano?: false | Record<string, any>;
 
     /**
      * CleanCss-specific settings for Webpack.

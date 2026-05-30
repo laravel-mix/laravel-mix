@@ -1,8 +1,10 @@
 import test from 'ava';
-import colors from 'colors/safe.js';
+import colors from '@colors/colors/safe.js';
 
 import BuildOutputPlugin from '../../../src/webpackPlugins/BuildOutputPlugin.js';
 
+// cli-table3 colorizes its borders via @colors/colors; disable it so the
+// snapshot is deterministic regardless of TTY/CI environment.
 test.beforeEach(() => colors.disable());
 
 test('The build output table renders as expected', async t => {

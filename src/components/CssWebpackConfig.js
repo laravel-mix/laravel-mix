@@ -95,6 +95,9 @@ class CssWebpackConfig extends Component {
                     use: this.createLoaderList(rule, {
                         mode: 'local',
                         auto: undefined,
+                        // css-loader 7 defaults namedExport to true; keep the
+                        // default export so `import styles from '...'` works.
+                        namedExport: false,
                         localIdentName:
                             this.context.config.cssModuleIdentifier || '[hash:base64]'
                     })
@@ -105,6 +108,9 @@ class CssWebpackConfig extends Component {
                     use: this.createLoaderList(rule, {
                         mode: 'local',
                         auto: true,
+                        // css-loader 7 defaults namedExport to true; keep the
+                        // default export so `import styles from '...'` works.
+                        namedExport: false,
                         localIdentName:
                             this.context.config.cssModuleIdentifier || '[hash:base64]'
                     })
@@ -130,16 +136,23 @@ class CssWebpackConfig extends Component {
             {
                 loader: this.context.resolve('css-loader'),
                 options: {
-                    /**
-                     * @param {string} url
-                     **/
-                    url: url => {
-                        if (url.startsWith('/')) {
-                            return false;
-                        }
+                    url: {
+                        /**
+                         * @param {string} url
+                         **/
+                        filter: url => {
+                            if (url.startsWith('/')) {
+                                return false;
+                            }
 
-                        return this.context.config.processCssUrls;
+                            return this.context.config.processCssUrls;
+                        }
                     },
+                    // On the legacy file-loader path (assetModules: false),
+                    // css-loader must emit CommonJS so url() references route
+                    // through file-loader rather than rspack's native `new URL`
+                    // asset handling (which ignores resourceRoot).
+                    esModule: this.context.config.assetModules !== false,
                     modules: useCssModules
                 }
             },

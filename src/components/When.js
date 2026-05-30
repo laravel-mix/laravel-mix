@@ -4,7 +4,7 @@ module.exports = class When extends Component {
     /**
      *
      * @param {boolean} condition
-     * @param {(api: import("laravel-mix").Api) => void} callback
+     * @param {(api: import("laravel-rix").Api) => void} callback
      */
     register(condition, callback) {
         if (condition) {

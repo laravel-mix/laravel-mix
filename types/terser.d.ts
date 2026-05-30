@@ -1,4 +1,4 @@
-// Type definitions for laravel-mix 6.0
+// Type definitions for laravel-rix
 
 // This is a workaround because `TerserPluginOptions` isn't exported from webpack-terser-plugin
 

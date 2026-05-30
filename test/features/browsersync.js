@@ -1,6 +1,13 @@
 import test from 'ava';
 import mockRequire from 'mock-require';
 
+// Rspack 2.0 is pure ESM. mock-require patches Module._load, which breaks
+// Node's handling of the internal cycles in @rspack/core when it is later
+// pulled in via require(esm) during webpack.buildConfig(). Loading it here
+// through a native ESM import sidesteps that patch and caches the module so
+// the later require() is a cheap cache hit.
+import '@rspack/core';
+
 import BrowserSync from '../../src/components/BrowserSync.js';
 import MixClass from '../../src/Mix.js';
 import { context } from '../helpers/test.js';

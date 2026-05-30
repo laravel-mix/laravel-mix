@@ -22,7 +22,8 @@ class MockEntryPlugin {
      */
     apply(compiler) {
         compiler.hooks.done.tap('MockEntryPlugin', stats => {
-            const assets = stats.toJson().assets || [];
+            // Rspack 2.0 omits assets from the default `toJson()` output.
+            const assets = stats.toJson({ assets: true }).assets || [];
             const temporaryOutputFile = assets.find(asset => asset.name === 'mix.js');
 
             if (!temporaryOutputFile) {

@@ -7,7 +7,7 @@ module.exports = class Vue extends Component {
     version = 2;
 
     /**
-     * @type {import('laravel-mix').VueConfig} options
+     * @type {import('laravel-rix').VueConfig} options
      */
     options = {
         version: undefined,
@@ -21,7 +21,7 @@ module.exports = class Vue extends Component {
     /**
      * Register the component.
      *
-     * @param {import('laravel-mix').VueConfig} options
+     * @param {import('laravel-rix').VueConfig} options
      */
     register(options = {}) {
         if (

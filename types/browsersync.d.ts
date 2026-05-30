@@ -1,4 +1,4 @@
-// Type definitions for laravel-mix 6.0
+// Type definitions for laravel-rix
 
 // Pulled from @types/browser-sync because reliance on outdated chokidar
 // -------- @types/browser-sync/index.d.ts --------

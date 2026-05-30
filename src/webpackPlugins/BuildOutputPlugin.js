@@ -1,8 +1,9 @@
 const _ = require('lodash');
-const chalk = require('chalk');
+// chalk 5 and strip-ansi 7 are pure ESM; require(esm) returns the namespace.
+const chalk = require('chalk').default;
 const Table = require('cli-table3');
 const readline = require('readline');
-const stripAnsi = require('strip-ansi');
+const stripAnsi = require('strip-ansi').default;
 function formatSize(size) {
     if (size <= 0) return '0 bytes';
     const units = ['bytes', 'KiB', 'MiB', 'GiB'];

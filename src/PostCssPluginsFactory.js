@@ -24,21 +24,6 @@ module.exports = class PostCssPluginsFactory {
     }
 
     /**
-     * Load the user's postcss.config.js file, if any.
-     *
-     * @deprecated postcss-loader already does this on its own
-     */
-    loadConfigFile() {
-        let postcssrc = require('postcss-load-config');
-
-        try {
-            this.plugins = [...this.plugins, ...postcssrc.sync().plugins];
-        } catch (e) {
-            // No postcss.config.js file exists.
-        }
-    }
-
-    /**
      * Load any global postcss plugins that have been passed to Mix.
      */
     loadGlobalPlugins() {

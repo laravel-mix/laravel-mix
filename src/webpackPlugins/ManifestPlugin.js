@@ -15,7 +15,10 @@ class ManifestPlugin {
      */
     apply(compiler) {
         compiler.hooks.emit.tapAsync('ManifestPlugin', (curCompiler, callback) => {
-            let stats = curCompiler.getStats().toJson();
+            // Rspack 2.0 no longer includes assets in the default `toJson()`
+            // output, so we must request them explicitly to populate
+            // `assetsByChunkName` (used by Manifest.flattenAssets).
+            let stats = curCompiler.getStats().toJson({ assets: true });
 
             // Handle the creation of the mix-manifest.json file.
             this.mix.manifest.transform(stats).refresh();

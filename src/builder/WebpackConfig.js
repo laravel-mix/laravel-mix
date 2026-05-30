@@ -166,16 +166,16 @@ class WebpackConfig {
                     }
                 });
 
-                // Patch the built-in open-editor to handle
-                // /__open-in-editor?file= (used by Vue DevTools)
-                // instead of /webpack-dev-server/open-editor?fileName=
-                const builtin = middlewares.find(
-                    m => m.name === 'webpack-dev-server-open-editor'
-                );
-
-                if (builtin) {
-                    builtin.path = '/__open-in-editor';
-                    builtin.middleware = function (req, res) {
+                // Serve /__open-in-editor?file= (used by Vue DevTools). We
+                // register our own middleware rather than patching the dev
+                // server's built-in open-editor handler, whose name differs
+                // between webpack-dev-server ('webpack-dev-server-open-editor')
+                // and rspack-dev-server ('rspack-dev-server-open-editor') and
+                // could change again.
+                middlewares.unshift({
+                    name: 'mix-open-in-editor',
+                    path: '/__open-in-editor',
+                    middleware: function (req, res) {
                         res.setHeader('Access-Control-Allow-Origin', '*');
 
                         const url = new URL(req.url, 'http://localhost');
@@ -189,8 +189,8 @@ class WebpackConfig {
 
                         require('launch-editor')(path.resolve(file));
                         res.end();
-                    };
-                }
+                    }
+                });
 
                 return middlewares;
             },

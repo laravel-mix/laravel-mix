@@ -1,4 +1,4 @@
-const glob = require('glob');
+const { globSync } = require('glob');
 const File = require('../File');
 const Assert = require('../Assert');
 const { Component } = require('./Component');
@@ -24,7 +24,9 @@ module.exports = class JavaScript extends Component {
      */
     register(entry, output) {
         if (typeof entry === 'string' && entry.includes('*')) {
-            entry = glob.sync(entry);
+            // glob 13 exposes the sync API as a named `globSync` export and no
+            // longer sorts results; sort for a deterministic entry order.
+            entry = globSync(entry).sort();
         }
 
         Assert.js(entry, output);

@@ -80,7 +80,7 @@ class Mix {
     async build() {
         if (!this.booted) {
             console.warn(
-                'Mix was not set up correctly. Please ensure you import or require laravel-mix in your mix config.'
+                'Mix was not set up correctly. Please ensure you import or require laravel-rix in your mix config.'
             );
 
             this.boot();
@@ -99,8 +99,8 @@ class Mix {
 
         this.booted = true;
 
-        // Load .env
-        Dotenv.config();
+        // Load .env (`quiet` silences dotenv 17's startup banner)
+        Dotenv.config({ quiet: true });
 
         // If we're using Laravel set the public path by default
         if (this.sees('laravel')) {
@@ -135,7 +135,7 @@ class Mix {
     }
 
     /**
-     * @return {import("laravel-mix").Api}
+     * @return {import("laravel-rix").Api}
      */
     get api() {
         if (!this._api) {

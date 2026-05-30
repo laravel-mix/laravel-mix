@@ -46,12 +46,10 @@ test.serial.beforeEach(async t => {
 });
 
 test.serial.afterEach.always(async t => {
+    // Read the existing context — passing fresh metadata here would overwrite
+    // (and null out) the server reference we need to close, leaking the handle.
     /** @type {TestContext<TestContextMetadata>} */
-    const { metadata } = context(t, {
-        port: port++,
-        server: null,
-        logEvents: []
-    });
+    const { metadata } = context(t);
 
     if (metadata.server) {
         await metadata.server.close();

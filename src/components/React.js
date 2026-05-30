@@ -3,7 +3,7 @@ const { Component } = require('./Component');
 const File = require('../File');
 
 module.exports = class React extends Component {
-    /** @type {import('laravel-mix').ReactConfig} */
+    /** @type {import('laravel-rix').ReactConfig} */
     options = {
         extractStyles: false
     };
@@ -17,11 +17,11 @@ module.exports = class React extends Component {
         if (this.supportsFastRefreshing()) {
             return dependencies.concat([
                 {
-                    package: '@pmmmwh/react-refresh-webpack-plugin@^0.5.0-rc.0',
+                    package: '@pmmmwh/react-refresh-webpack-plugin@^0.6.0',
                     check: name =>
                         semver.satisfies(
                             require(`${name}/package.json`).version,
-                            '^0.5.0-rc.0'
+                            '^0.6.0'
                         )
                 },
                 'react-refresh'
@@ -34,7 +34,7 @@ module.exports = class React extends Component {
     /**
      * Register the component.
      *
-     * @param {import('laravel-mix').ReactConfig} options
+     * @param {import('laravel-rix').ReactConfig} options
      */
     register(options = {}) {
         if (
@@ -63,7 +63,9 @@ module.exports = class React extends Component {
 
         const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-        return [new ReactRefreshPlugin({ overlay: { sockPath: 'ws' } })];
+        // v0.6 replaced the overlay's manual socket options (sockPath/sockHost/…)
+        // with `sockIntegration`, which reads the dev server's websocket config.
+        return [new ReactRefreshPlugin({ overlay: { sockIntegration: 'wds' } })];
     }
 
     /**
