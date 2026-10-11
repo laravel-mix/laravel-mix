@@ -3,8 +3,33 @@ const chalk = require('chalk');
 const Table = require('cli-table3');
 const readline = require('readline');
 const stripAnsi = require('strip-ansi');
-const { formatSize } = require('webpack/lib/SizeFormatHelpers');
 const { version } = require('../../package.json');
+
+/**
+ * Format a byte size into a human-readable string (e.g. "1.5 KiB").
+ *
+ * Historically imported from webpack's internal `lib/SizeFormatHelpers`, which
+ * webpack moved and renamed to `lib/util/formatSize` in 5.107.0 (breaking Mix on
+ * newer webpack). It's a trivial pure helper, so we inline it here and depend on
+ * no webpack internals at all. Mirrors webpack's own implementation.
+ *
+ * @param {number=} size the size in bytes
+ * @returns {string} the formatted size
+ */
+function formatSize(size) {
+    if (typeof size !== 'number' || Number.isNaN(size) === true) {
+        return 'unknown size';
+    }
+    if (size <= 0) {
+        return '0 bytes';
+    }
+    const abbreviations = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+    const index = Math.min(
+        Math.floor(Math.log(size) / Math.log(1024)),
+        abbreviations.length - 1
+    );
+    return `${Number((size / 1024 ** index).toPrecision(3))} ${abbreviations[index]}`;
+}
 
 /**
  * @typedef {object} BuildOutputOptions

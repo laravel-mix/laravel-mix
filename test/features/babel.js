@@ -7,12 +7,12 @@ test.serial('mix.babelConfig() can be used to merge custom Babel options.', asyn
 
     mix.js(`test/fixtures/app/src/js/app.js`, 'js');
     mix.babelConfig({
-        plugins: ['@babel/plugin-proposal-unicode-property-regex']
+        plugins: ['@babel/plugin-transform-unicode-property-regex']
     });
 
     await webpack.compile();
 
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-unicode-property-regex'));
 });
 
 test.serial('Default Babel plugins/presets are set', async t => {
@@ -103,7 +103,7 @@ test.serial('Babel config from Mix extensions is merged with the defaults', asyn
     mix.extend('extensionWithBabelConfig', {
         babelConfig() {
             return {
-                plugins: ['@babel/plugin-proposal-unicode-property-regex']
+                plugins: ['@babel/plugin-transform-unicode-property-regex']
             };
         }
     });
@@ -116,5 +116,5 @@ test.serial('Babel config from Mix extensions is merged with the defaults', asyn
     await webpack.compile();
 
     t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-unicode-property-regex'));
 });

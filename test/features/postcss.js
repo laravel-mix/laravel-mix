@@ -30,6 +30,11 @@ test.serial(
 test.serial(
     'it applies autoprefixer to compiled CSS',
     buildTest({
+        // Pin an explicit browser target so the expected vendor prefixes are
+        // deterministic and don't drift as caniuse/browserslist data changes.
+        prepare: ({ mix }) =>
+            mix.options({ autoprefixer: { overrideBrowserslist: ['Safari 8'] } }),
+
         file: 'autoprefixer.css',
         input: `@keyframes testing { to { color: red; } }`,
         expected: `
@@ -98,7 +103,12 @@ test.serial(
 test.serial(
     'it disables CSSNano minification',
     buildTest({
-        prepare: ({ mix }) => mix.options({ production: true, cssNano: false }),
+        prepare: ({ mix }) =>
+            mix.options({
+                production: true,
+                cssNano: false,
+                autoprefixer: { overrideBrowserslist: ['Safari 8'] }
+            }),
 
         file: `cssnano.css`,
         input: `@keyframes testing { to { color: red; } }`,
@@ -130,7 +140,11 @@ test.serial(
 test.serial(
     "it merge Mix's default postcss plugins with any found in the user's postcss.config.js.",
     buildTest({
-        prepare: ({ mix }) => mix.options({ production: true }),
+        prepare: ({ mix }) =>
+            mix.options({
+                production: true,
+                autoprefixer: { overrideBrowserslist: ['Safari 8'] }
+            }),
 
         plugins: ['postcss-custom-properties'],
 

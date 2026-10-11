@@ -87,13 +87,15 @@
         "webpack-dev-server": "^4.7.3",
         "webpack-merge": "^5.8.0",
         "webpack-notifier": "^1.14.1",
-        "webpackbar": "^5.0.0-3",
+        "webpackbar": "^7.0.0",
         "yargs": "^17.2.1"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.15.8",
         "@babel/plugin-proposal-class-properties": "^7.14.5",
+        "@babel/plugin-syntax-json-strings": "^7.8.3",
         "@babel/preset-react": "^7.14.5",
+        "@colors/colors": "^1.5.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.0-beta.0",
         "@types/cssnano": "^4.0.1",
         "@types/fs-extra": "^9.0.13",
